@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="Astro_HDF5_v1" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\local\;CMake Files\..\..\..\..\usr\local\lib\;CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\;CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\CMake\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/pmulumba/Projects/Astro_FITS_VTK/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="astro">
+         <Option output="/home/pmulumba/Projects/Astro_FITS_VTK/build/astro" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/pmulumba/Projects/Astro_FITS_VTK/build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DQT_NO_DEBUG" />
+            <Add option="-DQT_GUI_LIB" />
+            <Add option="-DQT_CORE_LIB" />
+            <Add directory="/home/pmulumba/Projects/Astro_FITS_VTK" />
+            <Add directory="/home/pmulumba/Projects/Astro_FITS_VTK/build" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.7" />
+            <Add directory="/usr/include/c++/4.7/backward" />
+            <Add directory="/usr/include/qt4" />
+            <Add directory="/usr/include/qt4/QtCore" />
+            <Add directory="/usr/include/qt4/QtGui" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/." />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
+            <Add directory="/usr/local/include" />
+            <Add directory="/usr/local/include/vtk-5.10" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 astro" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="astro/fast">
+         <Option output="/home/pmulumba/Projects/Astro_FITS_VTK/build/astro" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/pmulumba/Projects/Astro_FITS_VTK/build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DQT_NO_DEBUG" />
+            <Add option="-DQT_GUI_LIB" />
+            <Add option="-DQT_CORE_LIB" />
+            <Add directory="/home/pmulumba/Projects/Astro_FITS_VTK" />
+            <Add directory="/home/pmulumba/Projects/Astro_FITS_VTK/build" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.7" />
+            <Add directory="/usr/include/c++/4.7/backward" />
+            <Add directory="/usr/include/qt4" />
+            <Add directory="/usr/include/qt4/QtCore" />
+            <Add directory="/usr/include/qt4/QtGui" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/." />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
+            <Add directory="/usr/local/include" />
+            <Add directory="/usr/local/include/vtk-5.10" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 astro/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/pmulumba/Projects/Astro_FITS_VTK/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/pmulumba/Projects/Astro_FITS_VTK/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/fits_results.cpp">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/main.cpp">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.cpp">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/vtkfitsreader.cpp">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/fits_results.h">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.h">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.ui">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/vtkfitsreader.h">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/VTKConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/VTKConfig.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/VTKConfigQt.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/VTKTargets.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/VTKTargets-debug.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/UseVTK.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\" />
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/../../../../usr/local/lib/vtk-5.10/CMake/vtkMakeInstantiator.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\usr\local\lib\vtk-5.10\CMake\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

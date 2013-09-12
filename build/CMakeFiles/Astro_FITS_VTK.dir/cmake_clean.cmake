@@ -1,0 +1,26 @@
+FILE(REMOVE_RECURSE
+  "moc_mainwindow.cxx"
+  "moc_vtkfitsreader.cxx"
+  "moc_fits_results.cxx"
+  "moc_OrientationAxes.cxx"
+  "moc_subvolumedialog.cxx"
+  "ui_mainwindow.h"
+  "ui_subvolumedialog.h"
+  "CMakeFiles/Astro_FITS_VTK.dir/main.cpp.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/mainwindow.cpp.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/moc_fits_results.cxx.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o"
+  "CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o"
+  "../bin/Astro_FITS_VTK.pdb"
+  "../bin/Astro_FITS_VTK"
+)
+
+# Per-language clean rules from dependency scanning.
+FOREACH(lang CXX)
+  INCLUDE(CMakeFiles/Astro_FITS_VTK.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)

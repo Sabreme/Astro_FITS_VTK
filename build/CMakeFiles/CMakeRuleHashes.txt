@@ -1,0 +1,10 @@
+# Hashes of file build rules.
+4d4e356618a33c1660a7336a6931352a moc_OrientationAxes.cxx
+f805593debb16920a40949aac20f2026 moc_fits_results.cxx
+ae687b9d58c6cba0b600448dce95e2ae moc_mainwindow.cxx
+86c6a847c61ede97379b81b1a73ba27a moc_subVolume.cxx
+8333092db6ac9a44ba91fbaa3b70a071 moc_subvolumedialog.cxx
+29b189b33616017b5df34b99b6c4a372 moc_vtkfitsreader.cxx
+d5a58b2a7951e06f0f223b0231e6c56c ui_mainwindow.h
+9e0e874b648d715d56078ce5d328ca63 ui_subVolume.h
+e581a3cf5d12b2440efcd67b2ad1cafa ui_subvolumedialog.h
