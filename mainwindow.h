@@ -78,6 +78,12 @@ private slots:
 
         void on_actionReset_Camera_triggered();
 
+        void on_actionLeft_Side_View_triggered();
+
+        void on_actionRight_Side_View_triggered();
+
+        void on_actionTop_Side_View_triggered();
+
 private:
     Ui::MainWindow *ui;                     // Global pointer for the Mainwindow
     SubVolumeDialog *subVolDialog;          // Global pointer for the SubVolume

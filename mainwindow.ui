@@ -63,6 +63,9 @@
      <string>Views</string>
     </property>
     <addaction name="actionReset_Camera"/>
+    <addaction name="actionLeft_Side_View"/>
+    <addaction name="actionRight_Side_View"/>
+    <addaction name="actionTop_Side_View"/>
    </widget>
    <addaction name="menuFIle"/>
    <addaction name="menuActions"/>
@@ -103,6 +106,21 @@
   <action name="actionReset_Camera">
    <property name="text">
     <string>Reset Camera</string>
+   </property>
+  </action>
+  <action name="actionLeft_Side_View">
+   <property name="text">
+    <string>Left Side View</string>
+   </property>
+  </action>
+  <action name="actionRight_Side_View">
+   <property name="text">
+    <string>Right Side View</string>
+   </property>
+  </action>
+  <action name="actionTop_Side_View">
+   <property name="text">
+    <string>Top Side View</string>
    </property>
   </action>
  </widget>

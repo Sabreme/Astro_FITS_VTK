@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Tue Sep 3 10:46:10 2013
+** Created: Thu Sep 12 17:52:05 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -40,6 +40,9 @@ static const uint qt_meta_data_MainWindow[] = {
      140,   11,   11,   11, 0x08,
      166,   11,   11,   11, 0x08,
      192,   11,   11,   11, 0x08,
+     226,   11,   11,   11, 0x08,
+     262,   11,   11,   11, 0x08,
+     299,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -52,6 +55,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_actionOpen_triggered()\0"
     "on_actionExit_triggered()\0"
     "on_actionReset_Camera_triggered()\0"
+    "on_actionLeft_Side_View_triggered()\0"
+    "on_actionRight_Side_View_triggered()\0"
+    "on_actionTop_Side_View_triggered()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -69,6 +75,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 6: _t->on_actionOpen_triggered(); break;
         case 7: _t->on_actionExit_triggered(); break;
         case 8: _t->on_actionReset_Camera_triggered(); break;
+        case 9: _t->on_actionLeft_Side_View_triggered(); break;
+        case 10: _t->on_actionRight_Side_View_triggered(); break;
+        case 11: _t->on_actionTop_Side_View_triggered(); break;
         default: ;
         }
     }
@@ -107,9 +116,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 12;
     }
     return _id;
 }

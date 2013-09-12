@@ -419,56 +419,16 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionReset_Camera_triggered()
 {
-//    vtkSmartPointer<vtkActorCollection> actorCollection =
-//            vtkSmartPointer<vtkActorCollection>::New();
-
     vtkSmartPointer<vtkRenderer> theRenderer =
             vtkSmartPointer<vtkRenderer>::New();
 
     theRenderer = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
             GetRenderers()->GetFirstRenderer();
     
-//    actorCollection = theRenderer->GetActors();
-
-//    qDebug() << "ActorColleciton has " << actorCollection->GetNumberOfItems() <<endl;
-
-//    actorCollection->InitTraversal();
-//    vtkTransform *myTrans = vtkTransform::New();
-
-//    myTrans->Identity();
-//    myTrans->PostMultiply();
-//    //myTrans->RotateX(45);
-//    //myTrans->RotateY(45);
-//    //myTrans->RotateZ(45);
-
-//    for (vtkIdType  i = 0; i < actorCollection->GetNumberOfItems(); i++)
-//    {
-//        vtkActor * actor = actorCollection->GetNextActor();
-//        qDebug() << "nextActor " << i << " : " << actor->GetClassName() << endl;
-//        //actor->SetUserTransform(myTrans);
-
-//        //actor->SetUserMatrix(myTrans->GetMatrix());
-
-//        if(actor->GetUserMatrix()!= NULL)
-//            actor->GetUserMatrix()->Identity();
-
-//        actor->GetMatrix()->Identity();
-//        actor->SetOrientation(0,0,0);
-//        actor->SetScale(1,1,1);
-//        actor->SetPosition(0,0,0);
-//        actor->SetOrigin(0,0,0);
-//        //actor->
-//        //qDebug() << "Orientation " << " : " << actor-> << endl;
-//    }
-//    theRenderer->Render();
-//    this->ui->qvtkWidgetLeft->update();
-    //XYVolumeSelection(this->ui->qvtkWidgetLeft, global_Reader);
 
     double  * focalPoint;
     double  * position ;
     double  dist ;
-
-    //theRenderer->GetActiveCamera()->SetFocalPoint(0.0,0.0,0.0);
 
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
@@ -483,4 +443,89 @@ void MainWindow::on_actionReset_Camera_triggered()
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
     //theRenderer->
+}
+
+void MainWindow::on_actionLeft_Side_View_triggered()
+{
+    vtkSmartPointer<vtkRenderer> theRenderer =
+            vtkSmartPointer<vtkRenderer>::New();
+
+    theRenderer = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
+            GetRenderers()->GetFirstRenderer();
+
+
+    double  * focalPoint;
+    double  * position ;
+    double  dist ;
+
+    focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
+    position = theRenderer->GetActiveCamera()->GetPosition();
+    dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
+                 pow((position[1]-focalPoint[1]),2) +
+                 pow((position[2]-focalPoint[2]),2));
+    theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
+
+    theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
+
+    theRenderer->GetActiveCamera()->Azimuth(90);
+
+
+    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+
+}
+
+void MainWindow::on_actionRight_Side_View_triggered()
+{
+    vtkSmartPointer<vtkRenderer> theRenderer =
+            vtkSmartPointer<vtkRenderer>::New();
+
+    theRenderer = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
+            GetRenderers()->GetFirstRenderer();
+
+
+    double  * focalPoint;
+    double  * position ;
+    double  dist ;
+
+    focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
+    position = theRenderer->GetActiveCamera()->GetPosition();
+    dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
+                 pow((position[1]-focalPoint[1]),2) +
+                 pow((position[2]-focalPoint[2]),2));
+    theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
+
+    theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
+
+    theRenderer->GetActiveCamera()->Azimuth(270);
+
+
+    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+}
+
+void MainWindow::on_actionTop_Side_View_triggered()
+{
+    vtkSmartPointer<vtkRenderer> theRenderer =
+            vtkSmartPointer<vtkRenderer>::New();
+
+    theRenderer = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
+            GetRenderers()->GetFirstRenderer();
+
+
+    double  * focalPoint;
+    double  * position ;
+    double  dist ;
+
+    focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
+    position = theRenderer->GetActiveCamera()->GetPosition();
+    dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
+                 pow((position[1]-focalPoint[1]),2) +
+                 pow((position[2]-focalPoint[2]),2));
+    theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
+
+    theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
+
+    theRenderer->GetActiveCamera()->Elevation(90);
+
+
+    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
 }

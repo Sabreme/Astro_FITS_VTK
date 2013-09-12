@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Aug 30 00:46:20 2013
+** Created: Thu Sep 12 17:52:05 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -34,6 +34,9 @@ public:
     QAction *actionExit;
     QAction *actionSubVolume;
     QAction *actionReset_Camera;
+    QAction *actionLeft_Side_View;
+    QAction *actionRight_Side_View;
+    QAction *actionTop_Side_View;
     QWidget *centralWidget;
     QVTKWidget *qvtkWidgetLeft;
     QPlainTextEdit *plainTextEdit;
@@ -59,6 +62,12 @@ public:
         actionSubVolume->setObjectName(QString::fromUtf8("actionSubVolume"));
         actionReset_Camera = new QAction(MainWindow);
         actionReset_Camera->setObjectName(QString::fromUtf8("actionReset_Camera"));
+        actionLeft_Side_View = new QAction(MainWindow);
+        actionLeft_Side_View->setObjectName(QString::fromUtf8("actionLeft_Side_View"));
+        actionRight_Side_View = new QAction(MainWindow);
+        actionRight_Side_View->setObjectName(QString::fromUtf8("actionRight_Side_View"));
+        actionTop_Side_View = new QAction(MainWindow);
+        actionTop_Side_View->setObjectName(QString::fromUtf8("actionTop_Side_View"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         qvtkWidgetLeft = new QVTKWidget(centralWidget);
@@ -93,6 +102,9 @@ public:
         menuFIle->addAction(actionExit);
         menuActions->addAction(actionSubVolume);
         menuViews->addAction(actionReset_Camera);
+        menuViews->addAction(actionLeft_Side_View);
+        menuViews->addAction(actionRight_Side_View);
+        menuViews->addAction(actionTop_Side_View);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSubVolume);
         mainToolBar->addAction(actionExit);
@@ -110,6 +122,9 @@ public:
         actionExit->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
         actionSubVolume->setText(QApplication::translate("MainWindow", "SubVolume", 0, QApplication::UnicodeUTF8));
         actionReset_Camera->setText(QApplication::translate("MainWindow", "Reset Camera", 0, QApplication::UnicodeUTF8));
+        actionLeft_Side_View->setText(QApplication::translate("MainWindow", "Left Side View", 0, QApplication::UnicodeUTF8));
+        actionRight_Side_View->setText(QApplication::translate("MainWindow", "Right Side View", 0, QApplication::UnicodeUTF8));
+        actionTop_Side_View->setText(QApplication::translate("MainWindow", "Top Side View", 0, QApplication::UnicodeUTF8));
         menuFIle->setTitle(QApplication::translate("MainWindow", "FIle", 0, QApplication::UnicodeUTF8));
         menuActions->setTitle(QApplication::translate("MainWindow", "Actions", 0, QApplication::UnicodeUTF8));
         menuViews->setTitle(QApplication::translate("MainWindow", "Views", 0, QApplication::UnicodeUTF8));
