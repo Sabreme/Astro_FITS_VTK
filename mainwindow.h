@@ -84,6 +84,10 @@ private slots:
 
         void on_actionTop_Side_View_triggered();
 
+        void on_actionBottom_Side_View_triggered();
+
+        void on_actionSliceSelection_triggered();
+
 private:
     Ui::MainWindow *ui;                     // Global pointer for the Mainwindow
     SubVolumeDialog *subVolDialog;          // Global pointer for the SubVolume

@@ -57,6 +57,7 @@
      <string>Actions</string>
     </property>
     <addaction name="actionSubVolume"/>
+    <addaction name="actionSliceSelection"/>
    </widget>
    <widget class="QMenu" name="menuViews">
     <property name="title">
@@ -66,6 +67,7 @@
     <addaction name="actionLeft_Side_View"/>
     <addaction name="actionRight_Side_View"/>
     <addaction name="actionTop_Side_View"/>
+    <addaction name="actionBottom_Side_View"/>
    </widget>
    <addaction name="menuFIle"/>
    <addaction name="menuActions"/>
@@ -121,6 +123,16 @@
   <action name="actionTop_Side_View">
    <property name="text">
     <string>Top Side View</string>
+   </property>
+  </action>
+  <action name="actionBottom_Side_View">
+   <property name="text">
+    <string>Bottom Side View</string>
+   </property>
+  </action>
+  <action name="actionSliceSelection">
+   <property name="text">
+    <string>SliceSelection</string>
    </property>
   </action>
  </widget>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Sep 12 17:52:05 2013
+** Created: Sat Sep 14 13:35:50 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -37,6 +37,8 @@ public:
     QAction *actionLeft_Side_View;
     QAction *actionRight_Side_View;
     QAction *actionTop_Side_View;
+    QAction *actionBottom_Side_View;
+    QAction *actionSliceSelection;
     QWidget *centralWidget;
     QVTKWidget *qvtkWidgetLeft;
     QPlainTextEdit *plainTextEdit;
@@ -68,6 +70,10 @@ public:
         actionRight_Side_View->setObjectName(QString::fromUtf8("actionRight_Side_View"));
         actionTop_Side_View = new QAction(MainWindow);
         actionTop_Side_View->setObjectName(QString::fromUtf8("actionTop_Side_View"));
+        actionBottom_Side_View = new QAction(MainWindow);
+        actionBottom_Side_View->setObjectName(QString::fromUtf8("actionBottom_Side_View"));
+        actionSliceSelection = new QAction(MainWindow);
+        actionSliceSelection->setObjectName(QString::fromUtf8("actionSliceSelection"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         qvtkWidgetLeft = new QVTKWidget(centralWidget);
@@ -101,10 +107,12 @@ public:
         menuFIle->addAction(actionClose);
         menuFIle->addAction(actionExit);
         menuActions->addAction(actionSubVolume);
+        menuActions->addAction(actionSliceSelection);
         menuViews->addAction(actionReset_Camera);
         menuViews->addAction(actionLeft_Side_View);
         menuViews->addAction(actionRight_Side_View);
         menuViews->addAction(actionTop_Side_View);
+        menuViews->addAction(actionBottom_Side_View);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSubVolume);
         mainToolBar->addAction(actionExit);
@@ -125,6 +133,8 @@ public:
         actionLeft_Side_View->setText(QApplication::translate("MainWindow", "Left Side View", 0, QApplication::UnicodeUTF8));
         actionRight_Side_View->setText(QApplication::translate("MainWindow", "Right Side View", 0, QApplication::UnicodeUTF8));
         actionTop_Side_View->setText(QApplication::translate("MainWindow", "Top Side View", 0, QApplication::UnicodeUTF8));
+        actionBottom_Side_View->setText(QApplication::translate("MainWindow", "Bottom Side View", 0, QApplication::UnicodeUTF8));
+        actionSliceSelection->setText(QApplication::translate("MainWindow", "SliceSelection", 0, QApplication::UnicodeUTF8));
         menuFIle->setTitle(QApplication::translate("MainWindow", "FIle", 0, QApplication::UnicodeUTF8));
         menuActions->setTitle(QApplication::translate("MainWindow", "Actions", 0, QApplication::UnicodeUTF8));
         menuViews->setTitle(QApplication::translate("MainWindow", "Views", 0, QApplication::UnicodeUTF8));

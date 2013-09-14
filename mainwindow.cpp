@@ -529,3 +529,36 @@ void MainWindow::on_actionTop_Side_View_triggered()
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
 }
+
+void MainWindow::on_actionBottom_Side_View_triggered()
+{
+    vtkSmartPointer<vtkRenderer> theRenderer =
+            vtkSmartPointer<vtkRenderer>::New();
+
+    theRenderer = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
+            GetRenderers()->GetFirstRenderer();
+
+
+    double  * focalPoint;
+    double  * position ;
+    double  dist ;
+
+    focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
+    position = theRenderer->GetActiveCamera()->GetPosition();
+    dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
+                 pow((position[1]-focalPoint[1]),2) +
+                 pow((position[2]-focalPoint[2]),2));
+    theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
+
+    theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
+
+    theRenderer->GetActiveCamera()->Elevation(270);
+
+
+    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+}
+
+void MainWindow::on_actionSliceSelection_triggered()
+{
+
+}
