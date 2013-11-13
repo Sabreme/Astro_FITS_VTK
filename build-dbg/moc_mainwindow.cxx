@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sat Sep 14 13:35:50 2013
+** Created: Tue Nov 12 11:31:21 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      23,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,27 +33,35 @@ static const uint qt_meta_data_MainWindow[] = {
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x0a,
       23,   11,   11,   11, 0x08,
-      48,   11,   11,   11, 0x08,
-      73,   11,   11,   11, 0x08,
-      82,   11,   11,   11, 0x08,
-     109,   11,   11,   11, 0x08,
-     140,   11,   11,   11, 0x08,
-     166,   11,   11,   11, 0x08,
-     192,   11,   11,   11, 0x08,
-     226,   11,   11,   11, 0x08,
-     262,   11,   11,   11, 0x08,
-     299,   11,   11,   11, 0x08,
-     334,   11,   11,   11, 0x08,
-     372,   11,   11,   11, 0x08,
+      34,   11,   11,   11, 0x08,
+      56,   11,   11,   11, 0x08,
+      78,   11,   11,   11, 0x08,
+      87,   11,   11,   11, 0x08,
+     111,   11,   11,   11, 0x08,
+     137,   11,   11,   11, 0x08,
+     163,   11,   11,   11, 0x08,
+     197,   11,   11,   11, 0x08,
+     233,   11,   11,   11, 0x08,
+     270,   11,   11,   11, 0x08,
+     305,   11,   11,   11, 0x08,
+     343,   11,   11,   11, 0x08,
+     379,   11,   11,   11, 0x08,
+     412,   11,   11,   11, 0x08,
+     438,   11,   11,   11, 0x08,
+     465,   11,   11,   11, 0x08,
+     481,   11,   11,   11, 0x08,
+     502,   11,   11,   11, 0x08,
+     535,   11,   11,   11, 0x08,
+     569,   11,   11,   11, 0x08,
+     598,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0slotExit()\0on_button_Exit_clicked()\0"
-    "on_button_Open_clicked()\0mySlot()\0"
-    "on_Buttom_SubVol_clicked()\0"
-    "on_actionSubVolume_triggered()\0"
+    "MainWindow\0\0slotExit()\0updateme()\0"
+    "button_Exit_clicked()\0button_Open_clicked()\0"
+    "mySlot()\0Buttom_SubVol_clicked()\0"
     "on_actionOpen_triggered()\0"
     "on_actionExit_triggered()\0"
     "on_actionReset_Camera_triggered()\0"
@@ -62,6 +70,14 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_actionTop_Side_View_triggered()\0"
     "on_actionBottom_Side_View_triggered()\0"
     "on_actionSliceSelection_triggered()\0"
+    "on_actionBlack_White_triggered()\0"
+    "actionDefault_triggered()\0"
+    "actionBlue_Red_triggered()\0slot_LoadFile()\0"
+    "slot_Load_Finished()\0"
+    "on_actionSubVolumeXY_triggered()\0"
+    "on_action_SubVolume_Z_triggered()\0"
+    "on_actionPreview_triggered()\0"
+    "on_actionSubVol_Export_triggered()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -71,11 +87,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
         case 0: _t->slotExit(); break;
-        case 1: _t->on_button_Exit_clicked(); break;
-        case 2: _t->on_button_Open_clicked(); break;
-        case 3: _t->mySlot(); break;
-        case 4: _t->on_Buttom_SubVol_clicked(); break;
-        case 5: _t->on_actionSubVolume_triggered(); break;
+        case 1: _t->updateme(); break;
+        case 2: _t->button_Exit_clicked(); break;
+        case 3: _t->button_Open_clicked(); break;
+        case 4: _t->mySlot(); break;
+        case 5: _t->Buttom_SubVol_clicked(); break;
         case 6: _t->on_actionOpen_triggered(); break;
         case 7: _t->on_actionExit_triggered(); break;
         case 8: _t->on_actionReset_Camera_triggered(); break;
@@ -84,6 +100,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 11: _t->on_actionTop_Side_View_triggered(); break;
         case 12: _t->on_actionBottom_Side_View_triggered(); break;
         case 13: _t->on_actionSliceSelection_triggered(); break;
+        case 14: _t->on_actionBlack_White_triggered(); break;
+        case 15: _t->actionDefault_triggered(); break;
+        case 16: _t->actionBlue_Red_triggered(); break;
+        case 17: _t->slot_LoadFile(); break;
+        case 18: _t->slot_Load_Finished(); break;
+        case 19: _t->on_actionSubVolumeXY_triggered(); break;
+        case 20: _t->on_action_SubVolume_Z_triggered(); break;
+        case 21: _t->on_actionPreview_triggered(); break;
+        case 22: _t->on_actionSubVol_Export_triggered(); break;
         default: ;
         }
     }
@@ -122,9 +147,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 23)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 23;
     }
     return _id;
 }

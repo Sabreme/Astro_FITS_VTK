@@ -210,6 +210,78 @@ moc_OrientationAxes.cxx.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.s
 .PHONY : moc_OrientationAxes.cxx.s
 
+moc_PlaneSelection.o: moc_PlaneSelection.cxx.o
+.PHONY : moc_PlaneSelection.o
+
+# target to build an object file
+moc_PlaneSelection.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o
+.PHONY : moc_PlaneSelection.cxx.o
+
+moc_PlaneSelection.i: moc_PlaneSelection.cxx.i
+.PHONY : moc_PlaneSelection.i
+
+# target to preprocess a source file
+moc_PlaneSelection.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.i
+.PHONY : moc_PlaneSelection.cxx.i
+
+moc_PlaneSelection.s: moc_PlaneSelection.cxx.s
+.PHONY : moc_PlaneSelection.s
+
+# target to generate assembly for a file
+moc_PlaneSelection.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.s
+.PHONY : moc_PlaneSelection.cxx.s
+
+moc_ScalarBar.o: moc_ScalarBar.cxx.o
+.PHONY : moc_ScalarBar.o
+
+# target to build an object file
+moc_ScalarBar.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o
+.PHONY : moc_ScalarBar.cxx.o
+
+moc_ScalarBar.i: moc_ScalarBar.cxx.i
+.PHONY : moc_ScalarBar.i
+
+# target to preprocess a source file
+moc_ScalarBar.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.i
+.PHONY : moc_ScalarBar.cxx.i
+
+moc_ScalarBar.s: moc_ScalarBar.cxx.s
+.PHONY : moc_ScalarBar.s
+
+# target to generate assembly for a file
+moc_ScalarBar.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.s
+.PHONY : moc_ScalarBar.cxx.s
+
+moc_XYHighlightSelection.o: moc_XYHighlightSelection.cxx.o
+.PHONY : moc_XYHighlightSelection.o
+
+# target to build an object file
+moc_XYHighlightSelection.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o
+.PHONY : moc_XYHighlightSelection.cxx.o
+
+moc_XYHighlightSelection.i: moc_XYHighlightSelection.cxx.i
+.PHONY : moc_XYHighlightSelection.i
+
+# target to preprocess a source file
+moc_XYHighlightSelection.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.i
+.PHONY : moc_XYHighlightSelection.cxx.i
+
+moc_XYHighlightSelection.s: moc_XYHighlightSelection.cxx.s
+.PHONY : moc_XYHighlightSelection.s
+
+# target to generate assembly for a file
+moc_XYHighlightSelection.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.s
+.PHONY : moc_XYHighlightSelection.cxx.s
+
 moc_fits_results.o: moc_fits_results.cxx.o
 .PHONY : moc_fits_results.o
 
@@ -375,6 +447,15 @@ help:
 	@echo "... moc_OrientationAxes.o"
 	@echo "... moc_OrientationAxes.i"
 	@echo "... moc_OrientationAxes.s"
+	@echo "... moc_PlaneSelection.o"
+	@echo "... moc_PlaneSelection.i"
+	@echo "... moc_PlaneSelection.s"
+	@echo "... moc_ScalarBar.o"
+	@echo "... moc_ScalarBar.i"
+	@echo "... moc_ScalarBar.s"
+	@echo "... moc_XYHighlightSelection.o"
+	@echo "... moc_XYHighlightSelection.i"
+	@echo "... moc_XYHighlightSelection.s"
 	@echo "... moc_fits_results.o"
 	@echo "... moc_fits_results.i"
 	@echo "... moc_fits_results.s"

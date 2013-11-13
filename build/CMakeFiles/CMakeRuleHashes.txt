@@ -1,7 +1,11 @@
 # Hashes of file build rules.
 4d4e356618a33c1660a7336a6931352a moc_OrientationAxes.cxx
+947dcb5f8ecdfa31f00498ea2e3fcf29 moc_PlaneSelection.cxx
+252b83a12e3200173795575d05b720be moc_ScalarBar.cxx
+d400f92580801b7e09b6d5af5343e329 moc_XYHighlightSelection.cxx
 f805593debb16920a40949aac20f2026 moc_fits_results.cxx
 ae687b9d58c6cba0b600448dce95e2ae moc_mainwindow.cxx
+c6df193f8520003f40443b020a31a076 moc_processfile.cxx
 86c6a847c61ede97379b81b1a73ba27a moc_subVolume.cxx
 8333092db6ac9a44ba91fbaa3b70a071 moc_subvolumedialog.cxx
 29b189b33616017b5df34b99b6c4a372 moc_vtkfitsreader.cxx

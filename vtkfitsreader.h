@@ -27,7 +27,8 @@ class VTK_EXPORT vtkFitsReader : public vtkStructuredPointsSource
 
   static vtkFitsReader *New() {return new vtkFitsReader;};
   const char *GetClassName() {return "vtkFitsReader";}
-  void PrintSelf(ostream& os, vtkIndent indent);
+  void PrintSelf(ostream& os, vtkIndent indent);  
+  void PrintDetails();
 
   void SetFileName(const char *name);
   char *GetFileName(){return filename;}
@@ -43,18 +44,19 @@ class VTK_EXPORT vtkFitsReader : public vtkStructuredPointsSource
 //  char point_ratio[80];
 //  char status [20];
 
-  string dimensions;
-  string points;
-  string point_ratio;
-  string status ;
+  long dimensions[3];   // [x,y,z]
+  long points;          // Total # of points in DataSet
+  float datamin;        // Part of FITS Header file
+  float datamax;        // Part of FITS Header file
+  char filename[256];   // static buffer for filename
+
+
 
   std::stringstream tempString;
 
-
-
   protected:
 
-  char filename[256]; // static buffer for filename    
+
 
   void ReadHeader();
   void printerror(int status); // from fitsio distribution

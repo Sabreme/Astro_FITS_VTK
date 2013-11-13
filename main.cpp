@@ -1,24 +1,32 @@
 #include <QtGui/QApplication>
-#include "mainwindow.h"
+#include "main.h"
 
 #include <iostream>
 #include <QDebug>
+#include <QObject>
+#include <QThread>
 
-MainWindow * mw;
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+#include <vtkSmartPointer.h>
+#include <vtkRendererCollection.h>
+
+MainWindow * _mainWindow;
+vtkFrameRateWidget* _vtkFrameRateWidget;
 
 QString backlog;
 
 void myMsgHandler(QtMsgType, const char * message)
 {
     //std::cerr << message;
-    if(mw != NULL) {
+    if(_mainWindow != NULL) {
         if (backlog.size() != 0){
             backlog += message;
-            mw->log(backlog);
+            _mainWindow->log(backlog);
         }
         else
         {
-            mw->log(message);
+            _mainWindow->log(message);
         }
     }
     else {
@@ -27,15 +35,37 @@ void myMsgHandler(QtMsgType, const char * message)
     }
 }
 
+void loadFrameRate(vtkFrameRateWidget* frameRateWidget, MainWindow* mainWindow)
+{
+    frameRateWidget->SetInteractor(_mainWindow->vtkWidget->GetInteractor());
+    frameRateWidget->SetRenderer(_mainWindow->vtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+    frameRateWidget->SelectableOff();
+    frameRateWidget->Init();
+    frameRateWidget->On();
+
+}
+
+void reloadFrameRate()
+{
+    loadFrameRate(_vtkFrameRateWidget, _mainWindow);
+}
+
 int main(int argc, char *argv[])
 {
     qInstallMsgHandler(myMsgHandler);
     QApplication a(argc, argv);
-    MainWindow w;
-    mw = &w;    
+    MainWindow astroFitsVTK;
+    _mainWindow = &astroFitsVTK;
+
+    /// Frame Rate Calculation
+    vtkSmartPointer<vtkFrameRateWidget> frameRateWidget =
+            vtkSmartPointer<vtkFrameRateWidget>::New();
+
+    _vtkFrameRateWidget = frameRateWidget;
+    //loadFrameRate(frameRateWidget, _mainWindow);
 
     qDebug();
-    w.show();    
+    astroFitsVTK.show();
 
     return a.exec();
 }

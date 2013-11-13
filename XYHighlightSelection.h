@@ -36,6 +36,13 @@
 #endif // XYHIGHLIGHTSELECTION_H
 
 // Define interaction style
+
+double minX;
+double maxX;
+double minY;
+double maxY;
+
+
 class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
 {
   public:
@@ -49,9 +56,10 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
       this->SelectedActor->SetMapper(SelectedMapper);
     }
 
+
     virtual void OnLeftButtonUp()
     {
-      // Forward events
+      // Forward eventsp
       vtkInteractorStyleRubberBandPick::OnLeftButtonUp();
 
       if(this->CurrentMode == VTKISRBP_SELECT)
@@ -77,6 +85,26 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
         vtkPolyData* selected = glyphFilter->GetOutput();
         std::cout << "Selected " << selected->GetNumberOfPoints() << " points." << std::endl;
         std::cout << "Selected " << selected->GetNumberOfCells() << " cells." << std::endl;
+
+        double bounds[6];
+
+        selected->GetBounds(bounds);
+
+        minX = bounds[0];
+        maxX = bounds[1];
+        minY = bounds[2];
+        maxY = bounds[3];
+
+
+        std::cout << "Region (x1,y1,x2,y2) = ("
+                          << bounds[0] << "," << bounds[2] << ","
+                          << bounds[1] << "," << bounds[3] << ")" << std::endl ;
+
+        //std::cout << "Selected " << selected->
+        //std::cout << "Selected " << selected->Get
+        //std::cout << "Selected " << selected->getNum << "Vertices" << std::endl;
+        //vtkIdType
+
 #if VTK_MAJOR_VERSION <= 5
         this->SelectedMapper->SetInputConnection(
           selected->GetProducerPort());
@@ -86,10 +114,6 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
         this->SelectedMapper->ScalarVisibilityOff();
 
         vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
-        for(vtkIdType i = 0; i < ids->GetNumberOfTuples(); i++)
-          {
-          std::cout << "Id " << i << " : " << ids->GetValue(i) << std::endl;
-          }
 
         this->SelectedActor->GetProperty()->SetColor(1.0, 0.0, 0.0); //(R,G,B)
         this->SelectedActor->GetProperty()->SetPointSize(5);
@@ -97,7 +121,10 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
         this->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(SelectedActor);
         this->GetInteractor()->GetRenderWindow()->Render();
         this->HighlightProp(NULL);
+
+        std::cout << "Length: " << selected->GetLength() << std::endl;
         }
+
     }
 
     void SetPolyData(vtkSmartPointer<vtkPolyData> polyData) {this->PolyData = polyData;}
@@ -152,5 +179,33 @@ void XYVolumeSelection(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource)
 
     //renderWindowInteractor->Start();
 }
+
+
+double GetMinXBound()
+{
+    return minX;
+}
+
+double GetMaxXBound()
+{
+    return maxX;
+}
+
+double GetMinYBound()
+{
+    return minY;
+}
+
+double GetMaxYBound()
+{
+    return maxY;
+}
+
+//std::array<double,4> GetXYBounds()
+//{
+//    return (minX, maxX, minY,maxY);
+//}
+
+
 
 

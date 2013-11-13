@@ -1,8 +1,10 @@
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("debug")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib-debug)
     set(LIB_INSTALL_DIR ${CMAKE_SOURCE_DIR}/lib-debug)
     set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin-dbg)
 else()
+    message("not debug")
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
     set(LIB_INSTALL_DIR ${CMAKE_SOURCE_DIR}/lib)
     set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
@@ -10,6 +12,8 @@ endif()
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8.6)
 PROJECT (Astro_FITS_VTK)
+
+SET (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2 -g -std=c++0x -gdwarf-2"  )
 
 FIND_PACKAGE(Qt4 REQUIRED)
 #set(VTK_DIR "PATH/TO/VTK/BUILD/DIRECTORY")
@@ -24,8 +28,10 @@ FILE (GLOB HEADERS *.h *.hpp)
 FILE (GLOB UI *.ui)
 
 SET(SOURCES
-    main.cpp mainwindow.cpp vtkfitsreader.cpp
+    main.h main.cpp mainwindow.cpp vtkfitsreader.cpp
     fits_results.cpp subvolumedialog.cpp
+    vtkFrameRateWidget.cpp
+    #processfile.cpp
 )
 SET(HEADERS
     mainwindow.h vtkfitsreader.h fits_results.h
@@ -33,6 +39,10 @@ SET(HEADERS
     ScalarBar.h
     subvolumedialog.h
     XYHighlightSelection.h
+    ZHighlightSelection.h
+    PlaneSelection.h
+    vtkFrameRateWidget.h
+    #processfile.h
 
 )
 SET(UI

@@ -1,6 +1,10 @@
 #include "subvolumedialog.h"
 #include "ui_subvolumedialog.h"
-//#include "OrientationAxes.h"
+
+#include "vtkAxesActor.h"
+#include "vtkOrientationMarkerWidget.h"
+#include "vtkRenderWindowInteractor.h"
+#include "vtkCubeAxesActor.h"
 
 #include "vtkExtractVOI.h"
 #include "vtkOutlineFilter.h"
@@ -9,6 +13,14 @@
 #include "vtkImageDataGeometryFilter.h"
 #include "vtkDecimatePro.h"
 #include "vtkProperty.h"
+#include "vtkImageResample.h"
+#include "vtkGPUVolumeRayCastMapper.h"
+#include "vtkPiecewiseFunction.h"
+#include "vtkColorTransferFunction.h"
+#include "vtkImageData.h"
+#include "vtkVolumeProperty.h"
+#include "vtkInteractorStyleSwitch.h"
+#include "vtkTextProperty.h"
 
 
 SubVolumeDialog::SubVolumeDialog(QWidget *parent) :
@@ -25,114 +37,200 @@ SubVolumeDialog::~SubVolumeDialog()
     delete ui;
 }
 
-void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source)
+void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source, vtkCubeSource *subVolume)
 {
     //this->ui->qvtkWidgetLeft->SetRenderWindow(updatedVolume);
+    double bounds[6];
 
-    //////////////////////////////////////////////////////////////////
-    ///////////VTK ExtractVOI  CODE FROM EXTRACTVOI.CXX //////////////
-    //////////////////////////////////////////////////////////////////
+    subVolume->GetOutput()->GetBounds(bounds);
 
-    int* inputDims = source->GetOutput()->GetDimensions();
-    qDebug() << "Dims: " << " x: " << inputDims[0]
-                          << " y: " << inputDims[1]
-                          << " z: " << inputDims[2] << endl;
-    qDebug() << "Number of points: " << source->GetOutput()->GetNumberOfPoints() << endl;
-    qDebug() << "Number of cells: " << source->GetOutput()->GetNumberOfCells() << endl;
 
     vtkSmartPointer<vtkExtractVOI> extractVOI =
-        vtkSmartPointer<vtkExtractVOI>::New();
+            vtkSmartPointer<vtkExtractVOI>::New();
     //extractVOI->SetInputConnection(source->GetOutputPort());
     extractVOI->SetInputConnection(source->GetOutputPort());
-    extractVOI->SetVOI(inputDims[0]/4.,
-                       10.*inputDims[0]/4.,
-                       inputDims[1]/4.,
-                       10.*inputDims[1]/4.,
-                       inputDims[2]/4.,
-                       10.*inputDims[2]/4.);
+    extractVOI->SetVOI(bounds[0],
+            bounds[1],
+            bounds[2],
+            bounds[3],
+            bounds[4],
+            bounds[5]);
     extractVOI->Update();
 
     vtkImageData* extracted = extractVOI->GetOutput();
 
-    int* extractedDims = extracted->GetDimensions();
-    qDebug() << "Dims: " << " x: " << extractedDims[0]
-                          << " y: " << extractedDims[1]
-                          << " z: " << extractedDims[2] << endl;
-    qDebug() << "Number of points: " << extracted->GetNumberOfPoints() << endl;
-    qDebug() << "Number of cells: " << extracted->GetNumberOfCells() << endl;
-
-    //////////////////////////////////////////////////////////////////////
-    /// \brief inputCastFilter
-    /////////
-
-    // outline
+    /////////////////////////////
+    /// \brief Outline Object
+    ///
+    qDebug() << "Adding Outline" << endl;
     vtkOutlineFilter *outlineF = vtkOutlineFilter::New();
     outlineF->SetInputConnection(extractVOI->GetOutputPort());
 
-    vtkPolyDataMapper *outlineM = vtkPolyDataMapper::New();
-    outlineM->SetInput(outlineF->GetOutput());
-    outlineM->ScalarVisibilityOff();
 
-    vtkActor *outlineA = vtkActor::New();
-    outlineA->SetMapper(outlineM);
+//    ///
+//    /// \brief resample
+//    ///
+//    vtkImageResample *resample = vtkImageResample::New();
 
-    // isosurface
-    vtkMarchingCubes *shellE = vtkMarchingCubes::New();
-    shellE->SetInputConnection(extractVOI->GetOutputPort());
-    shellE->SetValue(0, 10.0f);
+//    resample->SetInputConnection(extractVOI->GetOutputPort() );
+//    resample->SetAxisMagnificationFactor(0, 1.0);
+//    resample->SetAxisMagnificationFactor(1, 1.0);
+//    resample->SetAxisMagnificationFactor(2, 1.0);
 
-    // decimate
-    vtkDecimatePro *shellD = vtkDecimatePro::New();
-    shellD->SetInput(shellE->GetOutput());
-    shellD->SetTargetReduction(2.0);
+    /// Create the Volume & mapper
 
-    vtkPolyDataMapper *shellM = vtkPolyDataMapper::New();
-    shellM->SetInput(shellE->GetOutput());
-    shellM->SetInput(shellD->GetOutput());
-    shellM->ScalarVisibilityOff();
+    vtkVolume *volume = vtkVolume::New();
+    vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
 
-    vtkActor *shellA = vtkActor::New();
-    shellA->SetMapper(shellM);
-    shellA->GetProperty()->SetColor(0.5, 0.5, 1.0);
+    //mapper->SetInputConnection(fitsReader->GetOutputPort());
+    mapper->SetInputConnection(extractVOI->GetOutputPort());
 
-    // slice
-    vtkImageDataGeometryFilter *sliceE =
-            vtkImageDataGeometryFilter::New();
-    // values are clamped
-    sliceE->SetExtent(0, 1000, 0, 1000, 0, 30);
-    sliceE->SetInputConnection(extractVOI->GetOutputPort());
+    /// Create out transfer function
+    ///
+    double opacityWindow = 4096;
+    double opacityLevel = 2048;
 
-    vtkPolyDataMapper *sliceM = vtkPolyDataMapper::New();
-    sliceM->SetInputConnection(sliceE->GetOutputPort());
-    sliceM->ScalarVisibilityOn();
-    double *range;
+    // Create our transfer function
+    vtkPiecewiseFunction *opacityFun = vtkPiecewiseFunction::New();
+    vtkColorTransferFunction *colorFun = vtkColorTransferFunction::New();
 
-    range = extractVOI->GetOutput()->GetScalarRange();
-    sliceM->SetScalarRange(range);
+    // Create the property and attach the transfer functions
 
-    vtkActor *sliceA = vtkActor::New();
-    sliceA->SetMapper(sliceM);
+    vtkVolumeProperty * property = vtkVolumeProperty::New();
+    property->SetColor(colorFun);
+    property->SetScalarOpacity(opacityFun);
+    property->SetInterpolationTypeToLinear();
 
-    // Cube Axes Visuazilzer
-    //vtkSmartPointer<vtkCubeA
+    colorFun->AddRGBPoint( -3024, 0, 0, 0, 0.5, 0.0 );
+    colorFun->AddRGBPoint( -1000, .62, .36, .18, 0.5, 0.0 );
+    colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
+    colorFun->AddRGBPoint( 3071, .83, .66, 1, 0.5, 0.0 );
 
-    // There will be one render window
-    vtkSmartPointer<vtkRenderWindow> renderWindow =
-      vtkSmartPointer<vtkRenderWindow>::New();
-    renderWindow->SetSize(600, 300);
+    //    colorFun->AddRGBPoint( -3024, 0, 0, 0, 0.5, 0.0 );
+    //    colorFun->AddRGBPoint( -155, .55, .25, .15, 0.5, .92 );
+    //    colorFun->AddRGBPoint( 217, .88, .60, .29, 0.33, 0.45 );
+    //    colorFun->AddRGBPoint( 420, 1, .94, .95, 0.5, 0.0 );
+    //    colorFun->AddRGBPoint( 3071, .83, .66, 1, 0.5, 0.0 );
+
+    opacityFun->AddPoint(0,  0.0);
+    opacityFun->AddPoint(50,  0.5);
+    opacityFun->AddPoint(1000,  1.0);
+    //    opacityFun->AddSegment(0, 1.0, 255, 1.0);
+    //    opacityFun->AddPoint(-3024, 0, 0.5, 0.0 );
+    //    opacityFun->AddPoint(-1000, 0, 0.5, 0.0 );
+    //    opacityFun->AddPoint(-500, 1.0, 0.33, 0.45 );
+    //    opacityFun->AddPoint(3071, 1.0, 0.5, 0.0);
+
+    mapper->SetBlendModeToComposite();
+    //mapper->SetBlendModeToMaximumIntensity();
+    property->ShadeOn();
+    property->SetAmbient(0.4);
+    property->SetDiffuse(0.6);
+    property->SetSpecular(0.2);
+    property->SetSpecularPower(10.0);
+    property->SetScalarOpacityUnitDistance(0.8919);
+
+    // connect up the volume to the property and the mapper
+    volume->SetProperty( property );
+    volume->SetMapper( mapper );
+
+
+    ////////////////////////////////////
+    /// \brief RenderWindow
+    ////
+    qDebug() << "Adding RenderWindow" << endl;
 
     vtkRenderer *ren1 = vtkRenderer::New();
+    vtkSmartPointer<vtkRenderWindow> renderWindow =
+            vtkSmartPointer<vtkRenderWindow>::New();
 
     renderWindow->AddRenderer(ren1);
-    // add actors to renderer
-    ren1->AddActor(outlineA);
-    ren1->AddActor(shellA);
-    ren1->AddActor(sliceA);
 
-    // And one interactor
-    vtkSmartPointer<vtkRenderWindowInteractor> interactor =
-      vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    interactor->SetRenderWindow(renderWindow);
+    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
+    vtkSmartPointer<vtkInteractorStyleSwitch> style =
+            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
+
+    ////////////////////////////////////
+    /// \brief Cube Axes Labels
+    ////
+
+    /// Create the Actor
+    vtkSmartPointer<vtkCubeAxesActor> cubeAxesActor =
+            vtkSmartPointer<vtkCubeAxesActor>::New();
+
+    qDebug() << "Adding Axes Labels" << endl;
+
+    cubeAxesActor->SetCamera(ren1->GetActiveCamera());
+    cubeAxesActor->SetBounds(volume->GetBounds());
+    #if VTK_MAJOR_VERSION > 5
+    cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
+    #endif
+    cubeAxesActor->GetTitleTextProperty(0)->SetColor(1.0, 0.0, 0.0);
+    cubeAxesActor->GetLabelTextProperty(0)->SetColor(1.0, 0.0, 0.0);
+
+    cubeAxesActor->GetTitleTextProperty(1)->SetColor(0.0, 1.0, 0.0);
+    cubeAxesActor->GetLabelTextProperty(1)->SetColor(0.0, 1.0, 0.0);
+
+    cubeAxesActor->GetTitleTextProperty(2)->SetColor(0.0, 0.0, 1.0);
+    cubeAxesActor->GetLabelTextProperty(2)->SetColor(0.0, 0.0, 1.0);
+
+
+
+    // add actors to renderer
+    ///Add CubeAxesActor to RenderWindow
+    ren1->AddActor(cubeAxesActor);
+
+    qDebug() << "Adding Objects to RenderWindow" << endl;
+
+
+
+    ren1->AddVolume(volume);
+
+
+    // vtk pipeline
+//    vtkFitsReader *fitsReader = vtkFitsReader::New();
+//    const char *newFileName = filename.toStdString().c_str();
+//    fitsReader->SetFileName(newFileName);
+//    fitsReader->AddObserver(vtkCommand::ProgressEvent, pObserver );
+
+//     qDebug() << "Obtained Filename" << endl;
+//    //fitsReader->PrintSelf();
+//    fitsReader->PrintDetails();
+//    QApplication::processEvents();
+
+//    fitsReader->Update();
+
+//    qDebug() << "Gathering Points" << endl;
+
+//    fitsReader->Execute();
+
+//    qDebug() << "Processing Points" << endl;
+
+
+
+
+//    // Cube Axes Visuazilzer
+//    //vtkSmartPointer<vtkCubeA
+
+//    // There will be one render window
+//    vtkSmartPointer<vtkRenderWindow> renderWindow =
+//      vtkSmartPointer<vtkRenderWindow>::New();
+//    renderWindow->SetSize(600, 300);
+
+//    vtkRenderer *ren1 = vtkRenderer::New();
+
+//    renderWindow->AddRenderer(ren1);
+//    // add actors to renderer
+//    ren1->AddActor(outlineA);
+//    ren1->AddActor(shellA);
+//    ren1->AddActor(sliceA);
+
+//      vtkRenderer *ren1 = vtkRenderer::New();
+//   //   ren1->AddActor(volume);
+//    // And one interactor
+//    vtkSmartPointer<vtkRenderWindowInteractor> interactor =
+//    vtkSmartPointer<vtkRenderWindowInteractor>::New();
+  //  interactor->SetRenderWindow(renderWindow);
 
     //this->ui->qvtkWidgetLeft->GetRenderWindow()->(ren1);
 
@@ -140,8 +238,36 @@ void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *so
 
     this->ui->qvtkWidgetRight->GetRenderWindow()->AddRenderer(ren1);
 
+    //this->ui->qvtkWidgetLeft->SetRenderWindow(renderWindow);
+    //this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
+    //this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetRenderWindow(renderWindow);
+
     //renderWindow->Render();
     //interactor->Start();
     //AddScalarBar(this->ui->qvtkWidgetLeft, fitsReader);
-    //AddOrientationAxes(this->ui->qvtkWidgetLeft);
+    //AddOrientationAxes(this->ui->qvtkWidgetLeft);    
+
+    ////////////////////////////////////
+    /// \brief OrientationMarker Widget
+    ////
+    qDebug() << "Adding Orientation Marker" << endl;
+
+    vtkAxesActor * axesActor = vtkAxesActor::New();
+    axesActor->SetNormalizedTipLength(0.4, 0.4, 0.4);
+    axesActor->SetNormalizedShaftLength(0.6, 0.6, 0.6);
+    axesActor->SetShaftTypeToCylinder();
+
+    vtkOrientationMarkerWidget * marker = vtkOrientationMarkerWidget::New();
+    marker->SetInteractor(this->ui->qvtkWidgetRight->GetInteractor());
+    marker->SetOrientationMarker(axesActor);
+    marker->SetEnabled(true);
+    marker->InteractiveOn();
+
+    ren1->ResetCamera();
+
 }
+
+//void SubVolumeDialog::on_pushButton_clicked()
+//{
+//    QFuture<void> future = QtConcurrent::
+//}

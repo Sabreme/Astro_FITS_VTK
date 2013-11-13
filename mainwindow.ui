@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>780</width>
-    <height>731</height>
+    <width>1234</width>
+    <height>788</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,19 +19,32 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>651</width>
-      <height>531</height>
+      <width>681</width>
+      <height>711</height>
      </rect>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="plainTextEdit">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>570</y>
-      <width>671</width>
-      <height>101</height>
+      <x>720</x>
+      <y>30</y>
+      <width>411</width>
+      <height>701</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>0</y>
+      <width>99</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear</string>
     </property>
    </widget>
   </widget>
@@ -40,7 +53,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>780</width>
+     <width>1234</width>
      <height>25</height>
     </rect>
    </property>
@@ -56,7 +69,8 @@
     <property name="title">
      <string>Actions</string>
     </property>
-    <addaction name="actionSubVolume"/>
+    <addaction name="separator"/>
+    <addaction name="actionSubVolumeXY"/>
     <addaction name="actionSliceSelection"/>
    </widget>
    <widget class="QMenu" name="menuViews">
@@ -69,9 +83,18 @@
     <addaction name="actionTop_Side_View"/>
     <addaction name="actionBottom_Side_View"/>
    </widget>
+   <widget class="QMenu" name="menuColourMaps">
+    <property name="title">
+     <string>ColourMaps</string>
+    </property>
+    <addaction name="actionDefault"/>
+    <addaction name="actionBlack_White"/>
+    <addaction name="actionBlue_Red"/>
+   </widget>
    <addaction name="menuFIle"/>
    <addaction name="menuActions"/>
    <addaction name="menuViews"/>
+   <addaction name="menuColourMaps"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -81,7 +104,10 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen"/>
-   <addaction name="actionSubVolume"/>
+   <addaction name="actionSubVolumeXY"/>
+   <addaction name="action_SubVolume_Z"/>
+   <addaction name="actionPreview"/>
+   <addaction name="actionSubVol_Export"/>
    <addaction name="actionExit"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -100,9 +126,9 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionSubVolume">
+  <action name="actionSubVolumeXY">
    <property name="text">
-    <string>SubVolume</string>
+    <string>SubVol-Select-XY</string>
    </property>
   </action>
   <action name="actionReset_Camera">
@@ -133,6 +159,39 @@
   <action name="actionSliceSelection">
    <property name="text">
     <string>SliceSelection</string>
+   </property>
+  </action>
+  <action name="actionBlack_White">
+   <property name="text">
+    <string>Black - White</string>
+   </property>
+  </action>
+  <action name="actionBlue_Red">
+   <property name="text">
+    <string>Blue - Red</string>
+   </property>
+  </action>
+  <action name="actionDefault">
+   <property name="text">
+    <string>Default Colour</string>
+   </property>
+  </action>
+  <action name="action_SubVolume_Z">
+   <property name="text">
+    <string>SubVol-Select-Z</string>
+   </property>
+   <property name="toolTip">
+    <string>SubVolume-Z Region</string>
+   </property>
+  </action>
+  <action name="actionPreview">
+   <property name="text">
+    <string>SubVol-Preview</string>
+   </property>
+  </action>
+  <action name="actionSubVol_Export">
+   <property name="text">
+    <string>SubVol-Export</string>
    </property>
   </action>
  </widget>

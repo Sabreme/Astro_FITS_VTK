@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'subvolumedialog.ui'
 **
-** Created: Tue Sep 10 17:57:12 2013
+** Created: Thu Oct 31 13:05:36 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

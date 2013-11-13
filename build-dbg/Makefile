@@ -210,6 +210,30 @@ moc_OrientationAxes.cxx.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.s
 .PHONY : moc_OrientationAxes.cxx.s
 
+moc_PlaneSelection.o: moc_PlaneSelection.cxx.o
+.PHONY : moc_PlaneSelection.o
+
+# target to build an object file
+moc_PlaneSelection.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o
+.PHONY : moc_PlaneSelection.cxx.o
+
+moc_PlaneSelection.i: moc_PlaneSelection.cxx.i
+.PHONY : moc_PlaneSelection.i
+
+# target to preprocess a source file
+moc_PlaneSelection.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.i
+.PHONY : moc_PlaneSelection.cxx.i
+
+moc_PlaneSelection.s: moc_PlaneSelection.cxx.s
+.PHONY : moc_PlaneSelection.s
+
+# target to generate assembly for a file
+moc_PlaneSelection.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.s
+.PHONY : moc_PlaneSelection.cxx.s
+
 moc_ScalarBar.o: moc_ScalarBar.cxx.o
 .PHONY : moc_ScalarBar.o
 
@@ -257,6 +281,30 @@ moc_XYHighlightSelection.s: moc_XYHighlightSelection.cxx.s
 moc_XYHighlightSelection.cxx.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.s
 .PHONY : moc_XYHighlightSelection.cxx.s
+
+moc_ZHighlightSelection.o: moc_ZHighlightSelection.cxx.o
+.PHONY : moc_ZHighlightSelection.o
+
+# target to build an object file
+moc_ZHighlightSelection.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o
+.PHONY : moc_ZHighlightSelection.cxx.o
+
+moc_ZHighlightSelection.i: moc_ZHighlightSelection.cxx.i
+.PHONY : moc_ZHighlightSelection.i
+
+# target to preprocess a source file
+moc_ZHighlightSelection.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.i
+.PHONY : moc_ZHighlightSelection.cxx.i
+
+moc_ZHighlightSelection.s: moc_ZHighlightSelection.cxx.s
+.PHONY : moc_ZHighlightSelection.s
+
+# target to generate assembly for a file
+moc_ZHighlightSelection.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.s
+.PHONY : moc_ZHighlightSelection.cxx.s
 
 moc_fits_results.o: moc_fits_results.cxx.o
 .PHONY : moc_fits_results.o
@@ -330,6 +378,30 @@ moc_subvolumedialog.cxx.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.s
 .PHONY : moc_subvolumedialog.cxx.s
 
+moc_vtkFrameRateWidget.o: moc_vtkFrameRateWidget.cxx.o
+.PHONY : moc_vtkFrameRateWidget.o
+
+# target to build an object file
+moc_vtkFrameRateWidget.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.o
+.PHONY : moc_vtkFrameRateWidget.cxx.o
+
+moc_vtkFrameRateWidget.i: moc_vtkFrameRateWidget.cxx.i
+.PHONY : moc_vtkFrameRateWidget.i
+
+# target to preprocess a source file
+moc_vtkFrameRateWidget.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.i
+.PHONY : moc_vtkFrameRateWidget.cxx.i
+
+moc_vtkFrameRateWidget.s: moc_vtkFrameRateWidget.cxx.s
+.PHONY : moc_vtkFrameRateWidget.s
+
+# target to generate assembly for a file
+moc_vtkFrameRateWidget.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.s
+.PHONY : moc_vtkFrameRateWidget.cxx.s
+
 moc_vtkfitsreader.o: moc_vtkfitsreader.cxx.o
 .PHONY : moc_vtkfitsreader.o
 
@@ -378,6 +450,30 @@ subvolumedialog.cpp.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.s
 .PHONY : subvolumedialog.cpp.s
 
+vtkFrameRateWidget.o: vtkFrameRateWidget.cpp.o
+.PHONY : vtkFrameRateWidget.o
+
+# target to build an object file
+vtkFrameRateWidget.cpp.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o
+.PHONY : vtkFrameRateWidget.cpp.o
+
+vtkFrameRateWidget.i: vtkFrameRateWidget.cpp.i
+.PHONY : vtkFrameRateWidget.i
+
+# target to preprocess a source file
+vtkFrameRateWidget.cpp.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.i
+.PHONY : vtkFrameRateWidget.cpp.i
+
+vtkFrameRateWidget.s: vtkFrameRateWidget.cpp.s
+.PHONY : vtkFrameRateWidget.s
+
+# target to generate assembly for a file
+vtkFrameRateWidget.cpp.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.s
+.PHONY : vtkFrameRateWidget.cpp.s
+
 vtkfitsreader.o: vtkfitsreader.cpp.o
 .PHONY : vtkfitsreader.o
 
@@ -423,12 +519,18 @@ help:
 	@echo "... moc_OrientationAxes.o"
 	@echo "... moc_OrientationAxes.i"
 	@echo "... moc_OrientationAxes.s"
+	@echo "... moc_PlaneSelection.o"
+	@echo "... moc_PlaneSelection.i"
+	@echo "... moc_PlaneSelection.s"
 	@echo "... moc_ScalarBar.o"
 	@echo "... moc_ScalarBar.i"
 	@echo "... moc_ScalarBar.s"
 	@echo "... moc_XYHighlightSelection.o"
 	@echo "... moc_XYHighlightSelection.i"
 	@echo "... moc_XYHighlightSelection.s"
+	@echo "... moc_ZHighlightSelection.o"
+	@echo "... moc_ZHighlightSelection.i"
+	@echo "... moc_ZHighlightSelection.s"
 	@echo "... moc_fits_results.o"
 	@echo "... moc_fits_results.i"
 	@echo "... moc_fits_results.s"
@@ -438,12 +540,18 @@ help:
 	@echo "... moc_subvolumedialog.o"
 	@echo "... moc_subvolumedialog.i"
 	@echo "... moc_subvolumedialog.s"
+	@echo "... moc_vtkFrameRateWidget.o"
+	@echo "... moc_vtkFrameRateWidget.i"
+	@echo "... moc_vtkFrameRateWidget.s"
 	@echo "... moc_vtkfitsreader.o"
 	@echo "... moc_vtkfitsreader.i"
 	@echo "... moc_vtkfitsreader.s"
 	@echo "... subvolumedialog.o"
 	@echo "... subvolumedialog.i"
 	@echo "... subvolumedialog.s"
+	@echo "... vtkFrameRateWidget.o"
+	@echo "... vtkFrameRateWidget.i"
+	@echo "... vtkFrameRateWidget.s"
 	@echo "... vtkfitsreader.o"
 	@echo "... vtkfitsreader.i"
 	@echo "... vtkfitsreader.s"

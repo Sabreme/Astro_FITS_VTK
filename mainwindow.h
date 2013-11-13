@@ -6,6 +6,7 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkVolume16Reader.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkGPUVolumeRayCastMapper.h>
 #include <vtkActor.h>
 #include <vtkOutlineFilter.h>
 #include <vtkCamera.h>
@@ -23,6 +24,8 @@
 #include <vtkSliceCubes.h>
 #include <vtkImageDataGeometryFilter.h>
 #include <vtkStructuredPoints.h>
+#include <vtkActor.h>
+#include <vtkLookupTable.h>
 
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkAxesActor.h>
@@ -33,13 +36,34 @@
 #include <QApplication>
 #include <QVTKWidget.h>
 
+#include <QProgressDialog>
+#include <QTime>
+
 #include "subvolumedialog.h"
 #include "subVolume.h"
 
+#include <QFutureWatcher>
+#include <QtGui>
+#include "processfile.h"
+#include "time.h"
+#include <QThread>
 
 namespace Ui {
     class MainWindow;    
 }
+
+class Thread :public QThread{
+public:
+    Thread(QObject *parent = 0) : QThread(parent)
+    {
+
+    }
+
+protected:
+    void run(){
+        exec();        
+    }
+};
 
 class MainWindow : public QMainWindow
 {
@@ -55,6 +79,13 @@ public:
 
     void loadSubVolume(QVTKWidget *qvtkWidget, vtkFitsReader *source );
 
+//    void sleep(timer_t delay);
+
+//    void LongFunction(int total);
+
+    QVTKWidget* vtkWidget;      // Used for Main loop for FrameRate Calculation
+
+
 public slots:
     virtual void slotExit();
 
@@ -62,15 +93,14 @@ protected:
         void ModifiedHandler();
 
 private slots:
-        void on_button_Exit_clicked();
+        void updateme();
+        void button_Exit_clicked();
 
-        void on_button_Open_clicked();
+        void button_Open_clicked();
 
         void mySlot();
 
-        void on_Buttom_SubVol_clicked();        
-
-        void on_actionSubVolume_triggered();
+        void Buttom_SubVol_clicked();        
 
         void on_actionOpen_triggered();
 
@@ -88,12 +118,42 @@ private slots:
 
         void on_actionSliceSelection_triggered();
 
+        void on_actionBlack_White_triggered();
+
+        void actionDefault_triggered();
+
+        void actionBlue_Red_triggered();
+
+        void slot_LoadFile();
+
+        void slot_Load_Finished();        
+
+        void on_actionSubVolumeXY_triggered();
+
+        void on_action_SubVolume_Z_triggered();
+
+        void on_actionPreview_triggered();
+
+        void on_actionSubVol_Export_triggered();
+
 private:
-    Ui::MainWindow *ui;                     // Global pointer for the Mainwindow
+
     SubVolumeDialog *subVolDialog;          // Global pointer for the SubVolume
+    Ui::MainWindow *ui;                     // Global pointer for the Mainwindow
 
     vtkFitsReader *global_Reader;           // Global Pointer for the loaded FitsReader
     vtkStructuredPoints *global_Points;     // Global Pointer for the point Dataset
+    vtkVolume * global_Volume;               // Global Pointer for the Current Volume
+    vtkCubeSource *global_subVolume;              // Global Pointer for the Sub-Volume
+
+    vtkLookupTable * default_Volume_Colours; // Global Pointer for the Default Volume schema
+
+    QTime Timer;
+    QProgressDialog* ProgressDialog;
+    QFutureWatcher<void> FutureWatcher;
+
+    //ProcessFile ProcessFileObject;
+
 };
 
 #endif // MAINWINDOW_H

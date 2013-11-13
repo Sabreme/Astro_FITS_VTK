@@ -104,6 +104,12 @@
       </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/OrientationAxes.h">
       </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/PlaneSelection.h">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/ScalarBar.h">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/XYHighlightSelection.h">
+      </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/fits_results.h">
       </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.h">

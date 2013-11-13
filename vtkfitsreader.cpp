@@ -11,11 +11,10 @@ vtkFitsReader::vtkFitsReader()
       this->zStr[0]='\0';
       this->title[0]='\0';
 
-      this->dimensions[0]='\0';
-      this->points[0]='\0';
-      this->point_ratio[0]='\0';
-      this->status[0]='\0';
-
+    this->dimensions[0] = 0  ;   // [x,y,z]
+    this->points    = 0      ;   // Total # of points in DataSet
+    this->datamin   = 0.0    ;   // Part of FITS Header file
+    this->datamax   = 0.0    ;   // Part of FITS Header file
 }
 
 void vtkFitsReader::SetFileName(const char *name) {
@@ -45,13 +44,7 @@ void vtkFitsReader::printerror(int status) {
 // fitsio distribution.
 void vtkFitsReader::Execute() {
 
-  //ReadHeader();
-
   vtkStructuredPoints *output = (vtkStructuredPoints *) this->GetOutput();
-  //output -> this->Outputs;
-    //vtkImageData *output = vtkImageData::New() ;
-   //&output -> this->Outputs;
-
 
   fitsfile *fptr;
   int status = 0, nfound = 0, anynull = 0;
@@ -73,38 +66,21 @@ void vtkFitsReader::Execute() {
   datamin  = 1.0E30;
   datamax  = -1.0E30;
 
-  cerr << "\nvtkFitsReader: " << this->filename << endl;
-  /*
-  cerr << "Dim: " << naxes[0] << " " << naxes[1] << " " << naxes[2] << endl;
-  tempString << "Dim: " <<  naxes[0] << naxes[1] << naxes[2] << endl;
-  dimensions = tempString.str();
-  tempString.clear("");
+  //cerr << "\nvtkFitsReader: " << this->filename << endl;
 
-  cerr << "points: " << npixels << endl;
-  tempString << cerr << "points: " << npixels << endl;
-  points = tempString.str();
-  tempString.clear("");
+//  qDebug() << "\nvtkFitsReader: " << this->filename;
 
-  cerr << "creating vtk structured points dataset..." << endl;
-  tempString << cerr << "creating vtk structured points dataset..." << endl;
+  this->dimensions[0] = naxes[0] ;
+  this->dimensions[1] = naxes[1] ;
+  this->dimensions[2] = naxes[2] ;
+  //qDebug() << "\nDim: " << naxes[0] << " " << naxes[1] << " " << naxes[2]  ;
+
+  this->points = npixels;
+  //qDebug() << "\npoints: " << npixels  ;
+
   output->SetDimensions(naxes[0], naxes[1], naxes[2]);
-  tempString.clear("");
-  output->SetOrigin(0.0, 0.0, 0.0);*/
 
-  qDebug() << "\nvtkFitsReader: " << this->filename << endl;
-
-  qDebug() << "\nDim: " << naxes[0] << " " << naxes[1] << " " << naxes[2]  ;
-
-  qDebug() << "\npoints: " << npixels  ;
-
-  qDebug() << "\ncreating vtk structured points dataset...";
- //tempString << cerr << "creating vtk structured points dataset..."  ;
-  output->SetDimensions(naxes[0], naxes[1], naxes[2]);
-//  tempString.clear("");
   output->SetOrigin(0.0, 0.0, 0.0);
-
-
-
 
   vtkFloatArray *scalars = vtkFloatArray::New();
 //  vtkFloatScalars *scalars = vtkFloatScalars::New();
@@ -135,7 +111,9 @@ void vtkFitsReader::Execute() {
     fpixel  += nbuffer;    /* next pixel to be read in image */
   }
 
-  qDebug() << "min: " << datamin << " max: " << datamax << endl;
+  this->datamin = datamin;
+  this->datamax = datamax;
+  //qDebug() << "min: " << datamin << " max: " << datamax << endl;
 
   if ( fits_close_file(fptr, &status) )
        printerror( status );
@@ -143,7 +121,7 @@ void vtkFitsReader::Execute() {
   output->GetPointData()->SetScalars(scalars) ;
  // output->GetPointData()->SetScalars(scalars) ;
 
-  qDebug() << "done." << endl;
+  //qDebug() << "Loaded." << endl;
 
 //qDebug().stream->
   return;
@@ -203,4 +181,24 @@ void vtkFitsReader::ReadHeader() {
 void vtkFitsReader::PrintSelf(ostream& os, vtkIndent indent) {
   os << indent << "FITS File Name: " << (this->filename) << "\n";
   vtkStructuredPointsSource::PrintSelf(os, indent);
+}
+
+void vtkFitsReader::PrintDetails()
+{
+    string path = this->filename;
+    string test = "heellloo";
+
+    //qDebug() << test << endl;
+    //cout << path.substr(path.find_last_of('\\') + 1) << endl;
+    //qDebug() << "Filename = " << path.substr(path.find_last_of('\\') + 1) << endl;
+    qDebug() << "Filename = " << this->filename << endl;
+
+    qDebug() << "Dimensions =  x:" << this->dimensions[0];
+    qDebug() <<               "y:" << this->dimensions[1];
+    qDebug() <<               "z:" << this->dimensions[2] << endl;
+
+    qDebug() << "Points  = " << this->points << endl;
+    qDebug() << "DataMin = " << this->datamin << endl;
+    qDebug() << "DataMax = " << this->datamax << endl;
+    qDebug() << "---------------------------------" << endl;
 }

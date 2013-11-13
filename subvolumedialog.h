@@ -6,6 +6,9 @@
 #include <vtkRenderWindow.h>
 #include <vtkfitsreader.h>
 #include <QDialog>
+#include <vtkCubeSource.h>
+
+#include <QFutureWatcher>
 
 namespace Ui {
 class SubVolumeDialog;
@@ -19,7 +22,9 @@ public:
     explicit SubVolumeDialog(QWidget *parent = 0);
     ~SubVolumeDialog();
 
-    void UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source);
+    void UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source, vtkCubeSource *subVolume);
+
+    //void on_pushButton_clicked();
     
     Ui::SubVolumeDialog *ui;
 };
