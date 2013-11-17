@@ -96,6 +96,8 @@
       </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.cpp">
       </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.cpp">
+      </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/subvolumedialog.cpp">
       </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/vtkFrameRateWidget.cpp">
@@ -119,6 +121,10 @@
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.h">
       </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.ui">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.h">
+      </Unit>
+      <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.ui">
       </Unit>
       <Unit filename="/home/pmulumba/Projects/Astro_FITS_VTK/subvolumedialog.h">
       </Unit>

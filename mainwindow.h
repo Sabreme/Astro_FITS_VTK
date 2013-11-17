@@ -136,6 +136,8 @@ private slots:
 
         void on_actionSubVol_Export_triggered();
 
+        void on_actionSliceAxisAligned_triggered();
+
 private:
 
     SubVolumeDialog *subVolDialog;          // Global pointer for the SubVolume

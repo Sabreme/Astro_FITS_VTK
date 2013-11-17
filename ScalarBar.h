@@ -74,6 +74,9 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
         scalarBar->SetMaximumHeightInPixels(120);
         scalarBar->SetMaximumWidthInPixels(20);
 
+        scalarBar->SetPosition(0.9, 0.1);
+
+
 
         // Create a renderer and render window
         vtkSmartPointer<vtkRenderer> renderer =

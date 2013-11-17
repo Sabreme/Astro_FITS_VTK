@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Nov 9 17:02:31 2013
+** Created: Thu Nov 14 12:30:10 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -46,6 +46,7 @@ public:
     QAction *action_SubVolume_Z;
     QAction *actionPreview;
     QAction *actionSubVol_Export;
+    QAction *actionSliceAxisAligned;
     QWidget *centralWidget;
     QVTKWidget *qvtkWidgetLeft;
     QPlainTextEdit *plainTextEdit;
@@ -55,6 +56,7 @@ public:
     QMenu *menuActions;
     QMenu *menuViews;
     QMenu *menuColourMaps;
+    QMenu *menuSlicing;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -95,6 +97,8 @@ public:
         actionPreview->setObjectName(QString::fromUtf8("actionPreview"));
         actionSubVol_Export = new QAction(MainWindow);
         actionSubVol_Export->setObjectName(QString::fromUtf8("actionSubVol_Export"));
+        actionSliceAxisAligned = new QAction(MainWindow);
+        actionSliceAxisAligned->setObjectName(QString::fromUtf8("actionSliceAxisAligned"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         qvtkWidgetLeft = new QVTKWidget(centralWidget);
@@ -118,6 +122,8 @@ public:
         menuViews->setObjectName(QString::fromUtf8("menuViews"));
         menuColourMaps = new QMenu(menuBar);
         menuColourMaps->setObjectName(QString::fromUtf8("menuColourMaps"));
+        menuSlicing = new QMenu(menuBar);
+        menuSlicing->setObjectName(QString::fromUtf8("menuSlicing"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -130,6 +136,7 @@ public:
         menuBar->addAction(menuActions->menuAction());
         menuBar->addAction(menuViews->menuAction());
         menuBar->addAction(menuColourMaps->menuAction());
+        menuBar->addAction(menuSlicing->menuAction());
         menuFIle->addAction(actionOpen);
         menuFIle->addAction(actionClose);
         menuFIle->addAction(actionExit);
@@ -144,6 +151,7 @@ public:
         menuColourMaps->addAction(actionDefault);
         menuColourMaps->addAction(actionBlack_White);
         menuColourMaps->addAction(actionBlue_Red);
+        menuSlicing->addAction(actionSliceAxisAligned);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSubVolumeXY);
         mainToolBar->addAction(action_SubVolume_Z);
@@ -178,11 +186,13 @@ public:
 #endif // QT_NO_TOOLTIP
         actionPreview->setText(QApplication::translate("MainWindow", "SubVol-Preview", 0, QApplication::UnicodeUTF8));
         actionSubVol_Export->setText(QApplication::translate("MainWindow", "SubVol-Export", 0, QApplication::UnicodeUTF8));
+        actionSliceAxisAligned->setText(QApplication::translate("MainWindow", "Axis Aligned", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Clear", 0, QApplication::UnicodeUTF8));
         menuFIle->setTitle(QApplication::translate("MainWindow", "FIle", 0, QApplication::UnicodeUTF8));
         menuActions->setTitle(QApplication::translate("MainWindow", "Actions", 0, QApplication::UnicodeUTF8));
         menuViews->setTitle(QApplication::translate("MainWindow", "Views", 0, QApplication::UnicodeUTF8));
         menuColourMaps->setTitle(QApplication::translate("MainWindow", "ColourMaps", 0, QApplication::UnicodeUTF8));
+        menuSlicing->setTitle(QApplication::translate("MainWindow", "Slicing", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

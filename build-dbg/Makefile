@@ -354,6 +354,30 @@ moc_mainwindow.cxx.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.s
 .PHONY : moc_mainwindow.cxx.s
 
+moc_sliceDialog.o: moc_sliceDialog.cxx.o
+.PHONY : moc_sliceDialog.o
+
+# target to build an object file
+moc_sliceDialog.cxx.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o
+.PHONY : moc_sliceDialog.cxx.o
+
+moc_sliceDialog.i: moc_sliceDialog.cxx.i
+.PHONY : moc_sliceDialog.i
+
+# target to preprocess a source file
+moc_sliceDialog.cxx.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.i
+.PHONY : moc_sliceDialog.cxx.i
+
+moc_sliceDialog.s: moc_sliceDialog.cxx.s
+.PHONY : moc_sliceDialog.s
+
+# target to generate assembly for a file
+moc_sliceDialog.cxx.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.s
+.PHONY : moc_sliceDialog.cxx.s
+
 moc_subvolumedialog.o: moc_subvolumedialog.cxx.o
 .PHONY : moc_subvolumedialog.o
 
@@ -425,6 +449,30 @@ moc_vtkfitsreader.s: moc_vtkfitsreader.cxx.s
 moc_vtkfitsreader.cxx.s:
 	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.s
 .PHONY : moc_vtkfitsreader.cxx.s
+
+sliceDialog.o: sliceDialog.cpp.o
+.PHONY : sliceDialog.o
+
+# target to build an object file
+sliceDialog.cpp.o:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o
+.PHONY : sliceDialog.cpp.o
+
+sliceDialog.i: sliceDialog.cpp.i
+.PHONY : sliceDialog.i
+
+# target to preprocess a source file
+sliceDialog.cpp.i:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.i
+.PHONY : sliceDialog.cpp.i
+
+sliceDialog.s: sliceDialog.cpp.s
+.PHONY : sliceDialog.s
+
+# target to generate assembly for a file
+sliceDialog.cpp.s:
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.s
+.PHONY : sliceDialog.cpp.s
 
 subvolumedialog.o: subvolumedialog.cpp.o
 .PHONY : subvolumedialog.o
@@ -537,6 +585,9 @@ help:
 	@echo "... moc_mainwindow.o"
 	@echo "... moc_mainwindow.i"
 	@echo "... moc_mainwindow.s"
+	@echo "... moc_sliceDialog.o"
+	@echo "... moc_sliceDialog.i"
+	@echo "... moc_sliceDialog.s"
 	@echo "... moc_subvolumedialog.o"
 	@echo "... moc_subvolumedialog.i"
 	@echo "... moc_subvolumedialog.s"
@@ -546,6 +597,9 @@ help:
 	@echo "... moc_vtkfitsreader.o"
 	@echo "... moc_vtkfitsreader.i"
 	@echo "... moc_vtkfitsreader.s"
+	@echo "... sliceDialog.o"
+	@echo "... sliceDialog.i"
+	@echo "... sliceDialog.s"
 	@echo "... subvolumedialog.o"
 	@echo "... subvolumedialog.i"
 	@echo "... subvolumedialog.s"

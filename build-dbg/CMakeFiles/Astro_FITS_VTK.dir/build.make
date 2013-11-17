@@ -82,39 +82,49 @@ moc_subvolumedialog.cxx: ../subvolumedialog.h
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating moc_subvolumedialog.cxx"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/moc -I/usr/local/include/vtk-5.10 -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore -DQT_GUI_LIB -DQT_CORE_LIB -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_subvolumedialog.cxx /home/pmulumba/Projects/Astro_FITS_VTK/subvolumedialog.h
 
-moc_XYHighlightSelection.cxx: ../XYHighlightSelection.h
+moc_sliceDialog.cxx: ../sliceDialog.h
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_7)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating moc_sliceDialog.cxx"
+	/usr/lib/x86_64-linux-gnu/qt4/bin/moc -I/usr/local/include/vtk-5.10 -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore -DQT_GUI_LIB -DQT_CORE_LIB -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_sliceDialog.cxx /home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.h
+
+moc_XYHighlightSelection.cxx: ../XYHighlightSelection.h
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating moc_XYHighlightSelection.cxx"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/moc -I/usr/local/include/vtk-5.10 -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore -DQT_GUI_LIB -DQT_CORE_LIB -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_XYHighlightSelection.cxx /home/pmulumba/Projects/Astro_FITS_VTK/XYHighlightSelection.h
 
 moc_ZHighlightSelection.cxx: ../ZHighlightSelection.h
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating moc_ZHighlightSelection.cxx"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/moc -I/usr/local/include/vtk-5.10 -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore -DQT_GUI_LIB -DQT_CORE_LIB -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_ZHighlightSelection.cxx /home/pmulumba/Projects/Astro_FITS_VTK/ZHighlightSelection.h
 
 moc_PlaneSelection.cxx: ../PlaneSelection.h
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating moc_PlaneSelection.cxx"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/moc -I/usr/local/include/vtk-5.10 -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore -DQT_GUI_LIB -DQT_CORE_LIB -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_PlaneSelection.cxx /home/pmulumba/Projects/Astro_FITS_VTK/PlaneSelection.h
 
 moc_vtkFrameRateWidget.cxx: ../vtkFrameRateWidget.h
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_11)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating moc_vtkFrameRateWidget.cxx"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/moc -I/usr/local/include/vtk-5.10 -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore -DQT_GUI_LIB -DQT_CORE_LIB -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_vtkFrameRateWidget.cxx /home/pmulumba/Projects/Astro_FITS_VTK/vtkFrameRateWidget.h
 
 ui_mainwindow.h: ../mainwindow.ui
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_11)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_12)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ui_mainwindow.h"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/uic -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/ui_mainwindow.h /home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.ui
 
 ui_subvolumedialog.h: ../subvolumedialog.ui
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_12)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ui_subvolumedialog.h"
 	/usr/lib/x86_64-linux-gnu/qt4/bin/uic -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/ui_subvolumedialog.h /home/pmulumba/Projects/Astro_FITS_VTK/subvolumedialog.ui
 
+ui_sliceDialog.h: ../sliceDialog.ui
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_14)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ui_sliceDialog.h"
+	/usr/lib/x86_64-linux-gnu/qt4/bin/uic -o /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/ui_sliceDialog.h /home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.ui
+
 CMakeFiles/Astro_FITS_VTK.dir/main.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/main.cpp.o: ../main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_13)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_15)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/main.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/main.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/main.cpp
 
@@ -137,7 +147,7 @@ CMakeFiles/Astro_FITS_VTK.dir/main.cpp.o.provides.build: CMakeFiles/Astro_FITS_V
 
 CMakeFiles/Astro_FITS_VTK.dir/mainwindow.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/mainwindow.cpp.o: ../mainwindow.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_14)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_16)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/mainwindow.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/mainwindow.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/mainwindow.cpp
 
@@ -160,7 +170,7 @@ CMakeFiles/Astro_FITS_VTK.dir/mainwindow.cpp.o.provides.build: CMakeFiles/Astro_
 
 CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o: ../vtkfitsreader.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_15)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_17)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/vtkfitsreader.cpp
 
@@ -183,7 +193,7 @@ CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o.provides.build: CMakeFiles/Ast
 
 CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o: ../fits_results.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_16)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_18)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/fits_results.cpp
 
@@ -206,7 +216,7 @@ CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o.provides.build: CMakeFiles/Astr
 
 CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o: ../subvolumedialog.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_17)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_19)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/subvolumedialog.cpp
 
@@ -227,9 +237,32 @@ CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o.provides: CMakeFiles/Astro_F
 
 CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o.provides.build: CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o
 
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o: ../sliceDialog.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_20)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.cpp
+
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.cpp > CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.i
+
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/pmulumba/Projects/Astro_FITS_VTK/sliceDialog.cpp -o CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.s
+
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.requires:
+.PHONY : CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.requires
+
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.provides: CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.provides.build
+.PHONY : CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.provides
+
+CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.provides.build: CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o
+
 CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o: ../vtkFrameRateWidget.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_18)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_21)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o -c /home/pmulumba/Projects/Astro_FITS_VTK/vtkFrameRateWidget.cpp
 
@@ -252,7 +285,7 @@ CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o.provides.build: CMakeFile
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o: moc_mainwindow.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_19)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_22)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_mainwindow.cxx
 
@@ -275,7 +308,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o.provides.build: CMakeFiles/As
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o: moc_vtkfitsreader.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_20)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_23)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_vtkfitsreader.cxx
 
@@ -298,7 +331,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o.provides.build: CMakeFiles
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_fits_results.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_fits_results.cxx.o: moc_fits_results.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_21)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_24)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_fits_results.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_fits_results.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_fits_results.cxx
 
@@ -321,7 +354,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_fits_results.cxx.o.provides.build: CMakeFiles/
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o: moc_OrientationAxes.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_22)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_25)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_OrientationAxes.cxx
 
@@ -344,7 +377,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o.provides.build: CMakeFil
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o: moc_ScalarBar.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_23)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_26)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_ScalarBar.cxx
 
@@ -367,7 +400,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o.provides.build: CMakeFiles/Ast
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o: moc_subvolumedialog.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_24)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_27)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_subvolumedialog.cxx
 
@@ -388,9 +421,32 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o.provides: CMakeFiles/Ast
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o.provides.build: CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o
 
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o: moc_sliceDialog.cxx
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_28)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_sliceDialog.cxx
+
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_sliceDialog.cxx > CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.i
+
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_sliceDialog.cxx -o CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.s
+
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.requires:
+.PHONY : CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.requires
+
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.provides: CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.requires
+	$(MAKE) -f CMakeFiles/Astro_FITS_VTK.dir/build.make CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.provides.build
+.PHONY : CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.provides
+
+CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.provides.build: CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o
+
 CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o: moc_XYHighlightSelection.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_25)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_29)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_XYHighlightSelection.cxx
 
@@ -413,7 +469,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o.provides.build: CMa
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o: moc_ZHighlightSelection.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_26)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_30)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_ZHighlightSelection.cxx
 
@@ -436,7 +492,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o.provides.build: CMak
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o: moc_PlaneSelection.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_27)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_31)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_PlaneSelection.cxx
 
@@ -459,7 +515,7 @@ CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o.provides.build: CMakeFile
 
 CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.o: CMakeFiles/Astro_FITS_VTK.dir/flags.make
 CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.o: moc_vtkFrameRateWidget.cxx
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_28)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles $(CMAKE_PROGRESS_32)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/Astro_FITS_VTK.dir/moc_vtkFrameRateWidget.cxx.o -c /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/moc_vtkFrameRateWidget.cxx
 
@@ -487,6 +543,7 @@ Astro_FITS_VTK_OBJECTS = \
 "CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o" \
+"CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o" \
@@ -494,6 +551,7 @@ Astro_FITS_VTK_OBJECTS = \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o" \
+"CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o" \
 "CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o" \
@@ -507,6 +565,7 @@ Astro_FITS_VTK_EXTERNAL_OBJECTS =
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o
+../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o
@@ -514,6 +573,7 @@ Astro_FITS_VTK_EXTERNAL_OBJECTS =
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o
+../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o
 ../bin-dbg/Astro_FITS_VTK: CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o
@@ -571,6 +631,7 @@ CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/mainwindow
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/vtkfitsreader.cpp.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/fits_results.cpp.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/subvolumedialog.cpp.o.requires
+CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/sliceDialog.cpp.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/vtkFrameRateWidget.cpp.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_mainwindow.cxx.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_vtkfitsreader.cxx.o.requires
@@ -578,6 +639,7 @@ CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_fits_r
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_OrientationAxes.cxx.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_ScalarBar.cxx.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_subvolumedialog.cxx.o.requires
+CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_sliceDialog.cxx.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_XYHighlightSelection.cxx.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_ZHighlightSelection.cxx.o.requires
 CMakeFiles/Astro_FITS_VTK.dir/requires: CMakeFiles/Astro_FITS_VTK.dir/moc_PlaneSelection.cxx.o.requires
@@ -594,12 +656,14 @@ CMakeFiles/Astro_FITS_VTK.dir/depend: moc_fits_results.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_OrientationAxes.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_ScalarBar.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_subvolumedialog.cxx
+CMakeFiles/Astro_FITS_VTK.dir/depend: moc_sliceDialog.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_XYHighlightSelection.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_ZHighlightSelection.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_PlaneSelection.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: moc_vtkFrameRateWidget.cxx
 CMakeFiles/Astro_FITS_VTK.dir/depend: ui_mainwindow.h
 CMakeFiles/Astro_FITS_VTK.dir/depend: ui_subvolumedialog.h
+CMakeFiles/Astro_FITS_VTK.dir/depend: ui_sliceDialog.h
 	cd /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pmulumba/Projects/Astro_FITS_VTK /home/pmulumba/Projects/Astro_FITS_VTK /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg /home/pmulumba/Projects/Astro_FITS_VTK/build-dbg/CMakeFiles/Astro_FITS_VTK.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Astro_FITS_VTK.dir/depend
 

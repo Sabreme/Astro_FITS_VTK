@@ -91,10 +91,17 @@
     <addaction name="actionBlack_White"/>
     <addaction name="actionBlue_Red"/>
    </widget>
+   <widget class="QMenu" name="menuSlicing">
+    <property name="title">
+     <string>Slicing</string>
+    </property>
+    <addaction name="actionSliceAxisAligned"/>
+   </widget>
    <addaction name="menuFIle"/>
    <addaction name="menuActions"/>
    <addaction name="menuViews"/>
    <addaction name="menuColourMaps"/>
+   <addaction name="menuSlicing"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -192,6 +199,11 @@
   <action name="actionSubVol_Export">
    <property name="text">
     <string>SubVol-Export</string>
+   </property>
+  </action>
+  <action name="actionSliceAxisAligned">
+   <property name="text">
+    <string>Axis Aligned</string>
    </property>
   </action>
  </widget>

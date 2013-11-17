@@ -29,7 +29,7 @@ FILE (GLOB UI *.ui)
 
 SET(SOURCES
     main.h main.cpp mainwindow.cpp vtkfitsreader.cpp
-    fits_results.cpp subvolumedialog.cpp
+    fits_results.cpp subvolumedialog.cpp sliceDialog.cpp
     vtkFrameRateWidget.cpp
     #processfile.cpp
 )
@@ -38,6 +38,8 @@ SET(HEADERS
     OrientationAxes.h
     ScalarBar.h
     subvolumedialog.h
+    sliceDialog.h
+
     XYHighlightSelection.h
     ZHighlightSelection.h
     PlaneSelection.h
@@ -48,6 +50,7 @@ SET(HEADERS
 SET(UI
     mainwindow.ui    
     subvolumedialog.ui
+    sliceDialog.ui
 )
 
 QT4_WRAP_UI(UI_MOC ${UI})
