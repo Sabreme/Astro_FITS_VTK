@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Camera_Rotation.PNG</file>
+        <file>Camera_Translation.PNG</file>
+        <file>Trackball.png</file>
+        <file>Joystick.png</file>
+        <file>SubVol-Export.png</file>
+        <file>SubVol-Preview.PNG</file>
+        <file>Arbitrary-Slice.png</file>
+        <file>Drag-XY-SubVolume.png</file>
+        <file>Drag-Z-SubVolume.png</file>
+        <file>Orthognal-Slice.png</file>
+        <file>XYZ-SubVolume-Preview.png</file>
+        <file>Camera_Reset.png</file>
+        <file>Cube_Bottom.png</file>
+        <file>Cube_Front.png</file>
+        <file>Cube_Left.png</file>
+        <file>Cube_Rear.png</file>
+        <file>Cube_Right.png</file>
+        <file>Cube_Top.png</file>
+        <file>Camera_Scaling.png</file>
+    </qresource>
+</RCC>

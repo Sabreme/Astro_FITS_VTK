@@ -24,5 +24,6 @@ void AddOrientationAxes(QVTKWidget *qvtkWidget)
     marker->SetInteractor(interactor);
     marker->SetOrientationMarker(axesActor);
     marker->SetEnabled(true);
-    marker->InteractiveOn();
+    //marker->InteractiveOn();
+    marker->InteractiveOff();
 }

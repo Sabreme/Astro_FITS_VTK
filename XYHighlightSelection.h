@@ -28,6 +28,9 @@
 
 #include <QVTKWidget.h>
 #include <vtkfitsreader.h>
+#include <vtkPlane.h>
+#include <vtkCamera.h>
+#include <vtkAbstractTransform.h>
 #include <vtkRendererCollection.h>
 
 #define VTKISRBP_ORIENT 0
@@ -65,6 +68,21 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
       if(this->CurrentMode == VTKISRBP_SELECT)
         {
         vtkPlanes* frustum = static_cast<vtkAreaPicker*>(this->GetInteractor()->GetPicker())->GetFrustum();
+        //vtkPlanes* region = static_cast<vtkHardwareSelector*>(this->GetInteractor()->GetPicker())->
+        frustum->Print(std::cout);
+        //frustum->Transform
+
+
+        //form->Print(std::cout);
+
+
+        //frustum->FunctionValue(19,43,22,46,0,0);
+        vtkPoints* points = static_cast<vtkAreaPicker*>(this->GetInteractor()->GetPicker())->GetClipPoints();
+
+
+        points->Print(std::cout);
+
+        //frustum->Print(std::cout);
 
         vtkSmartPointer<vtkExtractGeometry> extractPolyDataGeometry =
           vtkSmartPointer<vtkExtractGeometry>::New();
@@ -95,10 +113,20 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
         minY = bounds[2];
         maxY = bounds[3];
 
+        //selected->
+
 
         std::cout << "Region (x1,y1,x2,y2) = ("
                           << bounds[0] << "," << bounds[2] << ","
                           << bounds[1] << "," << bounds[3] << ")" << std::endl ;
+
+ //       double cellBounds[6];
+
+//        selected->GetCellBounds();
+
+//        std::cout << "CellRegion (x1,y1,x2,y2) = ("
+//                          << cellBounds[0] << "," << cellBounds[2] << ","
+//                          << cellBounds[1] << "," << cellBounds[3] << ")" << std::endl ;
 
         //std::cout << "Selected " << selected->
         //std::cout << "Selected " << selected->Get
@@ -160,7 +188,15 @@ void XYVolumeSelection(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource)
 //      vtkSmartPointer<vtkRenderWindow>::New();
 //    renderWindow->AddRenderer(renderer);
 
+    vtkSmartPointer<vtkCamera> camera =
+            vtkSmartPointer<vtkCamera>::New();
+
     renderer = qvtkWidget->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+    camera = renderer->GetActiveCamera();
+
+    camera->Print(std::cout);
+    camera->ParallelProjectionOn();
 
     vtkSmartPointer<vtkAreaPicker> areaPicker =
       vtkSmartPointer<vtkAreaPicker>::New();

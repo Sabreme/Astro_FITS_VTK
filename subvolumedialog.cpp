@@ -21,6 +21,7 @@
 #include "vtkVolumeProperty.h"
 #include "vtkInteractorStyleSwitch.h"
 #include "vtkTextProperty.h"
+#include "vtkSmartPointer.h"
 
 
 SubVolumeDialog::SubVolumeDialog(QWidget *parent) :
@@ -34,27 +35,37 @@ SubVolumeDialog::SubVolumeDialog(QWidget *parent) :
 
 SubVolumeDialog::~SubVolumeDialog()
 {
+    emit this->windowClosing(true);
     delete ui;
 }
 
-void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source, vtkCubeSource *subVolume)
+void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source, double subVolBounds[6])
 {
-    //this->ui->qvtkWidgetLeft->SetRenderWindow(updatedVolume);
-    double bounds[6];
 
-    subVolume->GetOutput()->GetBounds(bounds);
+    this->ui->lineMinX->setText(QString::number(subVolBounds[0], 'f', 2));
+    this->ui->lineMaxX->setText(QString::number(subVolBounds[1], 'f', 2));
+    this->ui->lineMinY->setText(QString::number(subVolBounds[2], 'f', 2));
+    this->ui->lineMaxY->setText(QString::number(subVolBounds[3], 'f', 2));
+    this->ui->lineMinZ->setText(QString::number(subVolBounds[4], 'f', 2));
+    this->ui->lineMaxZ->setText(QString::number(subVolBounds[5], 'f', 2));
+
+    //this->ui->qvtkWidgetLeft->SetRenderWindow(updatedVolume);
+   // double bounds[6];
+
+   // subVolume->GetOutput()->GetBounds(bounds);
 
 
     vtkSmartPointer<vtkExtractVOI> extractVOI =
             vtkSmartPointer<vtkExtractVOI>::New();
     //extractVOI->SetInputConnection(source->GetOutputPort());
     extractVOI->SetInputConnection(source->GetOutputPort());
-    extractVOI->SetVOI(bounds[0],
-            bounds[1],
-            bounds[2],
-            bounds[3],
-            bounds[4],
-            bounds[5]);
+    extractVOI->SetVOI(
+            subVolBounds[0],
+            subVolBounds[1],
+            subVolBounds[2],
+            subVolBounds[3],
+            subVolBounds[4],
+            subVolBounds[5]);
     extractVOI->Update();
 
     vtkImageData* extracted = extractVOI->GetOutput();
@@ -65,6 +76,13 @@ void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *so
     qDebug() << "Adding Outline" << endl;
     vtkOutlineFilter *outlineF = vtkOutlineFilter::New();
     outlineF->SetInputConnection(extractVOI->GetOutputPort());
+
+    vtkPolyDataMapper *outlineMapper = vtkPolyDataMapper::New();
+    outlineMapper->SetInputConnection(outlineF->GetOutputPort());
+
+    vtkActor *outlineActor = vtkActor::New();
+    outlineActor->SetMapper(outlineMapper);
+    outlineActor->GetProperty()->SetColor(0.5,0.5,0.5);
 
 
 //    ///
@@ -180,72 +198,16 @@ void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *so
     ///Add CubeAxesActor to RenderWindow
     ren1->AddActor(cubeAxesActor);
 
+    /// Add OutlineActor to REnderWindow
+    ren1->AddActor(outlineActor);
+
     qDebug() << "Adding Objects to RenderWindow" << endl;
-
-
 
     ren1->AddVolume(volume);
 
 
-    // vtk pipeline
-//    vtkFitsReader *fitsReader = vtkFitsReader::New();
-//    const char *newFileName = filename.toStdString().c_str();
-//    fitsReader->SetFileName(newFileName);
-//    fitsReader->AddObserver(vtkCommand::ProgressEvent, pObserver );
-
-//     qDebug() << "Obtained Filename" << endl;
-//    //fitsReader->PrintSelf();
-//    fitsReader->PrintDetails();
-//    QApplication::processEvents();
-
-//    fitsReader->Update();
-
-//    qDebug() << "Gathering Points" << endl;
-
-//    fitsReader->Execute();
-
-//    qDebug() << "Processing Points" << endl;
-
-
-
-
-//    // Cube Axes Visuazilzer
-//    //vtkSmartPointer<vtkCubeA
-
-//    // There will be one render window
-//    vtkSmartPointer<vtkRenderWindow> renderWindow =
-//      vtkSmartPointer<vtkRenderWindow>::New();
-//    renderWindow->SetSize(600, 300);
-
-//    vtkRenderer *ren1 = vtkRenderer::New();
-
-//    renderWindow->AddRenderer(ren1);
-//    // add actors to renderer
-//    ren1->AddActor(outlineA);
-//    ren1->AddActor(shellA);
-//    ren1->AddActor(sliceA);
-
-//      vtkRenderer *ren1 = vtkRenderer::New();
-//   //   ren1->AddActor(volume);
-//    // And one interactor
-//    vtkSmartPointer<vtkRenderWindowInteractor> interactor =
-//    vtkSmartPointer<vtkRenderWindowInteractor>::New();
-  //  interactor->SetRenderWindow(renderWindow);
-
-    //this->ui->qvtkWidgetLeft->GetRenderWindow()->(ren1);
-
-    //renderWindow->AddRenderer(ren1);
-
     this->ui->qvtkWidgetRight->GetRenderWindow()->AddRenderer(ren1);
 
-    //this->ui->qvtkWidgetLeft->SetRenderWindow(renderWindow);
-    //this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
-    //this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetRenderWindow(renderWindow);
-
-    //renderWindow->Render();
-    //interactor->Start();
-    //AddScalarBar(this->ui->qvtkWidgetLeft, fitsReader);
-    //AddOrientationAxes(this->ui->qvtkWidgetLeft);    
 
     ////////////////////////////////////
     /// \brief OrientationMarker Widget
@@ -271,3 +233,8 @@ void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *so
 //{
 //    QFuture<void> future = QtConcurrent::
 //}
+
+void SubVolumeDialog::on_buttonBox_accepted()
+{
+    emit this->windowClosing(true);
+}

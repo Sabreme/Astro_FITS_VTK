@@ -24,8 +24,10 @@ class vtkRenderer;
 
 #include "vtkTextWidget.h"
 #include "vtkTimerLog.h"
+#include "vtkSystemIncludes.h"
 
-class VTK_WIDGETS_EXPORT vtkFrameRateWidget : public vtkTextWidget
+class vtkFrameRateWidget : public vtkTextWidget
+//class VTK_WIDGETS_EXPORT vtkFrameRateWidget : public vtkTextWidget
 {
 public:
   static vtkFrameRateWidget *New();

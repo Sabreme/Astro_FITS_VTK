@@ -22,11 +22,16 @@ public:
     explicit SubVolumeDialog(QWidget *parent = 0);
     ~SubVolumeDialog();
 
-    void UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source, vtkCubeSource *subVolume);
+    void UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *source, double subVolBounds[6]);
 
     //void on_pushButton_clicked();
     
     Ui::SubVolumeDialog *ui;
+
+signals:
+    void windowClosing(bool);
+private slots:
+    void on_buttonBox_accepted();
 };
 
 #endif // SUBVOLUMEDIALOG_H

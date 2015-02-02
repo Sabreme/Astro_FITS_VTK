@@ -2,6 +2,8 @@
 #define SCALARBAR_H
 
 #include <cassert>
+#include <vtkFloatArray.h>
+#include <vtkPointData.h>
 #include "QVTKWidget.h"
 #include "vtkScalarBarActor.h"
 #include "vtkLookupTable.h"
@@ -50,14 +52,11 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
           vtkSmartPointer<vtkActor>::New();
         actor->SetMapper(mapper);
 
-
         vtkSmartPointer<vtkScalarBarActor> scalarBar =
           vtkSmartPointer<vtkScalarBarActor>::New();
         scalarBar->SetLookupTable(mapper->GetLookupTable());
         scalarBar->SetTitle("Point Spread");
         scalarBar->SetNumberOfLabels(4);
-
-
 
         // Create a lookup table to share between the mapper and the scalarbar
         vtkSmartPointer<vtkLookupTable> hueLut =
@@ -74,6 +73,7 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
         scalarBar->SetMaximumHeightInPixels(120);
         scalarBar->SetMaximumWidthInPixels(20);
 
+        scalarBar->SetPosition(0.9, 0.1);
 
         // Create a renderer and render window
         vtkSmartPointer<vtkRenderer> renderer =
@@ -84,11 +84,4 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
 
 
         renderer->AddActor2D(scalarBar);
-
-        // Render the scene (lights and cameras are created automatically)
-//        renderWindow->Render();
-//        renderWindowInteractor->Start();
-
-//    vtkRenderWindowInteractor* interactor = qvtkWidget->GetInteractor();
-
 }

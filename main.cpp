@@ -35,7 +35,7 @@ void myMsgHandler(QtMsgType, const char * message)
     }
 }
 
-void loadFrameRate(vtkFrameRateWidget* frameRateWidget, MainWindow* mainWindow)
+void loadFrameRate(vtkFrameRateWidget* frameRateWidget)
 {
     frameRateWidget->SetInteractor(_mainWindow->vtkWidget->GetInteractor());
     frameRateWidget->SetRenderer(_mainWindow->vtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
@@ -47,7 +47,7 @@ void loadFrameRate(vtkFrameRateWidget* frameRateWidget, MainWindow* mainWindow)
 
 void reloadFrameRate()
 {
-    loadFrameRate(_vtkFrameRateWidget, _mainWindow);
+    loadFrameRate(_vtkFrameRateWidget);
 }
 
 int main(int argc, char *argv[])
@@ -68,4 +68,10 @@ int main(int argc, char *argv[])
     astroFitsVTK.show();
 
     return a.exec();
+}
+
+
+void frameRateToggle(int show)
+{
+    _vtkFrameRateWidget->SetEnabled(show);    
 }

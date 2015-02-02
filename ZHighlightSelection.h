@@ -31,6 +31,8 @@
 #include <vtkfitsreader.h>
 #include <vtkRendererCollection.h>
 
+//#include <XYHighlightSelection.h>
+
 #define VTKISRBP_ORIENT 0
 #define VTKISRBP_SELECT 1
 
@@ -38,6 +40,13 @@
 
 double minZ;
 double maxZ;
+
+double pminX;
+double pmaxX;
+double pminY;
+double pmaxY;
+
+bool IsValidSelection(int, int);
 
 // Define interaction style
 class HighlightInteractorStyleZ : public vtkInteractorStyleRubberBandPick
@@ -87,37 +96,62 @@ class HighlightInteractorStyleZ : public vtkInteractorStyleRubberBandPick
 
         selected->GetBounds(bounds);
 
+        pminX = bounds[0];
+        pmaxX = bounds[1];
+        pminY = bounds[2];
+        pmaxY = bounds[3];
+
+
         minZ = bounds[4];
         maxZ = bounds[5];
+
+//        std::cout << "Region (z1,z2) = ("
+//                          << bounds[4] << "," << bounds[5] << ")" << std::endl;
+//                          //<< bounds[1] << "," << bounds[3] << ")" << std::endl ;
+
+//        std::cout   << "Old Region (y1, y2) = ("
+//                    << GetMinYBound() << "," << GetMaxYBound() <<  ")" << std::endl;
+
+//        std::cout   << "New Region (y1, y2) = ("
+//                    << pminY << "," << pmaxY <<  ")" << std::endl;
+
+        bool isValid = false;
+
+        isValid = IsValidSelection(pminY, pmaxY);
+
+        if (isValid)
+        {
+
+#if VTK_MAJOR_VERSION <= 5
+            this->SelectedMapper->SetInputConnection(
+                        selected->GetProducerPort());
+#else
+            this->SelectedMapper->SetInputData(selected);
+#endif
+            this->SelectedMapper->ScalarVisibilityOff();
+
+            vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
+
+            this->SelectedActor->GetProperty()->SetColor(0.0, 0.0, 1.0); //(R,G,B)
+            this->SelectedActor->GetProperty()->SetPointSize(5);
+
+            this->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(SelectedActor);
+            this->GetInteractor()->GetRenderWindow()->Render();
+            this->HighlightProp(NULL);
+
+            std::cout << "Length: " << selected->GetLength() << std::endl;
+        }
 
         std::cout << "Region (z1,z2) = ("
                           << bounds[4] << "," << bounds[5] << ")" << std::endl;
                           //<< bounds[1] << "," << bounds[3] << ")" << std::endl ;
 
-        //std::cout << "Selected " << selected->
-        //std::cout << "Selected " << selected->Get
-        //std::cout << "Selected " << selected->getNum << "Vertices" << std::endl;
-        //vtkIdType
+        std::cout   << "Old Region (y1, y2) = ("
+                    << GetMinYBound() << "," << GetMaxYBound() <<  ")" << std::endl;
 
-#if VTK_MAJOR_VERSION <= 5
-        this->SelectedMapper->SetInputConnection(
-          selected->GetProducerPort());
-#else
-        this->SelectedMapper->SetInputData(selected);
-#endif
-        this->SelectedMapper->ScalarVisibilityOff();
-
-        vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
-
-        this->SelectedActor->GetProperty()->SetColor(0.0, 0.0, 1.0); //(R,G,B)
-        this->SelectedActor->GetProperty()->SetPointSize(5);
-
-        this->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(SelectedActor);
-        this->GetInteractor()->GetRenderWindow()->Render();
-        this->HighlightProp(NULL);
-
-        std::cout << "Length: " << selected->GetLength() << std::endl;
-        }
+        std::cout   << "New Region (y1, y2) = ("
+                    << pminY << "," << pmaxY <<  ")" << std::endl;
+      }
 
     }
 
@@ -172,6 +206,27 @@ void ZVolumeSelection(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource)
     renderWindowInteractor->SetInteractorStyle( style );
 
     //renderWindowInteractor->Start();
+}
+
+bool IsValidSelection(int minY, int maxY)
+{
+    bool valid = false;
+
+   // int testY1 = GetMinYBound;
+
+    if ((minY > GetMinYBound()) && (maxY < GetMaxYBound()))
+    {
+        std::cout << "Valid Selection"  << std::endl;
+
+        valid =  true;
+    }
+    else
+    {
+        std::cout << "InValid Selection"  << std::endl;
+       valid = false;
+    }
+
+    return valid;
 }
 
 double GetMinZBound()
