@@ -30,7 +30,7 @@
      <enum>QTabWidget::North</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideNone</enum>
@@ -2241,7 +2241,7 @@
      <rect>
       <x>140</x>
       <y>0</y>
-      <width>281</width>
+      <width>251</width>
       <height>51</height>
      </rect>
     </property>
@@ -2254,9 +2254,9 @@
     <widget class="QPushButton" name="buttonModeTouch">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>170</x>
        <y>10</y>
-       <width>81</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -2272,7 +2272,7 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>81</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -2298,9 +2298,9 @@
     <widget class="QPushButton" name="buttonModeLeap">
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>90</x>
        <y>10</y>
-       <width>81</width>
+       <width>71</width>
        <height>31</height>
       </rect>
      </property>
@@ -2315,9 +2315,9 @@
    <widget class="QFrame" name="TopMethodFrame">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>390</x>
       <y>0</y>
-      <width>571</width>
+      <width>601</width>
       <height>51</height>
      </rect>
     </property>
@@ -2368,9 +2368,9 @@
     <widget class="QPushButton" name="buttonTabSliceAxis">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>570</x>
        <y>10</y>
-       <width>131</width>
+       <width>21</width>
        <height>31</height>
       </rect>
      </property>
@@ -2384,7 +2384,7 @@
     <widget class="QPushButton" name="buttonTabSliceArb">
      <property name="geometry">
       <rect>
-       <x>430</x>
+       <x>290</x>
        <y>10</y>
        <width>131</width>
        <height>31</height>
@@ -2427,7 +2427,7 @@
      <x>0</x>
      <y>0</y>
      <width>1361</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

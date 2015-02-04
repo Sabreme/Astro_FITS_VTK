@@ -114,9 +114,10 @@
 #include "vtkSliderRepresentation3D.h"
 #include "vtkSliderWidget.h"
 
-//#ifdef WIN32
+#ifdef OS_WINDOWS
     #include "windows.h"
-//#endif
+#endif
+
 
 
 /////////////////////////////////////////////////////////////////////
