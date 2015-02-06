@@ -2381,35 +2381,35 @@ void MainWindow::actionDefault_triggered()
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
-void MainWindow::on_buttonCameraFront_clicked()
-{
-    on_actionFront_Side_View_triggered();
-}
+//void MainWindow::on_buttonCameraFront_clicked()
+//{
+//    on_actionFront_Side_View_triggered();
+//}
 
-void MainWindow::on_buttonCameraRear_clicked()
-{
-    on_actionRear_Side_View_triggered();
-}
+//void MainWindow::on_buttonCameraRear_clicked()
+//{
+//    on_actionRear_Side_View_triggered();
+//}
 
-void MainWindow::on_buttonCameraLeft_clicked()
-{
-    on_actionLeft_Side_View_triggered();
-}
+//void MainWindow::on_buttonCameraLeft_clicked()
+//{
+//    on_actionLeft_Side_View_triggered();
+//}
 
-void MainWindow::on_buttonCameraRight_clicked()
-{
-    on_actionRight_Side_View_triggered();
-}
+//void MainWindow::on_buttonCameraRight_clicked()
+//{
+//    on_actionRight_Side_View_triggered();
+//}
 
-void MainWindow::on_buttonCameraTop_clicked()
-{
-    on_actionTop_Side_View_triggered();
-}
+//void MainWindow::on_buttonCameraTop_clicked()
+//{
+//    on_actionTop_Side_View_triggered();
+//}
 
-void MainWindow::on_buttonCameraBottom_clicked()
-{
-    on_actionBottom_Side_View_triggered();
-}
+//void MainWindow::on_buttonCameraBottom_clicked()
+//{
+//    on_actionBottom_Side_View_triggered();
+//}
 
 
 

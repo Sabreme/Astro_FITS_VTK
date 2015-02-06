@@ -249,12 +249,12 @@ private slots:
         void on_actionRear_Side_View_triggered();
         void on_actionFront_Side_View_triggered();
 
-        void on_buttonCameraFront_clicked();
-        void on_buttonCameraRear_clicked();
-        void on_buttonCameraLeft_clicked();
-        void on_buttonCameraRight_clicked();
-        void on_buttonCameraTop_clicked();
-        void on_buttonCameraBottom_clicked();
+//        void on_buttonCameraFront_clicked();
+//        void on_buttonCameraRear_clicked();
+//        void on_buttonCameraLeft_clicked();
+//        void on_buttonCameraRight_clicked();
+//        void on_buttonCameraTop_clicked();
+//        void on_buttonCameraBottom_clicked();
 
 
         ////////////////////////////////////////////////////
