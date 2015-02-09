@@ -658,21 +658,36 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->TopMethodFrame->setVisible(false);
     this->ui->TopModeFrame->setVisible(false);
 
-    this->ui->TopMethodFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
-                                                                            "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #dadbde, stop: 1 #dadbde);"
-                                                                            "border: 2px solid #8f8f91; "
-                                                                            "border-radius: 6px;"
-                                                                            "color: rgb(81, 81, 81) "
-                                                                            "}"));
+//    this->ui->TopMethodFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
+//                                                                            "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #dadbde, stop: 1 #dadbde);"
+//                                                                            "border: 2px solid #8f8f91; "
+//                                                                            "border-radius: 6px;"
+//                                                                            "color: rgb(81, 81, 81) "
+//                                                                            "}"));
 
-    this->ui->LeftCameraFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
-                                                                            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"
-                                                                            "border: 2px solid #8f8f91; "
-                                                                            "border-radius: 6px;"
-                                                                            "color: rgb(81, 81, 81) "
-                                                                            "}"));
+//    this->ui->TopMethodFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
+//                                                                            "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #dadbde, stop: 1 #dadbde);"
+//                                                                            "border: 2px solid #8f8f91; "
+//                                                                            "border-radius: 6px;"
+//                                                                            "color: rgb(81, 81, 81) "
+//                                                                            "}"));
+
+//    this->ui->LeftCameraFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
+//                                                                            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"
+//                                                                            "border: 2px solid #8f8f91; "
+//                                                                            "border-radius: 6px;"
+//                                                                            "color: rgb(81, 81, 81) "
+//                                                                            "}"));
 
     this->on_buttonModeMouse_clicked();
+/////
+/// //////////////////////////////////////////////////////////
+/// //////////////////////////////////////////////////////////
+///// STYLE SHEET CUSTOMIZATION FOR THE APPLICATION
+/// //////////////////////////////////////////////////////////
+///
+///
+
 
 //    this->ProgressDialog = new QProgressDialog();
 
