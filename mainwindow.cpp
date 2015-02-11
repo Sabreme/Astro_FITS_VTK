@@ -173,13 +173,24 @@ class vtkMySliceCallback : public vtkCommand
         camera->SetDistance(100.0);
         camera->OrthogonalizeViewUp();
 
-//        std::cout << "Origin = " << origin[0] << "," << origin[1] << "," << origin[2] << " \t";
-//        std::cout << "position = " << position[0] << "," << position[1] << "," << position[2] << " \t";
-//        std::cout << "normal = " << normal[0] << "," << normal[1] << "," << normal[2] << " \t";
-//        std::cout << endl;
+
         renderWindow->Render();
 
-        impPlaneWidget->Print(std::cout);
+        //impPlaneWidget->Print(std::cout);
+//        std::cout << "Origin = " << origin[0] << "," << origin[1] << "," << origin[2] << " \t";
+//        std::cout << "position = " << position[0] << "," << position[1] << "," << position[2] << " \t";
+//        std::cout << "normal = " << normal[0] << ", " << normal[1] << ",  " << normal[2] << " \t";
+        
+
+        ui->lineArbSlicePosX->setText(QString::number(position[0], 'f', 0));
+        ui->lineArbSlicePosY->setText(QString::number(position[1], 'f', 0));
+        ui->lineArbSlicePosZ->setText(QString::number(position[2], 'f', 0));
+
+        ui->lineArbSliceAngleX->setText(QString::number(normal[0] * 90, 'f', 0));
+        ui->lineArbSliceAngleY->setText(QString::number(normal[1] * 90, 'f', 0));
+        ui->lineArbSliceAngleZ->setText(QString::number(normal[2] * 90, 'f', 0));
+        
+//        std::cout << endl;
 
     }
 
@@ -189,6 +200,7 @@ class vtkMySliceCallback : public vtkCommand
     vtkCutter* cutter;
     vtkCamera* camera;
     vtkRenderWindow* renderWindow;
+    Ui::MainWindow * ui;
 
 };
 
@@ -3913,9 +3925,8 @@ void MainWindow::beginSliceArb()
 
 
     //QString("%1").arg(slice)
-    this->ui->lineArbSliceRangeMin->setText(QString("%1").arg(range[0]));
-    this->ui->lineArbSliceRangeMax->setText(QString("%1").arg(range[1]));
-
+    //this->ui->lineArbSliceRangeMin->setText(QString("%1").arg(range[0]));
+    //this->ui->lineArbSliceRangeMax->setText(QString("%1").arg(range[1]));
 
     ///
     /// \brief vtkPlaneWidget
@@ -4054,6 +4065,7 @@ void MainWindow::beginSliceArb()
     ProbeData->cutter = cutter;
     ProbeData->camera = camera2D;
     ProbeData->renderWindow = this->ui->widget_ArbPlanePreview->GetRenderWindow();
+    ProbeData->ui = this->ui;
 
 
     customArbPlaneWidget->AddObserver(vtkCommand::EnableEvent, ProbeData);
@@ -4066,6 +4078,21 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->OutlineTranslationOff();
 
     customArbPlaneWidget->EnabledOn();
+
+//    ///
+//    /// \brief Set the Position
+//    ///
+//    double * position = customArbPlaneWidget->GetOrigin();
+//    double * angle   = customArbPlaneWidget->GetNormal();
+
+
+//    this->ui->lineArbSlicePosX->setText(QString::number(position[0], 'f', 0));
+//    this->ui->lineArbSlicePosY->setText(QString::number(position[1], 'f', 0));
+//    this->ui->lineArbSlicePosZ->setText(QString::number(position[2], 'f', 0));
+
+//    this->ui->lineArbSliceAngleX->setText(QString::number(angle[0], 'f', 0));
+//    this->ui->lineArbSliceAngleY->setText(QString::number(angle[1], 'f', 0));
+//    this->ui->lineArbSliceAngleZ->setText(QString::number(angle[2], 'f', 0));
 }
 
 void MainWindow::on_buttonArbReset_clicked()
