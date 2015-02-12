@@ -20,6 +20,7 @@ background-color : rgb(49,48,43);
 QLineEdit{
 color: white;
 background-color : rgb(38, 38, 36);
+border-color: rgb(76, 76, 76);
 }
 
 QPushButton:disabled
@@ -43,9 +44,9 @@ background-color : rgb(49, 48, 43);
     </property>
     <property name="geometry">
      <rect>
-      <x>1000</x>
+      <x>1010</x>
       <y>70</y>
-      <width>361</width>
+      <width>351</width>
       <height>681</height>
      </rect>
     </property>
@@ -222,7 +223,21 @@ background-color : rgb(49, 48, 43);
      </palette>
     </property>
     <property name="styleSheet">
-     <string notr="true">QTabBar::tab:selected{
+     <string notr="true">QTabWidget
+{
+	border: none;
+}
+QTabWidget::tab-bar
+{ 
+alignment: center; 
+}
+
+QLineEdit 
+{
+	 border: 2px solid rgb(76, 76, 76);
+}
+
+QTabBar::tab:selected{
 color : white;
 background-color : rgb(255,67,19);
 }
@@ -232,11 +247,7 @@ color : white;
 background-color : rgb(49,48,43);
 padding: 5px;
 }
-
-QTabWidget::tab-bar
-{
- left: 120px;
-}</string>
+</string>
     </property>
     <property name="tabPosition">
      <enum>QTabWidget::North</enum>
@@ -261,7 +272,7 @@ QTabWidget::tab-bar
     </property>
     <widget class="QWidget" name="InfoTab">
      <attribute name="title">
-      <string>Info</string>
+      <string>Information</string>
      </attribute>
      <widget class="QFrame" name="frame_3">
       <property name="geometry">
@@ -1474,7 +1485,7 @@ QTabWidget::tab-bar
      <widget class="QPushButton" name="buttonAxisSliceReset">
       <property name="geometry">
        <rect>
-        <x>250</x>
+        <x>220</x>
         <y>10</y>
         <width>91</width>
         <height>41</height>
@@ -1773,7 +1784,7 @@ QTabWidget::tab-bar
      <widget class="QCheckBox" name="checkAxisSliceVolumeEnable">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>70</x>
         <y>20</y>
         <width>121</width>
         <height>21</height>
@@ -2141,7 +2152,7 @@ QTabWidget::tab-bar
      <widget class="QCheckBox" name="checkArbSliceVolumeEnable">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>70</x>
         <y>20</y>
         <width>121</width>
         <height>21</height>
@@ -2488,7 +2499,7 @@ QTabWidget::tab-bar
      <widget class="QPushButton" name="buttonArbReset">
       <property name="geometry">
        <rect>
-        <x>250</x>
+        <x>210</x>
         <y>10</y>
         <width>99</width>
         <height>41</height>
@@ -2507,9 +2518,9 @@ QTabWidget::tab-bar
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>340</y>
+      <y>360</y>
       <width>131</width>
-      <height>411</height>
+      <height>391</height>
      </rect>
     </property>
     <property name="palette">
@@ -2845,6 +2856,12 @@ QTabWidget::tab-bar
        </colorrole>
       </disabled>
      </palette>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit 
+{
+	 border: 2px solid rgb(76, 76, 76);
+}</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -3202,9 +3219,9 @@ QTabWidget::tab-bar
    <widget class="QFrame" name="TopModeFrame">
     <property name="geometry">
      <rect>
-      <x>1000</x>
+      <x>1020</x>
       <y>0</y>
-      <width>361</width>
+      <width>331</width>
       <height>61</height>
      </rect>
     </property>
@@ -3398,7 +3415,7 @@ QTabWidget::tab-bar
     <widget class="QPushButton" name="buttonModeTouch">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>250</x>
        <y>10</y>
        <width>71</width>
        <height>41</height>
@@ -3634,7 +3651,7 @@ QTabWidget::tab-bar
       <x>0</x>
       <y>0</y>
       <width>131</width>
-      <height>341</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -3659,7 +3676,7 @@ QTabWidget::tab-bar
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>90</y>
+       <y>110</y>
        <width>91</width>
        <height>41</height>
       </rect>
@@ -3678,7 +3695,7 @@ QTabWidget::tab-bar
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>190</y>
+       <y>210</y>
        <width>50</width>
        <height>50</height>
       </rect>
@@ -3720,7 +3737,7 @@ QTabWidget::tab-bar
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>280</y>
+       <y>310</y>
        <width>50</width>
        <height>50</height>
       </rect>
@@ -3746,7 +3763,7 @@ QTabWidget::tab-bar
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>250</y>
+       <y>280</y>
        <width>101</width>
        <height>21</height>
       </rect>
@@ -3759,7 +3776,7 @@ QTabWidget::tab-bar
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>160</y>
+       <y>180</y>
        <width>91</width>
        <height>21</height>
       </rect>
@@ -3772,7 +3789,7 @@ QTabWidget::tab-bar
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>10</y>
+       <y>40</y>
        <width>51</width>
        <height>41</height>
       </rect>
@@ -3800,25 +3817,84 @@ QTabWidget::tab-bar
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>60</y>
-       <width>51</width>
+       <x>20</x>
+       <y>10</y>
+       <width>101</width>
        <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Reset Camera</string>
+     </property>
+    </widget>
+    <widget class="Line" name="line_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(225, 67, 19);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(225, 67, 19);
+border-color: rgb(34, 34, 255);
+gridline-color: rgb(11, 68, 255);
+selection-color: rgb(41, 255, 248);
+selection-background-color: rgb(255, 69, 94);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(225, 67, 19);
+border-color: rgb(34, 34, 255);
+gridline-color: rgb(11, 68, 255);
+selection-color: rgb(41, 255, 248);
+selection-background-color: rgb(255, 69, 94);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </widget>
    <widget class="QFrame" name="VTKWidgetFrame">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>140</x>
       <y>0</y>
-      <width>871</width>
+      <width>861</width>
       <height>751</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -3829,7 +3905,7 @@ QTabWidget::tab-bar
     <widget class="QVTKWidget" name="qvtkWidgetLeft" native="true">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>0</x>
        <y>10</y>
        <width>851</width>
        <height>731</height>

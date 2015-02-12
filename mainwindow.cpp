@@ -186,11 +186,12 @@ class vtkMySliceCallback : public vtkCommand
         ui->lineArbSlicePosY->setText(QString::number(position[1], 'f', 0));
         ui->lineArbSlicePosZ->setText(QString::number(position[2], 'f', 0));
 
-        ui->lineArbSliceAngleX->setText(QString::number(normal[0] * 90, 'f', 0));
-        ui->lineArbSliceAngleY->setText(QString::number(normal[1] * 90, 'f', 0));
-        ui->lineArbSliceAngleZ->setText(QString::number(normal[2] * 90, 'f', 0));
+        ui->lineArbSliceAngleX->setText(QString::number(180 - normal[0] * 90 , 'f', 0));
+        ui->lineArbSliceAngleY->setText(QString::number(180 - normal[1] * 90, 'f', 0));
+        ui->lineArbSliceAngleZ->setText(QString::number(90 - normal[2] * 90, 'f', 0));
         
-//        std::cout << endl;
+        std::cout << "X = " << normal[0] << "\tY= " << normal[1] << "\tZ  " << normal[2] << " \t";
+        std::cout << endl;
 
     }
 
@@ -1684,8 +1685,9 @@ void MainWindow::on_actionOpen_triggered()
     //QFuture<int> future = QtConcurrent::run(ProgressDialog, &QProgressDialog::exec);
     //this->FutureWatcher.setFuture(future);
     loadFitsFile(fileName);
-
-    statusBar()->showMessage(fileName);
+    //////////////////////////////////////////////////////////////////////
+    QString padding = "                                                   ";
+    statusBar()->showMessage(padding + fileName);
 
     this->ui->tabLogWidget->setVisible(true);
     this->ui->LeftCameraFrame->setVisible(true);
@@ -1694,7 +1696,7 @@ void MainWindow::on_actionOpen_triggered()
 
     closeTabs();
 
-    this->ui->tabLogWidget->insertTab(0, this->ui->InfoTab, "Info Tab");
+    this->ui->tabLogWidget->insertTab(0, this->ui->InfoTab, "Information");
     this->ui->tabLogWidget->setCurrentIndex(0);
 
     this->UpdateFitsFileInfo();
@@ -2617,7 +2619,7 @@ void MainWindow::on_actionSubVolSelection_triggered()
 {
     this->closeTabs();
 //    this->ui->SubVolTab = new QWidget();
-    this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"SubVolTab");
+    this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"Sub-Volume Extraction");
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
 
@@ -2776,7 +2778,7 @@ void MainWindow::beginSliceAxis()
 void MainWindow::on_actionSliceAxisAligned_triggered()
 {
     closeTabs();
-    this->ui->tabLogWidget->insertTab(0,this->ui->SliceVolTab,"Slice Volume");
+    this->ui->tabLogWidget->insertTab(0,this->ui->SliceVolTab,"Axis-Alligned Slice");
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
 
@@ -2796,10 +2798,10 @@ void MainWindow::leapBeginSubVol()
 
 
 
-    this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Info");
+    this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Information");
     this->ui->tabLogWidget->setCurrentIndex(2);
 
-    this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"SubVolTab");
+    this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"Sub-Volume Extraction");
     this->ui->tabLogWidget->setCurrentIndex(0);
 
 }
@@ -2821,7 +2823,7 @@ void MainWindow::leapBeginSliceAxis()
     this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Info");
     this->ui->tabLogWidget->setCurrentIndex(2);
 
-    this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab,"Slice Volume");
+    this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab,"Axis-Alligned Slice");
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
 
@@ -2841,7 +2843,7 @@ void MainWindow::leapBeginSliceArb()
     this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Info");
     this->ui->tabLogWidget->setCurrentIndex(2);
 
-    this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab2,"Slice Volume");
+    this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab2,"Arbitrary Slice");
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
 
@@ -3729,7 +3731,7 @@ void MainWindow::on_actionLeap_Slice_triggered()
 void MainWindow::on_actionSliceAxisArbitrary_triggered()
 {
     closeTabs();
-    this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab2, "Arb Slice");
+    this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab2, "Arbitrary Slice");
     //this->ui->tabLogWidget->insertTab(1, this->ui->InfoTab, "Info Tab");
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
