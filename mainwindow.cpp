@@ -186,9 +186,9 @@ class vtkMySliceCallback : public vtkCommand
         ui->lineArbSlicePosY->setText(QString::number(position[1], 'f', 0));
         ui->lineArbSlicePosZ->setText(QString::number(position[2], 'f', 0));
 
-        ui->lineArbSliceAngleX->setText(QString::number(180 - normal[0] * 90 , 'f', 0));
-        ui->lineArbSliceAngleY->setText(QString::number(180 - normal[1] * 90, 'f', 0));
-        ui->lineArbSliceAngleZ->setText(QString::number(90 - normal[2] * 90, 'f', 0));
+        ui->lineArbSliceAngleX->setText(QString::number( (1 + normal[0]) * 180 , 'f', 0));
+        ui->lineArbSliceAngleY->setText(QString::number( (1 + normal[1]) * 180, 'f', 0));
+        ui->lineArbSliceAngleZ->setText(QString::number( (1 + normal[2]) * 180, 'f', 0));
         
         std::cout << "X = " << normal[0] << "\tY= " << normal[1] << "\tZ  " << normal[2] << " \t";
         std::cout << endl;
