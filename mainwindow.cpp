@@ -206,12 +206,12 @@ class vtkMySliceCallback : public vtkCommand
 };
 
 // Define interaction style
-class MouseInteractorStyle3 : public vtkInteractorStyleTrackballCamera
+class MouseInteractorStyle : public vtkInteractorStyleTrackballCamera
 {
 
 public:
-    static MouseInteractorStyle3* New();
-    vtkTypeMacro(MouseInteractorStyle3, vtkInteractorStyleTrackballCamera);
+    static MouseInteractorStyle* New();
+    vtkTypeMacro(MouseInteractorStyle, vtkInteractorStyleTrackballCamera);
 
     virtual void OnLeftButtonDown()
     {
@@ -606,7 +606,7 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
 
 };
 vtkStandardNewMacro(KeyPressInteractorStyle);
-vtkStandardNewMacro(MouseInteractorStyle3);
+vtkStandardNewMacro(MouseInteractorStyle);
 vtkStandardNewMacro(MouseInteractorStyleShiftAndControlTrackBall);
 vtkStandardNewMacro(MouseInteractorStyleShiftAndControlJoystick);
 vtkStandardNewMacro(MouseInteractorStyleScalingAndControlTrackBall);
@@ -1209,7 +1209,7 @@ void MainWindow::buttonTransRotationPressed()
         ///  Mouse Rotation
         ///
         ///
-        MouseInteractorStyle3 * style = MouseInteractorStyle3::New();
+        MouseInteractorStyle * style = MouseInteractorStyle::New();
 
 
         vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
@@ -1508,9 +1508,9 @@ void MainWindow::loadFitsFile(QString filename)
 
 
 
-    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
-    vtkSmartPointer<vtkInteractorStyleSwitch> style =
-            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
+//    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
+//    vtkSmartPointer<vtkInteractorStyleSwitch> style =
+//            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
 
     ////////////////////////////////////
     /// \brief Cube Axes Labels
@@ -1542,11 +1542,8 @@ void MainWindow::loadFitsFile(QString filename)
 
 
     this->ui->qvtkWidgetLeft->SetRenderWindow(renderWindow);
-    this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
-    style->SetCurrentStyleToTrackballCamera();
+    //this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
     this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetRenderWindow(renderWindow);
-
-
 
 
     this->defaultRenWindow = this->ui->qvtkWidgetLeft->GetRenderWindow();
@@ -1594,6 +1591,18 @@ void MainWindow::loadFitsFile(QString filename)
      ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
      ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
      defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
+
+
+     ///////////////////////////////////////////////
+     /// \brief SETTING Default Interactor Style to Mouse Interaction
+     ///
+     ///
+     MouseInteractorStyle * style = MouseInteractorStyle::New();
+     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+     interactor->SetInteractorStyle(style);
+     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+     style->ui = this->ui;
+     style->defualtDistance = this->defaultCameraDistance;
 
      ////////////////////////////////////////////////
      /// Leapmotion TRACKING Message
@@ -5276,8 +5285,8 @@ void MainWindow::on_actionWorldCoords_triggered()
     riw[0]->Render();
 
 
-    vtkSmartPointer<MouseInteractorStyle3> style =
-            vtkSmartPointer<MouseInteractorStyle3>::New();
+    vtkSmartPointer<MouseInteractorStyle> style =
+            vtkSmartPointer<MouseInteractorStyle>::New();
     style->SetDefaultRenderer(this->riw[0]->GetResliceCursorWidget()->GetCurrentRenderer());
     this->riw[0]->GetInteractor()->SetInteractorStyle(style);
     this->riw[0]->GetResliceCursorWidget()->GetInteractor()->SetInteractorStyle(style);
