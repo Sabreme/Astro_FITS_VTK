@@ -161,8 +161,6 @@ public slots:
     void leapTransfScalingClicked();
     void leapTransfNoneClicked();
 
-
-
 protected:
         void ModifiedHandler();
 

@@ -1879,8 +1879,8 @@ void MainWindow::on_actionReload_triggered()
 
 
     this->ui->qvtkWidgetLeft->SetRenderWindow(renderWindow);
-    this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
-    style->SetCurrentStyleToTrackballCamera();
+//    this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
+//    style->SetCurrentStyleToTrackballCamera();
     this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetRenderWindow(renderWindow);
 
 
@@ -2522,6 +2522,18 @@ void MainWindow::mouseBeginSubVol()
     boxWidget_->EnabledOn();
 
     boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
+
+    /////
+    /// \brief style - Standard Interactor
+    ///
+
+    MouseInteractorStyle * style = MouseInteractorStyle::New();
+    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+    interactor->SetInteractorStyle(style);
+    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    style->ui = this->ui;
+    style->defualtDistance = this->defaultCameraDistance;
+
 }
 
 void MainWindow::on_buttonSubVolReset_clicked()
