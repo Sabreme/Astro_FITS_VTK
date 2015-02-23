@@ -1752,6 +1752,10 @@ void MainWindow::on_actionOpen_triggered()
     ///
     //on_buttonTransfRotation_clicked();
     this->buttonTransRotationPressed();
+
+    /// We Update the Transformation Coordinates from the Camera Details
+    ///
+    this->updateTransformCoords();
     }
 
 }
@@ -2270,6 +2274,13 @@ void MainWindow::on_actionReset_Camera_triggered()
 
     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
     interactor->ExitCallback();
+
+     this->ui->qvtkWidgetLeft->update();
+
+    ///
+    /// \brief Reset the Transformation Coordinates
+    ///
+    updateTransformCoords();;
 
 
     //theRenderer->
@@ -5361,6 +5372,42 @@ void MainWindow::closeTab(int index)
 {
     this->ui->tabLogWidget->removeTab(index);
     //delete this->ui->tabLogWidget->widget(index);
+}
+
+void MainWindow::updateTransformCoords()
+{
+    vtkCamera* camera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+        ///
+    /// \brief Rotation
+    ///
+    double* orientation;
+
+    orientation  = camera->GetOrientation();
+
+    ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+    ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+    ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+    ///
+    /// \brief Translation
+    ///
+     double* position;
+
+     position = camera->GetPosition();
+
+     ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+     ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+     ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+     ///
+     /// \brief Scaling
+     ///
+     ///
+     double value ;
+
+     value = this->defaultCameraDistance /  camera->GetDistance();
+
+     ui->line_Scale->setText(QString::number(value, 'f', 2));
 }
 
 bool MainWindow::event(QEvent *event)

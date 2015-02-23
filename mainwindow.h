@@ -187,6 +187,8 @@ private slots:
 
         void closeTab(int index);
 
+        void updateTransformCoords();
+
        // void on_radioCameraTrackball_clicked();
         //void on_buttonCameraJoystick_clicked();
        // void on_buttonCameraTrackball_clicked();
