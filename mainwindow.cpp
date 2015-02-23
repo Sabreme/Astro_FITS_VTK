@@ -274,36 +274,6 @@ public:
 
     virtual void Dolly()
     {
-//        double current = ui->line_Scale->text().toDouble();
-//        double scale;
-
-//        vtkRenderWindowInteractor *rwi = this->Interactor;
-//        double* center = this->CurrentRenderer->GetCenter();
-//        int dy = rwi->GetEventPosition()[1] - rwi->GetLastEventPosition()[1];
-//        double dyf = this->MotionFactor * dy / center[1];
-//        scale = pow(1.1, dyf);
-
-
-//        double angle = camera->GetViewAngle();
-
-//        //scale = camera->GetParallelScale();
-
-//         std::cout << "Scale: " << scale
-//                   <<  "\t current: " << current
-//                  // << "\t dy: " << dy
-//                   << "\t dyf:" << dyf
-//                  // << "\t Angle: " << angle
-
-//                   //<< "\t FP: " << camera->GetFocalPoint()
-//                   << "\t Distance" << camera->GetDistance()
-
-//                   <<  std::endl;
-
-
-//        //camera->SetViewAngle(angle - dyf);
-//        //*dyf;
-
-
 
         vtkInteractorStyleTrackballCamera::Dolly();
 
@@ -1101,7 +1071,32 @@ void MainWindow::on_buttonTabInfo_pressed()
             this->systemTab = Information;
 
             this->ui->buttonTabInfo->setDisabled(true);
+
             this->infoTab_Triggered();
+
+            switch (this->systemMode)
+            {
+                case Mouse:
+                {
+                    /////////////////////////////////////////////////
+                    ///  Mouse Interaction
+                    ///
+                    ///
+                    MouseInteractorStyle * style = MouseInteractorStyle::New();
+                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+                    interactor->SetInteractorStyle(style);
+                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                    style->ui = this->ui;
+                    style->defualtDistance = this->defaultCameraDistance;
+                }
+                break;
+
+                case Leap:  ;
+                break;
+
+                //case Touch: this->touchBeginSubVol();
+            }
         }
 
     }
@@ -1126,7 +1121,21 @@ void MainWindow::on_buttonTabSubVol_pressed()
 
             switch (this->systemMode)
             {
-                case Mouse: this->mouseBeginSubVol();
+                case Mouse:
+                {
+                    this->mouseBeginSubVol();
+                    /////////////////////////////////////////////////
+                    ///  Mouse Interaction
+                    ///
+                    ///
+                    MouseInteractorStyle * style = MouseInteractorStyle::New();
+                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+                    interactor->SetInteractorStyle(style);
+                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                    style->ui = this->ui;
+                    style->defualtDistance = this->defaultCameraDistance;
+                }
                 break;
 
                 case Leap:  this->leapBeginSubVol();
@@ -1154,7 +1163,20 @@ void MainWindow::on_buttonTabSliceAxis_pressed()
 
             switch (this->systemMode)
             {
-                case Mouse: this->beginSliceAxis();
+                case Mouse:
+                {
+                    this->beginSliceAxis();
+                    /////////////////////////////////////////////////
+                    ///  Mouse Interactor
+                    ///
+                    ///
+                    MouseInteractorStyle * style = MouseInteractorStyle::New();
+                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+                    interactor->SetInteractorStyle(style);
+                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                    style->ui = this->ui;
+                    style->defualtDistance = this->defaultCameraDistance;
+                }
                 break;
 
                 case Leap: this->leapBeginSliceAxis();
@@ -1179,7 +1201,23 @@ void MainWindow::on_buttonTabSliceArb_pressed()
 
             switch (this->systemMode)
             {
-                case Mouse: this->beginSliceArb();
+                case Mouse:
+                {
+                this->beginSliceArb();
+
+                /////////////////////////////////////////////////
+                ///  Mouse Rotation
+                ///
+                ///
+                MouseInteractorStyle * style = MouseInteractorStyle::New();
+
+
+                vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+                interactor->SetInteractorStyle(style);
+                style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                style->ui = this->ui;
+                style->defualtDistance = this->defaultCameraDistance;
+            }
                 break;
 
                 case Leap: this->leapBeginSliceArb();
@@ -2228,6 +2266,12 @@ void MainWindow::on_actionReset_Camera_triggered()
 
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+
+
+    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+    interactor->ExitCallback();
+
+
     //theRenderer->
 }
 
@@ -2522,18 +2566,6 @@ void MainWindow::mouseBeginSubVol()
     boxWidget_->EnabledOn();
 
     boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
-
-    /////
-    /// \brief style - Standard Interactor
-    ///
-
-    MouseInteractorStyle * style = MouseInteractorStyle::New();
-    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-    interactor->SetInteractorStyle(style);
-    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-    style->ui = this->ui;
-    style->defualtDistance = this->defaultCameraDistance;
-
 }
 
 void MainWindow::on_buttonSubVolReset_clicked()
@@ -4101,6 +4133,20 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->OutlineTranslationOff();
 
     customArbPlaneWidget->EnabledOn();
+
+//    if (status)
+//    /////////////////////////////////////////////////
+//    ///  Mouse Rotation
+//    ///
+//    ///
+//    MouseInteractorStyle * style = MouseInteractorStyle::New();
+
+
+//    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+//    interactor->SetInteractorStyle(style);
+//    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+//    style->ui = this->ui;
+//    style->defualtDistance = this->defaultCameraDistance;
 
 //    ///
 //    /// \brief Set the Position
