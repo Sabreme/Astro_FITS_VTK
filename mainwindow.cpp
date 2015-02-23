@@ -1757,7 +1757,6 @@ void MainWindow::on_actionOpen_triggered()
     ///
     this->updateTransformCoords();
     }
-
 }
 
 void MainWindow::on_actionReload_triggered()
@@ -2581,10 +2580,13 @@ void MainWindow::mouseBeginSubVol()
 
 void MainWindow::on_buttonSubVolReset_clicked()
 {
-    on_actionReset_Camera_triggered();
+    //on_actionReset_Camera_triggered();
 
     boxWidget_->PlaceWidget(global_Volume->GetBounds());
     boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
+
+    /// Refresh the Interaction screen.
+    this->ui->qvtkWidgetLeft->update();
 }
 
 void MainWindow::loadSubVolume(QVTKWidget *qvtkWidget, vtkFitsReader *source)
@@ -4181,6 +4183,7 @@ void MainWindow::on_buttonArbReset_clicked()
     customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
     customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
     customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
+    this->ui->qvtkWidgetLeft->update();
 
 }
 

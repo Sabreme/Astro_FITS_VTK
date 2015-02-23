@@ -41,7 +41,7 @@ void loadFrameRate(vtkFrameRateWidget* frameRateWidget)
     frameRateWidget->SetRenderer(_mainWindow->vtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
     frameRateWidget->SelectableOff();
     frameRateWidget->Init();
-    frameRateWidget->On();
+    //frameRateWidget->On();
 
 }
 
