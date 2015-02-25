@@ -1404,6 +1404,7 @@ void MainWindow::updateme()
 
     if (Leaping_)
     {
+        ui->qvtkWidgetLeft->GetRenderWindow()->Render();
        LeapMotion();
     }
 }
@@ -4362,16 +4363,20 @@ void MainWindow::LeapMotion()
 
     boldFont.setBold(true);
     normalFont.setBold(false);       
+    int currentFreq = 1;
 
 
     /// IMPORTANT: Visualizer Window must be RENDERED B4 colour notification otherwise it will only stick 2 1 colour
     ///
+    ///if(this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
     if(this->ui->checkBox_Diagnostic->isChecked())
     {
         this->ui->widget_LeapVisualizer->GetRenderWindow()->Render();
         leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
         leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
-    }
+    }    
+
+
 
 
 
@@ -4935,9 +4940,11 @@ void MainWindow::LeapMotion()
             ///
             //qDebug() << "Hand Tracking " << endl ;
 
-          //  if (this->ui->checkBox_Diagnostic->isChecked())
+            ///if (this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
+            if (this->ui->checkBox_Diagnostic->isChecked())
             {
-                /// //////////////////////////////////////////////
+
+                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
                 //////////////////////////////////////////////////////////////////////////
                 /// \brief handPos
                 //////////////////////////////////////////////////////////////////////////
@@ -4957,6 +4964,7 @@ void MainWindow::LeapMotion()
                                          };
 
                 leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
+
                 leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
 
 
@@ -5011,7 +5019,12 @@ void MainWindow::LeapMotion()
                 leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
                 leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
 
+                //this->ui->widget_LeapVisualizer->update();
+                leapFrameFreqCount = 0;
+
             }
+
+            leapFrameFreqCount++;
             ////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////
             ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
@@ -5058,6 +5071,7 @@ void MainWindow::LeapDiagnostic()
     /// Create the RenderWindow
     vtkRenderWindow * renWin = vtkRenderWindow::New();   
 
+    renWin->SetSize(50,10);
     renWin->AddRenderer(renderer);    
 
     renderer->SetBackground(0.1, 0.2, 0.4);

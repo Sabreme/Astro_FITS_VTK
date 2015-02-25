@@ -480,6 +480,8 @@ private:
         char *zoomingPressed[1] ;
         QCheckBox * rotationPress;
 
+        int leapFrameFreqCount = 0;                 // Used a temporary Variable for Counting Number of Frames
+
 
 
         vtkSmartPointer< vtkResliceImageViewer > riw[3];
