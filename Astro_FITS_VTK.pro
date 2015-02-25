@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     sliceDialog.cpp \
     vtkimplicitcustomplanewidget.cpp \
     infobardialog.cpp \
-    leapdialog.cpp
+    leapdialog.cpp \
+    vtkLeapMarkerWidget.cxx
 
 HEADERS  += mainwindow.h \
     vtkfitsreader.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     Sample.h \
     vtkimplicitcustomplanewidget.h \
     infobardialog.h \
-    leapdialog.h
+    leapdialog.h \
+    vtkLeapMarkerWidget.h
 
 FORMS    += mainwindow.ui \
     subvolumedialog.ui \
