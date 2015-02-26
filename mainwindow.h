@@ -70,6 +70,8 @@
 
 #include <vtkSystemIncludes.h>
 
+#include <vtkLeapMarkerWidget.h>
+
 
 #include "Leap.h"
 #include "Sample.h"

@@ -1037,6 +1037,8 @@ void MainWindow::on_buttonModeLeap_clicked()
         this->ui->qvtkWidgetLeft->setFocus();
 
          this->leapTransRotationPressed();
+
+        AddLeapMarkerWidget(this->ui->qvtkWidgetLeft);
     }
 }
 

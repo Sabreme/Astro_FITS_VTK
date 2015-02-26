@@ -68,6 +68,25 @@
 
 #include "vtkInteractorObserver.h"
 
+#include "vtkSmartPointer.h"
+#include "vtkPlaneWidget.h"
+#include "vtkPolyDataMapper.h"
+#include "vtkSmartPointer.h"
+#include "vtkSphereSource.h"
+#include "vtkLeapMarkerWidget.h"
+#include "vtkArrowSource.h"
+#include "vtkMath.h"
+#include "vtkMatrix4x4.h"
+#include "vtkTransformPolyDataFilter.h"
+#include "vtkActor.h"
+#include "vtkPlaneWidget.h"
+#include "vtkCubeSource.h"
+#include "vtkProbeFilter.h"
+#include "vtkTransform.h"
+#include "vtkGlyph3D.h"
+#include "vtkProperty.h"
+#include "vtkPointWidget.h"
+
 class vtkActor2D;
 class vtkPolyData;
 class vtkProp;
@@ -122,6 +141,9 @@ public:
   vtkSetClampMacro(Tolerance,int,1,10);
   vtkGetMacro(Tolerance,int);
 
+
+  void GeneratActors();
+
 protected:
   vtkLeapMarkerWidget();
   ~vtkLeapMarkerWidget();
@@ -130,6 +152,19 @@ protected:
   vtkProp     *LeapMarker;
   vtkPolyData *Outline;
   vtkActor2D  *OutlineActor;
+
+  ///////////////////////////////////////////////////////////
+  /// \brief leapDbgSphereActor
+  ///
+
+  vtkActor        * leapDbgSphereActor;
+  vtkActor        * leapDbgArrowActor;
+  vtkArrowSource  * leapDbgArrow;
+  vtkPlaneSource  * leapDbgPlane;
+  vtkSphereSource * leapDbgSphere;
+  vtkPlaneWidget * leapDbgPlaneWidget;
+  vtkPointWidget * leapDbgPointWidget;
+
 
   unsigned long StartEventObserverId;
   
@@ -182,6 +217,7 @@ protected:
 
   void SquareRenderer();
   void UpdateOutline();
+
 
 private:
   vtkLeapMarkerWidget(const vtkLeapMarkerWidget&);  // Not implemented
