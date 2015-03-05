@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     sliceDialog.cpp \
     vtkimplicitcustomplanewidget.cpp \
     infobardialog.cpp \
-    leapdialog.cpp
+    leapdialog.cpp \
+    vtkLeapMarkerWidget.cxx
 
 HEADERS  += mainwindow.h \
     vtkfitsreader.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     Sample.h \
     vtkimplicitcustomplanewidget.h \
     infobardialog.h \
-    leapdialog.h
+    leapdialog.h \
+    vtkLeapMarkerWidget.h
 
 FORMS    += mainwindow.ui \
     subvolumedialog.ui \
@@ -53,7 +55,7 @@ INCLUDEPATH += /usr/local/include/vtk-5.10
 
 win32 {LIBS += -LC:/VTK5.10.1-bin/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
         -lvtkInfovis -lvtkGeovis -lvtkViews -lvtkCharts -lvtkFiltering -lvtkImaging \
-        -lvtkGraphics -lvtkGenericFiltering -lvtkIO -lvtkRendering -lvtkCommon  \
+        -lvtkGraphics -lvtkGenericFiltering -lvtkIO -lvtkRendering -lvtkCommon \
         -lcfitsio -lLeap
 
 INCLUDEPATH += C:/VTK5.10.1-src/include/vtk-5.10
