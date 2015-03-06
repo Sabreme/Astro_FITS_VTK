@@ -114,7 +114,7 @@
 #include "vtkSliderRepresentation3D.h"
 #include "vtkSliderWidget.h"
 
-#ifdef OS_WINDOWS
+#ifdef __WIN32__
     #include "windows.h"
 #endif
 
@@ -672,6 +672,7 @@ MainWindow::MainWindow(QWidget *parent) :
 ///
 
 
+    this->ui->menuBar->setStyleSheet("QMenuBar::item { background: black; color: white}");
 //    this->ProgressDialog = new QProgressDialog();
 
 //    connect (&this->FutureWatcher, SIGNAL(finished()), this, SLOT(slot_Load_Finished()));

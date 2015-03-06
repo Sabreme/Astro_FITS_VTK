@@ -223,7 +223,12 @@ background-color : rgb(49, 48, 43);
      </palette>
     </property>
     <property name="styleSheet">
-     <string notr="true">QTabWidget
+     <string notr="true">QFrame
+{
+border:none;
+}
+
+QTabWidget
 {
 	border: none;
 }
@@ -253,7 +258,7 @@ padding: 5px;
      <enum>QTabWidget::North</enum>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideNone</enum>
@@ -282,6 +287,19 @@ padding: 5px;
         <width>331</width>
         <height>131</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}
+
+</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -591,9 +609,9 @@ padding: 5px;
      <widget class="QLabel" name="label_26">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>110</x>
         <y>20</y>
-        <width>101</width>
+        <width>121</width>
         <height>20</height>
        </rect>
       </property>
@@ -796,6 +814,17 @@ padding: 5px;
         <height>101</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -934,9 +963,9 @@ padding: 5px;
      <widget class="QLabel" name="label_27">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>110</x>
         <y>180</y>
-        <width>101</width>
+        <width>121</width>
         <height>20</height>
        </rect>
       </property>
@@ -962,6 +991,17 @@ padding: 5px;
         <width>331</width>
         <height>131</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -1069,9 +1109,9 @@ padding: 5px;
      <widget class="QLabel" name="label_29">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>110</x>
         <y>310</y>
-        <width>81</width>
+        <width>121</width>
         <height>20</height>
        </rect>
       </property>
@@ -1097,6 +1137,17 @@ padding: 5px;
         <width>331</width>
         <height>131</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -1204,9 +1255,9 @@ padding: 5px;
      <widget class="QLabel" name="label_28">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>130</x>
         <y>470</y>
-        <width>51</width>
+        <width>61</width>
         <height>20</height>
        </rect>
       </property>
@@ -1240,6 +1291,17 @@ padding: 5px;
         <width>331</width>
         <height>481</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -1427,9 +1489,9 @@ padding: 5px;
       <widget class="QLabel" name="label_20">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>20</x>
          <y>10</y>
-         <width>231</width>
+         <width>301</width>
          <height>20</height>
         </rect>
        </property>
@@ -1522,6 +1584,17 @@ padding: 5px;
          <height>191</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -1611,6 +1684,17 @@ padding: 5px;
          <height>191</height>
         </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -1699,6 +1783,17 @@ padding: 5px;
          <width>331</width>
          <height>191</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -1978,6 +2073,17 @@ padding: 5px;
         <height>301</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -2016,6 +2122,17 @@ padding: 5px;
         <width>331</width>
         <height>71</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -2177,6 +2294,17 @@ padding: 5px;
         <height>571</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -2212,9 +2340,9 @@ padding: 5px;
       <widget class="QLabel" name="label_21">
        <property name="geometry">
         <rect>
-         <x>50</x>
+         <x>10</x>
          <y>110</y>
-         <width>241</width>
+         <width>311</width>
          <height>20</height>
         </rect>
        </property>
@@ -2858,10 +2986,21 @@ padding: 5px;
      </palette>
     </property>
     <property name="styleSheet">
-     <string notr="true">QLineEdit 
+     <string notr="true">QFrame
+{
+	border: 1px solid white;
+}
+
+QLineEdit 
 {
 	 border: 2px solid rgb(76, 76, 76);
-}</string>
+}
+
+QLabel
+{
+border:none;
+}
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -3183,33 +3322,35 @@ padding: 5px;
       <string>Space</string>
      </property>
     </widget>
-    <widget class="Line" name="line">
+    <widget class="Line" name="line_6">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>150</y>
-       <width>111</width>
-       <height>16</height>
+       <width>118</width>
+       <height>3</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(225, 67, 19);</string>
+      <string notr="true">border: 2px solid rgb(27, 27, 27);
+</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-    <widget class="Line" name="line_2">
+    <widget class="Line" name="line_7">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>270</y>
-       <width>111</width>
-       <height>16</height>
+       <width>118</width>
+       <height>3</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(225, 67, 19);</string>
+      <string notr="true">border: 2px solid rgb(27, 27, 27);
+</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -3398,7 +3539,17 @@ padding: 5px;
      </palette>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:default
+     <string notr="true">QFrame
+{
+border:1px solid white;
+}
+
+QLabel
+{
+border:none;
+}
+
+QPushButton:default
 {
   background-color: rgb(225,67,19) ;
   border: 2px solid #8f8f91;  
@@ -3655,7 +3806,22 @@ padding: 5px;
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton:disabled
+     <string notr="true">QFrame
+{
+	border: 1px solid white;
+}
+
+QLineEdit 
+{
+	 border: 2px solid rgb(76, 76, 76);
+}
+
+QLabel
+{
+border:none;
+}
+
+QPushButton:disabled
 {
   background-color: rgb(225,67,19) ;
   border: 2px solid #8f8f91;  
@@ -3823,44 +3989,11 @@ padding: 5px;
        <height>21</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border:none;</string>
+     </property>
      <property name="text">
       <string>Reset Camera</string>
-     </property>
-    </widget>
-    <widget class="Line" name="line_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>260</y>
-       <width>111</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: rgb(225, 67, 19);</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-    <widget class="Line" name="line_4">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>160</y>
-       <width>111</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: rgb(225, 67, 19);
-border-color: rgb(34, 34, 255);
-gridline-color: rgb(11, 68, 255);
-selection-color: rgb(41, 255, 248);
-selection-background-color: rgb(255, 69, 94);</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
     <widget class="Line" name="line_5">
@@ -3873,7 +4006,8 @@ selection-background-color: rgb(255, 69, 94);</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(225, 67, 19);
+      <string notr="true">border:none;
+color: rgb(225, 67, 19);
 border-color: rgb(34, 34, 255);
 gridline-color: rgb(11, 68, 255);
 selection-color: rgb(41, 255, 248);
@@ -3883,6 +4017,53 @@ selection-background-color: rgb(255, 69, 94);</string>
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+    <widget class="Line" name="line_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>270</y>
+       <width>118</width>
+       <height>3</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 2px solid rgb(27, 27, 27);
+</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_9">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>118</width>
+       <height>3</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 2px solid rgb(27, 27, 27);
+</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <zorder>buttonTabInfo</zorder>
+    <zorder>buttonTabSubVol</zorder>
+    <zorder>buttonTabSliceAxis</zorder>
+    <zorder>buttonTabSliceArb</zorder>
+    <zorder>label_44</zorder>
+    <zorder>label_45</zorder>
+    <zorder>buttonCameraReset</zorder>
+    <zorder>label_7</zorder>
+    <zorder>line_5</zorder>
+    <zorder>line_2</zorder>
+    <zorder>line_6</zorder>
+    <zorder>line_8</zorder>
+    <zorder>line_9</zorder>
    </widget>
    <widget class="QFrame" name="VTKWidgetFrame">
     <property name="geometry">
@@ -3932,7 +4113,7 @@ selection-background-color: rgb(255, 69, 94);</string>
      <x>0</x>
      <y>0</y>
      <width>1361</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

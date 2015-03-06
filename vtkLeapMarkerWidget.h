@@ -93,7 +93,7 @@ class vtkProp;
 class vtkLeapMarkerWidgetObserver;
 class vtkRenderer;
 
-class VTK_WIDGETS_EXPORT vtkLeapMarkerWidget : public vtkInteractorObserver
+class VTK_EXPORT vtkLeapMarkerWidget : public vtkInteractorObserver
 {
 public:
   static vtkLeapMarkerWidget* New();
