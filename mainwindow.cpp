@@ -1039,7 +1039,19 @@ void MainWindow::on_buttonModeLeap_clicked()
 
          this->leapTransRotationPressed();
 
-        AddLeapMarkerWidget(this->ui->qvtkWidgetLeft);
+        //////
+        /// \brief INTRODUCTION OF LEAP WIDGET
+        ///
+
+        vtkRenderWindowInteractor* interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+        this->leapMarkerWidget = vtkLeapMarkerWidget::New();
+        this->leapMarkerWidget->SetInteractor(interactor);
+         this->leapMarkerWidget->SetEnabled(true);
+        //marker->InteractiveOn();
+         this->leapMarkerWidget->InteractiveOff();
+
+         this->leapMarkerWidget->GeneratActors();
     }
 }
 
@@ -4353,10 +4365,9 @@ void MainWindow::on_actionLeapBasic_triggered()
    this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
    this->leapFloatTotalMotionScale = 1.0f;
 
-   LeapDiagnostic();
+   //LeapDiagnostic();
 
    this->ui->qvtkWidgetLeft->setFocus();
-
 }
 
 
@@ -4368,15 +4379,15 @@ void MainWindow::LeapMotion()
     normalFont.setBold(false);       
     int currentFreq = 1;
 
-
     /// IMPORTANT: Visualizer Window must be RENDERED B4 colour notification otherwise it will only stick 2 1 colour
     ///
     ///if(this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
     if(this->ui->checkBox_Diagnostic->isChecked())
     {
-        this->ui->widget_LeapVisualizer->GetRenderWindow()->Render();
-        leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
-        leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
+        //this->ui->widget_LeapVisualizer->GetRenderWindow()->Render();
+
+        this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
+        this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
     }    
 
 
@@ -4966,9 +4977,9 @@ void MainWindow::LeapMotion()
                                           handPos.z * sensitivity - offSetZ
                                          };
 
-                leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
+                this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
 
-                leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
+                this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
 
 
                 /////////////////////////////////////////////////////////////////////////////
@@ -4979,12 +4990,12 @@ void MainWindow::LeapMotion()
                 Vector newNormal = hand.palmNormal();
 
                 double oldNormal[3] ;
-                leapDbgPlaneWidget->GetNormal(oldNormal);
+                this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
                 double newNormalD [3];
                 double theta, rotVector[3];
 
-                double *point1 = leapDbgPlaneWidget->GetPoint1();
-                double *origin = leapDbgPlaneWidget->GetOrigin();
+                double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
+                double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
                 //double *center = leapDbgPlaneWidget->GetCenter();
 
 
@@ -4992,8 +5003,8 @@ void MainWindow::LeapMotion()
                 newNormalD[1] = newNormal.y;
                 newNormalD[2] = newNormal.z;
 
-                leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
-                leapDbgPlaneWidget->UpdatePlacement();
+                this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
+                this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
 
 
                 ///Compute the rotation vector using a transformation matrix
@@ -5018,9 +5029,9 @@ void MainWindow::LeapMotion()
                     theta = vtkMath::DegreesFromRadians(acos(dp));
                 }
 
-                leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-                leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-                leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
+                this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+               this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+               this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
 
                 //this->ui->widget_LeapVisualizer->update();
                 leapFrameFreqCount = 0;

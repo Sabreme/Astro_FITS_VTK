@@ -144,6 +144,14 @@ public:
 
   void GeneratActors();
 
+  vtkActor        * leapDbgSphereActor;
+  vtkActor        * leapDbgArrowActor;
+  vtkArrowSource  * leapDbgArrow;
+  vtkPlaneSource  * leapDbgPlane;
+  vtkSphereSource * leapDbgSphere;
+  vtkPlaneWidget * leapDbgPlaneWidget;
+  vtkPointWidget * leapDbgPointWidget;
+
 protected:
   vtkLeapMarkerWidget();
   ~vtkLeapMarkerWidget();
@@ -156,14 +164,6 @@ protected:
   ///////////////////////////////////////////////////////////
   /// \brief leapDbgSphereActor
   ///
-
-  vtkActor        * leapDbgSphereActor;
-  vtkActor        * leapDbgArrowActor;
-  vtkArrowSource  * leapDbgArrow;
-  vtkPlaneSource  * leapDbgPlane;
-  vtkSphereSource * leapDbgSphere;
-  vtkPlaneWidget * leapDbgPlaneWidget;
-  vtkPointWidget * leapDbgPointWidget;
 
 
   unsigned long StartEventObserverId;

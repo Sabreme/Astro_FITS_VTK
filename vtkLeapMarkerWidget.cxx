@@ -573,6 +573,9 @@ void vtkLeapMarkerWidget::GeneratActors()
     SetLeapMarker(sphereActor);
 
 
+    //this->Renderer->GetActiveCamera()->Dolly(0.2);
+
+
     ////////////////////////////////////////////////
     ///////////////////////////////////////////////
     /// ARROW ACTOR
@@ -781,7 +784,7 @@ void vtkLeapMarkerWidget::GeneratActors()
 //    //marker->InteractiveOn();
 //    marker->InteractiveOff();
 
-
+  this->Renderer->GetActiveCamera()->Dolly(0.5);
 }
 
 //-------------------------------------------------------------------------
