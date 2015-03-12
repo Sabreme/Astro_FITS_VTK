@@ -1047,11 +1047,14 @@ void MainWindow::on_buttonModeLeap_clicked()
 
         this->leapMarkerWidget = vtkLeapMarkerWidget::New();
         this->leapMarkerWidget->SetInteractor(interactor);
+
+        this->leapMarkerWidget->GeneratActors();
+
          this->leapMarkerWidget->SetEnabled(true);
         //marker->InteractiveOn();
          this->leapMarkerWidget->InteractiveOff();
 
-         this->leapMarkerWidget->GeneratActors();
+
     }
 }
 

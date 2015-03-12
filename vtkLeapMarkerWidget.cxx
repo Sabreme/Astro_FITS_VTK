@@ -132,7 +132,7 @@ vtkLeapMarkerWidget::vtkLeapMarkerWidget()
   this->OutlineActor->SetPosition( 0, 0 );
   this->OutlineActor->SetPosition2( 1, 1 );
 
-  this->GeneratActors();
+ // this->GeneratActors();
 
   points->Delete();
   mapper->Delete();
@@ -264,19 +264,21 @@ void vtkLeapMarkerWidget::ExecuteCameraUpdateEvent(vtkObject *vtkNotUsed(o),
     return;
     }
 
-  vtkCamera *cam = this->CurrentRenderer->GetActiveCamera();
-  double pos[3], fp[3], viewup[3];
-  cam->GetPosition( pos );
-  cam->GetFocalPoint( fp );
-  cam->GetViewUp( viewup );
+//  vtkCamera *cam = this->CurrentRenderer->GetActiveCamera();
+//  double pos[3], fp[3], viewup[3];
+//  cam->GetPosition( pos );
+//  cam->GetFocalPoint( fp );
+//  cam->GetViewUp( viewup );
 
-  cam = this->Renderer->GetActiveCamera();
-  cam->SetPosition( pos );
-  cam->SetFocalPoint( fp );
-  cam->SetViewUp( viewup );
-  this->Renderer->ResetCamera();
+//  cam = this->Renderer->GetActiveCamera();
+//  cam->SetPosition( pos );
+//  cam->SetFocalPoint( fp );
+//  cam->SetViewUp( viewup );
 
-  this->UpdateOutline();
+//  this->Renderer->ResetCamera();
+//  cam->Dolly(0.8);
+
+//  this->UpdateOutline();
 }
 
 //-------------------------------------------------------------------------
@@ -546,8 +548,8 @@ void vtkLeapMarkerWidget::GeneratActors()
 
     vtkSmartPointer<vtkSphereSource> sphereSource =
             vtkSmartPointer<vtkSphereSource>::New();
-    sphereSource->SetPhiResolution(15);
-    sphereSource->SetThetaResolution(15);
+    sphereSource->SetPhiResolution(10);
+    sphereSource->SetThetaResolution(10);
     sphereSource->Update();
     inputPolyData = sphereSource->GetOutput();
 
@@ -570,7 +572,7 @@ void vtkLeapMarkerWidget::GeneratActors()
     ///
     ///
     ///
-    SetLeapMarker(sphereActor);
+
 
 
     //this->Renderer->GetActiveCamera()->Dolly(0.2);
@@ -758,7 +760,9 @@ void vtkLeapMarkerWidget::GeneratActors()
 //    myCallback->PositionActor = textActor;
 
     leapDbgPointWidget = vtkPointWidget::New();
+    leapDbgPointWidget->SetCurrentRenderer(this->Renderer);
     leapDbgPointWidget->SetInteractor(this->Interactor);
+
     //pointWidget->SetInput(global_Reader->GetOutput());
     leapDbgPointWidget->AllOff();
     leapDbgPointWidget->PlaceWidget(-1, 1, -1, 1, -1, 1);
@@ -784,7 +788,11 @@ void vtkLeapMarkerWidget::GeneratActors()
 //    //marker->InteractiveOn();
 //    marker->InteractiveOff();
 
-  this->Renderer->GetActiveCamera()->Dolly(0.5);
+  //this->Renderer->GetActiveCamera()->Dolly(0.5);
+
+     SetLeapMarker(sphereActor);
+
+     this->Renderer->GetActiveCamera()->Dolly(0.3);
 }
 
 //-------------------------------------------------------------------------
