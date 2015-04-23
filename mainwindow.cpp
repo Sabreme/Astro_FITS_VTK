@@ -940,8 +940,6 @@ void MainWindow::leapTransfNoneClicked()
      this->leapTrackingActor->SetVisibility(false);
 }
 
-
-
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /////////////////MODE SELECTION BUTTONS////////////////////
@@ -987,6 +985,8 @@ void MainWindow::on_buttonModeLeap_clicked()
 
         this->systemMode = Leap;
 
+        this->ui->actionLeapDialogToggle->setChecked(true);
+
         this->ui->buttonModeMouse->setDefault(false);
         this->ui->buttonModeTouch->setDefault(false);
 
@@ -998,8 +998,8 @@ void MainWindow::on_buttonModeLeap_clicked()
         this->controller_= new Controller;
         Leaping_ = true;
 
-        this->ui->tabLogWidget->insertTab(0, this->ui->LeapTab, "Leap Data Tab");
-        this->ui->tabLogWidget->setCurrentIndex(0);
+       // this->ui->tabLogWidget->insertTab(0, this->ui->LeapTab, "Leap Data Tab");
+       // this->ui->tabLogWidget->setCurrentIndex(0);
 
         vtkSmartPointer<KeyPressInteractorStyle> style =
                 vtkSmartPointer<KeyPressInteractorStyle>::New();
@@ -1019,7 +1019,7 @@ void MainWindow::on_buttonModeLeap_clicked()
         this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
         this->leapFloatTotalMotionScale = 1.0f;
 
-        LeapDiagnostic();
+        //LeapDiagnostic();
 
 //        connect(this->ui->buttonTransfRotation, SIGNAL(clicked()), this,SLOT(leapTransfRotationClicked()));
 //        connect(this->ui->buttonTransfTranslation, SIGNAL(clicked()), this,SLOT(leapTransfTranslationClicked()));
@@ -4349,8 +4349,8 @@ void MainWindow::on_actionLeapBasic_triggered()
    //std::cout << "Leaping " << endl;
    //CloseTabs();
 
-   this->ui->tabLogWidget->insertTab(0, this->ui->LeapTab, "Leap Data Tab");
-   this->ui->tabLogWidget->setCurrentIndex(0);
+   //this->ui->tabLogWidget->insertTab(0, this->ui->LeapTab, "Leap Data Tab");
+   //this->ui->tabLogWidget->setCurrentIndex(0);
 
    vtkSmartPointer<KeyPressInteractorStyle> style =
            vtkSmartPointer<KeyPressInteractorStyle>::New();
@@ -4385,7 +4385,7 @@ void MainWindow::LeapMotion()
     /// IMPORTANT: Visualizer Window must be RENDERED B4 colour notification otherwise it will only stick 2 1 colour
     ///
     ///if(this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
-    if(this->ui->checkBox_Diagnostic->isChecked())
+    if(this->ui->actionLeapDialogToggle->isChecked())
     {
         //this->ui->widget_LeapVisualizer->GetRenderWindow()->Render();
 
@@ -4958,7 +4958,7 @@ void MainWindow::LeapMotion()
             //qDebug() << "Hand Tracking " << endl ;
 
             ///if (this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
-            if (this->ui->checkBox_Diagnostic->isChecked())
+            if (this->ui->actionLeapDialogToggle->isChecked())
             {
 
                 std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
