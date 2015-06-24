@@ -1,25 +1,24 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2014-02-07T03:45:10
-#
-#-------------------------------------------------
+include (../defaults.pri)
+
+QT       += core gui
+
+#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TEMPLATE = app
 
 QT       += core gui
 
 #greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Astro_FITS_VTK
-
 TEMPLATE = app
 
-CONFIG +=
 
-include(src/src.pri)
-include(InfoDlg/InfoDlg.pri)
-include(SubVolume/SubVolume.pri)
-include(System/System.pri)
-include(Slicing/Slicing.pri)
-include(Leap/Leap.pri)
+SOURCES += infobardialog.cpp\      
+
+HEADERS  += infobardialog.h \
+
+FORMS    += infobardialog.ui \
 
 unix {LIBS += -L/home/pmulumba/VTK5.10.1/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
         -lvtkInfovis -lvtkGeovis -lvtkViews -lvtkCharts -lvtkFiltering -lvtkImaging \
@@ -37,9 +36,7 @@ win32 {LIBS += -LC:/VTK5.10.1-bin/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -l
 INCLUDEPATH += C:/VTK5.10.1-src/include/vtk-5.10
 }
 
-QMAKE_CXXFLAGS_DEBUG += -std=c++11
+CONFIG +=
 
-QMAKE_CXXFLAGS_RELEASE += -std=c++11
+RESOURCES +=
 
-RESOURCES += \
-    Icons/Icons.qrc

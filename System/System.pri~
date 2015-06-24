@@ -1,0 +1,7 @@
+SOURCES += vtkFrameRateWidget.cpp\
+           vtkfitsreader.cpp
+
+HEADERS  += vtkFrameRateWidget.h \
+	    vtkfitsReader.h \ 
+            ScalarBar.h \ 
+            OrientationAxes.h
