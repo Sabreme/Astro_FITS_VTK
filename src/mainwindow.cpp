@@ -104,16 +104,16 @@
 #endif
 
 
-void CallbackFunction(vtkObject* caller, long unsigned int vtkNotUsed(eventId),void* vtkNotUsed(clientData), void* vtkNotUsed(callData) )
-{
-  vtkRenderer* renderer = static_cast<vtkRenderer*>(caller);
+//void CallbackFunction(vtkObject* caller, long unsigned int vtkNotUsed(eventId),void* vtkNotUsed(clientData), void* vtkNotUsed(callData) )
+//{
+//  vtkRenderer* renderer = static_cast<vtkRenderer*>(caller);
 
-  double timeInSeconds = renderer->GetLastRenderTimeInSeconds();
-  double fps = 1.0/timeInSeconds;
-  std::cout << "FPS: " << fps << std::endl;
+//  double timeInSeconds = renderer->GetLastRenderTimeInSeconds();
+//  double fps = 1.0/timeInSeconds;
+//  std::cout << "FPS: " << fps << std::endl;
 
-  std::cout << "Callback" << std::endl;
-}
+//  std::cout << "Callback" << std::endl;
+//}
 
 
 /////////////////////////////////////////////////////////////////////
@@ -4038,7 +4038,7 @@ void MainWindow::LeapMotion()
 
 //            int handCount = 0;
             Hand hand = frame.hands().rightmost();
-            std::cout << hand.toString() << endl;
+//            std::cout << hand.toString() << endl;
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4484,7 +4484,7 @@ void MainWindow::LeapMotion()
             if (this->ui->actionLeapDialogToggle->isChecked())
             {
 
-                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
+//                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
                 //////////////////////////////////////////////////////////////////////////
                 /// \brief handPos
                 //////////////////////////////////////////////////////////////////////////

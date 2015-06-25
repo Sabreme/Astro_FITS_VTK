@@ -410,7 +410,7 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
       std::string key = rwi->GetKeySym();
 
       // Output the key that was pressed
-//      std::cout << "Pressed " << key << std::endl;
+      std::cout << "Pressed " << key << std::endl;
 
 //      // Handle an arrow key
 //      if(key == "Up")
