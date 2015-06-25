@@ -3,5 +3,6 @@ SOURCES += src/main.cpp\
 
 HEADERS  += src/main.h \
 	    src/mainwindow.h \   
+    src/InteractionClasses.h
 
 FORMS    += src/mainwindow.ui
