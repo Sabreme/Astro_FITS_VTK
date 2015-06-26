@@ -51,19 +51,6 @@
     <string>ROTATION</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_Scaling">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>570</y>
-     <width>21</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="labelScaling">
    <property name="geometry">
     <rect>
@@ -212,32 +199,6 @@
      <string>D</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QCheckBox" name="checkBox_Rotation">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>570</y>
-     <width>21</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox_Translation">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>570</y>
-     <width>21</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
   </widget>
   <widget class="QLabel" name="labelTranslation">
    <property name="geometry">

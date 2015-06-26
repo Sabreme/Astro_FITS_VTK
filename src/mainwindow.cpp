@@ -3887,6 +3887,9 @@ void MainWindow::on_actionLeapBasic_triggered()
    style->scaling = this->ui->checkBox_Scaling;
    style->mainWindow = this;
 
+   style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+   style->ui = this->ui;
+
    this->leapMatrixTotalMotionRotation = Leap::Matrix::identity();
    this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
    this->leapFloatTotalMotionScale = 1.0f;
@@ -3914,7 +3917,12 @@ void MainWindow::LeapMotion()
 
         this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
         this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
-    }    
+        this->leapMarkerWidget->On();
+    }       
+    else
+    {
+        this->leapMarkerWidget->Off();
+    }
 
 
 
@@ -3945,9 +3953,9 @@ void MainWindow::LeapMotion()
         //bool chkRotate = this->ui->checkBox_Rotation->isChecked();
         //bool chkScale = this->ui->checkBox_Scaling->isChecked();
 
-        bool chkTranslate = !this->ui->buttonTransfTranslation->isEnabled() && this->ui->checkBoxLeapTracking->isChecked();
-        bool chkRotate = !this->ui->buttonTransfRotation->isEnabled() && this->ui->checkBoxLeapTracking->isChecked();
-        bool chkScale = !this->ui->buttonTransfScaling->isEnabled() && this->ui->checkBoxLeapTracking->isChecked();
+        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
+        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
+        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
 
         this->leapTrackingActor->SetVisibility(this->ui->checkBoxLeapTracking->isChecked());
 
@@ -4402,6 +4410,16 @@ void MainWindow::LeapMotion()
 
                camera->ApplyTransform(handMove);
 
+               /// ADDED INTERACTION CAPTURE
+               ///
+               double* position;
+
+               position = camera->GetPosition();
+
+               ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+               ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+               ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
             }
 
 
@@ -4443,6 +4461,15 @@ void MainWindow::LeapMotion()
 
                 camera->SetFocalPoint(cameraFocalPoint);
 
+                /// ADDED INTERACTION CAPTURE
+                double* orientation;
+
+                orientation  = camera->GetOrientation();
+
+                ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+                ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+                ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
                 //renderer->ResetCameraClippingRange();
 
             }
@@ -4471,7 +4498,13 @@ void MainWindow::LeapMotion()
                     camera->Dolly(scaleFactor);
                     renderer->ResetCameraClippingRange();
                //     qDebug() << "ScaleFactor Normal = " << scaleFactor << endl;
-                }                
+                }
+
+                double value ;
+
+                value = this->defaultCameraDistance /  camera->GetDistance();
+
+                ui->line_Scale->setText(QString::number(value, 'f', 2));
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -473,7 +473,61 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
 
       // Forward events
       vtkInteractorStyleTrackballCamera::OnKeyPress();
+
+
     }
+
+    virtual void Rotate()
+   {
+
+
+       vtkInteractorStyleTrackballCamera::Rotate();
+
+       double* orientation;
+
+       orientation  = camera->GetOrientation();
+
+       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+
+   }
+
+
+    virtual void Pan()
+    {
+
+
+        vtkInteractorStyleTrackballCamera::Pan();
+
+        double* position;
+
+        position = camera->GetPosition();
+
+        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+    }
+
+    virtual void Dolly()
+    {
+
+        vtkInteractorStyleTrackballCamera::Dolly();
+
+        double value ;
+
+        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
+
+        ui->line_Scale->setText(QString::number(value, 'f', 2));
+    }
+
+
+    vtkCamera * camera;
+    Ui::MainWindow * ui;
+    double defualtDistance;
+
+
     QCheckBox * rotation;
     QCheckBox * translation;
     QCheckBox * scaling;

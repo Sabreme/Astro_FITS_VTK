@@ -3356,6 +3356,72 @@ border:none;
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+    <widget class="QCheckBox" name="checkBox_Rotation_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>21</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_Translation_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>21</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_Scaling_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>280</y>
+       <width>21</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>buttonTransfRotation</zorder>
+    <zorder>buttonTransfTranslation</zorder>
+    <zorder>buttonTransfScaling</zorder>
+    <zorder>label_34</zorder>
+    <zorder>label_35</zorder>
+    <zorder>label_36</zorder>
+    <zorder>label_37</zorder>
+    <zorder>line_OrientX</zorder>
+    <zorder>line_OrientY</zorder>
+    <zorder>line_OrientZ</zorder>
+    <zorder>line_PosY</zorder>
+    <zorder>line_PosZ</zorder>
+    <zorder>line_PosX</zorder>
+    <zorder>line_Scale</zorder>
+    <zorder>label_39</zorder>
+    <zorder>label_40</zorder>
+    <zorder>label_41</zorder>
+    <zorder>label_42</zorder>
+    <zorder>label_43</zorder>
+    <zorder>checkBoxLeapTracking</zorder>
+    <zorder>line_6</zorder>
+    <zorder>line_7</zorder>
+    <zorder>checkBox_Rotation_2</zorder>
+    <zorder>checkBox_Translation_2</zorder>
+    <zorder>checkBox_Rotation_2</zorder>
+    <zorder>checkBox_Translation_2</zorder>
+    <zorder>checkBox_Scaling_2</zorder>
    </widget>
    <widget class="QFrame" name="TopModeFrame">
     <property name="geometry">
@@ -4074,9 +4140,9 @@ selection-background-color: rgb(255, 69, 94);</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>0</y>
        <width>841</width>
-       <height>731</height>
+       <height>741</height>
       </rect>
      </property>
      <property name="sizePolicy">
