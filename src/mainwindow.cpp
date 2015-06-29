@@ -458,7 +458,12 @@ void MainWindow::leapTransfNoneClicked()
      style->rotation = this->ui->checkBox_Rotation;
      style->translation = this->ui->checkBox_Translation;
      style->scaling = this->ui->checkBox_Scaling;
-     style->mainWindow = this;
+     style->mainWindow = this;          
+
+     interactor->SetInteractorStyle(style);
+     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+     style->ui = this->ui;
+     style->defualtDistance = this->defaultCameraDistance;
 
      this->leapTrackingActor->SetVisibility(false);
 }
@@ -537,6 +542,12 @@ void MainWindow::on_buttonModeLeap_clicked()
         style->mainWindow = this;
 
 
+        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+        interactor->SetInteractorStyle(style);
+        style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+        style->ui = this->ui;
+        style->defualtDistance = this->defaultCameraDistance;
 
         this->leapMatrixTotalMotionRotation = Leap::Matrix::identity();
         this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
@@ -566,7 +577,7 @@ void MainWindow::on_buttonModeLeap_clicked()
         /// \brief INTRODUCTION OF LEAP WIDGET
         ///
 
-        vtkRenderWindowInteractor* interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+//        vtkRenderWindowInteractor* interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
         this->leapMarkerWidget = vtkLeapMarkerWidget::New();
         this->leapMarkerWidget->SetInteractor(interactor);
@@ -4461,14 +4472,14 @@ void MainWindow::LeapMotion()
 
                 camera->SetFocalPoint(cameraFocalPoint);
 
-                /// ADDED INTERACTION CAPTURE
-                double* orientation;
+//                /// ADDED INTERACTION CAPTURE
+//                double* orientation;
 
-                orientation  = camera->GetOrientation();
+//                orientation  = camera->GetOrientation();
 
-                ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
-                ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
-                ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+//                ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+//                ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+//                ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
                 //renderer->ResetCameraClippingRange();
 

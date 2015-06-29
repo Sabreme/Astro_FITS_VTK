@@ -485,6 +485,8 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
 
        double* orientation;
 
+       camera->Print(std::cout);
+
        orientation  = camera->GetOrientation();
 
        ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
@@ -495,32 +497,32 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
    }
 
 
-    virtual void Pan()
-    {
+//    virtual void Pan()
+//    {
 
 
-        vtkInteractorStyleTrackballCamera::Pan();
+//        vtkInteractorStyleTrackballCamera::Pan();
 
-        double* position;
+//        double* position;
 
-        position = camera->GetPosition();
+//        position = camera->GetPosition();
 
-        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
-    }
+//        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//    }
 
-    virtual void Dolly()
-    {
+//    virtual void Dolly()
+//    {
 
-        vtkInteractorStyleTrackballCamera::Dolly();
+//        vtkInteractorStyleTrackballCamera::Dolly();
 
-        double value ;
+//        double value ;
 
-        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
+//        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
 
-        ui->line_Scale->setText(QString::number(value, 'f', 2));
-    }
+//        ui->line_Scale->setText(QString::number(value, 'f', 2));
+//    }
 
 
     vtkCamera * camera;

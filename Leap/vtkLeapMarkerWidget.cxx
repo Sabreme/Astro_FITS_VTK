@@ -792,7 +792,7 @@ void vtkLeapMarkerWidget::GeneratActors()
 
      SetLeapMarker(sphereActor);
 
-     this->Renderer->GetActiveCamera()->Dolly(0.3);
+     this->Renderer->GetActiveCamera()->Dolly(0.2);
 }
 
 //-------------------------------------------------------------------------
