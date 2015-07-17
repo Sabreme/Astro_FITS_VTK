@@ -86,6 +86,7 @@
 #include "vtkGlyph3D.h"
 #include "vtkProperty.h"
 #include "vtkPointWidget.h"
+#include "vtkSliderWidget.h"
 
 class vtkActor2D;
 class vtkPolyData;
@@ -151,6 +152,14 @@ public:
   vtkSphereSource * leapDbgSphere;
   vtkPlaneWidget * leapDbgPlaneWidget;
   vtkPointWidget * leapDbgPointWidget;
+  vtkSliderWidget* leapDbgSliderWidget;
+
+  double global_CameraPosition;
+
+  int64_t global_ScaleFactorID ;  // Last  Frames Counted.
+  double scaling_Max = 40;
+  double scaling_Start = 10;
+  double scaling_Min = 5;
 
 protected:
   vtkLeapMarkerWidget();

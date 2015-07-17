@@ -32,6 +32,11 @@
 #include "vtkPointWidget.h"
 #include "vtkTextActor.h"
 
+#include "vtkProperty.h"
+#include "vtkSliderRepresentation2D.h"
+#include "vtkTextProperty.h"
+#include "vtkProperty2D.h"
+
 vtkStandardNewMacro(vtkLeapMarkerWidget);
 
 vtkCxxSetObjectMacro(vtkLeapMarkerWidget, LeapMarker, vtkProp);
@@ -793,6 +798,60 @@ void vtkLeapMarkerWidget::GeneratActors()
      SetLeapMarker(sphereActor);
 
      this->Renderer->GetActiveCamera()->Dolly(0.2);
+
+     ////////////////////////////////////////////////
+     ///////////////////////////////////////////////
+     /// SLIDERWIDGET ACTOR
+     ///////////////////////////////////////////////
+     ///////////////////////////////////////////////
+
+     vtkSmartPointer<vtkSliderRepresentation2D> sliderRep =
+       vtkSmartPointer<vtkSliderRepresentation2D>::New();
+
+     sliderRep->SetMinimumValue(scaling_Min);
+     sliderRep->SetMaximumValue(scaling_Max);
+     sliderRep->SetValue(scaling_Start);
+
+     // Set color properties:
+     // Change the color of the knob that slides
+     sliderRep->GetSliderProperty()->SetColor(0,1,0);//Green
+     sliderRep->SetSliderLength(0.006);          //THICKNESS
+     sliderRep->SetSliderWidth(0.01);           // TALL
+
+     // Change the color of the text indicating what the slider controls
+     sliderRep->GetTitleProperty()->SetColor(1,0,0);//red
+
+     // Change the color of the text displaying the value
+     sliderRep->GetLabelProperty()->SetColor(1,0,0);//red
+
+     //Change the color of the text displaying the value location
+     sliderRep->ShowSliderLabelOff();
+
+     // Change the color of the knob when the mouse is held on it
+     sliderRep->GetSelectedProperty()->SetColor(0,1,0);//green
+
+     // Change the color and Width of the bar
+     sliderRep->GetTubeProperty()->SetColor(1,1,1);//white
+     sliderRep->SetTubeWidth(0.002);
+
+     // Change the color and Width of the ends of the bar
+     sliderRep->GetCapProperty()->SetColor(0,1,0);//Green
+     sliderRep->SetEndCapLength(0.005);          //THICKNESS
+     sliderRep->SetEndCapWidth(0.02);           // TALL
+
+     sliderRep->GetPoint1Coordinate()->SetCoordinateSystemToDisplay();
+     sliderRep->GetPoint1Coordinate()->SetValue(135 ,720);
+     sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToDisplay();
+     sliderRep->GetPoint2Coordinate()->SetValue(30, 720);
+
+     leapDbgSliderWidget  = vtkSliderWidget::New();
+     leapDbgSliderWidget->SetInteractor(this->Interactor);
+     leapDbgSliderWidget->SetRepresentation(sliderRep);
+     leapDbgSliderWidget->SetAnimationModeToOff();
+
+     leapDbgSliderWidget->EnabledOn();
+     global_CameraPosition = 7;
+
 }
 
 //-------------------------------------------------------------------------

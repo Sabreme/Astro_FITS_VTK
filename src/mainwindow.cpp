@@ -95,7 +95,10 @@
 #include "vtkTransformPolyDataFilter.h"
 
 #include "vtkSliderRepresentation3D.h"
+
+#include "vtkSliderRepresentation2D.h"
 #include "vtkSliderWidget.h"
+#include "vtkProperty2D.h"
 
 #include "InteractionClasses.h"
 
@@ -3928,6 +3931,9 @@ void MainWindow::LeapMotion()
 
         this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
         this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
+        static_cast<vtkSliderRepresentation2D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(this->leapMarkerWidget->scaling_Start);
+        static_cast<vtkSliderRepresentation2D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1,1);
+
         this->leapMarkerWidget->On();
     }       
     else
@@ -4512,7 +4518,7 @@ void MainWindow::LeapMotion()
                 }
 
                 double value ;
-
+;
                 value = this->defaultCameraDistance /  camera->GetDistance();
 
                 ui->line_Scale->setText(QString::number(value, 'f', 2));
@@ -4602,6 +4608,56 @@ void MainWindow::LeapMotion()
                 this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
                this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
                this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
+
+                //////////////////////////////////////////////////////////////////////////
+                /// \brief Pinch Scaling
+                //////////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////////
+                ///
+                ///
+                /// Compute the Scale Factor using the leap motion factor
+
+                /// The following code checks to see if the sensor has regained focus.
+                /// if so, we set the global_CameraPosition to the default value
+                /// Effectively functioning as a reset value.
+                /// We also have a skip value to true to not invert the slider.
+
+                bool do_Invert = true;
+                if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
+                {
+                    this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
+//                    std::cout << "Return focus" << endl;
+                    do_Invert = false;
+                }
+
+                this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
+
+                float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
+
+                double oldPosition = this->leapMarkerWidget->global_CameraPosition;
+
+                this->leapMarkerWidget->global_CameraPosition = oldPosition / (scaleFactor) ;
+
+                double newPosition = this->leapMarkerWidget->global_CameraPosition;
+
+                /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+
+                double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+
+                if (colourRange < 0) colourRange = 0;
+                else
+                if(colourRange > 1) colourRange = 1;
+
+                if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting SMALLER - Blue Adjustment
+                {
+                     static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                    static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                }
+                else                                           /// SCHINKING.... ColourRange Getting BIGGER -- Red Adjustment
+                {
+                    static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                    static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                }
 
                 //this->ui->widget_LeapVisualizer->update();
                 leapFrameFreqCount = 0;
