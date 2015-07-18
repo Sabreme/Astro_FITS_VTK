@@ -3970,9 +3970,14 @@ void MainWindow::LeapMotion()
         //bool chkRotate = this->ui->checkBox_Rotation->isChecked();
         //bool chkScale = this->ui->checkBox_Scaling->isChecked();
 
-        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
-        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
-        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
+//        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
+//        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
+//        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
+
+
+        bool chkRotate = (frame.rotationProbability(controller_->frame(1)) > 0.6);
+        bool chkTranslate = (frame.translationProbability(controller_->frame(1)) > 0.6);
+        bool chkScale = (frame.scaleProbability(controller_->frame(1)) > 0.6);
 
         this->leapTrackingActor->SetVisibility(this->ui->checkBoxLeapTracking->isChecked());
 
@@ -3980,22 +3985,22 @@ void MainWindow::LeapMotion()
         vtkCamera *camera = renderer->GetActiveCamera();
 
 
-        // Get the most recent frame and report some basic information
-        //                std::cout   << "Frame id: " << frame.id()
-        //                            << ", timestamp: " << frame.timestamp()
-        //                            << ", hands: " << frame.hands().count()
-        //                            << ", fingers: " << frame.fingers().count()
-                                    //<< ", fingers: " << fingers.count()
-        //                            //<< ", Rotation (Y): " << shouldRotate
-        //                            //<< ", Translate (Y): " << shouldTranslate
-        //                            //<< ", Scale (Y): " << shouldScale
-        //                            //<< ", tools: " << frame.tools().count()
-        //                            //<< ", gestures: " << frame.gestures().count()
-        //                            //<< ", PalmNormal: " << frame.hands()[0].palmNormal()
-        //                            //<< ", PalmDirect: " << frame.hands()[0].direction()
-        //                            << ", yaw: " << frame.hands()[0].direction().yaw()
-        //                            //<< ", Angle: " << frame.rotationAngle(controller_->frame(1))
-        //                            << std::endl;
+//        // Get the most recent frame and report some basic information
+//                        std::cout   << "Frame id: " << frame.id()
+//                                    << ", timestamp: " << frame.timestamp()
+//                                    << ", hands: " << frame.hands().count()
+//        //                            << ", fingers: " << frame.fingers().count()
+//        //                            //<< ", fingers: " << fingers.count()
+//                                    << ", Rotation (Y): " << frame.rotationProbability(controller_->frame(1))
+//                                    << ", Translate (Y): " << frame.translationProbability(controller_->frame(1))
+//                                    << ", Scale (Y): " << frame.scaleProbability(controller_->frame(1))
+//                                    //<< ", tools: " << frame.tools().count()
+//        //                            //<< ", gestures: " << frame.gestures().count()
+//        //                            //<< ", PalmNormal: " << frame.hands()[0].palmNormal()
+//        //                            //<< ", PalmDirect: " << frame.hands()[0].direction()
+//        //                            << ", yaw: " << frame.hands()[0].direction().yaw()
+//        //                            //<< ", Angle: " << frame.rotationAngle(controller_->frame(1))
+//                                    << std::endl;
 
 //        const std::string fingerNames[] = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
 
@@ -4540,6 +4545,8 @@ void MainWindow::LeapMotion()
                 //////////////////////////////////////////////////////////////////////////
                 ////////////////////////////////////////////////////////////////////////
 
+                if (frame.translationProbability(controller_->frame(1)) > 0.6)
+                {
                 Vector handPos = hand.palmPosition();
                 //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
 
@@ -4556,58 +4563,62 @@ void MainWindow::LeapMotion()
                 this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
 
                 this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
+            }
 
 
                 /////////////////////////////////////////////////////////////////////////////
                 /// \brief newNormal
                 ///
 
-
-                Vector newNormal = hand.palmNormal();
-
-                double oldNormal[3] ;
-                this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
-                double newNormalD [3];
-                double theta, rotVector[3];
-
-                double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
-                double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
-                //double *center = leapDbgPlaneWidget->GetCenter();
-
-
-                newNormalD[0] = newNormal.x;
-                newNormalD[1] = newNormal.y;
-                newNormalD[2] = newNormal.z;
-
-                this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
-                this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
-
-
-                ///Compute the rotation vector using a transformation matrix
-                ///Note that is fnromals are aparelle then te rotation is either 0 or 180 Degrees
-
-                double dp = vtkMath::Dot(oldNormal, newNormalD);
-                if (dp >= 1.0)
+                if (frame.rotationProbability(controller_->frame(1)) > 0.6)
                 {
-                    return;    ///zero rotation
-                }
 
-                else if (dp <= -1.0)
-                {
-                    theta = 180.0;
-                    rotVector[0] = point1[0] - origin[0];
-                    rotVector[1] = point1[1] - origin[1];
-                    rotVector[2] = point1[2] - origin[2];
-                }
-                else
-                {
-                    vtkMath::Cross(oldNormal, newNormalD,rotVector);
-                    theta = vtkMath::DegreesFromRadians(acos(dp));
-                }
+                    Vector newNormal = hand.palmNormal();
 
-                this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-               this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-               this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
+                    double oldNormal[3] ;
+                    this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
+                    double newNormalD [3];
+                    double theta, rotVector[3];
+
+                    double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
+                    double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
+                    //double *center = leapDbgPlaneWidget->GetCenter();
+
+
+                    newNormalD[0] = newNormal.x;
+                    newNormalD[1] = newNormal.y;
+                    newNormalD[2] = newNormal.z;
+
+                    this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
+                    this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
+
+
+                    ///Compute the rotation vector using a transformation matrix
+                    ///Note that is fnromals are aparelle then te rotation is either 0 or 180 Degrees
+
+                    double dp = vtkMath::Dot(oldNormal, newNormalD);
+                    if (dp >= 1.0)
+                    {
+                        return;    ///zero rotation
+                    }
+
+                    else if (dp <= -1.0)
+                    {
+                        theta = 180.0;
+                        rotVector[0] = point1[0] - origin[0];
+                        rotVector[1] = point1[1] - origin[1];
+                        rotVector[2] = point1[2] - origin[2];
+                    }
+                    else
+                    {
+                        vtkMath::Cross(oldNormal, newNormalD,rotVector);
+                        theta = vtkMath::DegreesFromRadians(acos(dp));
+                    }
+
+                    this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+                    this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+                    this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
+                }
 
                 //////////////////////////////////////////////////////////////////////////
                 /// \brief Pinch Scaling
@@ -4622,42 +4633,66 @@ void MainWindow::LeapMotion()
                 /// Effectively functioning as a reset value.
                 /// We also have a skip value to true to not invert the slider.
 
-                bool do_Invert = true;
-                if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
+                if (frame.scaleProbability(controller_->frame(1)) > 0.6)
                 {
-                    this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
-//                    std::cout << "Return focus" << endl;
-                    do_Invert = false;
+                    bool do_Invert = true;
+                    if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
+                    {
+                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
+                        //                    std::cout << "Return focus" << endl;
+                        do_Invert = false;
+                    }
+
+                    this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
+
+                    float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
+
+                    double oldPosition = this->leapMarkerWidget->global_CameraPosition;
+
+                    this->leapMarkerWidget->global_CameraPosition = oldPosition / (scaleFactor) ;
+
+                    double newPosition = this->leapMarkerWidget->global_CameraPosition;
+
+                    /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+
+                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+
+                    if (colourRange < 0) colourRange = 0;
+                    else
+                        if(colourRange > 1) colourRange = 1;
+
+                    if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting SMALLER - Blue Adjustment
+                    {
+                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                    }
+                    else                                           /// SCHINKING.... ColourRange Getting BIGGER -- Red Adjustment
+                    {
+                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                    }
                 }
 
-                this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
 
-                float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
 
-                double oldPosition = this->leapMarkerWidget->global_CameraPosition;
 
-                this->leapMarkerWidget->global_CameraPosition = oldPosition / (scaleFactor) ;
 
-                double newPosition = this->leapMarkerWidget->global_CameraPosition;
-
-                /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-
-                double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
-
-                if (colourRange < 0) colourRange = 0;
-                else
-                if(colourRange > 1) colourRange = 1;
-
-                if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting SMALLER - Blue Adjustment
-                {
-                     static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                    static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(colourRange,colourRange,1);
-                }
-                else                                           /// SCHINKING.... ColourRange Getting BIGGER -- Red Adjustment
-                {
-                    static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                    static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
-                }
+//                // Get the most recent frame and report some basic information
+//                                std::cout   << "Frame id: " << frame.id()
+//                                            << ", timestamp: " << frame.timestamp()
+//                                            << ", hands: " << frame.hands().count()
+//                //                            << ", fingers: " << frame.fingers().count()
+//                //                            //<< ", fingers: " << fingers.count()
+//                                            << ", Rotation (Y): " << frame.rotationProbability(controller_->frame(1))
+//                                            << ", Translate (Y): " << frame.translationProbability(controller_->frame(1))
+//                                            << ", Scale (Y): " << frame.scaleProbability(controller_->frame(1))
+//                                            //<< ", tools: " << frame.tools().count()
+//                //                            //<< ", gestures: " << frame.gestures().count()
+//                //                            //<< ", PalmNormal: " << frame.hands()[0].palmNormal()
+//                //                            //<< ", PalmDirect: " << frame.hands()[0].direction()
+//                //                            << ", yaw: " << frame.hands()[0].direction().yaw()
+//                //                            //<< ", Angle: " << frame.rotationAngle(controller_->frame(1))
+//                                            << std::endl;
 
                 //this->ui->widget_LeapVisualizer->update();
                 leapFrameFreqCount = 0;
