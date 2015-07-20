@@ -1283,66 +1283,6 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionReload_triggered()
 {
-
-
-//    //////////////////////////////////////////////////////////////////
-//    ///////////VTK FITS READER CODE FROM FITS.CXX ////////////////////
-//    //////////////////////////////////////////////////////////////////
-
-//    //moveToThread(QApplication::instance()->thread());
-//    //qRegisterMetaType<QTextCursor>("QTextCursor");
-
-//    vtkCommand* pObserver = vtkProgressCommand::New();
-
-//    // vtk pipeline
-//    vtkFitsReader *fitsReader = vtkFitsReader::New();
-//    const char *newFileName = filename.toStdString().c_str();
-//    fitsReader->SetFileName(newFileName);
-//    fitsReader->AddObserver(vtkCommand::ProgressEvent, pObserver );
-
-//    // qDebug() << "Obtained Filename" << endl;
-//    //fitsReader->PrintSelf();
-//    //fitsReader->PrintDetails();
-//    QApplication::processEvents();
-
-    //qDebug() << "Gathering Points" << endl;
-
-
-    //qDebug() << "Processing Points" << endl;
-
-
-//    /////////////////////////////////
-//    /// \brief Outline Object
-//    ///
-//    //qDebug() << "Adding Outline" << endl;
-//    vtkOutlineFilter *outline = vtkOutlineFilter::New();
-//    outline->AddObserver(vtkCommand::ProgressEvent, pObserver );
-//    outline->SetInputConnection(fitsReader->GetOutputPort());
-
-//    vtkPolyDataMapper *outlineMapper = vtkPolyDataMapper::New();
-//    outlineMapper->SetInputConnection(outline->GetOutputPort());
-
-//    vtkActor *outlineActor = vtkActor::New();
-//    outlineActor->SetMapper(outlineMapper);
-//    outlineActor->GetProperty()->SetColor(0.5,0.5,0.5);
-
-//    global_Outline = outlineActor;
-
-
-//    ///
-//    /// \brief resample
-//    ///
-//    vtkImageResample *resample = vtkImageResample::New();
-
-//    resample->SetInputConnection( fitsReader->GetOutputPort() );
-//    resample->SetAxisMagnificationFactor(0, 1.0);
-//    resample->SetAxisMagnificationFactor(1, 1.0);
-//    resample->SetAxisMagnificationFactor(2, 1.0);
-
-//    imageResample_ = resample;
-
-//    /// Create the Volume & mapper
-
     vtkVolume *volume = vtkVolume::New();
     vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
     global_Mapper = mapper;
@@ -1511,8 +1451,15 @@ void MainWindow::on_actionReload_triggered()
     //on_buttonTransfRotation_clicked();
      this->buttonTransRotationPressed();
 
-//    this->ui->menuBar->setVisible(false);
-//    this->ui->menuViews->setDisabled(true);
+     this->leapMarkerWidget = vtkLeapMarkerWidget::New();
+     this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+
+     this->leapMarkerWidget->GeneratActors();
+
+      this->leapMarkerWidget->SetEnabled(true);
+     //marker->InteractiveOn();
+      this->leapMarkerWidget->InteractiveOff();
+
 }
 
 void MainWindow::printBounds(const char* name, double bounds[6])
@@ -2386,8 +2333,8 @@ void MainWindow::leapBeginSubVol()
 
 
 
-    this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Information");
-    this->ui->tabLogWidget->setCurrentIndex(2);
+//    this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Information");
+//    this->ui->tabLogWidget->setCurrentIndex(2);
 
     this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"Sub-Volume Extraction");
     this->ui->tabLogWidget->setCurrentIndex(0);
