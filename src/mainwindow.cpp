@@ -106,19 +106,6 @@
     #include "windows.h"
 #endif
 
-
-//void CallbackFunction(vtkObject* caller, long unsigned int vtkNotUsed(eventId),void* vtkNotUsed(clientData), void* vtkNotUsed(callData) )
-//{
-//  vtkRenderer* renderer = static_cast<vtkRenderer*>(caller);
-
-//  double timeInSeconds = renderer->GetLastRenderTimeInSeconds();
-//  double fps = 1.0/timeInSeconds;
-//  std::cout << "FPS: " << fps << std::endl;
-
-//  std::cout << "Callback" << std::endl;
-//}
-
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -166,27 +153,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->LeftCameraFrame->setVisible(false);
     this->ui->TopMethodFrame->setVisible(false);
     this->ui->TopModeFrame->setVisible(false);
-
-//    this->ui->TopMethodFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
-//                                                                            "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #dadbde, stop: 1 #dadbde);"
-//                                                                            "border: 2px solid #8f8f91; "
-//                                                                            "border-radius: 6px;"
-//                                                                            "color: rgb(81, 81, 81) "
-//                                                                            "}"));
-
-//    this->ui->TopMethodFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
-//                                                                            "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #dadbde, stop: 1 #dadbde);"
-//                                                                            "border: 2px solid #8f8f91; "
-//                                                                            "border-radius: 6px;"
-//                                                                            "color: rgb(81, 81, 81) "
-//                                                                            "}"));
-
-//    this->ui->LeftCameraFrame->setStyleSheet(QString::fromUtf8("QPushButton:disabled {"
-//                                                                            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"
-//                                                                            "border: 2px solid #8f8f91; "
-//                                                                            "border-radius: 6px;"
-//                                                                            "color: rgb(81, 81, 81) "
-//                                                                            "}"));
 
     this->on_buttonModeMouse_clicked();
 /////
@@ -3703,34 +3669,6 @@ void MainWindow::beginSliceArb()
 
     customArbPlaneWidget->EnabledOn();
 
-//    if (status)
-//    /////////////////////////////////////////////////
-//    ///  Mouse Rotation
-//    ///
-//    ///
-//    MouseInteractorStyle * style = MouseInteractorStyle::New();
-
-
-//    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-//    interactor->SetInteractorStyle(style);
-//    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-//    style->ui = this->ui;
-//    style->defualtDistance = this->defaultCameraDistance;
-
-//    ///
-//    /// \brief Set the Position
-//    ///
-//    double * position = customArbPlaneWidget->GetOrigin();
-//    double * angle   = customArbPlaneWidget->GetNormal();
-
-
-//    this->ui->lineArbSlicePosX->setText(QString::number(position[0], 'f', 0));
-//    this->ui->lineArbSlicePosY->setText(QString::number(position[1], 'f', 0));
-//    this->ui->lineArbSlicePosZ->setText(QString::number(position[2], 'f', 0));
-
-//    this->ui->lineArbSliceAngleX->setText(QString::number(angle[0], 'f', 0));
-//    this->ui->lineArbSliceAngleY->setText(QString::number(angle[1], 'f', 0));
-//    this->ui->lineArbSliceAngleZ->setText(QString::number(angle[2], 'f', 0));
 }
 
 void MainWindow::on_buttonArbReset_clicked()
@@ -3803,8 +3741,6 @@ vtkLookupTable* MainWindow::BuildHueIntensityBaseMap(double min, double max)
 
     return lut;
 }
-
-
 
 void MainWindow::on_checkArbSliceVolumeEnable_stateChanged(int arg1)
 {
@@ -3908,8 +3844,6 @@ void MainWindow::on_actionLeapBasic_triggered()
    this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
    this->leapFloatTotalMotionScale = 1.0f;
 
-   //LeapDiagnostic();
-
    this->ui->qvtkWidgetLeft->setFocus();
 }
 
@@ -3919,15 +3853,12 @@ void MainWindow::LeapMotion()
     QFont boldFont, normalFont;
 
     boldFont.setBold(true);
-    normalFont.setBold(false);       
-    int currentFreq = 1;
+    normalFont.setBold(false);
 
     /// IMPORTANT: Visualizer Window must be RENDERED B4 colour notification otherwise it will only stick 2 1 colour
     ///
-    ///if(this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
     if(this->ui->actionLeapDialogToggle->isChecked())
     {
-        //this->ui->widget_LeapVisualizer->GetRenderWindow()->Render();
 
         this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
         this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
@@ -3935,16 +3866,11 @@ void MainWindow::LeapMotion()
         static_cast<vtkSliderRepresentation2D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1,1);
 
         this->leapMarkerWidget->On();
-    }       
+    }
     else
     {
         this->leapMarkerWidget->Off();
     }
-
-
-
-
-
 
     if(controller_->isConnected())  // controller is a controller object
     {
@@ -3952,27 +3878,20 @@ void MainWindow::LeapMotion()
         const Frame frame = controller_->frame();
         //const FingerList fingers = controller_->frame().fingers();
 
+        controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
 
-
-        //controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
-        controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);                
-
-        bool shouldTranslate = true;
-        bool shouldRotate = true;
-        bool shouldScale = true;
         bool shouldSubVol = this->leapSubVolMode;
         bool shouldAxisSlice =  this->leapAxisSliceMode;
         bool shouldArbSlice = this->leapArbSliceMode;
 
-        //bool shouldCheck  = false;
 
         //bool chkTranslate = this->ui->checkBox_Translation->isChecked();
         //bool chkRotate = this->ui->checkBox_Rotation->isChecked();
         //bool chkScale = this->ui->checkBox_Scaling->isChecked();
 
-//        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
-//        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
-//        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
+        //        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
+        //        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
+        //        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
 
 
         bool chkRotate = (frame.rotationProbability(controller_->frame(1)) > 0.6);
@@ -3983,63 +3902,6 @@ void MainWindow::LeapMotion()
 
         vtkRenderer * renderer = this->defaultRenderer;
         vtkCamera *camera = renderer->GetActiveCamera();
-
-
-//        // Get the most recent frame and report some basic information
-//                        std::cout   << "Frame id: " << frame.id()
-//                                    << ", timestamp: " << frame.timestamp()
-//                                    << ", hands: " << frame.hands().count()
-//        //                            << ", fingers: " << frame.fingers().count()
-//        //                            //<< ", fingers: " << fingers.count()
-//                                    << ", Rotation (Y): " << frame.rotationProbability(controller_->frame(1))
-//                                    << ", Translate (Y): " << frame.translationProbability(controller_->frame(1))
-//                                    << ", Scale (Y): " << frame.scaleProbability(controller_->frame(1))
-//                                    //<< ", tools: " << frame.tools().count()
-//        //                            //<< ", gestures: " << frame.gestures().count()
-//        //                            //<< ", PalmNormal: " << frame.hands()[0].palmNormal()
-//        //                            //<< ", PalmDirect: " << frame.hands()[0].direction()
-//        //                            << ", yaw: " << frame.hands()[0].direction().yaw()
-//        //                            //<< ", Angle: " << frame.rotationAngle(controller_->frame(1))
-//                                    << std::endl;
-
-//        const std::string fingerNames[] = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
-
-//        // Get fingers
-//            const FingerList fingers = frame.hands().rightmost().fingers();
-//            const FingerList openFingers = frame.hands()[0].fingers().extended();
-//            std::cout   << "Fingers" <<  openFingers.count() << "------------------------" << endl;
-//            for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
-//              const Finger finger = *fl;
-//              std::cout << std::string(4, ' ') <<  fingerNames[finger.type()]
-//                        << " finger, id: " << finger.id()
-//                        << ", length: " << finger.length()
-//                        << ",direction:"<< finger.direction()
-//                        << "mm, width: " << finger.width() << std::endl;
-//            }
-
-//        if (shouldSubVol )
-//        {
-//            const GestureList gestures = frame.gestures();
-//            for (int g = 0; g < gestures.count(); ++g)
-//            {
-//                Gesture gesture = gestures[g];
-
-//                if (gesture.type() == Gesture::TYPE_SCREEN_TAP)
-//                {
-//                    std::cout << "KeyTapp Pressed" << std::endl;
-//                    if (!this->ui->checkBox_Rotation->isChecked())
-//                    {
-//                        std::cout << "Should Check" << std::endl;
-//                        this->ui->checkBox_Rotation->setChecked(true);
-//                    }
-//                    else
-//                    {
-//                        std::cout << "Should Export" << std::endl;
-//                        on_actionSubVol_Export_triggered();
-//                    }
-//                }
-//            }
-//        }
 
         if (shouldAxisSlice)
         {
@@ -4062,43 +3924,28 @@ void MainWindow::LeapMotion()
         if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
         {
 
-
-
-
-
-//            int handCount = 0;
             Hand hand = frame.hands().rightmost();
-//            std::cout << hand.toString() << endl;
-
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////  AXIS  SLICE TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
             if((shouldAxisSlice) && (frame.hands().count() ==1))
-            {                                
-                const FingerList rightFingers = frame.hands().rightmost().fingers();
-                const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
+            {
 
                 Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
                 Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
 
-                 //leapMovement = false;
+                //leapMovement = false;
 
                 std::cout << " 1. Movement = " << leapMovement << "\t";
 
                 if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
-                  rightThumb.isExtended())
+                        rightThumb.isExtended())
                 {
-
-
-                    //std::cout << "Slice Mode" << endl;
                     double moveFactor = 2.0;
 
                     Vector newPosition = frame.translation(controller_->frame(1));
-
-
-
                     ///
                     ///Translate the X Axis Left and Right  (RED)
                     ///
@@ -4165,17 +4012,6 @@ void MainWindow::LeapMotion()
 
                     }
 
-                    //sliderWidgetX->InvokeEvent(vtkCommand::InteractionEvent);
-                    //sliderWidgetY->InvokeEvent(vtkCommand::InteractionEvent);
-                    //sliderWidgetZ->InvokeEvent(vtkCommand::InteractionEvent);
-
-
-
-//                    std::cout << "X: " << currentPosX << "\t = " << changeX << "\t" ;
-//                    std::cout << "Y: " << currentPosY << "\t = " << changeY << "\t" ;
-//                    std::cout << "Z: " << currentPosZ << "\t = " << changeZ << "\t" ;
-//                    std::cout << endl;
-
                     std::cout << " 5. Movement = " << leapMovement << "\t";
                 }
 
@@ -4217,9 +4053,9 @@ void MainWindow::LeapMotion()
                 Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
                 Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
 
-                 //leapMovement = false;
+                //leapMovement = false;
 
-              //  std::cout << " 1. Movement = " << leapMovement << "\t";
+                //  std::cout << " 1. Movement = " << leapMovement << "\t";
 
                 if(extendedRight.count() >=4)
                 {
@@ -4267,7 +4103,7 @@ void MainWindow::LeapMotion()
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
-                }       
+                }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4276,16 +4112,16 @@ void MainWindow::LeapMotion()
 
             if((shouldSubVol) &&  frame.hands().count() > 1)
             {
-               const FingerList leftFingers = frame.hands().leftmost().fingers();
-               const FingerList rightFingers = frame.hands().rightmost().fingers();
-               const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
-               const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
+                const FingerList leftFingers = frame.hands().leftmost().fingers();
+                const FingerList rightFingers = frame.hands().rightmost().fingers();
+                const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
+                const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
 
-//               const FingerList indexFingerLeftList = frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX);
-//               const FingerList indexFingerRightList = frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX);
+                //               const FingerList indexFingerLeftList = frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX);
+                //               const FingerList indexFingerRightList = frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX);
 
-//               const FingerList thumbFingerLeftList = frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB);
-//               const FingerList thumbFingerRightList = frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB);
+                //               const FingerList thumbFingerLeftList = frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB);
+                //               const FingerList thumbFingerRightList = frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB);
 
 
                 Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
@@ -4308,8 +4144,8 @@ void MainWindow::LeapMotion()
 
 
                 if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()  &&
-                   frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
-                   leftThumb.isExtended() && rightThumb.isExtended() )
+                        frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
+                        leftThumb.isExtended() && rightThumb.isExtended() )
                 {
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -4391,8 +4227,8 @@ void MainWindow::LeapMotion()
             //////////////////////////    TRANSLATION   //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkTranslate)
-            {                
+            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked())
+            {
                 this->ui->labelTranslation->setFont(boldFont);
 
                 //////////////////////////////////////////////////////////////////////////////////////
@@ -4412,43 +4248,43 @@ void MainWindow::LeapMotion()
                 /// to apply to the CameraMatrix. By ysing the old fashioned Xt, Yt, Zt * Matrix COLUMNS
 
                 newTranslation.x =   (cameraMatrix->GetElement(0,0) * newPosition.x) +
-                                     (cameraMatrix->GetElement(1,0) * newPosition.y) +
-                                     (cameraMatrix->GetElement(2,0) * newPosition.z)  ;
+                        (cameraMatrix->GetElement(1,0) * newPosition.y) +
+                        (cameraMatrix->GetElement(2,0) * newPosition.z)  ;
 
                 newTranslation.y =   (cameraMatrix->GetElement(0,1) * newPosition.x) +
-                                     (cameraMatrix->GetElement(1,1) * newPosition.y) +
-                                     (cameraMatrix->GetElement(2,1) * newPosition.z)    ;
+                        (cameraMatrix->GetElement(1,1) * newPosition.y) +
+                        (cameraMatrix->GetElement(2,1) * newPosition.z)    ;
 
                 newTranslation.z =   (cameraMatrix->GetElement(0,2) * newPosition.x) +
-                                     (cameraMatrix->GetElement(1,2) * newPosition.y) +
-                                     (cameraMatrix->GetElement(2,2) * newPosition.z)    ;
+                        (cameraMatrix->GetElement(1,2) * newPosition.y) +
+                        (cameraMatrix->GetElement(2,2) * newPosition.z)    ;
 
 
-               vtkTransform* handMove = vtkTransform::New();
+                vtkTransform* handMove = vtkTransform::New();
 
-               handMove->Identity();
+                handMove->Identity();
 
-               handMove->Translate(-newTranslation.x, - newTranslation.y, -newTranslation.z);
+                handMove->Translate(-newTranslation.x, - newTranslation.y, -newTranslation.z);
 
-               camera->ApplyTransform(handMove);
+                camera->ApplyTransform(handMove);
 
-               /// ADDED INTERACTION CAPTURE
-               ///
-               double* position;
+                /// ADDED INTERACTION CAPTURE
+                ///
+                double* position;
 
-               position = camera->GetPosition();
+                position = camera->GetPosition();
 
-               ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-               ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-               ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+                ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+                ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+                ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
 
             }
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    ROTATION   /////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////            
-            if(chkRotate)
+            //////////////////////////////////////////////////////////////////////////////////
+            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked())
             {
                 this->ui->labelRotation->setFont(boldFont);
                 
@@ -4460,15 +4296,15 @@ void MainWindow::LeapMotion()
                 vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
 
                 rotationMatrix->Identity();
-                int index = 0;                
+                int index = 0;
 
                 for (int i = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 4; j++)
-                    {                 
-                        rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index]);                        
+                    {
+                        rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index]);
                         index++;
-                    }                    
+                    }
                 }
 
                 vtkTransform* transform = vtkTransform::New();
@@ -4483,14 +4319,14 @@ void MainWindow::LeapMotion()
 
                 camera->SetFocalPoint(cameraFocalPoint);
 
-//                /// ADDED INTERACTION CAPTURE
-//                double* orientation;
+                /// ADDED INTERACTION CAPTURE
+                double* orientation;
 
-//                orientation  = camera->GetOrientation();
+                orientation  = camera->GetOrientation();
 
-//                ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
-//                ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
-//                ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+                ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+                ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+                ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
                 //renderer->ResetCameraClippingRange();
 
@@ -4500,7 +4336,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    SCALING       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkScale)
+            if(chkScale && this->ui->checkBoxLeapTracking->isChecked())
             {
 
                 this->ui->labelScaling->setFont(boldFont);
@@ -4513,17 +4349,17 @@ void MainWindow::LeapMotion()
                 if (camera->GetParallelProjection())
                 {
                     camera->SetParallelProjection(camera->GetParallelScale() / scaleFactor);
-                //     qDebug() << "ScaleFactor Parallel = " << scaleFactor << endl;
+                    //     qDebug() << "ScaleFactor Parallel = " << scaleFactor << endl;
                 }
                 else
                 {
                     camera->Dolly(scaleFactor);
                     renderer->ResetCameraClippingRange();
-               //     qDebug() << "ScaleFactor Normal = " << scaleFactor << endl;
+                    //     qDebug() << "ScaleFactor Normal = " << scaleFactor << endl;
                 }
 
                 double value ;
-;
+
                 value = this->defaultCameraDistance /  camera->GetDistance();
 
                 ui->line_Scale->setText(QString::number(value, 'f', 2));
@@ -4539,7 +4375,7 @@ void MainWindow::LeapMotion()
             if (this->ui->actionLeapDialogToggle->isChecked())
             {
 
-//                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
+                //                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
                 //////////////////////////////////////////////////////////////////////////
                 /// \brief handPos
                 //////////////////////////////////////////////////////////////////////////
@@ -4547,23 +4383,23 @@ void MainWindow::LeapMotion()
 
                 if (frame.translationProbability(controller_->frame(1)) > 0.6)
                 {
-                Vector handPos = hand.palmPosition();
-                //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
+                    Vector handPos = hand.palmPosition();
+                    //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
 
-                double sensitivity = 0.01;
-                double offSetX = 0;
-                double offSetY = 2.5;
-                double offSetZ = 1;
+                    double sensitivity = 0.01;
+                    double offSetX = 0;
+                    double offSetY = 2.5;
+                    double offSetZ = 1;
 
-                double handPosPoint[3] = {handPos.x * sensitivity - offSetX,
-                                          handPos.y * sensitivity - offSetY,
-                                          handPos.z * sensitivity - offSetZ
-                                         };
+                    double handPosPoint[3] = {handPos.x * sensitivity - offSetX,
+                                              handPos.y * sensitivity - offSetY,
+                                              handPos.z * sensitivity - offSetZ
+                                             };
 
-                this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
+                    this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
 
-                this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
-            }
+                    this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
+                }
 
 
                 /////////////////////////////////////////////////////////////////////////////
@@ -4672,321 +4508,15 @@ void MainWindow::LeapMotion()
                         static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
                     }
                 }
-
-
-
-
-
-//                // Get the most recent frame and report some basic information
-//                                std::cout   << "Frame id: " << frame.id()
-//                                            << ", timestamp: " << frame.timestamp()
-//                                            << ", hands: " << frame.hands().count()
-//                //                            << ", fingers: " << frame.fingers().count()
-//                //                            //<< ", fingers: " << fingers.count()
-//                                            << ", Rotation (Y): " << frame.rotationProbability(controller_->frame(1))
-//                                            << ", Translate (Y): " << frame.translationProbability(controller_->frame(1))
-//                                            << ", Scale (Y): " << frame.scaleProbability(controller_->frame(1))
-//                                            //<< ", tools: " << frame.tools().count()
-//                //                            //<< ", gestures: " << frame.gestures().count()
-//                //                            //<< ", PalmNormal: " << frame.hands()[0].palmNormal()
-//                //                            //<< ", PalmDirect: " << frame.hands()[0].direction()
-//                //                            << ", yaw: " << frame.hands()[0].direction().yaw()
-//                //                            //<< ", Angle: " << frame.rotationAngle(controller_->frame(1))
-//                                            << std::endl;
-
-                //this->ui->widget_LeapVisualizer->update();
                 leapFrameFreqCount = 0;
-
             }
-
             leapFrameFreqCount++;
             ////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////
             ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
-
             this->ui->qvtkWidgetLeft->setFocus();
-
         }
     }
-}
-
-void MainWindow::LeapDiagnostic()
-{
-
-    double sphereCenter[3];
-    double sphereRadius;
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// SPHERE ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    vtkSmartPointer<vtkPolyData> inputPolyData ;
-
-    vtkSmartPointer<vtkSphereSource> sphereSource =
-            vtkSmartPointer<vtkSphereSource>::New();
-    sphereSource->SetPhiResolution(15);
-    sphereSource->SetThetaResolution(15);
-    sphereSource->Update();
-    inputPolyData = sphereSource->GetOutput();
-
-    vtkSmartPointer<vtkPolyDataMapper> mapperSphere =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapperSphere->SetInput(inputPolyData);
-
-    vtkSmartPointer<vtkActor> sphereActor =
-            vtkSmartPointer<vtkActor>::New();
-    sphereActor->SetMapper(mapperSphere);
-    sphereActor->GetProperty()->SetRepresentationToWireframe();
-    sphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
-
-    /// Create the Renderer
-    vtkRenderer * renderer = vtkRenderer::New();    
-
-    /// Create the RenderWindow
-    vtkRenderWindow * renWin = vtkRenderWindow::New();   
-
-    renWin->SetSize(50,10);
-    renWin->AddRenderer(renderer);    
-
-    renderer->SetBackground(0.1, 0.2, 0.4);
-
-    this->ui->widget_LeapVisualizer->SetRenderWindow(renWin);    
-
-    renderer->AddActor(sphereActor);
-
-    sphereSource->GetCenter(sphereCenter);
-    sphereRadius =  sphereSource->GetRadius();    
-
-    leapDbgSphere = sphereSource;
-    leapDbgSphereActor = sphereActor;
-    sphereActor->RotateY(-90);
-
-    /// Get the Interactor
-    vtkRenderWindowInteractor * interactor = this->ui->widget_LeapVisualizer->GetInteractor();
-
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-    interactor->MouseWheelBackwardEvent();
-
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// ARROW ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-
-    vtkSmartPointer<vtkArrowSource> arrowSource =
-            vtkSmartPointer<vtkArrowSource>::New();
-
-    double startPoint[3], endPoint[3];
-#ifndef main
-    vtkMath::RandomSeed(time(NULL));
-#else
-    vtkMath::RandomSeed(8775070);
-#endif
-
-    startPoint[0] = 0;
-    startPoint[1] = 0;
-    startPoint[2] = 0.5;
-
-    endPoint[0] = 0;
-    endPoint[1] = 0;
-    endPoint[2] = -0.5;
-
-    // Compute a basis
-    double normalizedX[3];
-    double normalizedY[3];
-    double normalizedZ[3];
-
-    //THe X axis is a vector from start to end
-
-    vtkMath::Subtract(endPoint, startPoint, normalizedX);
-    ///double length = vtkMath::Norm(normalizedX);
-    double length = sphereRadius * 2;
-
-
-    vtkMath::Normalize(normalizedX);
-
-    // THe Z axis is an arbitrary vector cross X
-
-    double arbitratry[3];
-
-    arbitratry[0]  = vtkMath::Random(-10, 10);
-    arbitratry[1]  = vtkMath::Random(-10, 10);
-    arbitratry[2]  = vtkMath::Random(-10, 10);
-    vtkMath::Cross(normalizedX,arbitratry,normalizedZ);
-    vtkMath::Normalize(normalizedZ);
-
-    // The Y axis is Z cross X
-    vtkMath::Cross(normalizedZ,normalizedX,normalizedY);
-    vtkSmartPointer<vtkMatrix4x4> matrix =
-            vtkSmartPointer<vtkMatrix4x4>::New();
-
-
-    //Create the direction cosine matrix
-    matrix->Identity();
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        matrix->SetElement(i, 0,normalizedX[i]);
-        matrix->SetElement(i, 1, normalizedY[i]);
-        matrix->SetElement(i, 2, normalizedZ[i]);
-    }
-
-    // Apply the transforms
-    vtkSmartPointer<vtkTransform> transform =
-            vtkSmartPointer<vtkTransform>::New();
-
-    transform->Translate(startPoint);
-    transform->Concatenate(matrix);
-    transform->Scale(length, length, length);
-
-    // Transform the polydata
-    vtkSmartPointer<vtkTransformPolyDataFilter> transformPD =
-            vtkSmartPointer<vtkTransformPolyDataFilter>::New();
-    transformPD->SetTransform(transform);
-    transformPD->SetInputConnection(arrowSource->GetOutputPort());
-
-    //Create a mapper and actor for the arrow
-    vtkSmartPointer<vtkPolyDataMapper> mapperArrow =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    vtkSmartPointer<vtkActor> arrowActor =
-            vtkSmartPointer<vtkActor>::New();
-
-#ifdef USER_MATRIX
-    mapperArrow->SetInputConnection(arrowSource->GetOutputPort());
-    arrowActor->SetUserMatrix(transform->GetMatrix());
-#else
-    mapperArrow->SetInputConnection(transformPD->GetOutputPort());
-#endif
-    arrowActor->SetMapper(mapperArrow);
-
-
-    renderer->AddActor(arrowActor);
-
-    leapDbgArrow = arrowSource;
-    leapDbgArrowActor = arrowActor;
-    //global_Arrow = arrowSource;
-
-
-    /// Align the arrow with the Widget
-    arrowActor->RotateY(-90);
-
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// PLANE ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-
-    leapDbgPlaneWidget = vtkPlaneWidget::New();
-    leapDbgPlaneWidget->SetInput(leapDbgSphere->GetOutput());
-    leapDbgPlaneWidget->NormalToXAxisOn();
-    leapDbgPlaneWidget->SetResolution(20);
-    leapDbgPlaneWidget->SetRepresentationToOutline();
-    leapDbgPlaneWidget->PlaceWidget();
-
-    leapDbgPlaneWidget->SetInteractor(this->ui->widget_LeapVisualizer->GetInteractor());
-    leapDbgPlaneWidget->EnabledOn();
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// POINTWIDGET ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-
-
-    vtkSmartPointer<vtkCubeSource> cubeSource =
-            vtkSmartPointer<vtkCubeSource>::New();
-    //cubeSource->SetBounds(global_Renderer->ComputeVisiblePropBounds());
-    cubeSource->SetBounds(-1, 1, -1, 1, -1, 1);
-    cubeSource->Update();
-
-    vtkSmartPointer<vtkPolyDataMapper> mapperCube =
-        vtkSmartPointer<vtkPolyDataMapper>::New();
-//    mapper->SetInput();
-
-
-    /// The plane widget is used probe the dataset.
-    vtkSmartPointer<vtkPolyData> point =
-            vtkSmartPointer<vtkPolyData>::New();
-
-    vtkSmartPointer<vtkProbeFilter> probe =
-            vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(cubeSource->GetOutput());
-
-    ///
-    /// create glyph
-    ///
-
-    vtkSmartPointer<vtkSphereSource> pointMarker =
-            vtkSmartPointer<vtkSphereSource>::New();
-    pointMarker->SetRadius(0.1);
-
-    vtkSmartPointer<vtkGlyph3D> glyph =
-            vtkSmartPointer<vtkGlyph3D>::New();
-    glyph->SetInputConnection(probe->GetOutputPort());
-    glyph->SetSourceConnection(pointMarker->GetOutputPort());
-    glyph->SetVectorModeToUseVector();
-    glyph->SetScaleModeToDataScalingOff();
-//    glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
-
-    vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    glyphMapper->SetInputConnection(glyph->GetOutputPort());
-
-    vtkSmartPointer<vtkActor> glyphActor =
-            vtkSmartPointer<vtkActor>::New();
-    glyphActor->SetMapper(glyphMapper);
-    glyphActor->VisibilityOn();
-
-
-    // The SetInteractor method is how 3D widgets are associated with the render
-    // window interactor. Internally, SetInteractor sets up a bunch of callbacks
-    // using the Command/Observer mechanism (AddObserver()).
-    vtkSmartPointer<vtkmyPWCallback> myCallback =
-            vtkSmartPointer<vtkmyPWCallback>::New();
-    myCallback->PolyData = point;
-    //myCallback->CursorActor = glyphActor;
-//    myCallback->PositionActor = textActor;
-
-    leapDbgPointWidget = vtkPointWidget::New();
-    leapDbgPointWidget->SetInteractor(this->ui->widget_LeapVisualizer->GetInteractor());
-    //pointWidget->SetInput(global_Reader->GetOutput());
-    leapDbgPointWidget->AllOff();
-    leapDbgPointWidget->PlaceWidget(-1, 1, -1, 1, -1, 1);
-    leapDbgPointWidget->GetPolyData(point);
-    leapDbgPointWidget->EnabledOff();
-    //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
-    leapDbgPointWidget->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
-
-    leapDbgPointWidget->GetProperty()->SetLineWidth(1.5);
-
-    // Set the widget colour to GREEN
-    //pointWidget->GetProperty()->SetColor(0.0, 1.0, 0.0);
-
-    renderer->AddActor(glyphActor);
-//    global_Renderer->AddActor2D(textActor);
-
-    leapDbgPointWidget->EnabledOn();
-    //global_Initialised = true;
-
-
-    //renderer->GetActiveCamera()->SetClippingRange(3.5, 5.0);
-//    std::cout << "-------------------------- CAMERA -------------------------------" << endl;
-//    renderer->GetActiveCamera()->Print(std::cout);
-//    std::cout << "-------------------------- RENWIN -------------------------------" << endl;
-//    renWin->Print(std::cout);
-//    std::cout << "-------------------------- RENDER -------------------------------" << endl;
-//    renderer->Print(std::cout);
-
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -5105,18 +4635,12 @@ void MainWindow::updateTransformCoords()
 bool MainWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
-    QKeyEvent *ke = static_cast<QKeyEvent *>(event);
-    if (ke->key() == Qt::Key_Tab) {
-        // special tab handling here
-        std::cout << "tab button pressed" << endl;
-        return true;
-    }
-//    } else if (event->type() == MyCustomEventType) {
-//    MyCustomEvent *myEvent = static_cast<MyCustomEvent *>(event);
-//    // custom event handling here
-//    return true;
-//    }
-
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+        if (ke->key() == Qt::Key_Tab) {
+            // special tab handling here
+            std::cout << "tab button pressed" << endl;
+            return true;
+        }
     }
    return QWidget::event(event);
 }

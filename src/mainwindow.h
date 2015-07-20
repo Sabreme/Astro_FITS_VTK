@@ -139,8 +139,7 @@ public:
     vtkLookupTable *BuildHueIntensityBaseMap(double min, double max);
 
     //// LEAP MOTION
-    void LeapMotion();
-    void LeapDiagnostic();
+    void LeapMotion();    
 
     bool event(QEvent *event);
 
