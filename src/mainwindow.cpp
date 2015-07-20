@@ -3809,8 +3809,8 @@ void MainWindow::LeapMotion()
 
         this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
         this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 1.0);
-        static_cast<vtkSliderRepresentation2D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(this->leapMarkerWidget->scaling_Start);
-        static_cast<vtkSliderRepresentation2D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1,1);
+        static_cast<vtkSliderRepresentation3D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(this->leapMarkerWidget->scaling_Start);
+        static_cast<vtkSliderRepresentation3D*>( this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1,1);
 
         this->leapMarkerWidget->On();
     }
@@ -4421,7 +4421,7 @@ void MainWindow::LeapMotion()
                     bool do_Invert = true;
                     if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
                     {
-                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
+                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
                         //                    std::cout << "Return focus" << endl;
                         do_Invert = false;
                     }
@@ -4446,13 +4446,13 @@ void MainWindow::LeapMotion()
 
                     if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting SMALLER - Blue Adjustment
                     {
-                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(colourRange,colourRange,1);
                     }
                     else                                           /// SCHINKING.... ColourRange Getting BIGGER -- Red Adjustment
                     {
-                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation2D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
                     }
                 }
                 leapFrameFreqCount = 0;
