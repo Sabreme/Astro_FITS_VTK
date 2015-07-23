@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1361</width>
-    <height>805</height>
+    <width>1362</width>
+    <height>840</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -258,7 +258,7 @@ padding: 5px;
      <enum>QTabWidget::North</enum>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>3</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideNone</enum>
@@ -2648,7 +2648,7 @@ border:none;
       <x>10</x>
       <y>360</y>
       <width>131</width>
-      <height>391</height>
+      <height>431</height>
      </rect>
     </property>
     <property name="palette">
@@ -3101,7 +3101,7 @@ border:none;
     <widget class="QLabel" name="label_34">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>40</x>
        <y>20</y>
        <width>71</width>
        <height>21</height>
@@ -3114,7 +3114,7 @@ border:none;
     <widget class="QLabel" name="label_35">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>40</x>
        <y>160</y>
        <width>81</width>
        <height>21</height>
@@ -3127,7 +3127,7 @@ border:none;
     <widget class="QLabel" name="label_36">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>40</x>
        <y>280</y>
        <width>61</width>
        <height>21</height>
@@ -4116,7 +4116,7 @@ selection-background-color: rgb(255, 69, 94);</string>
       <x>150</x>
       <y>10</y>
       <width>851</width>
-      <height>741</height>
+      <height>781</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -4134,7 +4134,7 @@ selection-background-color: rgb(255, 69, 94);</string>
        <x>10</x>
        <y>0</y>
        <width>841</width>
-       <height>741</height>
+       <height>641</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -4157,7 +4157,7 @@ selection-background-color: rgb(255, 69, 94);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1361</width>
+     <width>1362</width>
      <height>25</height>
     </rect>
    </property>

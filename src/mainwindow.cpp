@@ -4345,7 +4345,7 @@ void MainWindow::LeapMotion()
 
                     this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
 
-                    this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 0.0, 0.0);
+                    this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 0.0);
                 }
 
 
