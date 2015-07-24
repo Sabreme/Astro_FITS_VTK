@@ -258,7 +258,7 @@ padding: 5px;
      <enum>QTabWidget::North</enum>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>4</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideNone</enum>
@@ -1198,12 +1198,12 @@ border:none;
         <rect>
          <x>30</x>
          <y>100</y>
-         <width>41</width>
+         <width>21</width>
          <height>22</height>
         </rect>
        </property>
        <property name="text">
-        <string>Z-Info</string>
+        <string>Z</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_10">
@@ -1211,12 +1211,12 @@ border:none;
         <rect>
          <x>30</x>
          <y>20</y>
-         <width>51</width>
+         <width>21</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string>X-Info</string>
+        <string>X</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineInfoXAxis">
@@ -1243,12 +1243,12 @@ border:none;
         <rect>
          <x>30</x>
          <y>60</y>
-         <width>41</width>
+         <width>21</width>
          <height>22</height>
         </rect>
        </property>
        <property name="text">
-        <string>Y-Info</string>
+        <string>Y</string>
        </property>
       </widget>
      </widget>
@@ -1513,14 +1513,14 @@ border:none;
      <widget class="QCheckBox" name="checkSubVolVolumeEnable">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>20</x>
         <y>30</y>
-        <width>121</width>
-        <height>22</height>
+        <width>211</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Show Volume</string>
+       <string>Show Volume when Moving</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -1529,7 +1529,7 @@ border:none;
      <widget class="QPushButton" name="buttonSubVolReset">
       <property name="geometry">
        <rect>
-        <x>190</x>
+        <x>240</x>
         <y>20</y>
         <width>91</width>
         <height>51</height>
@@ -1547,7 +1547,7 @@ border:none;
      <widget class="QPushButton" name="buttonAxisSliceReset">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>250</x>
         <y>10</y>
         <width>91</width>
         <height>41</height>
@@ -1879,14 +1879,14 @@ border:none;
      <widget class="QCheckBox" name="checkAxisSliceVolumeEnable">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>10</x>
         <y>20</y>
-        <width>121</width>
+        <width>221</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>Show Volume</string>
+       <string>Show Volume When Moving</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -2269,14 +2269,14 @@ border:none;
      <widget class="QCheckBox" name="checkArbSliceVolumeEnable">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>10</x>
         <y>20</y>
-        <width>121</width>
+        <width>221</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>Show Volume</string>
+       <string>Show Volume When Moving</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -2627,7 +2627,7 @@ border:none;
      <widget class="QPushButton" name="buttonArbReset">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>240</x>
         <y>10</y>
         <width>99</width>
         <height>41</height>
@@ -3589,14 +3589,14 @@ QPushButton:default
     <widget class="QPushButton" name="buttonModeTouch">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>230</x>
        <y>10</y>
-       <width>71</width>
+       <width>91</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>TOUCH</string>
+      <string>MULTITOUCH</string>
      </property>
      <property name="checkable">
       <bool>false</bool>
@@ -3605,9 +3605,9 @@ QPushButton:default
     <widget class="QPushButton" name="buttonModeMouse">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>10</x>
        <y>10</y>
-       <width>71</width>
+       <width>91</width>
        <height>41</height>
       </rect>
      </property>
@@ -3805,9 +3805,9 @@ QPushButton:default
     <widget class="QPushButton" name="buttonModeLeap">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>120</x>
        <y>10</y>
-       <width>71</width>
+       <width>91</width>
        <height>41</height>
       </rect>
      </property>

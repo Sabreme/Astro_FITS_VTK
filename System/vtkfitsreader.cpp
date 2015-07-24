@@ -119,7 +119,7 @@ int vtkFitsReader::RequestData(
   fitsfile *fptr;
   int status = 0, nfound = 0, anynull = 0;
   long naxes[3], fpixel, nbuffer, npixels, ii;
-  const int buffsize = 1000;
+  const int buffsize = 2000000;
   char comm[10] ;
   long pNaxis[0], pEpoch[0];
 
@@ -135,7 +135,7 @@ int vtkFitsReader::RequestData(
    fits_read_key_lng(fptr, "NAXIS",pNaxis,comm, &status);
      //rinterror( status );
 
-  fits_read_key_lng(fptr, "EPOCH",pEpoch,comm, &status);
+  ///fits_read_key_lng(fptr, "EPOCH",pEpoch,comm, &status);
 
   this->naxis = pNaxis[0];
   this->epoch = pEpoch[0];
