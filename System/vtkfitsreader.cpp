@@ -118,8 +118,8 @@ int vtkFitsReader::RequestData(
 
   fitsfile *fptr;
   int status = 0, nfound = 0, anynull = 0;
-  long naxes[3], fpixel, nbuffer, npixels, ii;
-  const int buffsize = 2000000;
+  long naxes[4], fpixel, nbuffer, npixels, ii;
+  const int buffsize = 1000000;
   char comm[10] ;
   long pNaxis[0], pEpoch[0];
 
@@ -171,15 +171,16 @@ int vtkFitsReader::RequestData(
                        buffer, &anynull, &status) )
       printerror( status );
 
-    for (ii = 0; ii < nbuffer; ii++)  {
+    for (ii = 0; ii < nbuffer; ii++)
+    {
+        if (isnan(buffer[ii]))
+            buffer[ii] = -1000000.0; // hack for now
+        scalars->InsertNextValue(buffer[ii]);
 
-      if (isnan(buffer[ii])) buffer[ii] = -1000000.0; // hack for now
-      scalars->InsertNextValue(buffer[ii]);
-
-      if ( buffer[ii] < datamin )
-        datamin = buffer[ii];
-      if ( buffer[ii] > datamax )
-        datamax = buffer[ii];
+        if ( buffer[ii] < datamin )
+                datamin = buffer[ii];
+        if ( buffer[ii] > datamax )
+            datamax = buffer[ii];
     }
 
     npixels -= nbuffer;    /* increment remaining number of pixels */
@@ -202,8 +203,11 @@ int vtkFitsReader::RequestData(
   extent[1] = this->dimensions[0]-1;
   extent[2] = 0;
   extent[3] = this->dimensions[1]-1;
-  extent[4] = 0;
+  extent[4] = 0;  
   extent[5] = this->dimensions[2]-1;
+
+  if (this->dimensions[2] ==1)
+      extent[5] = 1;
   output->SetWholeExtent(extent);
 
   ReadHeader();

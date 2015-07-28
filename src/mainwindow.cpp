@@ -1015,29 +1015,66 @@ void MainWindow::loadFitsFile(QString filename)
     property->SetInterpolationTypeToLinear();
     //property->SetIndependentComponents(1);//
 
+
+    /// Opacity Function Colour point ( x,  r,  g,  b, midpoint, sharpness, rgb range [0,255])
     /// WHITE contrast
-//    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 255.0, 1.0, 1.0, 1.0 );
+///    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 255.0, 1.0, 1.0, 1.0 );
+
+//    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 5.0, 1.0, 1.0, 1.0 );
+///    colorFun->AddRGBPoint(5, 1,1,1);
+    //colorFun->AddPoi(0.0, 1.0, 1.0, 1.0, 255.0, 1.0, 1.0, 1.0 );
+
+
 
 //    /// Black and White
 //    colorFun->AddRGBSegment(opacityLevel - 0.5*opacityWindow, 0.0, 0.0, 0.0,
 //                            opacityLevel + 0.5*opacityWindow, 1.0, 1.0, 1.0 );
 //    ///
     colorFun->AddRGBPoint( -3024, 0, 0, 0, 0.5, 0.0 );
-    colorFun->AddRGBPoint( -1000, .62, .36, .18, 0.5, 0.0 );
-    colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
+   colorFun->AddRGBPoint( -1000, .62, .36, .18, 0.5, 0.0 );    /// REDISH COLOUR
+   colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
     colorFun->AddRGBPoint( 3071, .83, .66, 1, 0.5, 0.0 );
 
-    opacityFun->AddPoint(0,  0.0);
-    opacityFun->AddPoint(50,  0.5);
-    opacityFun->AddPoint(1000,  1.0);
+ /// Add Point x, y, midpoint, sharpness
+//    opacityFun->AddPoint(0,  0.0);
+
+        opacityFun->AddPoint(1,  0.0);
+        opacityFun->AddPoint(26,  0.5);
+    ///
+    ///
+
+    /// Add a Colour Lookup Table
+//    vtkSmartPointer<vtkLookupTable> lut3D =
+//            vtkSmartPointer<vtkLookupTable>::New();
+//    lut3D->SetTableRange(0,1000);
+//    lut3D->SetSaturationRange(0,0);
+//    lut3D->SetHueRange(0,0);
+//    lut3D->SetValueRange(0,1);
+
+
+
+
+
+//    double min = this->global_Reader->GetDataMin();
+//    double max = this->global_Reader->GetDataMin();
+//    double mid = (min + max) / 2;
+
+//    //opacityFun->AddPoint(, 0.0);
+//    opacityFun->AddPoint(min, 0.0);
+//    //opacityFun->AddPoint(mid, 0.1);
+//    //opacityFun->AddPoint(max, 0.55);
+
+//      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
+//      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
 
     mapper->SetBlendModeToComposite();
     //mapper->SetBlendModeToMaximumIntensity();
     property->ShadeOn();
     property->SetAmbient(0.4);
     property->SetDiffuse(0.6);
+
     property->SetSpecular(0.2);
-    property->SetSpecularPower(10.0);
+    property->SetSpecularPower(1.0);
     property->SetScalarOpacityUnitDistance(0.8919);
 
     // connect up the volume to the property and the mapper
@@ -1311,7 +1348,7 @@ void MainWindow::on_actionReload_triggered()
     opacityFun->AddPoint(50,  0.5);
     opacityFun->AddPoint(1000,  1.0);
 
-   // mapper->SetBlendModeToComposite();
+    mapper->SetBlendModeToComposite();
     //mapper->SetBlendModeToMaximumIntensity();
     property->ShadeOn();
     property->SetAmbient(0.4);
@@ -1451,14 +1488,23 @@ void MainWindow::on_actionReload_triggered()
     //on_buttonTransfRotation_clicked();
      this->buttonTransRotationPressed();
 
-     this->leapMarkerWidget = vtkLeapMarkerWidget::New();
-     this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
 
-     this->leapMarkerWidget->GeneratActors();
+     ////////////////////////////////////////////////////
+     /////
+     /// vtk LeapMarkerWidget should only be active if we are in the leap state
+     ///
 
-      this->leapMarkerWidget->SetEnabled(true);
-     //marker->InteractiveOn();
-      this->leapMarkerWidget->InteractiveOff();
+     if (this->systemMode == Leap )
+     {
+         this->leapMarkerWidget = vtkLeapMarkerWidget::New();
+         this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+
+         this->leapMarkerWidget->GeneratActors();
+
+          this->leapMarkerWidget->SetEnabled(true);
+         //marker->InteractiveOn();
+          this->leapMarkerWidget->InteractiveOff();
+     }
 
 }
 
@@ -3256,11 +3302,305 @@ void MainWindow::on_buttonExportZSlice_clicked()
 
 void MainWindow::on_actionLeap_Slice_triggered()
 {
-    this->controller_= new Controller;
-   Leaping_ = true;
-   this->leapAxisSliceMode = true;
+    QFileDialog dlg(NULL,tr("Open File"),"", tr("Files (*.FITS)"));
+
+    //QString fileName = QFileDialog::getOpenFileName(this, tr ("Open File"),"", tr("Files (*.FITS)"));
+    dlg.setAcceptMode(QFileDialog::AcceptOpen);
+    QString fileName;
+    if (dlg.exec())
+    {
+        fileName = dlg.selectedFiles().at(0);
+    }
+
+    //////////////////////////////////////////////////////////////////
+    ///////////VTK FITS READER CODE FROM FITS.CXX ////////////////////
+    //////////////////////////////////////////////////////////////////
+
+    // vtk pipeline
+    vtkFitsReader *fitsReader = vtkFitsReader::New();
+    const char *newFileName = fileName.toStdString().c_str();
+    fitsReader->SetFileName(newFileName);
+
+    fitsReader->Update();
+
+    global_Reader = fitsReader;
+
+    /////////////////////////////////
+    /// \brief Outline Object
+    ///
+    //qDebug() << "Adding Outline" << endl;
+    vtkOutlineFilter *outline = vtkOutlineFilter::New();
+    outline->SetInputConnection(fitsReader->GetOutputPort());
+
+    vtkPolyDataMapper *outlineMapper = vtkPolyDataMapper::New();
+    outlineMapper->SetInputConnection(outline->GetOutputPort());
 
 
+    vtkActor *outlineActor = vtkActor::New();
+    outlineActor->SetMapper(outlineMapper);
+    outlineActor->GetProperty()->SetColor(0.5,0.5,0.5);
+
+    global_Outline = outlineActor;
+
+
+    ///
+    /// \brief resample
+    ///
+//    vtkImageResample *resample = vtkImageResample::New();
+
+//    resample->SetInputConnection( fitsReader->GetOutputPort() );
+//    resample->SetAxisMagnificationFactor(0, 1.0);
+//    resample->SetAxisMagnificationFactor(1, 1.0);
+//    resample->SetAxisMagnificationFactor(2, 1.0);
+
+//    global_Resample = resample;
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Create the Volume & mapper
+
+//    vtkVolume *volume = vtkVolume::New();
+//    vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
+//    global_Mapper = mapper;
+
+//    //mapper->SetInputConnection(fitsReader->GetOutputPort());
+//    mapper->SetInputConnection(resample->GetOutputPort());
+
+//    /// Create our transfer function
+//    vtkPiecewiseFunction *opacityFun = vtkPiecewiseFunction::New();
+//    vtkColorTransferFunction *colorFun = vtkColorTransferFunction::New();
+
+//    // Create the property and attach the transfer functions
+
+//    vtkVolumeProperty * property = vtkVolumeProperty::New();
+//    property->SetColor(colorFun);
+//    property->SetScalarOpacity(opacityFun);
+//    property->SetInterpolationTypeToLinear();
+//    //property->SetIndependentComponents(1);//
+
+//    double min = this->global_Reader->GetDataMin();
+//    double max = this->global_Reader->GetDataMin();
+//    double mid = (min + max) / 2;
+
+//    //opacityFun->AddPoint(, 0.0);
+//    opacityFun->AddPoint(min, 0.0);
+//    //opacityFun->AddPoint(mid, 0.1);
+//    //opacityFun->AddPoint(max, 0.55);
+
+//      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
+//      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
+
+//   mapper->SetBlendModeToComposite();
+//    //  mapper->SetBlendModeToMinimumIntensity();
+//    //mapper->SetBlendModeToMaximumIntensity();
+//    property->ShadeOn();
+//    property->SetAmbient(0.4);
+//    property->SetDiffuse(0.6);
+
+//    property->SetSpecular(0.2);
+//    property->SetSpecularPower(1.0);
+//    property->SetScalarOpacityUnitDistance(0.8919);
+
+//    // connect up the volume to the property and the mapper
+//    volume->SetProperty( property );
+//    volume->SetMapper( mapper );
+
+//    global_Volume = volume;
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vtkPolyData * polyPlane = vtkPolyData::New();
+
+    double range[2] ;
+
+    global_Reader->GetOutput()->GetScalarRange(range);
+
+    ///
+    /// \brief vtkPlaneWidget
+    ///
+    customArbPlaneWidget = vtkImplicitCustomPlaneWidget::New();
+    //customPlaneWidget = vtkSmartPointer<vtkImplicitCustomPlaneWidget>::New();
+    customArbPlaneWidget->SetInput(global_Reader->GetOutput());
+    customArbPlaneWidget->NormalToZAxisOn();
+    customArbPlaneWidget->SetPlaceFactor(1.0);
+    customArbPlaneWidget->GetPolyData(polyPlane);
+    customArbPlaneWidget->SetOrigin(512, 512, 1);
+    customArbPlaneWidget->TubingOn();
+    customArbPlaneWidget->PlaceWidget();
+    customArbPlaneWidget->DrawPlaneOff();
+
+    customArbPlaneWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+
+
+    vtkCutter * cutter = vtkCutter::New();
+    cutter->SetInput(global_Reader->GetOutput());
+
+    vtkPlane * plane = vtkPlane::New();
+    customArbPlaneWidget->GetPlane(plane);
+
+    cutter->SetCutFunction(plane);
+
+    /// Map the slice from the plane and create the geometry to be rendered
+    ///
+
+    vtkPolyDataMapper * slice = vtkPolyDataMapper::New();
+    slice->SetInput(cutter->GetOutput());
+    slice->Update();
+    slice->SetScalarRange(global_Reader->GetOutput()->GetScalarRange());
+
+
+
+    /// Add a Colour Lookup Table
+    vtkSmartPointer<vtkLookupTable> lut3D =
+            vtkSmartPointer<vtkLookupTable>::New();
+    lut3D->SetTableRange(global_Reader->GetDataMin(),global_Reader->GetDataMax());
+    lut3D->SetSaturationRange(0,0);
+    lut3D->SetHueRange(0,0);        //
+    lut3D->SetValueRange(0,1);      // From BLack to White
+    lut3D->SetRampToLinear();
+    lut3D->Build();
+
+    slice->SetLookupTable(lut3D);
+
+    /// Actor representing Volume Slice
+    vtkActor * sliceActor = vtkActor::New();
+    sliceActor->SetMapper(slice);
+
+
+    vtkRenderer * renderer = this->defaultRenderer;
+
+    renderer->AddActor(sliceActor);
+
+    sliceActor->Print(std::cout);
+    lut3D->Print(std::cout);
+
+
+    customArbPlaneWidget->PlaceWidget(outlineMapper->GetBounds());
+
+    customArbPlaneWidget->OutlineTranslationOff();
+
+    customArbPlaneWidget->EnabledOn();
+
+
+
+
+
+    /// Create the CubeAxesActor
+
+    vtkSmartPointer<vtkCubeAxesActor> cubeAxesActor =
+            vtkSmartPointer<vtkCubeAxesActor>::New();
+    //cubeAxesActor->AddObserver(vtkCommand::ProgressEvent, pObserver );
+
+
+    global_CubeAxes = cubeAxesActor;
+    ////////////////////////////////////
+    /// \brief RenderWindow
+    ////
+    //qDebug() << "Adding RenderWindow" << endl;
+
+    vtkRenderer *ren1 = vtkRenderer::New();
+    vtkSmartPointer<vtkRenderWindow> renderWindow =
+            vtkSmartPointer<vtkRenderWindow>::New();
+
+    renderWindow->AddRenderer(ren1);
+
+
+
+//    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
+//    vtkSmartPointer<vtkInteractorStyleSwitch> style =
+//            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
+
+    ////////////////////////////////////
+    /// \brief Cube Axes Labels
+    ////
+    //qDebug() << "Adding Axes Labels" << endl;
+
+    cubeAxesActor->SetCamera(ren1->GetActiveCamera());
+    //cubeAxesActor->SetBounds(->GetBounds());
+    cubeAxesActor->SetBounds(outlineMapper->GetBounds());
+    #if VTK_MAJOR_VERSION > 5
+    cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
+    #endif
+    cubeAxesActor->GetTitleTextProperty(0)->SetColor(1.0, 0.0, 0.0);
+    cubeAxesActor->GetLabelTextProperty(0)->SetColor(1.0, 0.0, 0.0);
+
+    cubeAxesActor->GetTitleTextProperty(1)->SetColor(0.0, 1.0, 0.0);
+    cubeAxesActor->GetLabelTextProperty(1)->SetColor(0.0, 1.0, 0.0);
+
+    cubeAxesActor->GetTitleTextProperty(2)->SetColor(0.0, 0.0, 1.0);
+    cubeAxesActor->GetLabelTextProperty(2)->SetColor(0.0, 0.0, 1.0);
+
+    ren1->AddActor(cubeAxesActor);
+    ren1->AddActor(outlineActor);
+
+    // add actors to renderer
+
+    //qDebug() << "Adding Objects to RenderWindow" << endl;
+
+    //ren1->AddVolume(volume);
+
+
+    this->ui->qvtkWidgetLeft->SetRenderWindow(renderWindow);
+    //this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style);
+    this->ui->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetRenderWindow(renderWindow);
+
+
+    this->defaultRenWindow = this->ui->qvtkWidgetLeft->GetRenderWindow();
+    this->defaultRenderer =  this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+    ////////////////////////////////////
+    /// \brief OrientationMarker Widget
+    ////
+    //qDebug() << "Adding Orientation Marker" << endl;
+
+    AddOrientationAxes(this->ui->qvtkWidgetLeft);
+
+    ////////////////////////////////////
+    /// \brief ScalarBar Widget
+    ////
+    //qDebug() << "Adding ScalarBar" << endl;
+
+    AddScalarBar(this->ui->qvtkWidgetLeft, fitsReader);
+
+////    // global_Points = tempSet;
+     global_Reader = fitsReader;
+
+  //   global_Volume = sliceA;
+
+     //qDebug() << "Resetting Camera" << endl;
+     ren1->ResetCamera();
+     //qDebug() << "Complete" << endl;
+
+
+     ////////////////////////////////////
+     /// \brief FrameRate Widget
+     ////
+     //qDebug() << "Adding FrameRate" << endl;
+     reloadFrameRate();
+
+     ////////////////////////////////////
+     /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
+     ///
+     ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);
+
+     ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
+
+
+     ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
+     ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
+     ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
+     defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
+
+
+     ///////////////////////////////////////////////
+     /// \brief SETTING Default Interactor Style to Mouse Interaction
+     ///
+     ///
+     MouseInteractorStyle * style = MouseInteractorStyle::New();
+     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+     interactor->SetInteractorStyle(style);
+     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+     style->ui = this->ui;
+     style->defualtDistance = this->defaultCameraDistance;
 }
 
 void MainWindow::on_actionSliceAxisArbitrary_triggered()
@@ -3499,15 +3839,22 @@ void MainWindow::beginSliceArb()
     /// Add a Colour Lookup Table
     vtkSmartPointer<vtkLookupTable> lut3D =
             vtkSmartPointer<vtkLookupTable>::New();
-    lut3D->SetTableRange(0,1000);
-    lut3D->SetSaturationRange(0,0);
-    lut3D->SetHueRange(0,0);
+    //lut3D->SetTableRange(0,1000);
+    lut3D->SetTableRange(global_Reader->GetDataMin(), global_Reader->GetDataMax());
+    lut3D->SetSaturationRange(0,1);
+    lut3D->SetHueRange(0,1);
     lut3D->SetValueRange(0,1);
+    lut3D->SetAlphaRange(0,1);
+    lut3D->SetVectorComponent(3);
+    lut3D->Build();
+
 
     slice->SetLookupTable(lut3D);
 
     /// Assign the LookupTable to the Global Pointer
     lookupTable3D = lut3D;
+
+    lut3D->Print(std::cout);
 
     /// Actor representing Volume Slice
     vtkActor * sliceActor = vtkActor::New();
