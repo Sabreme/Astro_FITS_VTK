@@ -3932,7 +3932,7 @@ void MainWindow::beginSliceArb()
             vtkSmartPointer<vtkRenderWindow>::New();
 
     /// Add the 2nd Renderer to the 2D RenderWindow
-    renWindow2D->AddRenderer(ren2D);
+    renWindow2D->AddRenderer(ren2D);    
 
     /// Add the 2nd RenderWindow to the 2D sidewindow
     this->ui->widget_ArbPlanePreview->SetRenderWindow(renWindow2D);
@@ -3962,6 +3962,8 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->OutlineTranslationOff();
 
     customArbPlaneWidget->EnabledOn();
+
+    this->ui->widget_ArbPlanePreview->setDisabled(true);
 
 }
 
@@ -4041,27 +4043,36 @@ void MainWindow::on_checkArbSliceVolumeEnable_stateChanged(int arg1)
     global_Volume->SetVisibility(arg1);
 }
 
-void MainWindow::on_radioArbSliceContourCount10_clicked()
+//void MainWindow::on_radioArbSliceContourCount10_clicked()
+//{
+//    global_Contours2D->SetNumberOfContours(10);
+//    global_Contours2D->GenerateValues(10, global_Reader->GetOutput()->GetScalarRange());
+//    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
+//}
+
+//void MainWindow::on_radioArbSliceContourCount20_clicked()
+//{
+//    global_Contours2D->SetNumberOfContours(20);
+//    global_Contours2D->GenerateValues(20, global_Reader->GetOutput()->GetScalarRange());
+//    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
+
+
+//}
+
+//void MainWindow::on_radioArbSliceContourCount30_clicked()
+//{
+//    global_Contours2D->SetNumberOfContours(30);
+//    global_Contours2D->GenerateValues(30, global_Reader->GetOutput()->GetScalarRange());
+//    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
+//}
+
+void MainWindow::on_slider_CntourDisplay_valueChanged(int value)
 {
-    global_Contours2D->SetNumberOfContours(10);
-    global_Contours2D->GenerateValues(10, global_Reader->GetOutput()->GetScalarRange());
-    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
-}
-
-void MainWindow::on_radioArbSliceContourCount20_clicked()
-{
-    global_Contours2D->SetNumberOfContours(20);
-    global_Contours2D->GenerateValues(20, global_Reader->GetOutput()->GetScalarRange());
+    global_Contours2D->SetNumberOfContours(value);
+    global_Contours2D->GenerateValues(value, global_Reader->GetOutput()->GetScalarRange());
     this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
 
-
-}
-
-void MainWindow::on_radioArbSliceContourCount30_clicked()
-{
-    global_Contours2D->SetNumberOfContours(30);
-    global_Contours2D->GenerateValues(30, global_Reader->GetOutput()->GetScalarRange());
-    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
+    this->ui->lineArbSliceContours->setText(QString("%1").arg(value));
 }
 
 
@@ -4087,6 +4098,8 @@ void MainWindow::on_buttonArbSliceContourBackground_clicked()
 
     this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
 }
+
+
 
 
 

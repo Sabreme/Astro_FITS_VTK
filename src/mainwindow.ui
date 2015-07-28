@@ -2376,6 +2376,9 @@ border:none;
         <enum>QFrame::Raised</enum>
        </property>
        <widget class="QVTKWidget" name="widget_ArbPlanePreview" native="true">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -2399,19 +2402,6 @@ border:none;
         <string>Contours</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="radioArbSliceContourCount30">
-       <property name="geometry">
-        <rect>
-         <x>270</x>
-         <y>9</y>
-         <width>51</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>30</string>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="lineArbSlicePosX">
        <property name="geometry">
         <rect>
@@ -2425,19 +2415,6 @@ border:none;
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QRadioButton" name="radioArbSliceContourCount20">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>9</y>
-         <width>51</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>20</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="lablArbSliceMin">
        <property name="geometry">
         <rect>
@@ -2449,22 +2426,6 @@ border:none;
        </property>
        <property name="text">
         <string>Y</string>
-       </property>
-      </widget>
-      <widget class="QRadioButton" name="radioArbSliceContourCount10">
-       <property name="geometry">
-        <rect>
-         <x>130</x>
-         <y>9</y>
-         <width>51</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>10</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineArbSlicePosY">
@@ -2621,6 +2582,73 @@ border:none;
        </property>
        <property name="text">
         <string>Position</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="slider_CntourDisplay">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>10</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>10</number>
+       </property>
+       <property name="maximum">
+        <number>40</number>
+       </property>
+       <property name="value">
+        <number>10</number>
+       </property>
+       <property name="sliderPosition">
+        <number>10</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
+       </property>
+       <property name="tickInterval">
+        <number>5</number>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineArbSliceContours">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>10</y>
+         <width>41</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lablArbSliceMin_7">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>10</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lablArbSliceMin_8">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>10</y>
+         <width>21</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>40</string>
        </property>
       </widget>
      </widget>
