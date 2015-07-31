@@ -20,6 +20,7 @@ include(SubVolume/SubVolume.pri)
 include(System/System.pri)
 include(Slicing/Slicing.pri)
 include(Leap/Leap.pri)
+include(Touch/Touch.pri)
 
 unix {
 LIBS += -L/home/pmulumba/VTK5.10.1/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \

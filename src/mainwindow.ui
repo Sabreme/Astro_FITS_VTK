@@ -4128,7 +4128,7 @@ selection-background-color: rgb(255, 69, 94);</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QVTKWidget" name="qvtkWidgetLeft" native="true">
+    <widget class="QVTKTouchWidget" name="qvtkWidgetLeft" native="true">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -4158,7 +4158,7 @@ selection-background-color: rgb(255, 69, 94);</string>
      <x>0</x>
      <y>0</y>
      <width>1362</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -4487,6 +4487,12 @@ selection-background-color: rgb(255, 69, 94);</string>
    <class>QVTKWidget</class>
    <extends>QWidget</extends>
    <header>QVTKWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QVTKTouchWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">Touch/vtkTouchWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

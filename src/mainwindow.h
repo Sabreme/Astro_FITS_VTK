@@ -49,6 +49,7 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <QVTKWidget.h>
+#include <Touch/vtkTouchWidget.h>
 
 #include <QProgressDialog>
 #include <QTime>
