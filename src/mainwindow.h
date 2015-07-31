@@ -325,10 +325,11 @@ private slots:
         void on_actionSliceAxisArbitrary_triggered();
         //void on_buttonArbSlice_clicked();
         void on_checkArbSliceVolumeEnable_stateChanged(int arg1);
-        void on_radioArbSliceContourCount10_clicked();
-        void on_radioArbSliceContourCount20_clicked();
-        void on_radioArbSliceContourCount30_clicked();
+        //void on_radioArbSliceContourCount10_clicked();
+        //void on_radioArbSliceContourCount20_clicked();
+        //void on_radioArbSliceContourCount30_clicked();
         void on_buttonArbSliceContourBackground_clicked();
+        void on_slider_CntourDisplay_valueChanged(int value);
 
         //////////////////////////////////////////////////////
         //// LEAP-MOTION SLOTS

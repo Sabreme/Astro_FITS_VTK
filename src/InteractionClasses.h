@@ -113,6 +113,7 @@ class vtkMySliceCallback : public vtkCommand
     vtkRenderWindow* renderWindow;
     Ui::MainWindow * ui;
 
+
 };
 
 // Define interaction style
