@@ -350,6 +350,15 @@ private slots:
         void addThirdPointer();
         void on_actionStats_triggered();
 
+        //////////////////////////////////////////////////////
+        //// MULTI-TOUCH SLOTS
+
+        void touchBeginSubVol();
+        void touchUpdateSubVol();
+    ///    void touchBeginSliceAxis();
+    ///    void touchBeginSliceArb();
+
+
         ////////////////////////////////////////////////////////
         //// TEST-SECTION SLOTS
 

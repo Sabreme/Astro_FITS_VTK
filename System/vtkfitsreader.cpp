@@ -119,7 +119,7 @@ int vtkFitsReader::RequestData(
   fitsfile *fptr;
   int status = 0, nfound = 0, anynull = 0;
   long naxes[4], fpixel, nbuffer, npixels, ii;
-  const int buffsize = 1000000;
+  const int buffsize = 100000;
   char comm[10] ;
   long pNaxis[0], pEpoch[0];
 

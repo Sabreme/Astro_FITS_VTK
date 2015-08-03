@@ -667,7 +667,8 @@ void MainWindow::on_buttonTabSubVol_pressed()
                 case Leap:  this->leapBeginSubVol();
                 break;
 
-                //case Touch: this->touchBeginSubVol();
+                case Touch: this->touchBeginSubVol();
+                break;
             }
         }
         this->ui->qvtkWidgetLeft->setFocus();
@@ -907,7 +908,7 @@ void MainWindow::infoTab_Triggered()
 
 void MainWindow::updateme()
 {
-    ///ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+    //ui->qvtkWidgetLeft->GetRenderWindow()->Render();
 
     //        if (this->ui->checkCameraUpdate->isChecked())
     //        {
@@ -932,6 +933,11 @@ void MainWindow::updateme()
     {
         ui->qvtkWidgetLeft->GetRenderWindow()->Render();
        LeapMotion();
+    }
+
+    if (systemMode == Touch)
+    {
+        ui->qvtkWidgetLeft->GetRenderWindow()->Render();
     }
 }
 
@@ -1320,6 +1326,10 @@ void MainWindow::on_actionOpen_triggered()
     /// We Update the Transformation Coordinates from the Camera Details
     ///
     this->updateTransformCoords();
+
+    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+
+    this->ui->qvtkWidgetLeft->update();
     }
 }
 
@@ -2559,6 +2569,277 @@ void MainWindow::on_actionStats_triggered()
     this->ui->plainTextEdit_Leap->insertPlainText(message);
 
     this->ui->plainTextEdit_Leap->insertPlainText("--------------------------------------\n\n");
+}
+
+void MainWindow::touchBeginSubVol()
+{
+    on_actionReset_Camera_triggered();
+
+    //this->ui->qvtkWidgetLeft->setGesturesActive(false);
+
+
+    double bounds[6];
+
+    global_Reader->GetOutput()->GetBounds(bounds);
+
+
+    double offset = 0.6;
+    double p1XOffset = bounds[1] * offset;
+    double p1YOffset = bounds[3] * offset;
+    double p1ZOffset = bounds[5] * offset;
+
+           offset = 0.3;
+    double p2xOffset = bounds[1] * offset;
+    double p2yOffset = bounds[3] * offset;
+    double p2zOffset = bounds[5] * offset;
+
+
+    double pt1[3] = {p1XOffset, p1YOffset, p1ZOffset};
+    double pt2[3] = {p2xOffset, p2yOffset, p2zOffset};
+
+
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
+    /// POINT 1
+    {
+    /// The plane widget is used probe the dataset.
+    vtkSmartPointer<vtkPolyData> point =
+            vtkSmartPointer<vtkPolyData>::New();
+
+    vtkSmartPointer<vtkProbeFilter> probe =
+            vtkSmartPointer<vtkProbeFilter>::New();
+    probe->SetInput(point);
+    probe->SetSource(global_Reader->GetOutput());
+
+    /// create glyph
+    ///
+    ///
+    vtkSmartPointer<vtkSphereSource> pointMarker =
+            vtkSmartPointer<vtkSphereSource>::New();
+    pointMarker->SetRadius(0.15);
+
+    vtkSmartPointer<vtkGlyph3D> glyph =
+            vtkSmartPointer<vtkGlyph3D>::New();
+    glyph->SetInputConnection(probe->GetOutputPort());
+    glyph->SetSourceConnection(pointMarker->GetOutputPort());
+    glyph->SetVectorModeToUseVector();
+    glyph->SetScaleModeToDataScalingOff();
+    glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
+
+    vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
+            vtkSmartPointer<vtkPolyDataMapper>::New();
+    glyphMapper->SetInputConnection(glyph->GetOutputPort());
+
+    vtkSmartPointer<vtkActor> glyphActor =
+            vtkSmartPointer<vtkActor>::New();
+    glyphActor->SetMapper(glyphMapper);
+    glyphActor->VisibilityOn();
+
+    /// A Text Widget showing the point location
+    ///
+    ///
+    vtkSmartPointer<vtkTextActor> textActor =
+            vtkSmartPointer<vtkTextActor>::New();
+    textActor->GetTextProperty()->SetFontSize(16);
+    textActor->SetPosition(10, 20);
+    textActor->SetInput("cursor:");
+    textActor->GetTextProperty()->SetColor(0.8900, 0.8100, 0.3400);
+
+    /// Extract the RenderWindow, Renderer and  add both Actors
+    ///
+    ///
+
+    vtkSmartPointer<vtkRenderer> renderer =
+            this->defaultRenderer;
+
+    // The SetInteractor method is how 3D widgets are associated with the render
+    // window interactor. Internally, SetInteractor sets up a bunch of callbacks
+    // using the Command/Observer mechanism (AddObserver()).
+    vtkSmartPointer<vtkmyPWCallback> myCallback =
+            vtkSmartPointer<vtkmyPWCallback>::New();
+    myCallback->PolyData = point;
+    myCallback->Actor = glyphActor;
+    myCallback->TextActor = textActor;
+
+    pointWidget1_ = vtkPointWidget::New();
+    pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+    pointWidget1_->SetInput(global_Reader->GetOutput());
+    pointWidget1_->AllOff();
+    pointWidget1_->PlaceWidget();
+    pointWidget1_->GetPolyData(point);
+    pointWidget1_->EnabledOff();
+    //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
+    pointWidget1_->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
+
+    renderer->AddActor(glyphActor);
+    renderer->AddActor2D(textActor);
+
+    pointWidget1_->EnabledOn();
+    }
+    pointWidget1_->SetPosition(pt1);
+    pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+
+
+    ////////////////////////////////////////////////
+    ////////////////////////////////////////////////
+    /// THIS IS THE 2nd POINTER
+
+    {
+    /// The plane widget is used probe the dataset.
+    vtkSmartPointer<vtkPolyData> point =
+            vtkSmartPointer<vtkPolyData>::New();
+
+    vtkSmartPointer<vtkProbeFilter> probe =
+            vtkSmartPointer<vtkProbeFilter>::New();
+    probe->SetInput(point);
+    probe->SetSource(global_Reader->GetOutput());
+
+    /// create glyph
+    ///
+    ///
+    vtkSmartPointer<vtkSphereSource> pointMarker =
+            vtkSmartPointer<vtkSphereSource>::New();
+    pointMarker->SetRadius(0.15);
+
+    vtkSmartPointer<vtkGlyph3D> glyph =
+            vtkSmartPointer<vtkGlyph3D>::New();
+    glyph->SetInputConnection(probe->GetOutputPort());
+    glyph->SetSourceConnection(pointMarker->GetOutputPort());
+    glyph->SetVectorModeToUseVector();
+    glyph->SetScaleModeToDataScalingOff();
+    glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
+
+    vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
+            vtkSmartPointer<vtkPolyDataMapper>::New();
+    glyphMapper->SetInputConnection(glyph->GetOutputPort());
+
+    vtkSmartPointer<vtkActor> glyphActor =
+            vtkSmartPointer<vtkActor>::New();
+    glyphActor->SetMapper(glyphMapper);
+    glyphActor->VisibilityOn();
+
+    /// A Text Widget showing the point location
+    ///
+    ///
+    vtkSmartPointer<vtkTextActor> textActor =
+            vtkSmartPointer<vtkTextActor>::New();
+    textActor->GetTextProperty()->SetFontSize(16);
+    textActor->SetPosition(400, 20);
+    textActor->SetInput("cursor:");
+    textActor->GetTextProperty()->SetColor(0.3400, 0.8100, 0.8900);
+
+    /// Extract the RenderWindow, Renderer and  add both Actors
+    ///
+    ///
+
+    vtkSmartPointer<vtkRenderer> renderer =
+            this->defaultRenderer;
+    // The SetInteractor method is how 3D widgets are associated with the render
+    // window interactor. Internally, SetInteractor sets up a bunch of callbacks
+    // using the Command/Observer mechanism (AddObserver()).
+    vtkSmartPointer<vtkmyPWCallback> myCallback =
+            vtkSmartPointer<vtkmyPWCallback>::New();
+    myCallback->PolyData = point;
+    myCallback->Actor = glyphActor;
+    myCallback->TextActor = textActor;
+
+    pointWidget2_ = vtkPointWidget::New();
+    pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+    pointWidget2_->SetInput(global_Reader->GetOutput());
+    pointWidget2_->AllOff();
+    pointWidget2_->PlaceWidget();
+    pointWidget2_->GetPolyData(point);
+    pointWidget2_->EnabledOff();
+    //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
+    pointWidget2_->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
+
+    renderer->AddActor(glyphActor);
+    renderer->AddActor2D(textActor);
+
+    pointWidget2_->EnabledOn();
+    }
+
+    loadSubVolume();
+
+    pointWidget2_->SetPosition(pt2);
+
+    vtkEventQtSlotConnect* vtkEventConnector =
+            vtkEventQtSlotConnect::New();
+
+    vtkEventConnector->Connect(pointWidget1_, vtkCommand::InteractionEvent, this, SLOT(touchUpdateSubVol()));
+    vtkEventConnector->Connect(pointWidget2_, vtkCommand::InteractionEvent, this, SLOT(touchUpdateSubVol()));
+
+    pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+    pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+
+}
+
+void MainWindow::touchUpdateSubVol()
+{
+    double* point1;
+    double* point2;
+
+    point1 = this->pointWidget1_->GetPosition();
+    point2 = this->pointWidget2_->GetPosition();
+
+    ///
+    /// 1. Determine the MIN and MAX values for each axis
+    /// 2. Create a subVolume bounding box using the two points
+    /// 3. Update the current volume with the new specs
+    ///
+
+    double minX;
+    double maxX;
+    double minY;
+    double maxY;
+    double minZ;
+    double maxZ;
+
+
+    //determine X Min/Max
+    if (point1[0] < point2[0])
+    {
+        minX = point1[0];
+        maxX = point2[0];
+    }
+    else
+    {
+        minX = point2[0];
+        maxX = point1[0];
+    }
+    ////////////////////////////////////////////////////
+    //determine Y Min/Max
+    if (point1[1] < point2[1])
+    {
+        minY = point1[1];
+        maxY = point2[1];
+    }
+    else
+    {
+        minY = point2[1];
+        maxY = point1[1];
+    }
+    ///////////////////////////////////////////////////
+    //determine Z Min/Max
+    if (point1[2] < point2[2])
+    {
+        minZ = point1[2];
+        maxZ = point2[2];
+    }
+    else
+    {
+        minZ = point2[2];
+        maxZ = point1[2];
+    }
+
+    global_subVolume->SetBounds(minX, maxX, minY,maxY, minZ, maxZ);
+
+    this->ui->lineSubVolXMin->setText(QString::number(minX, 'f', 2));
+    this->ui->lineSubVolXMax->setText(QString::number(maxX, 'f', 2));
+    this->ui->lineSubVolYMin->setText(QString::number(minY, 'f', 2));
+    this->ui->lineSubVolYMax->setText(QString::number(maxY, 'f', 2));
+    this->ui->lineSubVolZMin->setText(QString::number(minZ, 'f', 2));
+    this->ui->lineSubVolZMax->setText(QString::number(maxZ, 'f', 2));
 }
 
 void MainWindow::on_actionTracking_triggered()

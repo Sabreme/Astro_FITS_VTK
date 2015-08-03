@@ -29,6 +29,36 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
         std::cout << "Translation triggered" << endl;
     }
 
+    virtual void OnMouseMove()
+    {
+        vtkInteractorStyleTrackballCamera::OnMouseMove();
+
+        //this->GetInteractor()->GetRenderWindow()->Render();
+
+        switch (this->GetState())
+        {
+            case 0: std::cout << "Start/Stop" << endl;
+                break;
+
+            case 1: std::cout << "Rotate" << endl;
+                break;
+
+            case 2: std::cout << "Pan" << endl;
+                break;
+
+            case 3: std::cout << "Spin" << endl;
+                break;
+
+            case 4: std::cout << "Dolly" << endl;
+                break;
+
+            case 5: std::cout << "Zoom" << endl;
+                break;
+        default : std::cout << "Defualt" << endl;
+
+        }
+    }
+
     virtual void OnRightButtonUp()
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
@@ -104,7 +134,6 @@ void QVTKTouchWidget::enableGestures()
         this->gesturesActive = false;
         this->setAttribute(Qt::WA_AcceptTouchEvents,false);
 
-        this->ungrabGesture(Qt::SwipeGesture);
         this->ungrabGesture(Qt::TapGesture);
         this->ungrabGesture(Qt::TapAndHoldGesture);
         this->ungrabGesture(Qt::PinchGesture);
@@ -130,12 +159,15 @@ void QVTKTouchWidget::enableGestures()
                 QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent*>(event)->touchPoints();
                 //std::cout << "TouchPoints: " << touchPoints.count() << endl;
 
-                std::cout << "TouchPoints: " << touchPoints.count() << '\t'
-                          << "even Type: " << static_cast<QTouchEvent*>(event)->type() << endl;
-                count = touchPoints.count();
+//                std::cout << "TouchPoints: " << touchPoints.count() << '\t'
+//                          << "even Type: " << static_cast<QTouchEvent*>(event)->type() << endl;
+//                count = touchPoints.count();
             }
             if (event->type() == QEvent::Gesture)
+            {
+                std::cout << "gesture Event" << endl;
                 return gestureEvent(static_cast<QGestureEvent*> (event));
+            }
             else
                 return QVTKWidget::event(event);
         }
@@ -203,10 +235,10 @@ void QVTKTouchWidget::enableGestures()
             camera->Dolly(ppinch->scaleFactor());
             renderer->ResetCameraClippingRange();
         }
-        if (pinch->state() == Qt::GestureFinished) {
-            scaleFactor *= currentStepScaleFactor;
-            currentStepScaleFactor = 1;
-        }
+//        if (pinch->state() == Qt::GestureFinished) {
+//            scaleFactor *= currentStepScaleFactor;
+//            currentStepScaleFactor = 1;
+//        }
 
     }
 
