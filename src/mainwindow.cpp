@@ -2191,6 +2191,11 @@ void MainWindow::on_buttonSubVolExport_clicked()
         global_subVolume->GetOutput()->GetBounds(subVolBounds);
     }
 
+    if (this->systemMode == Touch)
+    {
+        global_subVolume->GetOutput()->GetBounds(subVolBounds);
+    }
+
     SubVolumeDialog subVol;
     subVol.setModal(true);
 
