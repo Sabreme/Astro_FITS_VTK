@@ -3150,7 +3150,7 @@ void MainWindow::loadSubVolume()
             vtkSmartPointer<vtkCubeSource>::New();
 
     //#if VTK_MAJOR_VERSION <= 5
-    subVolume->SetInput(global_Reader->GetOutput());
+    subVolume->SetBounds(global_Volume->GetBounds());
 
     vtkSmartPointer<vtkPolyDataMapper> subVolMapper =
             vtkSmartPointer<vtkPolyDataMapper>::New();
