@@ -13,67 +13,115 @@
 #include "vtkTransform.h"
 #include "vtkMatrix4x4.h"
 #include "vtkInteractorStyleTrackballCamera.h"
+//#include "src/InteractionClasses.h"
 #include "vtkInteractorStyleSwitch.h"
 #include "vtkInteractorObserver.h"
 #include "vtkObjectFactory.h"
 
-class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCamera
-{
-    public:
-    static TouchInteractorStyleTrackBallCamera* New();
+//class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCamera
+//{
+//    public:
+//    static TouchInteractorStyleTrackBallCamera* New();
 
-    virtual void OnRightButtonDown()
-    {
-        vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
+//    virtual void OnRightButtonDown()
+//    {
+//        vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
 
-        std::cout << "Translation triggered" << endl;
-    }
+//        std::cout << "Translation triggered" << endl;
+//    }
 
-    virtual void OnMouseMove()
-    {
-        vtkInteractorStyleTrackballCamera::OnMouseMove();
+//    virtual void OnMouseMove()
+//    {
+//        vtkInteractorStyleTrackballCamera::OnMouseMove();
 
-        //this->GetInteractor()->GetRenderWindow()->Render();
+//        //this->GetInteractor()->GetRenderWindow()->Render();
 
-        switch (this->GetState())
-        {
-            case 0: std::cout << "Start/Stop" << endl;
-                break;
+//        switch (this->GetState())
+//        {
+//            case 0: std::cout << "Start/Stop" << endl;
+//                break;
 
-            case 1: std::cout << "Rotate" << endl;
-                break;
+//            case 1: std::cout << "Rotate" << endl;
+//                break;
 
-            case 2: std::cout << "Pan" << endl;
-                break;
+//            case 2: std::cout << "Pan" << endl;
+//                break;
 
-            case 3: std::cout << "Spin" << endl;
-                break;
+//            case 3: std::cout << "Spin" << endl;
+//                break;
 
-            case 4: std::cout << "Dolly" << endl;
-                break;
+//            case 4: std::cout << "Dolly" << endl;
+//                break;
 
-            case 5: std::cout << "Zoom" << endl;
-                break;
-        default : std::cout << "Defualt" << endl;
+//            case 5: std::cout << "Zoom" << endl;
+//                break;
+//        default : std::cout << "Defualt" << endl;
 
-        }
-    }
+//        }
+//    }
 
-    virtual void OnRightButtonUp()
-    {
-        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+//    virtual void OnRightButtonUp()
+//    {
+//        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
 
-        std::cout << "Translation Finished" << endl;
+//        std::cout << "Translation Finished" << endl;
 
-    }
+//    }
 
 
-    virtual void OnLeftButtonDown()
-    {
-        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
-    }
+//    virtual void OnLeftButtonDown()
+//    {
+//        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+//    }
 
-};
+//    virtual void Rotate()
+//   {
+
+
+//       vtkInteractorStyleTrackballCamera::Rotate();
+
+//       double* orientation;
+
+//       orientation  = camera->GetOrientation();
+
+//       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+//       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+//       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+
+//   }
+
+
+//    virtual void Pan()
+//    {
+
+
+//        vtkInteractorStyleTrackballCamera::Pan();
+
+//        double* position;
+
+//        position = camera->GetPosition();
+
+//        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//    }
+
+//    virtual void Dolly()
+//    {
+
+//        vtkInteractorStyleTrackballCamera::Dolly();
+
+//        double value ;
+
+//        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
+
+//        ui->line_Scale->setText(QString::number(value, 'f', 2));
+//    }
+
+//    Ui::MainWindow * ui;
+
+//};
 
 class InteractorStyleDefaultTrackBall : public vtkInteractorStyleTrackballCamera
 {
@@ -95,7 +143,7 @@ class InteractorStyleDefaultTrackBall : public vtkInteractorStyleTrackballCamera
 
 };
 
-vtkStandardNewMacro(TouchInteractorStyleTrackBallCamera);
+//vtkStandardNewMacro(TouchInteractorStyleTrackBallCamera);
 vtkStandardNewMacro(InteractorStyleDefaultTrackBall);
 
 QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
@@ -120,10 +168,10 @@ void QVTKTouchWidget::enableGestures()
     this->grabGesture(Qt::PinchGesture);
 
 
-    TouchInteractorStyleTrackBallCamera * style =
-         TouchInteractorStyleTrackBallCamera::New();
+//    TouchInteractorStyleTrackBallCamera * style =
+//         TouchInteractorStyleTrackBallCamera::New();
 
-    this->GetInteractor()->SetInteractorStyle(style);
+//    this->GetInteractor()->SetInteractorStyle(style);
 
     }
 
@@ -232,8 +280,14 @@ void QVTKTouchWidget::enableGestures()
 
             QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
 
+
             camera->Dolly(ppinch->scaleFactor());
             renderer->ResetCameraClippingRange();
+//            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
+//                    (iren->GetInteractorStyle());
+//            style->UpdateScale();
+
+
         }
 //        if (pinch->state() == Qt::GestureFinished) {
 //            scaleFactor *= currentStepScaleFactor;

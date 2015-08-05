@@ -43,6 +43,38 @@
 /////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+class vtkCameraCallback : public vtkCommand
+{
+    public:
+//      static vtkCameraCallback* New();
+//      vtkTypeMacro(vtkCameraCallback, vtkCommand);
+
+        static vtkCameraCallback * New(){
+            return new vtkCameraCallback();};
+
+
+
+    virtual void Execute(vtkObject *caller, unsigned long , void *)
+    {
+         std::cout << "Caught event in vtkCameraCallback" << std::endl;
+         vtkCamera *cam = reinterpret_cast<vtkCamera*> (caller);
+
+         // In case you would need this too:
+         vtkMatrix4x4* mat = cam->GetViewTransformMatrix();
+
+         cout << "View matrix: " << endl;
+         cout << "================================================================================= " << endl;
+         cout << mat->GetElement(0, 0) << "\t" << mat->GetElement(0, 1) << "\t" << mat->GetElement(0, 2) << "\t" << mat->GetElement(0, 3) << "\t" << endl;
+         cout << mat->GetElement(1, 0) << "\t" << mat->GetElement(1, 1) << "\t" << mat->GetElement(1, 2) << "\t" << mat->GetElement(1, 3) << "\t" << endl;
+         cout << mat->GetElement(2, 0) << "\t" << mat->GetElement(2, 1) << "\t" << mat->GetElement(2, 2) << "\t" << mat->GetElement(2, 3) << "\t" << endl;
+         cout << mat->GetElement(3, 0) << "\t" << mat->GetElement(3, 1) << "\t" << mat->GetElement(3, 2) << "\t" << mat->GetElement(3, 3) << "\t" << endl;
+         cout << "================================================================================= " << endl;
+         double* x = cam->GetOrientation();
+         cout << "Orientation : " << x[0] << " " << x[1] << " " << x[2] << endl;
+
+     }
+};
+
 
 class vtkMySliceCallback : public vtkCommand
 {
@@ -113,6 +145,122 @@ class vtkMySliceCallback : public vtkCommand
     vtkRenderWindow* renderWindow;
     Ui::MainWindow * ui;
 
+
+};
+
+class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCamera
+{
+    public:
+    static TouchInteractorStyleTrackBallCamera* New();
+
+    virtual void OnRightButtonDown()
+    {
+        vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
+
+        std::cout << "Translation triggered" << endl;
+    }
+
+    virtual void OnMouseMove()
+    {
+        vtkInteractorStyleTrackballCamera::OnMouseMove();
+
+        //this->GetInteractor()->GetRenderWindow()->Render();
+
+        switch (this->GetState())
+        {
+            case 0: std::cout << "Start/Stop" << endl;
+                break;
+
+            case 1: std::cout << "Rotate" << endl;
+                break;
+
+            case 2: std::cout << "Pan" << endl;
+                break;
+
+            case 3: std::cout << "Spin" << endl;
+                break;
+
+            case 4: std::cout << "Dolly" << endl;
+                break;
+
+            case 5: std::cout << "Zoom" << endl;
+                break;
+        default : std::cout << "Defualt" << endl;
+
+        }
+    }
+
+    virtual void OnRightButtonUp()
+    {
+        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+
+        std::cout << "Translation Finished" << endl;
+
+    }
+
+
+    virtual void OnLeftButtonDown()
+    {
+        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+    }
+
+    virtual void Rotate()
+   {
+
+
+       vtkInteractorStyleTrackballCamera::Rotate();
+
+       double* orientation;
+
+       orientation  = camera->GetOrientation();
+
+       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+
+   }
+
+
+    virtual void Pan()
+    {
+
+
+        vtkInteractorStyleTrackballCamera::Pan();
+
+        double* position;
+
+        position = camera->GetPosition();
+
+        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+    }
+
+    virtual void Dolly()
+    {
+
+        vtkInteractorStyleTrackballCamera::Dolly();
+
+        double value ;
+
+        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
+
+        ui->line_Scale->setText(QString::number(value, 'f', 2));
+    }
+
+    virtual void UpdateScale()
+    {
+        double value ;
+
+        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
+
+        ui->line_Scale->setText(QString::number(value, 'f', 2));
+    }
+
+    vtkCamera * camera;
+    Ui::MainWindow * ui;
+    double defualtDistance;
 
 };
 
@@ -573,5 +721,7 @@ vtkStandardNewMacro(MouseInteractorStyle);
 vtkStandardNewMacro(MouseInteractorStyleShiftAndControlTrackBall);
 vtkStandardNewMacro(MouseInteractorStyleShiftAndControlJoystick);
 vtkStandardNewMacro(MouseInteractorStyleScalingAndControlTrackBall);
+vtkStandardNewMacro(TouchInteractorStyleTrackBallCamera);
+//vtkStandardNewMacro(vtkCameraCallback);
 
 #endif // INTERACTIONCLASSES_H

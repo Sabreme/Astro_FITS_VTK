@@ -352,6 +352,8 @@ private slots:
 
         //////////////////////////////////////////////////////
         //// MULTI-TOUCH SLOTS
+        ///
+        void touchInteractionEvent();
 
         void touchBeginSubVol();
         void touchUpdateSubVol();

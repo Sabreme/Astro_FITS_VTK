@@ -576,6 +576,28 @@ void MainWindow::on_buttonModeTouch_clicked()
         ///////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////
 
+        vtkSmartPointer<TouchInteractorStyleTrackBallCamera> style =
+                vtkSmartPointer<TouchInteractorStyleTrackBallCamera>::New();
+
+        this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+        style->SetCurrentRenderer(this->defaultRenderer);
+
+        style->ui = this->ui;
+        style->defualtDistance = this->defaultCameraDistance;
+        style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+        vtkEventQtSlotConnect* vtkEventConnector =
+                vtkEventQtSlotConnect::New();
+
+        vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+     //   vtkEventConnector->Connect(camera,vtkCommand::ActiveCameraEvent,this,SLOT(touchInteractionEvent()));
+
+
+        //vtkEventConnector->Connect(boxWidget_, vtkCommand::InteractionEvent, this, SLOT(boxWidgetCallback()));
+
         this->ui->qvtkWidgetLeft->enableGestures();
 
     }
@@ -720,7 +742,7 @@ void MainWindow::on_buttonTabSliceArb_pressed()
     {
         if (this->MessageBoxQuery("Switch to Arb Slice?","Are you sure you want to continue?"))
         {
-             this->releaseTabFocus();
+            this->releaseTabFocus();
 
             this->systemTab = SliceArb;
             this->ui->buttonTabSliceArb->setDisabled(true);
@@ -728,8 +750,8 @@ void MainWindow::on_buttonTabSliceArb_pressed()
 
             switch (this->systemMode)
             {
-                case Mouse:
-                {
+            case Mouse:
+            {
                 this->beginSliceArb();
 
                 /////////////////////////////////////////////////
@@ -745,15 +767,36 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 style->ui = this->ui;
                 style->defualtDistance = this->defaultCameraDistance;
             }
+
                 break;
 
-                case Leap: this->leapBeginSliceArb();
+            case Leap:
+
+                this->leapBeginSliceArb();
+                break;
+
+            case Touch:
+            {
+                this ->beginSliceArb();
+
+                vtkSmartPointer<TouchInteractorStyleTrackBallCamera> style =
+                        vtkSmartPointer<TouchInteractorStyleTrackBallCamera>::New();
+
+                this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+                style->SetCurrentRenderer(this->defaultRenderer);
+
+                style->ui = this->ui;
+                style->defualtDistance = this->defaultCameraDistance;
+                style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                        GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+                this->ui->qvtkWidgetLeft->enableGestures();
+            }
                 break;
             }
         }
         this->ui->qvtkWidgetLeft->setFocus();
     }
-
 }
 
 ///////////////////////////////////////////////////////////
@@ -973,6 +1016,8 @@ void MainWindow::loadFitsFile(QString filename)
     vtkFitsReader *fitsReader = vtkFitsReader::New();
     const char *newFileName = filename.toStdString().c_str();
     fitsReader->SetFileName(newFileName);
+    fitsReader->SetFileName("OMC.FITS");
+
 
     fitsReader->Update();
 
@@ -2574,6 +2619,15 @@ void MainWindow::on_actionStats_triggered()
     this->ui->plainTextEdit_Leap->insertPlainText(message);
 
     this->ui->plainTextEdit_Leap->insertPlainText("--------------------------------------\n\n");
+}
+
+void MainWindow::touchInteractionEvent()
+{
+    double value ;
+
+    value = this->defaultCameraDistance /  this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera()->GetDistance();
+
+    this->ui->line_Scale->setText(QString::number(value, 'f', 2));
 }
 
 void MainWindow::touchBeginSubVol()
@@ -5132,57 +5186,64 @@ void MainWindow::LeapMotion()
 void MainWindow::on_actionWorldCoords_triggered()
 {
 
-    AddDistanceMeasurementToView1();
-    // remove existing widgets.
-    if (this->lineWidget[0])
-    {
-        this->lineWidget[0]->SetEnabled(0);
-        this->lineWidget[0] = NULL;
-    }
+//    AddDistanceMeasurementToView1();
+//    // remove existing widgets.
+//    if (this->lineWidget[0])
+//    {
+//        this->lineWidget[0]->SetEnabled(0);
+//        this->lineWidget[0] = NULL;
+//    }
 
-    // add new widget
-    this->lineWidget[0] = vtkSmartPointer<vtkLineWidget>::New();
-    this->lineWidget[0]->SetInteractor(
-                this->riw[0]->GetResliceCursorWidget()->GetInteractor());
+//    // add new widget
+//    this->lineWidget[0] = vtkSmartPointer<vtkLineWidget>::New();
+//    this->lineWidget[0]->SetInteractor(
+//                this->riw[0]->GetResliceCursorWidget()->GetInteractor());
 
-    // Set a priority higher than our reslice cursor widget
-    this->lineWidget[0]->SetPriority(
-                this->riw[0]->GetResliceCursorWidget()->GetPriority() + 0.01);
+//    // Set a priority higher than our reslice cursor widget
+//    this->lineWidget[0]->SetPriority(
+//                this->riw[0]->GetResliceCursorWidget()->GetPriority() + 0.01);
 
-    vtkSmartPointer<vtkLineCallback> lineCallback =
-            vtkSmartPointer<vtkLineCallback>::New();
-    lineCallback->riw = riw[0];
+//    vtkSmartPointer<vtkLineCallback> lineCallback =
+//            vtkSmartPointer<vtkLineCallback>::New();
+//    lineCallback->riw = riw[0];
 
-    lineWidget[0]->AddObserver(vtkCommand::InteractionEvent, lineCallback);
-
-
-    vtkSmartPointer<vtkLineRepresentation> lineRepresentation =
-          vtkSmartPointer<vtkLineRepresentation>::New();
+//    lineWidget[0]->AddObserver(vtkCommand::InteractionEvent, lineCallback);
 
 
-    double pos1 [3] = {115, 31.87, 13.05};
-    double pos2 [3] = {115, 31.87, 40.55};
-    lineRepresentation->SetPoint1DisplayPosition(pos1);
-    lineRepresentation->SetPoint2DisplayPosition(pos2);
-
-    lineWidget[0]->SetPoint1(pos1);
-    lineWidget[0]->SetPoint2(pos2);
-
-    lineWidget[0]->On();
+//    vtkSmartPointer<vtkLineRepresentation> lineRepresentation =
+//          vtkSmartPointer<vtkLineRepresentation>::New();
 
 
-    riw[0]->Render();
+//    double pos1 [3] = {115, 31.87, 13.05};
+//    double pos2 [3] = {115, 31.87, 40.55};
+//    lineRepresentation->SetPoint1DisplayPosition(pos1);
+//    lineRepresentation->SetPoint2DisplayPosition(pos2);
+
+//    lineWidget[0]->SetPoint1(pos1);
+//    lineWidget[0]->SetPoint2(pos2);
+
+//    lineWidget[0]->On();
 
 
-    vtkSmartPointer<MouseInteractorStyle> style =
-            vtkSmartPointer<MouseInteractorStyle>::New();
-    style->SetDefaultRenderer(this->riw[0]->GetResliceCursorWidget()->GetCurrentRenderer());
-    this->riw[0]->GetInteractor()->SetInteractorStyle(style);
-    this->riw[0]->GetResliceCursorWidget()->GetInteractor()->SetInteractorStyle(style);
-//    //this->ui->sliceView1->update();
-//    riw[0]->GetInteractor()->SetInteractorStyle(style);
+//    riw[0]->Render();
 
 
+//    vtkSmartPointer<MouseInteractorStyle> style =
+//            vtkSmartPointer<MouseInteractorStyle>::New();
+//    style->SetDefaultRenderer(this->riw[0]->GetResliceCursorWidget()->GetCurrentRenderer());
+//    this->riw[0]->GetInteractor()->SetInteractorStyle(style);
+//    this->riw[0]->GetResliceCursorWidget()->GetInteractor()->SetInteractorStyle(style);
+////    //this->ui->sliceView1->update();
+////    riw[0]->GetInteractor()->SetInteractorStyle(style);
+///
+///
+///
+
+    vtkSmartPointer<vtkCameraCallback> cameraObserver =
+            vtkSmartPointer<vtkCameraCallback>::New();
+    vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+    thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
 
 }
 
