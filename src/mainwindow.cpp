@@ -5243,6 +5243,10 @@ void MainWindow::on_actionWorldCoords_triggered()
             vtkSmartPointer<vtkCameraCallback>::New();
     vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
+    cameraObserver->ui = this->ui;
+    cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+
+
     thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
 
 }

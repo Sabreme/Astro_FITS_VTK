@@ -59,20 +59,81 @@ class vtkCameraCallback : public vtkCommand
          std::cout << "Caught event in vtkCameraCallback" << std::endl;
          vtkCamera *cam = reinterpret_cast<vtkCamera*> (caller);
 
-         // In case you would need this too:
-         vtkMatrix4x4* mat = cam->GetViewTransformMatrix();
+//         // In case you would need this too:
+//         vtkMatrix4x4* mat = cam->GetViewTransformMatrix();
 
-         cout << "View matrix: " << endl;
-         cout << "================================================================================= " << endl;
-         cout << mat->GetElement(0, 0) << "\t" << mat->GetElement(0, 1) << "\t" << mat->GetElement(0, 2) << "\t" << mat->GetElement(0, 3) << "\t" << endl;
-         cout << mat->GetElement(1, 0) << "\t" << mat->GetElement(1, 1) << "\t" << mat->GetElement(1, 2) << "\t" << mat->GetElement(1, 3) << "\t" << endl;
-         cout << mat->GetElement(2, 0) << "\t" << mat->GetElement(2, 1) << "\t" << mat->GetElement(2, 2) << "\t" << mat->GetElement(2, 3) << "\t" << endl;
-         cout << mat->GetElement(3, 0) << "\t" << mat->GetElement(3, 1) << "\t" << mat->GetElement(3, 2) << "\t" << mat->GetElement(3, 3) << "\t" << endl;
-         cout << "================================================================================= " << endl;
-         double* x = cam->GetOrientation();
-         cout << "Orientation : " << x[0] << " " << x[1] << " " << x[2] << endl;
+//         cout << "View matrix: " << endl;
+//         cout << "================================================================================= " << endl;
+//         cout << mat->GetElement(0, 0) << "\t" << mat->GetElement(0, 1) << "\t" << mat->GetElement(0, 2) << "\t" << mat->GetElement(0, 3) << "\t" << endl;
+//         cout << mat->GetElement(1, 0) << "\t" << mat->GetElement(1, 1) << "\t" << mat->GetElement(1, 2) << "\t" << mat->GetElement(1, 3) << "\t" << endl;
+//         cout << mat->GetElement(2, 0) << "\t" << mat->GetElement(2, 1) << "\t" << mat->GetElement(2, 2) << "\t" << mat->GetElement(2, 3) << "\t" << endl;
+//         cout << mat->GetElement(3, 0) << "\t" << mat->GetElement(3, 1) << "\t" << mat->GetElement(3, 2) << "\t" << mat->GetElement(3, 3) << "\t" << endl;
+//         cout << "================================================================================= " << endl;
+//         double* x = cam->GetOrientation();
+//         cout << "Orientation : " << x[0] << " " << x[1] << " " << x[2] << endl;
+
+
+         /// Camera Orientation UI Display
+         ///
+         ///
+
+         vtkMatrix4x4 * cameraMatrix = cam->GetModelViewTransformMatrix();
+
+
+         vtkTransform * newTransform = vtkTransform::New();
+
+         newTransform->Identity();
+
+         newTransform->SetMatrix(cameraMatrix);
+
+         double* orientation;
+
+         orientation  = cam->GetOrientation();
+         //orientation = newTransform->GetOrientation();
+
+         ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+         ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+         ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+         /// Camera Position
+         double* position;
+
+         position = cam->GetPosition();
+
+         //position = newTransform->GetPosition();
+
+         //cam->GetEyePosition(position);
+
+         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+         /// Camera Zoom
+
+         double scale ;
+
+         scale = this->defualtCameraDistance /  cam->GetDistance();
+
+         ui->line_Scale->setText(QString::number(scale, 'f', 2));
+
+
+         double* focalPoint, *viewNormal;
+
+         focalPoint = cam->GetFocalPoint();
+         viewNormal = cam->GetViewPlaneNormal();
+
+         std::cout << "orient = " << orientation[0] << "," << orientation[1] << "," << orientation[2] << " \t";
+         std::cout << "position = " << position[0] << "," << position[1] << "," << position[2] << " \t";
+         std::cout << "focalPoint = " << focalPoint[0] << ", " << focalPoint[1] << ",  " << focalPoint[2] << " \t";
+         std::cout << "viewNormal = " << viewNormal[0] << ", " << viewNormal[1] << ",  " << viewNormal[2] << " \t";
+         std::cout << endl;
 
      }
+
+        Ui::MainWindow * ui;
+        double defualtCameraDistance;
+
+
 };
 
 
