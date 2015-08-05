@@ -268,7 +268,7 @@ void QVTKTouchWidget::enableGestures()
     {
         QPinchGesture::ChangeFlags changeFlags = pinch->changeFlags();
         if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-            std::cout << "SCALING" << endl;
+            //std::cout << "SCALING" << endl;
 
             vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
 

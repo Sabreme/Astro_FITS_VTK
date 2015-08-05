@@ -1245,6 +1245,20 @@ void MainWindow::loadFitsFile(QString filename)
      ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
      defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
 
+     ////////////////////////////////////////////////////////////////////////////////
+     /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
+     ///
+
+     vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
+             vtkSmartPointer<vtkCameraScaleCallback>::New();
+     vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+     cameraObserver->ui = this->ui;
+     cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+
+
+     thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
+
 
      ///////////////////////////////////////////////
      /// \brief SETTING Default Interactor Style to Mouse Interaction
@@ -1524,6 +1538,20 @@ void MainWindow::on_actionReload_triggered()
      ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
      ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
      ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
+
+     ////////////////////////////////////////////////////////////////////////////////
+     /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
+     ///
+
+     vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
+             vtkSmartPointer<vtkCameraScaleCallback>::New();
+     vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+     cameraObserver->ui = this->ui;
+     cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+
+
+     thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
 
      ////////////////////////////////////////////////
      /// Leapmotion TRACKING Message
@@ -5239,8 +5267,8 @@ void MainWindow::on_actionWorldCoords_triggered()
 ///
 ///
 
-    vtkSmartPointer<vtkCameraCallback> cameraObserver =
-            vtkSmartPointer<vtkCameraCallback>::New();
+    vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
+            vtkSmartPointer<vtkCameraScaleCallback>::New();
     vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
     cameraObserver->ui = this->ui;

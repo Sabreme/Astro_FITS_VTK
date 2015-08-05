@@ -43,20 +43,17 @@
 /////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-class vtkCameraCallback : public vtkCommand
+class vtkCameraScaleCallback : public vtkCommand
 {
     public:
-//      static vtkCameraCallback* New();
-//      vtkTypeMacro(vtkCameraCallback, vtkCommand);
 
-        static vtkCameraCallback * New(){
-            return new vtkCameraCallback();};
+        static vtkCameraScaleCallback * New(){
+            return new vtkCameraScaleCallback();};
 
 
 
     virtual void Execute(vtkObject *caller, unsigned long , void *)
-    {
-         std::cout << "Caught event in vtkCameraCallback" << std::endl;
+    {         
          vtkCamera *cam = reinterpret_cast<vtkCamera*> (caller);
 
 //         // In case you would need this too:
@@ -73,41 +70,6 @@ class vtkCameraCallback : public vtkCommand
 //         cout << "Orientation : " << x[0] << " " << x[1] << " " << x[2] << endl;
 
 
-         /// Camera Orientation UI Display
-         ///
-         ///
-
-         vtkMatrix4x4 * cameraMatrix = cam->GetModelViewTransformMatrix();
-
-
-         vtkTransform * newTransform = vtkTransform::New();
-
-         newTransform->Identity();
-
-         newTransform->SetMatrix(cameraMatrix);
-
-         double* orientation;
-
-         orientation  = cam->GetOrientation();
-         //orientation = newTransform->GetOrientation();
-
-         ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
-         ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
-         ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
-
-         /// Camera Position
-         double* position;
-
-         position = cam->GetPosition();
-
-         //position = newTransform->GetPosition();
-
-         //cam->GetEyePosition(position);
-
-         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
-
          /// Camera Zoom
 
          double scale ;
@@ -115,18 +77,6 @@ class vtkCameraCallback : public vtkCommand
          scale = this->defualtCameraDistance /  cam->GetDistance();
 
          ui->line_Scale->setText(QString::number(scale, 'f', 2));
-
-
-         double* focalPoint, *viewNormal;
-
-         focalPoint = cam->GetFocalPoint();
-         viewNormal = cam->GetViewPlaneNormal();
-
-         std::cout << "orient = " << orientation[0] << "," << orientation[1] << "," << orientation[2] << " \t";
-         std::cout << "position = " << position[0] << "," << position[1] << "," << position[2] << " \t";
-         std::cout << "focalPoint = " << focalPoint[0] << ", " << focalPoint[1] << ",  " << focalPoint[2] << " \t";
-         std::cout << "viewNormal = " << viewNormal[0] << ", " << viewNormal[1] << ",  " << viewNormal[2] << " \t";
-         std::cout << endl;
 
      }
 
@@ -221,44 +171,43 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
         std::cout << "Translation triggered" << endl;
     }
 
-    virtual void OnMouseMove()
-    {
-        vtkInteractorStyleTrackballCamera::OnMouseMove();
+//    virtual void OnMouseMove()
+//    {
+//        vtkInteractorStyleTrackballCamera::OnMouseMove();
 
-        //this->GetInteractor()->GetRenderWindow()->Render();
+//        //this->GetInteractor()->GetRenderWindow()->Render();
 
-        switch (this->GetState())
-        {
-            case 0: std::cout << "Start/Stop" << endl;
-                break;
+//        switch (this->GetState())
+//        {
+//            case 0: std::cout << "Start/Stop" << endl;
+//                break;
 
-            case 1: std::cout << "Rotate" << endl;
-                break;
+//            case 1: std::cout << "Rotate" << endl;
+//                break;
 
-            case 2: std::cout << "Pan" << endl;
-                break;
+//            case 2: std::cout << "Pan" << endl;
+//                break;
 
-            case 3: std::cout << "Spin" << endl;
-                break;
+//            case 3: std::cout << "Spin" << endl;
+//                break;
 
-            case 4: std::cout << "Dolly" << endl;
-                break;
+//            case 4: std::cout << "Dolly" << endl;
+//                break;
 
-            case 5: std::cout << "Zoom" << endl;
-                break;
-        default : std::cout << "Defualt" << endl;
+//            case 5: std::cout << "Zoom" << endl;
+//                break;
+//        default : std::cout << "Defualt" << endl;
 
-        }
-    }
+//        }
+//    }
 
     virtual void OnRightButtonUp()
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
 
-        std::cout << "Translation Finished" << endl;
+        //std::cout << "Translation Finished" << endl;
 
     }
-
 
     virtual void OnLeftButtonDown()
     {
@@ -298,26 +247,6 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
     }
 
-    virtual void Dolly()
-    {
-
-        vtkInteractorStyleTrackballCamera::Dolly();
-
-        double value ;
-
-        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
-
-        ui->line_Scale->setText(QString::number(value, 'f', 2));
-    }
-
-    virtual void UpdateScale()
-    {
-        double value ;
-
-        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
-
-        ui->line_Scale->setText(QString::number(value, 'f', 2));
-    }
 
     vtkCamera * camera;
     Ui::MainWindow * ui;
@@ -336,28 +265,29 @@ public:
     virtual void OnLeftButtonDown()
     {
 
-//      std::cout << "Picking pixel: " << this->Interactor->GetEventPosition()[0] << " " << this->Interactor->GetEventPosition()[1] << std::endl;
-//      this->Interactor->GetPicker()->Pick(this->Interactor->GetEventPosition()[0],
-//                         this->Interactor->GetEventPosition()[1],
-//                         0,  // always zero.
-//                         this->Interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
-//      double picked[3];
-//      this->Interactor->GetPicker()->GetPickPosition(picked);
-      //std::cout << "Picked value: " << picked[0] << " " << picked[1] << " " << picked[2] << std::endl;
-
-
-
-//      double * orientation;
-//      orientation = camera->GetOrientation();
-
-//      std::cout << "orientation: " << orientation[0] << " " << orientation[1] << " " << orientation[2] << " " << orientation[3] << std::endl;
-
-      //this->ui->lineInfoNAxis1->setText(QString("%1").arg(orientation[0]));
-
-        //this->
-      // Forward events
       vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
     }
+
+    virtual void OnRightButtonDown()
+    {
+        vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
+    }
+
+    virtual void OnRightButtonUp()
+    {
+        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+    }
+
+    virtual void OnMiddleButtonDown()
+    {
+        vtkInteractorStyleTrackballCamera::OnRightButtonDown();
+    }
+
+    virtual void OnMiddleButtonUp()
+    {
+        vtkInteractorStyleTrackballCamera::OnRightButtonUp();
+    }
+
 
     virtual void Rotate()
    {
@@ -392,17 +322,17 @@ public:
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
     }
 
-    virtual void Dolly()
-    {
+//    virtual void Dolly()
+//    {
 
-        vtkInteractorStyleTrackballCamera::Dolly();
+//        vtkInteractorStyleTrackballCamera::Dolly();
 
-        double value ;
+//        double value ;
 
-        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
+//        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
 
-        ui->line_Scale->setText(QString::number(value, 'f', 2));
-    }
+//        ui->line_Scale->setText(QString::number(value, 'f', 2));
+//    }
 
 
     vtkCamera * camera;
