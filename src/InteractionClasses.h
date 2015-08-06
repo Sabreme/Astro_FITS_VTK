@@ -73,11 +73,15 @@ class vtkCameraScaleCallback : public vtkCommand
 //         /// Camera Rotate
 //         ///
 //         ///
-//         double * orientation = cam->GetOrientation();
+         double * orientation = cam->GetOrientation();
 
-//         std::cout << "Camera "  << orientation[0] << ", "
-//                                  << orientation[1] << ", "
-//                                  << orientation[2] << endl;
+         ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+         ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+         ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+         std::cout << "Camera "  << orientation[0] << ", "
+                                  << orientation[1] << ", "
+                                  << orientation[2] << endl;
 
 //         /// Camera Position
 //         ///
@@ -96,6 +100,7 @@ class vtkCameraScaleCallback : public vtkCommand
          scale = this->defualtCameraDistance /  cam->GetDistance();
 
          ui->line_Scale->setText(QString::number(scale, 'f', 2));
+
 
      }
 
@@ -255,6 +260,27 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
 //       std::cout << "Touch "  << orientation[0] << ", "
 //                                << orientation[1] << ", "
 //                                << orientation[2] << endl;
+
+
+   }
+
+    virtual void Spin()
+   {
+
+
+       vtkInteractorStyleTrackballCamera::Spin();
+
+       std::cout << "We Spinning !!!" << endl;
+
+       double* orientation;
+
+       //camera->Print(std::cout);
+
+       orientation  = camera->GetOrientation();
+
+       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
 
    }
@@ -667,6 +693,8 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
 
 
    }
+
+
 
 
 //    virtual void Pan()

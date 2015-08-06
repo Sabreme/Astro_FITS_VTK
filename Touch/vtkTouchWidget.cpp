@@ -297,30 +297,30 @@ void QVTKTouchWidget::enableGestures()
         ////
         //// OPTIONAL ROTATIONAL 2-Finger ROLL
         ///
-//        if (changeFlags & QPinchGesture::RotationAngleChanged) {
+        if (changeFlags & QPinchGesture::RotationAngleChanged) {
 
-//            //std::cout << "Z-Axis Rotation" << endl;
+            //std::cout << "Z-Axis Rotation" << endl;
 
-//            vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+            vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
 
-//            vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+            vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
 
-//            // Calculate the focal depth since we'll be using it a lot
+            // Calculate the focal depth since we'll be using it a lot
 
-//            vtkCamera *camera = renderer->GetActiveCamera();
+            vtkCamera *camera = renderer->GetActiveCamera();
 
-//            QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
-
-
-//            double rotationDelta = ppinch->rotationAngle() - ppinch->lastRotationAngle();
-//            camera->Roll(-rotationDelta);
-//            renderer->ResetCameraClippingRange();
-////            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
-////                    (iren->GetInteractorStyle());
-////            style->UpdateScale();
+            QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
 
 
-//        }
+            double rotationDelta = ppinch->rotationAngle() - ppinch->lastRotationAngle();
+            camera->Roll(-rotationDelta);
+            renderer->ResetCameraClippingRange();
+//            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
+//                    (iren->GetInteractorStyle());
+//            style->UpdateScale();
+
+
+        }
 //        if (pinch->state() == Qt::GestureFinished) {
 //            scaleFactor *= currentStepScaleFactor;
 //            currentStepScaleFactor = 1;
