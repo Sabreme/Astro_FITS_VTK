@@ -70,6 +70,25 @@ class vtkCameraScaleCallback : public vtkCommand
 //         cout << "Orientation : " << x[0] << " " << x[1] << " " << x[2] << endl;
 
 
+//         /// Camera Rotate
+//         ///
+//         ///
+//         double * orientation = cam->GetOrientation();
+
+//         std::cout << "Camera "  << orientation[0] << ", "
+//                                  << orientation[1] << ", "
+//                                  << orientation[2] << endl;
+
+//         /// Camera Position
+//         ///
+//         ///
+//         double * position = cam->GetPosition();
+
+//         std::cout << "Camera "  << position[0] << ", "
+//                                  << position[1] << ", "
+//                                  << position[2] << endl;
+
+
          /// Camera Zoom
 
          double scale ;
@@ -143,8 +162,8 @@ class vtkMySliceCallback : public vtkCommand
         ui->lineArbSliceAngleY->setText(QString::number( (1 + normal[1]) * 180, 'f', 0));
         ui->lineArbSliceAngleZ->setText(QString::number( (1 + normal[2]) * 180, 'f', 0));
 
-        std::cout << "X = " << normal[0] << "\tY= " << normal[1] << "\tZ  " << normal[2] << " \t";
-        std::cout << endl;
+       // std::cout << "X = " << normal[0] << "\tY= " << normal[1] << "\tZ  " << normal[2] << " \t";
+       // std::cout << endl;
 
     }
 
@@ -168,14 +187,19 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
 
-        std::cout << "Translation triggered" << endl;
+       // std::cout << "Translation triggered" << endl;
     }
 
-//    virtual void OnMouseMove()
-//    {
-//        vtkInteractorStyleTrackballCamera::OnMouseMove();
+    virtual void OnRightButtonUp()
+    {
+        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+    }
 
-//        //this->GetInteractor()->GetRenderWindow()->Render();
+    virtual void OnMouseMove()
+    {
+        vtkInteractorStyleTrackballCamera::OnMouseMove();
+
+        //this->GetInteractor()->GetRenderWindow()->Render();
 
 //        switch (this->GetState())
 //        {
@@ -199,11 +223,11 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
 //        default : std::cout << "Defualt" << endl;
 
 //        }
-//    }
+    }
 
-    virtual void OnRightButtonUp()
+    virtual void OnMiddleButtonDown()
     {
-        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+       // vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
 
         //std::cout << "Translation Finished" << endl;
 
@@ -228,6 +252,10 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
        ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
        ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
+//       std::cout << "Touch "  << orientation[0] << ", "
+//                                << orientation[1] << ", "
+//                                << orientation[2] << endl;
+
 
    }
 
@@ -245,6 +273,10 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+//        std::cout << "Touch "  << position[0] << ", "
+//                                 << position[1] << ", "
+//                                 << position[2] << endl;
     }
 
 

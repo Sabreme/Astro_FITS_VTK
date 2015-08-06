@@ -159,7 +159,7 @@ QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
 
 void QVTKTouchWidget::enableGestures()
 {
-    std::cout << "gestures enabled" << endl;
+//    std::cout << "gestures enabled" << endl;
     this->gesturesActive = true;
     this->setAttribute(Qt::WA_AcceptTouchEvents);
 
@@ -177,7 +177,7 @@ void QVTKTouchWidget::enableGestures()
 
     void QVTKTouchWidget::dissableGestures()
     {
-        std::cout << "gestures dissabled" << endl;
+//        std::cout << "gestures dissabled" << endl;
 
         this->gesturesActive = false;
         this->setAttribute(Qt::WA_AcceptTouchEvents,false);
@@ -185,6 +185,7 @@ void QVTKTouchWidget::enableGestures()
         this->ungrabGesture(Qt::TapGesture);
         this->ungrabGesture(Qt::TapAndHoldGesture);
         this->ungrabGesture(Qt::PinchGesture);
+
 
 
         InteractorStyleDefaultTrackBall * style =
@@ -213,7 +214,7 @@ void QVTKTouchWidget::enableGestures()
             }
             if (event->type() == QEvent::Gesture)
             {
-                std::cout << "gesture Event" << endl;
+//                std::cout << "gesture Event" << endl;
                 return gestureEvent(static_cast<QGestureEvent*> (event));
             }
             else
@@ -243,7 +244,7 @@ void QVTKTouchWidget::enableGestures()
         this->horizonatlOffset = 0;
         this->update();
 
-        std::cout << "Position Reset" << endl;
+//        std::cout << "Position Reset" << endl;
 
     }
 
@@ -288,13 +289,46 @@ void QVTKTouchWidget::enableGestures()
 //            style->UpdateScale();
 
 
+
+
+
         }
+
+        ////
+        //// OPTIONAL ROTATIONAL 2-Finger ROLL
+        ///
+//        if (changeFlags & QPinchGesture::RotationAngleChanged) {
+
+//            //std::cout << "Z-Axis Rotation" << endl;
+
+//            vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+//            vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+//            // Calculate the focal depth since we'll be using it a lot
+
+//            vtkCamera *camera = renderer->GetActiveCamera();
+
+//            QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
+
+
+//            double rotationDelta = ppinch->rotationAngle() - ppinch->lastRotationAngle();
+//            camera->Roll(-rotationDelta);
+//            renderer->ResetCameraClippingRange();
+////            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
+////                    (iren->GetInteractorStyle());
+////            style->UpdateScale();
+
+
+//        }
 //        if (pinch->state() == Qt::GestureFinished) {
 //            scaleFactor *= currentStepScaleFactor;
 //            currentStepScaleFactor = 1;
 //        }
 
     }
+
+
 
 
     //void TouchWidget::printPanGestureInfo(QPanGesture *gesture)
