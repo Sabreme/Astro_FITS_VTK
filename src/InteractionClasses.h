@@ -79,9 +79,9 @@ class vtkCameraScaleCallback : public vtkCommand
          ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
          ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
-         std::cout << "Camera "  << orientation[0] << ", "
-                                  << orientation[1] << ", "
-                                  << orientation[2] << endl;
+//         std::cout << "Camera "  << orientation[0] << ", "
+//                                  << orientation[1] << ", "
+//                                  << orientation[2] << endl;
 
 //         /// Camera Position
 //         ///

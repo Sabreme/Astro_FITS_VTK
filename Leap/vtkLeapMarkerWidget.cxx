@@ -56,11 +56,10 @@ public:
         double position[3];
 
         pointWidget->GetPosition(position);
-//        std::ostringstream text;
-//        text    << "Point: "
-//                << std::fixed << std::setprecision(1)
-//                << position[0] << ", " << position[1] << ", " << position[2];
-//        this->TextActor->SetInput(text.str().c_str());
+        std::cout << "Point: "
+                << std::fixed << std::setprecision(1)
+                << position[0] << ", " << position[1] << ", " << position[2] << endl;
+        //this->TextActor->SetInput(text.str().c_str());
         //this->Actor->VisibilityOn();
     }
     vtkmyPWCallback():PolyData(0),Actor(0) {}
@@ -763,7 +762,7 @@ void vtkLeapMarkerWidget::GeneratActors()
             vtkSmartPointer<vtkmyPWCallback>::New();
     myCallback->PolyData = point;
     //myCallback->CursorActor = glyphActor;
-//    myCallback->PositionActor = textActor;
+    //myCallback->PositionActor = textActor;
 
     leapDbgPointWidget = vtkPointWidget::New();
     leapDbgPointWidget->SetCurrentRenderer(this->Renderer);
@@ -817,7 +816,7 @@ void vtkLeapMarkerWidget::GeneratActors()
      // Change the color of the knob that slides
      sliderRep->GetSliderProperty()->SetColor(0,1,0);//Green
      sliderRep->SetSliderLength(0.06);          //THICKNESS
-     sliderRep->SetSliderWidth(0.06);           // TALL
+     sliderRep->SetSliderWidth(0.1);           // TALL
 
 //     // Change the color of the text indicating what the slider controls
 //     sliderRep->GetTitleProperty()->SetColor(1,0,0);//red
@@ -840,11 +839,15 @@ void vtkLeapMarkerWidget::GeneratActors()
      sliderRep->SetEndCapLength(0.06);          //THICKNESS
      sliderRep->SetEndCapWidth(0.02);           // TALL
 
-     sliderRep->GetPoint1Coordinate()->SetCoordinateSystemToDisplay();
-     sliderRep->GetPoint1Coordinate()->SetValue(30 ,720);
-     sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToDisplay();
-     sliderRep->GetPoint2Coordinate()->SetValue(135, 720);
+//     sliderRep->GetPoint1Coordinate()->SetCoordinateSystemToDisplay();
+//     sliderRep->GetPoint1Coordinate()->SetValue(135 ,220);
+//     sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToDisplay();
+//     sliderRep->GetPoint2Coordinate()->SetValue(30, 220);
 
+     sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToWorld();
+     sliderRep->GetPoint2Coordinate()->SetValue(-0.8, 0.8, 0.3);
+     sliderRep->GetPoint1Coordinate()->SetCoordinateSystemToWorld();
+     sliderRep->GetPoint1Coordinate()->SetValue(0.8, 0.8, 0.3);
 
    //  std::cout << "Point Viewport: " << sliderRep->GetPoint1Coordinate()->GetComputedViewportValue(sliderRep->GetPoint1Coordinate()->GetViewport()) << endl;
 

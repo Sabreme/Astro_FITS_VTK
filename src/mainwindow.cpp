@@ -5154,7 +5154,8 @@ void MainWindow::LeapMotion()
                     bool do_Invert = true;
                     if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
                     {
-                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
+                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>
+                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
                         //                    std::cout << "Return focus" << endl;
                         do_Invert = false;
                     }
@@ -5165,27 +5166,55 @@ void MainWindow::LeapMotion()
 
                     double oldPosition = this->leapMarkerWidget->global_CameraPosition;
 
-                    this->leapMarkerWidget->global_CameraPosition = oldPosition / (scaleFactor) ;
+                    this->leapMarkerWidget->global_CameraPosition = oldPosition * (scaleFactor) ;
 
                     double newPosition = this->leapMarkerWidget->global_CameraPosition;
 
+
                     /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
 
-                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+//                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
 
-                    if (colourRange < 0) colourRange = 0;
-                    else
+//                    if (colourRange < 0) colourRange = 0;
+//                    else
+//                        if(colourRange > 1) colourRange = 1;
+
+//                    std::cout << "Scale Factor: " << scaleFactor
+//                              << "\tPosition: " << newPosition
+//                              << "\tColourRange: " << colourRange << endl;
+
+                    if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting BIGGER - Blue Adjustment
+                    {
+                        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+                        ///
+                        double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
                         if(colourRange > 1) colourRange = 1;
 
-                    if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting SMALLER - Blue Adjustment
-                    {
-                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                        static_cast<vtkSliderRepresentation3D*>
+                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                        static_cast<vtkSliderRepresentation3D*>
+                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
+                                //GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                                GetTubeProperty()->SetColor(1.2-colourRange,1.2-colourRange,1);
                     }
-                    else                                           /// SCHINKING.... ColourRange Getting BIGGER -- Red Adjustment
+                    else                                           /// SCHINKING.... ColourRange Getting SMALLER -- Red Adjustment
                     {
-                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation3D*>(this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+                        ///
+                        double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Start) ;
+                        if(colourRange < 0) colourRange = 0;
+
+                        static_cast<vtkSliderRepresentation3D*>
+                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+                        static_cast<vtkSliderRepresentation3D*>
+                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
+                                //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                                GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
+
+                                std::cout << "Scale Factor: " << scaleFactor
+                                          << "\tPosition: " << newPosition
+                                          << "\tRGB(1,: " << colourRange * 0.8
+                                          << "," << colourRange * 0.8 << endl;
                     }
                 }
                 leapFrameFreqCount = 0;
