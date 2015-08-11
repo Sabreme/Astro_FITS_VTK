@@ -1016,7 +1016,7 @@ void MainWindow::loadFitsFile(QString filename)
     vtkFitsReader *fitsReader = vtkFitsReader::New();
     const char *newFileName = filename.toStdString().c_str();
     fitsReader->SetFileName(newFileName);
-    fitsReader->SetFileName("OMC.FITS");
+    //fitsReader->SetFileName("OMC.FITS");
 
 
     fitsReader->Update();
