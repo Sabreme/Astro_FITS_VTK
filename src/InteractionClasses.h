@@ -79,20 +79,6 @@ class vtkCameraScaleCallback : public vtkCommand
          ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
          ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
-//         std::cout << "Camera "  << orientation[0] << ", "
-//                                  << orientation[1] << ", "
-//                                  << orientation[2] << endl;
-
-//         /// Camera Position
-//         ///
-//         ///
-//         double * position = cam->GetPosition();
-
-//         std::cout << "Camera "  << position[0] << ", "
-//                                  << position[1] << ", "
-//                                  << position[2] << endl;
-
-
          /// Camera Zoom
 
          double scale ;
@@ -380,18 +366,6 @@ public:
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
     }
 
-//    virtual void Dolly()
-//    {
-
-//        vtkInteractorStyleTrackballCamera::Dolly();
-
-//        double value ;
-
-//        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
-
-//        ui->line_Scale->setText(QString::number(value, 'f', 2));
-//    }
-
 
     vtkCamera * camera;
     Ui::MainWindow * ui;
@@ -455,20 +429,7 @@ class MouseInteractorStyleShiftAndControlJoystick : public vtkInteractorStyleJoy
         }
 
         vtkInteractorStyleJoystickCamera::OnLeftButtonDown();
-        // Forward events
 
-//        if (currentStyle==1)
-//        {
-
-//            vtkInteractorStyleJoystickActor::OnLeftButtonDown();
-//        }
-//        else
-//        if
-//           (currentStyle==2)
-//        {
-//            vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
-//        }
-//        vtkInteractorStyle::OnLeftButtonDown();
 
     }
     int currentStyle;
@@ -509,86 +470,6 @@ public:
   QLabel * label;
   vtkImagePlaneWidget * ipw[3];
   int axis;
-};
-
-class vtkLineCallback : public vtkCommand
-{
-  public:
-    static vtkLineCallback *New()
-    {
-      return new vtkLineCallback;
-    }
-
-    virtual void Execute(vtkObject *caller, unsigned long, void*)
-    {
-
-      vtkLineWidget *lineWidget =
-          reinterpret_cast<vtkLineWidget*>(caller);
-
-
-//      // Get the actual box coordinates of the line
-//      vtkSmartPointer<vtkPolyData> polydata =
-//          vtkSmartPointer<vtkPolyData>::New();
-//      static_cast<vtkLineRepresentation*>(lineWidget->GetRepresentation())->GetPolyData (polydata);
-
-//      vtkSmartPointer<vtkLineRepresentation> lineRep =
-//              lineWidget->GetLineRepresentation();
-      // Display one of the points, just so we know it's working
-      double displayPos1[3];
-      double displayPos2[3];
-      double worldPos1[3];
-      double worldPos2[3];
-
-
-
-//      lineRep->GetPoint1DisplayPosition(displayPos1);
-//      lineRep->GetPoint2DisplayPosition(displayPos2);
-//      lineRep->GetPoint1WorldPosition(worldPos1);
-//      lineRep->GetPoint2WorldPosition(worldPos2);
-
-      lineWidget->GetPoint1(displayPos1);
-      lineWidget->GetPoint2(displayPos2);
-
-      std::cout << "Display1: " << displayPos1[0] << ", " << displayPos1[1] << ", " << displayPos1[2] << std::endl;
-      std::cout << "Display2: " << displayPos2[0] << ", " << displayPos2[1] << ", " << displayPos2[2] << std::endl;
-
-      lineWidget->ComputeDisplayToWorld(lineWidget->GetCurrentRenderer(),
-                                        displayPos1[0], displayPos1[1], displayPos1[2],
-                                        worldPos1);
-
-      lineWidget->ComputeDisplayToWorld(lineWidget->GetCurrentRenderer(),
-                                        displayPos2[0], displayPos2[1], displayPos2[2],
-                                        worldPos2);
-
-      std::cout << "World1: " << worldPos1[0] << ", " << worldPos1[1] << ", " << worldPos1[2] << std::endl;
-      std::cout << "World2: " << worldPos2[0] << ", " << worldPos2[1] << ", " << worldPos2[2] << std::endl;
-
-
-      vtkRenderWindowInteractor * vtkInteractor = lineWidget->GetInteractor();
-
-
-
-      int * lastPos = vtkInteractor->GetLastEventPosition();
-
-      std::cout << "LastPos: " << lastPos[0] << " " << lastPos[1] << endl;
-
-      riw->GetInteractor()->LeftButtonPressEvent();
-      riw->GetInteractor()->SetEventPosition(lastPos[0] + 10, lastPos[1] + 10);
-      riw->GetInteractor()->MouseMoveEvent();
-      riw->GetInteractor()->LeftButtonReleaseEvent();
-
-
-      //std::cout << "WorldPt1: " << worldPos1[0] << ", " << worldPos1[1] << ", " << worldPos1[2] << std::endl;
-      //std::cout << "WorldPt2: " << worldPos2[0] << ", " << worldPos2[1] << ", " << worldPos2[2] << std::endl;
-
-      std::cout << "---------------------------------------------" << endl;
-
-
-    }
-    vtkLineCallback(){}
-    vtkResliceImageViewer * riw;
-
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -5211,10 +5211,10 @@ void MainWindow::LeapMotion()
                                 //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
                                 GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
 
-                                std::cout << "Scale Factor: " << scaleFactor
-                                          << "\tPosition: " << newPosition
-                                          << "\tRGB(1,: " << colourRange * 0.8
-                                          << "," << colourRange * 0.8 << endl;
+//                                std::cout << "Scale Factor: " << scaleFactor
+//                                          << "\tPosition: " << newPosition
+//                                          << "\tRGB(1,: " << colourRange * 0.8
+//                                          << "," << colourRange * 0.8 << endl;
                     }
                 }
                 leapFrameFreqCount = 0;

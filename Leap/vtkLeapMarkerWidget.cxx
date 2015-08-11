@@ -42,31 +42,6 @@ vtkStandardNewMacro(vtkLeapMarkerWidget);
 
 vtkCxxSetObjectMacro(vtkLeapMarkerWidget, LeapMarker, vtkProp);
 
-// This does the actual work: updates the probe.
-// Callback for the interaction
-class vtkmyPWCallback : public vtkCommand
-{
-public:
-    static vtkmyPWCallback *New()
-    { return new vtkmyPWCallback; }
-    virtual void Execute(vtkObject *caller, unsigned long, void*)
-    {
-        vtkPointWidget *pointWidget = reinterpret_cast<vtkPointWidget*>(caller);
-        pointWidget->GetPolyData(this->PolyData);
-        double position[3];
-
-        pointWidget->GetPosition(position);
-        std::cout << "Point: "
-                << std::fixed << std::setprecision(1)
-                << position[0] << ", " << position[1] << ", " << position[2] << endl;
-        //this->TextActor->SetInput(text.str().c_str());
-        //this->Actor->VisibilityOn();
-    }
-    vtkmyPWCallback():PolyData(0),Actor(0) {}
-    vtkPolyData *PolyData;
-    vtkActor *Actor;
-    vtkTextActor* TextActor;
-};
 
 class vtkLeapMarkerWidgetObserver : public vtkCommand
 {
@@ -102,8 +77,7 @@ vtkLeapMarkerWidget::vtkLeapMarkerWidget()
   this->Tolerance = 7;
   this->Moving = 0;
   
-  this->Renderer = vtkRenderer::New();
-  //this->Renderer->SetViewport( 0.0, 0.0, 0.2, 0.2 );
+  this->Renderer = vtkRenderer::New();  
   this->Renderer->SetViewport( 0.0, 0.8, 0.2, 1.0 );
   this->Renderer->SetLayer(1);
   this->Renderer->InteractiveOff();
@@ -268,22 +242,6 @@ void vtkLeapMarkerWidget::ExecuteCameraUpdateEvent(vtkObject *vtkNotUsed(o),
     {
     return;
     }
-
-//  vtkCamera *cam = this->CurrentRenderer->GetActiveCamera();
-//  double pos[3], fp[3], viewup[3];
-//  cam->GetPosition( pos );
-//  cam->GetFocalPoint( fp );
-//  cam->GetViewUp( viewup );
-
-//  cam = this->Renderer->GetActiveCamera();
-//  cam->SetPosition( pos );
-//  cam->SetFocalPoint( fp );
-//  cam->SetViewUp( viewup );
-
-//  this->Renderer->ResetCamera();
-//  cam->Dolly(0.8);
-
-//  this->UpdateOutline();
 }
 
 //-------------------------------------------------------------------------
@@ -755,15 +713,6 @@ void vtkLeapMarkerWidget::GeneratActors()
     glyphActor->VisibilityOn();
 
 
-    // The SetInteractor method is how 3D widgets are associated with the render
-    // window interactor. Internally, SetInteractor sets up a bunch of callbacks
-    // using the Command/Observer mechanism (AddObserver()).
-    vtkSmartPointer<vtkmyPWCallback> myCallback =
-            vtkSmartPointer<vtkmyPWCallback>::New();
-    myCallback->PolyData = point;
-    //myCallback->CursorActor = glyphActor;
-    //myCallback->PositionActor = textActor;
-
     leapDbgPointWidget = vtkPointWidget::New();
     leapDbgPointWidget->SetCurrentRenderer(this->Renderer);
     leapDbgPointWidget->SetInteractor(this->Interactor);
@@ -773,8 +722,6 @@ void vtkLeapMarkerWidget::GeneratActors()
     leapDbgPointWidget->PlaceWidget(-1, 1, -1, 1, -1, 1);
     leapDbgPointWidget->GetPolyData(point);
     leapDbgPointWidget->EnabledOff();
-    //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
-    leapDbgPointWidget->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
 
     leapDbgPointWidget->GetProperty()->SetLineWidth(1.5);
 
@@ -786,14 +733,6 @@ void vtkLeapMarkerWidget::GeneratActors()
 
     leapDbgPointWidget->EnabledOn();
 
-//    vtkLeapMarkerWidget * marker = vtkLeapMarkerWidget::New();
-//    marker->SetInteractor(this->Interactor);
-//    marker->SetLeapMarker(sphereActor);
-//    marker->SetEnabled(true);
-//    //marker->InteractiveOn();
-//    marker->InteractiveOff();
-
-  //this->Renderer->GetActiveCamera()->Dolly(0.5);
 
      SetLeapMarker(sphereActor);
 
@@ -818,12 +757,6 @@ void vtkLeapMarkerWidget::GeneratActors()
      sliderRep->SetSliderLength(0.06);          //THICKNESS
      sliderRep->SetSliderWidth(0.1);           // TALL
 
-//     // Change the color of the text indicating what the slider controls
-//     sliderRep->GetTitleProperty()->SetColor(1,0,0);//red
-
-//     // Change the color of the text displaying the value
-//     sliderRep->GetLabelProperty()->SetColor(1,0,0);//red
-
      //Change the color of the text displaying the value location
      sliderRep->ShowSliderLabelOff();
 
@@ -838,11 +771,6 @@ void vtkLeapMarkerWidget::GeneratActors()
      sliderRep->GetCapProperty()->SetColor(0,1,0);//Green
      sliderRep->SetEndCapLength(0.06);          //THICKNESS
      sliderRep->SetEndCapWidth(0.02);           // TALL
-
-//     sliderRep->GetPoint1Coordinate()->SetCoordinateSystemToDisplay();
-//     sliderRep->GetPoint1Coordinate()->SetValue(135 ,220);
-//     sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToDisplay();
-//     sliderRep->GetPoint2Coordinate()->SetValue(30, 220);
 
      sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToWorld();
      sliderRep->GetPoint2Coordinate()->SetValue(-0.8, 0.8, 0.3);
