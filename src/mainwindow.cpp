@@ -126,8 +126,25 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->ui->centralWidget = ui->qvtkWidgetLeft;
+    this->ui->centralWidget = ui->qvtkWidgetLeft;    
     this->vtkWidget = ui->qvtkWidgetLeft;               // Used for FrameRate Calculation
+
+    ///MAIN WINDOW GUI LAYOUT CONFIGURATION
+    ///                     |                        |
+    /// LEFT Window | QVTKWIDGET    | RIGHT PANEL
+    ///                      |      <---->          |
+    ///                      |                        |
+    QHBoxLayout* guiLayout = new QHBoxLayout;
+    this->ui->Frame_LEFT->setFixedWidth(151);
+    this->ui->Frame_RIGHT->setFixedWidth(371);
+    guiLayout->addWidget(this->ui->Frame_LEFT);
+    guiLayout->addWidget(this->ui->qvtkWidgetLeft);
+    guiLayout->addWidget(this->ui->Frame_RIGHT);
+    centralWidget()->setLayout(guiLayout);
+
+    //// Resize Window Handler
+    resizeTimer.setSingleShot(true);
+    connect (&resizeTimer, SIGNAL(timeout()),SLOT (resizeDone()));
 
     cameraAzimuth = 0;
     cameraElevation = 0;
@@ -300,6 +317,11 @@ void MainWindow::releaseModeSlots()
     }
 }
 
+void MainWindow::resizeDone()
+{
+     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+}
+
 
 
 void MainWindow::leapTransfRotationClicked()
@@ -435,6 +457,12 @@ void MainWindow::leapTransfNoneClicked()
      style->defualtDistance = this->defaultCameraDistance;
 
      this->leapTrackingActor->SetVisibility(false);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    resizeTimer.start( 500);
+    QMainWindow::resizeEvent(event);
 }
 
 ///////////////////////////////////////////////////////////
@@ -1877,7 +1905,7 @@ void MainWindow::on_actionReset_Camera_triggered()
     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
     interactor->ExitCallback();
 
-     this->ui->qvtkWidgetLeft->update();
+   //  this->ui->qvtkWidgetLeft->update();
 
     ///
     /// \brief Reset the Transformation Coordinates

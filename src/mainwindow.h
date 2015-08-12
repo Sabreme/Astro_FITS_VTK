@@ -108,6 +108,7 @@ public:
 
     void loadFitsFile(QString filename);    
 
+
     void closeTabs();
 
     /////////////////////////////////////////////////////
@@ -124,6 +125,7 @@ public:
 //    void LongFunction(int total);
 
     QVTKWidget* vtkWidget;      // Used for Main loop for FrameRate Calculation
+    QTimer resizeTimer;
 
 
     double Distance2Point(double *point1, double *point2);
@@ -156,6 +158,8 @@ public slots:
 
     void releaseModeSlots();
 
+    void resizeDone();
+
 
 
     void leapTransfRotationClicked();
@@ -165,6 +169,7 @@ public slots:
 
 protected:
         void ModifiedHandler();
+        void resizeEvent(QResizeEvent* event);
 
 private slots:
         /////////////////////////////////////////////////
