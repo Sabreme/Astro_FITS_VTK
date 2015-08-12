@@ -19,5 +19,21 @@
         <file>Cube_Right.png</file>
         <file>Cube_Top.png</file>
         <file>Camera_Scaling.png</file>
+        <file>cube-info.png</file>
+        <file>cube-info-Active.png</file>
+        <file>free-slice.png</file>
+        <file>free-slice-Active.png</file>
+        <file>orth-slice.png</file>
+        <file>orth-slice-Active.png</file>
+        <file>reset.png</file>
+        <file>reset-Active.png</file>
+        <file>rotation.png</file>
+        <file>rotation-2.png</file>
+        <file>sub-vol.png</file>
+        <file>sub-vol-Active.png</file>
+        <file>translation.png</file>
+        <file>translation-Active.png</file>
+        <file>zoom.png</file>
+        <file>zoom-Active.png</file>
     </qresource>
 </RCC>

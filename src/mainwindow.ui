@@ -10,6 +10,12 @@
     <height>838</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1340</width>
+    <height>800</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Astro FITS VTK ver1.1</string>
   </property>
@@ -874,9 +880,9 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>150</y>
-        <width>51</width>
-        <height>41</height>
+        <y>140</y>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="text">
@@ -884,12 +890,13 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/Trackball.png</normaloff>:/Trackball.png</iconset>
+        <normaloff>:/rotation-2.png</normaloff>
+        <disabledoff>:/rotation.png</disabledoff>:/rotation-2.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>40</width>
-        <height>40</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="shortcut">
@@ -904,8 +911,8 @@ border:none;
        <rect>
         <x>40</x>
         <y>290</y>
-        <width>51</width>
-        <height>41</height>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="text">
@@ -913,12 +920,13 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/Camera_Translation.PNG</normaloff>:/Camera_Translation.PNG</iconset>
+        <normaloff>:/translation.png</normaloff>
+        <disabledoff>:/translation-Active.png</disabledoff>:/translation.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>40</width>
-        <height>40</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="shortcut">
@@ -932,9 +940,9 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>430</y>
-        <width>51</width>
-        <height>41</height>
+        <y>450</y>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="text">
@@ -942,12 +950,13 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/Camera_Scaling.png</normaloff>:/Camera_Scaling.png</iconset>
+        <normaloff>:/zoom.png</normaloff>
+        <disabledoff>:/zoom-Active.png</disabledoff>:/zoom.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>40</width>
-        <height>40</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="shortcut">
@@ -961,7 +970,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>120</y>
+        <y>110</y>
         <width>71</width>
         <height>21</height>
        </rect>
@@ -974,7 +983,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>270</y>
+        <y>260</y>
         <width>81</width>
         <height>21</height>
        </rect>
@@ -986,8 +995,8 @@ border:none;
      <widget class="QLabel" name="label_36">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>400</y>
+        <x>50</x>
+        <y>410</y>
         <width>61</width>
         <height>21</height>
        </rect>
@@ -1052,7 +1061,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>350</y>
+        <y>370</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1065,7 +1074,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>350</y>
+        <y>370</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1078,7 +1087,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>350</y>
+        <y>370</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1091,8 +1100,8 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>480</y>
-        <width>41</width>
+        <y>510</y>
+        <width>51</width>
         <height>22</height>
        </rect>
       </property>
@@ -1130,7 +1139,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>330</y>
+        <y>350</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1143,7 +1152,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>330</y>
+        <y>350</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1156,7 +1165,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>330</y>
+        <y>350</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1169,7 +1178,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>260</y>
+        <y>250</y>
         <width>118</width>
         <height>3</height>
        </rect>
@@ -1186,7 +1195,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>390</y>
+        <y>400</y>
         <width>118</width>
         <height>3</height>
        </rect>
@@ -1203,7 +1212,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>120</y>
+        <y>110</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1216,7 +1225,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>270</y>
+        <y>260</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1228,8 +1237,8 @@ border:none;
      <widget class="QCheckBox" name="checkBox_Scaling_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>400</y>
+        <x>20</x>
+        <y>410</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1260,8 +1269,8 @@ border:none;
        <rect>
         <x>40</x>
         <y>40</y>
-        <width>51</width>
-        <height>41</height>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="focusPolicy">
@@ -1272,12 +1281,16 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/Camera_Reset.png</normaloff>:/Camera_Reset.png</iconset>
+        <normaloff>:/reset.png</normaloff>
+        <normalon>:/reset-Active.png</normalon>
+        <disabledoff>:/reset-Active.png</disabledoff>
+        <disabledon>:/reset-Active.png</disabledon>
+        <activeoff>:/reset-Active.png</activeoff>:/reset.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>40</width>
-        <height>40</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="shortcut">
@@ -1304,7 +1317,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>510</y>
+        <y>540</y>
         <width>118</width>
         <height>3</height>
        </rect>
@@ -1324,7 +1337,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>540</y>
+        <y>560</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1343,7 +1356,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>540</y>
+        <y>560</y>
         <width>61</width>
         <height>21</height>
        </rect>
@@ -1420,14 +1433,25 @@ QPushButton:disabled
       </property>
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>91</width>
-        <height>41</height>
+        <x>30</x>
+        <y>10</y>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="text">
-       <string>Info</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="../Icons/Icons.qrc">
+        <normaloff>:/cube-info.png</normaloff>
+        <disabledoff>:/cube-info-Active.png</disabledoff>:/cube-info.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>48</width>
+        <height>48</height>
+       </size>
       </property>
       <property name="default">
        <bool>false</bool>
@@ -1439,10 +1463,10 @@ QPushButton:disabled
      <widget class="QPushButton" name="buttonTabSubVol">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>20</y>
-        <width>50</width>
-        <height>50</height>
+        <x>140</x>
+        <y>10</y>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="text">
@@ -1450,12 +1474,13 @@ QPushButton:disabled
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/SubVol-Preview.PNG</normaloff>:/SubVol-Preview.PNG</iconset>
+        <normaloff>:/sub-vol.png</normaloff>
+        <disabledoff>:/sub-vol-Active.png</disabledoff>:/sub-vol.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>40</width>
-        <height>40</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="checkable">
@@ -1481,10 +1506,10 @@ QPushButton:disabled
      <widget class="QPushButton" name="buttonTabSliceArb">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>20</y>
-        <width>50</width>
-        <height>50</height>
+        <x>250</x>
+        <y>10</y>
+        <width>52</width>
+        <height>53</height>
        </rect>
       </property>
       <property name="text">
@@ -1492,12 +1517,13 @@ QPushButton:disabled
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/Arbitrary-Slice.png</normaloff>:/Arbitrary-Slice.png</iconset>
+        <normaloff>:/free-slice.png</normaloff>
+        <disabledoff>:/free-slice-Active.png</disabledoff>:/free-slice.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>40</width>
-        <height>40</height>
+        <width>48</width>
+        <height>48</height>
        </size>
       </property>
       <property name="checkable">
@@ -1520,14 +1546,14 @@ QPushButton:disabled
      <widget class="QLabel" name="label_45">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>30</x>
         <y>70</y>
-        <width>91</width>
+        <width>71</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>Sub-Volume</string>
+       <string>Cube Info</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_48">
@@ -1764,7 +1790,7 @@ padding: 5px;
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
