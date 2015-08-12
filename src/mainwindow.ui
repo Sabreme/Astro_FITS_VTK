@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1345</width>
+    <width>1350</width>
     <height>838</height>
    </rect>
   </property>
@@ -58,6 +58,12 @@ background-color : rgb(49, 48, 43);
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame
+{
+border:1px solid white;
+}</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -1382,6 +1388,12 @@ border:none;
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame
+{
+border:1px solid white;
+}</string>
+    </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
     </property>
@@ -1758,6 +1770,11 @@ QPushButton:disabled
       <string notr="true">QFrame
 {
 border:none;
+}
+
+QTabWidget::pane
+{
+	border: 0;
 }
 
 QTabWidget
@@ -3823,7 +3840,7 @@ border:none;
          <x>10</x>
          <y>60</y>
          <width>331</width>
-         <height>571</height>
+         <height>561</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -3847,7 +3864,7 @@ border:none;
         <property name="geometry">
          <rect>
           <x>220</x>
-          <y>530</y>
+          <y>520</y>
           <width>51</width>
           <height>31</height>
          </rect>
@@ -3860,7 +3877,7 @@ border:none;
         <property name="geometry">
          <rect>
           <x>90</x>
-          <y>530</y>
+          <y>520</y>
           <width>111</width>
           <height>31</height>
          </rect>
@@ -3898,7 +3915,7 @@ border:none;
           <x>10</x>
           <y>140</y>
           <width>311</width>
-          <height>381</height>
+          <height>371</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -3916,7 +3933,7 @@ border:none;
            <x>10</x>
            <y>10</y>
            <width>291</width>
-           <height>361</height>
+           <height>351</height>
           </rect>
          </property>
         </widget>
@@ -4228,8 +4245,8 @@ border:none;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1345</width>
-     <height>25</height>
+     <width>1350</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
