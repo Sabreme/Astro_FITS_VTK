@@ -55,7 +55,6 @@
 #include <QTime>
 
 #include "SubVolume/subvolumedialog.h"
-///#include "subVolume.h"                   -- CHECK
 #include "InfoDlg/infobardialog.h"
 
 #include <QFutureWatcher>
@@ -154,9 +153,9 @@ public slots:
     bool MessageBoxQuery(QString title, QString question);    
 
     void releaseTabFocus();
-    void releaseTransfFocus();
+//    void releaseTransfFocus();
 
-    void releaseModeSlots();
+//    void releaseModeSlots();
 
     void resizeDone();
 
@@ -186,7 +185,7 @@ private slots:
 
         void on_actionDemo_triggered();
 
-        void actionDefault_triggered();
+        //void actionDefault_triggered();
         void on_actionBlack_White_triggered();
         void on_actionBlue_Red_triggered();
 
@@ -194,13 +193,7 @@ private slots:
 
         void closeTab(int index);
 
-        void updateTransformCoords();
-
-       // void on_radioCameraTrackball_clicked();
-        //void on_buttonCameraJoystick_clicked();
-       // void on_buttonCameraTrackball_clicked();
-        //void on_buttonCameraTranslation_clicked();
-        //         void on_radioJoystick_clicked();
+        void resetTransformCoords();
 
         void printBounds(const char*, double[6]);
 
@@ -227,13 +220,13 @@ private slots:
 //        void on_buttonTransfTranslation_clicked();
 //        void on_buttonTransfScaling_clicked();
 
-        void buttonTransRotationPressed();
-        void buttonTransTranslationPressed();
-        void buttonTransScalingPressed();
+//        void buttonTransRotationPressed();
+//        void buttonTransTranslationPressed();
+//        void buttonTransScalingPressed();
 
-        void leapTransRotationPressed();
-        void leapTransTranslationPressed();
-        void leapTransScalingPressed();
+//        void leapTransRotationPressed();
+//        void leapTransTranslationPressed();
+//        void leapTransScalingPressed();
 
 
         //        void updateCameraDetails();
@@ -256,13 +249,6 @@ private slots:
         void on_actionRear_Side_View_triggered();
         void on_actionFront_Side_View_triggered();
 
-//        void on_buttonCameraFront_clicked();
-//        void on_buttonCameraRear_clicked();
-//        void on_buttonCameraLeft_clicked();
-//        void on_buttonCameraRight_clicked();
-//        void on_buttonCameraTop_clicked();
-//        void on_buttonCameraBottom_clicked();
-
 
         ////////////////////////////////////////////////////
         //// SUB-VOLUME SLOTS
@@ -270,7 +256,7 @@ private slots:
         void on_buttonSubVolReset_clicked();
 
 
-        void Buttom_SubVol_clicked();
+        //void Buttom_SubVol_clicked();
         void on_actionSubVolumeXY_triggered();
         void on_action_SubVolume_Z_triggered();
         //void on_actionSubVolSelect_triggered();
@@ -278,19 +264,17 @@ private slots:
         void boxWidgetCallback();
         void on_actionSubVolSelection_triggered();
         void trackSubVolume(double*, double*);
-        void loadSubVolume(QVTKWidget *, vtkFitsReader *);
+//        void loadSubVolume(QVTKWidget *, vtkFitsReader *);
 
         void on_checkSubVolVolumeEnable_stateChanged(int arg1);
         //void on_buttonSubVolPreview_clicked();
         void on_buttonSubVolExport_clicked();
 
-
-
         ///////////////////////////////////////////////////////
         //// AXIS-SLICE SLOTS
 
         void beginSliceAxis();
-        void on_buttonArbReset_clicked();
+
 
         void on_actionSliceAxisAligned_triggered();
         //void on_buttonAxisSliceLoad_clicked();
@@ -326,13 +310,11 @@ private slots:
         //// ARB-SLICE SLOTS
         ///
         void beginSliceArb();
+        void on_buttonArbReset_clicked();
 
         void on_actionSliceAxisArbitrary_triggered();
         //void on_buttonArbSlice_clicked();
         void on_checkArbSliceVolumeEnable_stateChanged(int arg1);
-        //void on_radioArbSliceContourCount10_clicked();
-        //void on_radioArbSliceContourCount20_clicked();
-        //void on_radioArbSliceContourCount30_clicked();
         void on_buttonArbSliceContourBackground_clicked();
         void on_slider_CntourDisplay_valueChanged(int value);
 
@@ -343,8 +325,6 @@ private slots:
         void leapBeginSubVol();
         void leapBeginSliceAxis();
         void leapBeginSliceArb();
-
-
 
         void on_actionLeap_Slice_triggered();
         void on_actionLeapBasic_triggered();
@@ -359,7 +339,6 @@ private slots:
         //// MULTI-TOUCH SLOTS
         ///
         void touchInteractionEvent();
-
         void touchBeginSubVol();
         void touchUpdateSubVol();
     ///    void touchBeginSliceAxis();
@@ -369,6 +348,7 @@ private slots:
         ////////////////////////////////////////////////////////
         //// TEST-SECTION SLOTS
 
+
         void on_actionInfoBarToggle_toggled(bool arg1);
 
         void on_actionFPSToggle_toggled(bool arg1);
@@ -376,10 +356,7 @@ private slots:
         /// \brief on_buttonCameraReset_clicked
         ////////////////////////////////////////////////////////
 
-//        void on_buttonCameraReset_clicked();
-//        void on_actionLeapBasic_triggered();
-//        void on_TestButton_clicked();
-//    void on_actionLeapSubVol_triggered();
+        void on_actionTestButton_triggered();
 
 private:
 

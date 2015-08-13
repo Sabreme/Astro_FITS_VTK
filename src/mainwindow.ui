@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1350</width>
+    <width>1341</width>
     <height>838</height>
    </rect>
   </property>
@@ -896,8 +896,8 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/rotation-2.png</normaloff>
-        <disabledoff>:/rotation.png</disabledoff>:/rotation-2.png</iconset>
+        <normaloff>:/rotation.png</normaloff>
+        <disabledoff>:/rotation-2.png</disabledoff>:/rotation.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -913,6 +913,9 @@ border:none;
       </property>
      </widget>
      <widget class="QPushButton" name="buttonTransfTranslation">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -926,8 +929,8 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/translation.png</normaloff>
-        <disabledoff>:/translation-Active.png</disabledoff>:/translation.png</iconset>
+        <normaloff>:/translation-Active.png</normaloff>
+        <disabledoff>:/translation.png</disabledoff>:/translation-Active.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -943,6 +946,9 @@ border:none;
       </property>
      </widget>
      <widget class="QPushButton" name="buttonTransfScaling">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -956,8 +962,8 @@ border:none;
       </property>
       <property name="icon">
        <iconset resource="../Icons/Icons.qrc">
-        <normaloff>:/zoom.png</normaloff>
-        <disabledoff>:/zoom-Active.png</disabledoff>:/zoom.png</iconset>
+        <normaloff>:/zoom-Active.png</normaloff>
+        <disabledoff>:/zoom.png</disabledoff>:/zoom-Active.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -1444,7 +1450,7 @@ border:none;
      <rect>
       <x>970</x>
       <y>0</y>
-      <width>371</width>
+      <width>361</width>
       <height>781</height>
      </rect>
     </property>
@@ -1469,9 +1475,9 @@ border:1px solid white;
     <widget class="QFrame" name="TopMethodFrame">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>10</y>
-       <width>331</width>
+       <width>341</width>
        <height>101</height>
       </rect>
      </property>
@@ -1674,7 +1680,7 @@ QPushButton:disabled
       <rect>
        <x>10</x>
        <y>120</y>
-       <width>351</width>
+       <width>341</width>
        <height>651</height>
       </rect>
      </property>
@@ -1891,7 +1897,7 @@ padding: 5px;
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -4035,9 +4041,9 @@ border:none;
        </property>
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>0</x>
          <y>60</y>
-         <width>331</width>
+         <width>341</width>
          <height>561</height>
         </rect>
        </property>
@@ -4112,7 +4118,7 @@ border:none;
          <rect>
           <x>10</x>
           <y>140</y>
-          <width>311</width>
+          <width>321</width>
           <height>371</height>
          </rect>
         </property>
@@ -4130,7 +4136,7 @@ border:none;
           <rect>
            <x>10</x>
            <y>10</y>
-           <width>291</width>
+           <width>301</width>
            <height>351</height>
           </rect>
          </property>
@@ -4497,8 +4503,8 @@ border:none;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1350</width>
-     <height>21</height>
+     <width>1341</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -4524,6 +4530,7 @@ border:none;
     <addaction name="actionTracking"/>
     <addaction name="separator"/>
     <addaction name="actionLeapBasic"/>
+    <addaction name="actionTestButton"/>
    </widget>
    <widget class="QMenu" name="menuViews">
     <property name="enabled">
@@ -4818,6 +4825,11 @@ border:none;
    </property>
    <property name="text">
     <string>LeapDialogToggle</string>
+   </property>
+  </action>
+  <action name="actionTestButton">
+   <property name="text">
+    <string>TestButton</string>
    </property>
   </action>
  </widget>

@@ -564,7 +564,7 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
 
        double* orientation;
 
-       camera->Print(std::cout);
+       //camera->Print(std::cout);
 
        orientation  = camera->GetOrientation();
 

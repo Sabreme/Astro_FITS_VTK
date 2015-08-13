@@ -141,7 +141,7 @@ class HighlightInteractorStyle : public vtkInteractorStyleRubberBandPick
 #endif
         this->SelectedMapper->ScalarVisibilityOff();
 
-        vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
+    //    vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
 
         this->SelectedActor->GetProperty()->SetColor(1.0, 0.0, 0.0); //(R,G,B)
         this->SelectedActor->GetProperty()->SetPointSize(5);
