@@ -263,7 +263,7 @@ QLabel
 border:none;
 }
 
-QPushButton:default
+QPushButton:checked
 {
   background-color: rgb(225,67,19) ;
   border: 2px solid #8f8f91;  
@@ -290,7 +290,7 @@ QPushButton:default
        <string>MULTITOUCH</string>
       </property>
       <property name="checkable">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QPushButton" name="buttonModeMouse">
@@ -478,10 +478,10 @@ QPushButton:default
        <string>MOUSE</string>
       </property>
       <property name="checkable">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="checked">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="autoDefault">
        <bool>false</bool>
@@ -506,7 +506,7 @@ QPushButton:default
        <string>LEAP</string>
       </property>
       <property name="checkable">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
     </widget>

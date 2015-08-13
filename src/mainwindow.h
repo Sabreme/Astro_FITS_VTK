@@ -119,10 +119,6 @@ public:
     enum app_Tab_t {Information, SubVolume, SliceAxis, SliceArb};
     enum app_TransForm_t {Rotation, Translation, Scaling, None};
 
-//    void sleep(timer_t delay);
-
-//    void LongFunction(int total);
-
     QVTKWidget* vtkWidget;      // Used for Main loop for FrameRate Calculation
     QTimer resizeTimer;
 
@@ -146,25 +142,13 @@ public:
     bool event(QEvent *event);
 
 
-
 public slots:
     virtual void slotExit();
     void infoTabCloseSignal();
     bool MessageBoxQuery(QString title, QString question);    
 
     void releaseTabFocus();
-//    void releaseTransfFocus();
-
-//    void releaseModeSlots();
-
     void resizeDone();
-
-
-
-    void leapTransfRotationClicked();
-    void leapTransfTranslationClicked();
-    void leapTransfScalingClicked();
-    void leapTransfNoneClicked();
 
 protected:
         void ModifiedHandler();
@@ -205,37 +189,15 @@ private slots:
         void on_buttonModeLeap_clicked();
         void on_buttonModeTouch_clicked();
 
-        //void on_buttonTabInfo_clicked();
-        //void on_buttonTabSubVol_clicked();
-        //void on_buttonTabSliceAxis_clicked();
-        //void on_buttonTabSliceArb_clicked();
-
         void on_buttonTabInfo_pressed();
         void on_buttonTabSubVol_pressed();
         void on_buttonTabSliceAxis_pressed();
         void on_buttonTabSliceArb_pressed();
 
-
-//        void on_buttonTransfRotation_clicked();
-//        void on_buttonTransfTranslation_clicked();
-//        void on_buttonTransfScaling_clicked();
-
-//        void buttonTransRotationPressed();
-//        void buttonTransTranslationPressed();
-//        void buttonTransScalingPressed();
-
-//        void leapTransRotationPressed();
-//        void leapTransTranslationPressed();
-//        void leapTransScalingPressed();
-
-
-        //        void updateCameraDetails();
         /////////////////////////////////////////////////////
         ///// INFORMAITON SLOTS
         ///
         void infoTab_Triggered();
-        //void on_actionInfoTab_triggered();
-
 
         /////////////////////////////////////////////////////
         //// CAMERA SLOTS
@@ -255,8 +217,6 @@ private slots:
         void mouseBeginSubVol();
         void on_buttonSubVolReset_clicked();
 
-
-        //void Buttom_SubVol_clicked();
         void on_actionSubVolumeXY_triggered();
         void on_action_SubVolume_Z_triggered();
         //void on_actionSubVolSelect_triggered();
@@ -264,20 +224,15 @@ private slots:
         void boxWidgetCallback();
         void on_actionSubVolSelection_triggered();
         void trackSubVolume(double*, double*);
-//        void loadSubVolume(QVTKWidget *, vtkFitsReader *);
 
         void on_checkSubVolVolumeEnable_stateChanged(int arg1);
-        //void on_buttonSubVolPreview_clicked();
         void on_buttonSubVolExport_clicked();
 
         ///////////////////////////////////////////////////////
         //// AXIS-SLICE SLOTS
 
         void beginSliceAxis();
-
-
-        void on_actionSliceAxisAligned_triggered();
-        //void on_buttonAxisSliceLoad_clicked();
+        void on_actionSliceAxisAligned_triggered();       
         void on_checkAxisSliceVolumeEnable_stateChanged(int arg1);
 
         void ResetViews();
@@ -305,15 +260,13 @@ private slots:
 
         void on_actionWorldCoords_triggered();
 
-
         ///////////////////////////////////////////////////////
         //// ARB-SLICE SLOTS
         ///
         void beginSliceArb();
         void on_buttonArbReset_clicked();
 
-        void on_actionSliceAxisArbitrary_triggered();
-        //void on_buttonArbSlice_clicked();
+        void on_actionSliceAxisArbitrary_triggered();        
         void on_checkArbSliceVolumeEnable_stateChanged(int arg1);
         void on_buttonArbSliceContourBackground_clicked();
         void on_slider_CntourDisplay_valueChanged(int value);
@@ -329,7 +282,6 @@ private slots:
         void on_actionLeap_Slice_triggered();
         void on_actionLeapBasic_triggered();
 
-        //void pointWidgetCallBack();
         void on_actionTracking_triggered();
         void addSecondPointer();
         void addThirdPointer();
@@ -347,7 +299,7 @@ private slots:
 
         ////////////////////////////////////////////////////////
         //// TEST-SECTION SLOTS
-
+        void on_actionTestButton_triggered();
 
         void on_actionInfoBarToggle_toggled(bool arg1);
 
@@ -355,8 +307,6 @@ private slots:
         /////////////////////////////////////////////////////////
         /// \brief on_buttonCameraReset_clicked
         ////////////////////////////////////////////////////////
-
-        void on_actionTestButton_triggered();
 
 private:
 

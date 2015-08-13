@@ -503,12 +503,12 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
           if (this->rotation->isChecked())
           {
               rotation->setChecked(false);
-              this->mainWindow->leapTransfNoneClicked();
+              //this->mainWindow->leapTransfNoneClicked();
           }
           else
           {
               rotation->setChecked(true);
-              this->mainWindow->leapTransfRotationClicked();
+              //this->mainWindow->leapTransfRotationClicked();
           }
 
       }
@@ -519,12 +519,12 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
           if (this->translation->isChecked())
           {
               translation->setChecked(false);
-              this->mainWindow->leapTransfNoneClicked();
+              //this->mainWindow->leapTransfNoneClicked();
           }
           else
           {
               translation->setChecked(true);
-              this->mainWindow->leapTransfTranslationClicked();
+            //  this->mainWindow->leapTransfTranslationClicked();
           }
 
       }
@@ -534,12 +534,12 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
           if (this->scaling->isChecked())
           {
               scaling->setChecked(false);
-              this->mainWindow->leapTransfNoneClicked();
+            //  this->mainWindow->leapTransfNoneClicked();
           }
           else
           {
               scaling->setChecked(true);
-              this->mainWindow->leapTransfScalingClicked();
+           //   this->mainWindow->leapTransfScalingClicked();
           }
 
       }

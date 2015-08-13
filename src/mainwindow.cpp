@@ -142,6 +142,17 @@ MainWindow::MainWindow(QWidget *parent) :
     guiLayout->addWidget(this->ui->Frame_RIGHT);
     centralWidget()->setLayout(guiLayout);
 
+    /// MODE BUTTON GROUPING
+    ///
+    ///
+    QButtonGroup* groupModeButtons = new QButtonGroup(this->ui->TopModeFrame);
+    groupModeButtons->addButton(this->ui->buttonModeMouse);
+    groupModeButtons->addButton(this->ui->buttonModeLeap);
+    groupModeButtons->addButton(this->ui->buttonModeTouch);
+    groupModeButtons->setExclusive(true);
+
+
+
     //// Resize Window Handler
     resizeTimer.setSingleShot(true);
     connect (&resizeTimer, SIGNAL(timeout()),SLOT (resizeDone()));
@@ -162,7 +173,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->setInterval(1000/60);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateme()));
     connect(this->ui->tabLogWidget, SIGNAL(tabCloseRequested(int)),this, SLOT(closeTab(int)));
-//    connect(this->ui->tabLogWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTab(int)) )
 
     timer->start();
 
@@ -171,7 +181,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->TopMethodFrame->setVisible(false);
     this->ui->TopModeFrame->setVisible(false);
 
-    this->on_buttonModeMouse_clicked();
+    //this->on_buttonModeMouse_clicked();
 /////
 /// //////////////////////////////////////////////////////////
 /// //////////////////////////////////////////////////////////
@@ -269,195 +279,11 @@ void MainWindow::releaseTabFocus()
     this->on_actionReload_triggered();
 }
 
-//void MainWindow::releaseTransfFocus()
-//{
-//    switch (this->systemTransF)
-//    {
-//        case Rotation:   this->ui->buttonTransfRotation->setEnabled(true);
-//        break;
-
-//        case Translation:   this->ui->buttonTransfTranslation->setEnabled(true);
-//        break;
-
-//        case Scaling:   this->ui->buttonTransfScaling->setEnabled(true);
-//        break;
-
-//        case None:   ;
-//        break;
-//    }
-//}
-
-//void MainWindow::releaseModeSlots()
-//{
-
-//    switch (this->systemMode)
-//    {
-//        case Mouse:
-//        disconnect(this->ui->buttonTransfRotation,          SIGNAL(pressed()),  this,SLOT(buttonTransRotationPressed()));
-//        disconnect(this->ui->buttonTransfTranslation,       SIGNAL(pressed()),  this,SLOT(buttonTransTranslationPressed()));
-//        disconnect(this->ui->buttonTransfScaling,           SIGNAL(pressed()),  this,SLOT(buttonTransScalingPressed()));
-
-//            //disconnect(this->ui->buttonTabSubVol,           SIGNAL(pressed()), this, SLOT(on_buttonTabSubVol_pressed()));
-
-
-//        break;
-
-//        case Leap:
-//        disconnect(this->ui->buttonTransfRotation,          SIGNAL(pressed()), this,SLOT(leapTransRotationPressed()));
-//        disconnect(this->ui->buttonTransfTranslation,       SIGNAL(pressed()), this,SLOT(leapTransTranslationPressed()));
-//        disconnect(this->ui->buttonTransfScaling,           SIGNAL(pressed()), this,SLOT(leapTransScalingPressed()));
-
-//            // disconnect(this->ui->buttonTabSubVol,           SIGNAL(clicked()), this, SLOT(leapBeginSubVol()));
-
-//        break;
-
-//        case Touch:
-//        break;
-
-//    }
-//}
-
 void MainWindow::resizeDone()
 {
      this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
 }
 
-
-
-void MainWindow::leapTransfRotationClicked()
-{    
-
-    std::cout << "Leap ROtaion Code" << endl;
-    /// If WE ARE LEAP MODE.. ACTIVATE INTERACTOR TO DEFAULT and BUTTON DEAULT TO TRUE
-    if(this->ui->checkBox_Rotation->isChecked())
-    {
-        this->systemTransF = Rotation;
-        this->ui->buttonTransfRotation->setDefault(true);
-
-        this->ui->buttonTransfScaling->setDefault(false);
-        this->ui->buttonTransfTranslation->setDefault(false);
-
-        ///////////////////////////////////////////////
-        /// Leap Interaction
-        ///
-
-        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-        KeyPressInteractorStyle * style = KeyPressInteractorStyle::New();
-        interactor->SetInteractorStyle(style);
-
-        //style->SetCurrentRenderer(this->defaultRenderer);
-
-        //this->rotationPress = this->ui->checkBox_Rotation;
-        style->rotation = this->ui->checkBox_Rotation;
-        style->translation = this->ui->checkBox_Translation;
-        style->scaling = this->ui->checkBox_Scaling;
-        style->mainWindow = this;
-
-        this->leapTrackingActor->SetVisibility(true);
-    }
-}
-
-void MainWindow::leapTransfTranslationClicked()
-{
-
-    std::cout << "Leap Translation Code" << endl;
-
-    /// If WE ARE LEAP MODE.. ACTIVATE INTERACTOR TO DEFAULT and BUTTON DEAULT TO TRUE
-    if(this->ui->checkBox_Translation->isChecked())
-    {
-        this->systemTransF = Translation;
-        this->ui->buttonTransfTranslation->setDefault(true);
-
-        this->ui->buttonTransfScaling->setDefault(false);
-        this->ui->buttonTransfRotation->setDefault(false);
-
-        ///////////////////////////////////////////////
-        /// Leap Interaction
-        ///
-
-        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-        KeyPressInteractorStyle * style = KeyPressInteractorStyle::New();
-        interactor->SetInteractorStyle(style);
-
-        //style->SetCurrentRenderer(this->defaultRenderer);
-
-        //this->rotationPress = this->ui->checkBox_Rotation;
-        style->rotation = this->ui->checkBox_Rotation;
-        style->translation = this->ui->checkBox_Translation;
-        style->scaling = this->ui->checkBox_Scaling;
-        style->mainWindow = this;
-
-        this->leapTrackingActor->SetVisibility(true);
-    }
-}
-
-
-void MainWindow::leapTransfScalingClicked()
-{
-
-    std::cout << "Leap Scaling Code" << endl;
-    /// If WE ARE LEAP MODE.. ACTIVATE INTERACTOR TO DEFAULT and BUTTON DEAULT TO TRUE
-    if(this->ui->checkBox_Scaling->isChecked())
-    {
-        this->systemTransF = Scaling;
-        this->ui->buttonTransfScaling->setDefault(true);
-
-        this->ui->buttonTransfTranslation->setDefault(false);
-        this->ui->buttonTransfRotation->setDefault(false);
-
-        ///////////////////////////////////////////////
-        /// Leap Interaction
-        ///
-
-        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-        KeyPressInteractorStyle * style = KeyPressInteractorStyle::New();
-        interactor->SetInteractorStyle(style);
-
-        //style->SetCurrentRenderer(this->defaultRenderer);
-
-        //this->rotationPress = this->ui->checkBox_Rotation;
-        style->rotation = this->ui->checkBox_Rotation;
-        style->translation = this->ui->checkBox_Translation;
-        style->scaling = this->ui->checkBox_Scaling;
-        style->mainWindow = this;
-
-        this->leapTrackingActor->SetVisibility(true);
-    }
-}
-
-void MainWindow::leapTransfNoneClicked()
-{
-     std::cout << "Leap NONE Code" << endl;
-
-     this->systemTransF = None;
-     this->ui->buttonTransfRotation->setDefault(false);
-
-     this->ui->buttonTransfScaling->setDefault(false);
-     this->ui->buttonTransfTranslation->setDefault(false);
-
-     ///////////////////////////////////////////////
-     /// Leap Interaction
-     ///
-
-     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-     KeyPressInteractorStyle * style = KeyPressInteractorStyle::New();
-     interactor->SetInteractorStyle(style);
-
-     //style->SetCurrentRenderer(this->defaultRenderer);
-
-     //this->rotationPress = this->ui->checkBox_Rotation;
-     style->rotation = this->ui->checkBox_Rotation;
-     style->translation = this->ui->checkBox_Translation;
-     style->scaling = this->ui->checkBox_Scaling;
-     style->mainWindow = this;          
-
-     interactor->SetInteractorStyle(style);
-     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-     style->ui = this->ui;
-     style->defualtDistance = this->defaultCameraDistance;
-
-     this->leapTrackingActor->SetVisibility(false);
-}
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
@@ -472,46 +298,35 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 
 void MainWindow::on_buttonModeMouse_clicked()
-{
-    if (this->systemMode != Mouse )
-    {      
+{     
+        this->systemMode = Mouse; 
+        std::cout << "System Mode is: " << this->systemMode << endl;
 
-        this->ui->buttonModeMouse->setDefault(true);
-        this->systemMode = Mouse;
+        ///DISSABLE LEAP AND TOUCH CALLS
+        this->ui->qvtkWidgetLeft->dissableGestures();
+        this->ui->actionLeapDialogToggle->setChecked(false);
+        Leaping_ = false;
 
-        this->ui->buttonModeLeap->setDefault(false);
-        this->ui->buttonModeTouch->setDefault(false);
+        ///////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////
 
-        std::cout << "System Mode is: " << this->systemMode << endl;        
+        MouseInteractorStyle * style = MouseInteractorStyle::New();
+        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-//        connect(this->ui->buttonTransfRotation, SIGNAL(pressed()), this,SLOT(buttonTransRotationPressed()));
-//        connect(this->ui->buttonTransfTranslation, SIGNAL(pressed()), this,SLOT(buttonTransTranslationPressed()));
-//        connect(this->ui->buttonTransfScaling, SIGNAL(pressed()), this,SLOT(buttonTransScalingPressed()));
-
-        //connect(this->ui->buttonTabSubVol,           SIGNAL(clicked()), this, SLOT(beginSubVolume()));
-
-        //this
-
-        //this->on_buttonTransfRotation_clicked();
-        //this->buttonTransRotationPressed();
-
-    }
+        interactor->SetInteractorStyle(style);
+        style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+        style->ui = this->ui;
+        style->defualtDistance = this->defaultCameraDistance;
 }
 
 
 void MainWindow::on_buttonModeLeap_clicked()
 {
-    if (this->systemMode != Leap )
-    {
-
-        this->ui->buttonModeLeap->setDefault(true);
-
-        this->systemMode = Leap;
-
+        this->systemMode = Leap;    
         this->ui->actionLeapDialogToggle->setChecked(true);
 
-        this->ui->buttonModeMouse->setDefault(false);
-        this->ui->buttonModeTouch->setDefault(false);
+        ///DISSABLE MOUSE AND TOUCH CALLS
+        this->ui->qvtkWidgetLeft->dissableGestures();
 
         std::cout << "System Mode is: " << this->systemMode << endl;
 
@@ -521,16 +336,12 @@ void MainWindow::on_buttonModeLeap_clicked()
         this->controller_= new Controller;
         Leaping_ = true;
 
-       // this->ui->tabLogWidget->insertTab(0, this->ui->LeapTab, "Leap Data Tab");
-       // this->ui->tabLogWidget->setCurrentIndex(0);
-
         vtkSmartPointer<KeyPressInteractorStyle> style =
                 vtkSmartPointer<KeyPressInteractorStyle>::New();
 
         this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
         style->SetCurrentRenderer(this->defaultRenderer);
 
-        //this->rotationPress = this->ui->checkBox_Rotation;
         style->rotation = this->ui->checkBox_Rotation;
         style->translation = this->ui->checkBox_Translation;
         style->scaling = this->ui->checkBox_Scaling;
@@ -548,56 +359,33 @@ void MainWindow::on_buttonModeLeap_clicked()
         this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
         this->leapFloatTotalMotionScale = 1.0f;
 
-        //LeapDiagnostic();
-
-//        connect(this->ui->buttonTransfRotation, SIGNAL(clicked()), this,SLOT(leapTransfRotationClicked()));
-//        connect(this->ui->buttonTransfTranslation, SIGNAL(clicked()), this,SLOT(leapTransfTranslationClicked()));
-//        connect(this->ui->buttonTransfScaling, SIGNAL(clicked()), this,SLOT(leapTransfScalingClicked()));
-
-//        connect(this->ui->buttonTransfRotation, SIGNAL(pressed()), this,SLOT(leapTransRotationPressed()));
-//        connect(this->ui->buttonTransfTranslation, SIGNAL(pressed()), this,SLOT(leapTransTranslationPressed()));
-//        connect(this->ui->buttonTransfScaling, SIGNAL(pressed()), this,SLOT(leapTransScalingPressed()));
-
         connect(this->ui->checkBoxLeapTracking, SIGNAL(toggled(bool)), this,SLOT(leapTrackingOn(bool)));
 
-        //connect(this->ui->buttonTabSubVol,           SIGNAL(clicked()), this, SLOT(leapBeginSubVol()));
-
-    //    this->leapTransfNoneClicked();
-
         this->ui->qvtkWidgetLeft->setFocus();
-
-    //     this->leapTransRotationPressed();
-
         //////
         /// \brief INTRODUCTION OF LEAP WIDGET
         ///
 
-//        vtkRenderWindowInteractor* interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-
         this->leapMarkerWidget = vtkLeapMarkerWidget::New();
         this->leapMarkerWidget->SetInteractor(interactor);
-
         this->leapMarkerWidget->GeneratActors();
-
          this->leapMarkerWidget->SetEnabled(true);
-        //marker->InteractiveOn();
          this->leapMarkerWidget->InteractiveOff();
 
-
-    }
 }
 
 void MainWindow::on_buttonModeTouch_clicked()
-{
-    if (this->systemMode != Touch )
-    {
-        this->ui->buttonModeTouch->setDefault(true);
-        this->systemMode = Touch;
+{    
+        this->systemMode = Touch; 
 
-        this->ui->buttonModeMouse->setDefault(false);
-        this->ui->buttonModeLeap->setDefault(false);
+     ///DISSABLE MOUSE AND LEAP CALLS
+      this->ui->actionLeapDialogToggle->setChecked(false);
+    this->leapMarkerWidget->SetEnabled(false);
 
         std::cout << "System Mode is: " << this->systemMode << endl;
+
+
+
 
         ///////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////
@@ -613,16 +401,7 @@ void MainWindow::on_buttonModeTouch_clicked()
         style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
                 GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
-//        vtkEventQtSlotConnect* vtkEventConnector =
-//                vtkEventQtSlotConnect::New();
-
-//        vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->
-//                GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-
-
-        this->ui->qvtkWidgetLeft->enableGestures();
-
-    }
+        this->ui->qvtkWidgetLeft->enableGestures();    
 }
 
 
@@ -643,32 +422,7 @@ void MainWindow::on_buttonTabInfo_pressed()
             this->ui->buttonTabInfo->setDisabled(true);
 
             this->infoTab_Triggered();
-
-//            switch (this->systemMode)
-//            {
-//                case Mouse:
-//                {
-//                    /////////////////////////////////////////////////
-//                    ///  Mouse Interaction
-//                    ///
-//                    ///
-//                    MouseInteractorStyle * style = MouseInteractorStyle::New();
-//                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-
-//                    interactor->SetInteractorStyle(style);
-//                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-//                    style->ui = this->ui;
-//                    style->defualtDistance = this->defaultCameraDistance;
-//                }
-//                break;
-
-//                case Leap:  ;
-//                break;
-
-//                //case Touch: this->touchBeginSubVol();
-//            }
         }
-
     }
     this->ui->qvtkWidgetLeft->setFocus();
 }
@@ -685,8 +439,6 @@ void MainWindow::on_buttonTabSubVol_pressed()
 
             this->systemTab = SubVolume;
             this->ui->buttonTabSubVol->setDisabled(true);
-
-
             this->on_actionSubVolSelection_triggered();
 
             switch (this->systemMode)
@@ -790,7 +542,7 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 style->defualtDistance = this->defaultCameraDistance;
             }
 
-                break;
+            break;
 
             case Leap:
 
@@ -814,141 +566,12 @@ void MainWindow::on_buttonTabSliceArb_pressed()
 
                 this->ui->qvtkWidgetLeft->enableGestures();
             }
-                break;
+            break;
             }
         }
         this->ui->qvtkWidgetLeft->setFocus();
     }
 }
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/////////////////TRANSFORM SELECTION BUTTONS///////////////
-///////////////////////////////////////////////////////////
-
-//void MainWindow::buttonTransRotationPressed()
-//{
-//    if (this->systemTransF != Rotation)
-//    {
-//        this->releaseTransfFocus();
-//        this->systemTransF = Rotation;
-
-//        this->ui->buttonTransfRotation->setDisabled(true);
-
-//        /////////////////////////////////////////////////
-//        ///  Mouse Rotation
-//        ///
-//        ///
-//        MouseInteractorStyle * style = MouseInteractorStyle::New();
-
-
-//        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-//        interactor->SetInteractorStyle(style);
-//        style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-//        style->ui = this->ui;
-//        style->defualtDistance = this->defaultCameraDistance;
-
-//        //vtkInteractorStyleSwitch * camSwitch =  vtkInteractorStyleSwitch::New();
-//        //interactor->SetInteractorStyle(camSwitch);
-
-
-//        //camSwitch->SetCurrentStyleToTrackballCamera();
-//    }
-//    this->ui->qvtkWidgetLeft->setFocus();
-//}
-
-//void MainWindow::buttonTransTranslationPressed()
-//{
-//    if (this->systemTransF != Translation)
-//    {
-//        this->releaseTransfFocus();
-//        this->systemTransF = Translation;
-
-//        this->ui->buttonTransfTranslation->setDisabled(true);
-
-//        /////////////////////////////////////////////////
-//        ///  Mouse Translation
-//        ///
-//        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-
-//        MouseInteractorStyleShiftAndControlTrackBall * style =
-//            MouseInteractorStyleShiftAndControlTrackBall::New();
-
-//        style->changeType = 1;
-//        interactor->SetInteractorStyle(style);
-
-//    }
-//    this->ui->qvtkWidgetLeft->setFocus();
-//}
-
-//void MainWindow::buttonTransScalingPressed()
-//{
-//    if (this->systemTransF != Scaling)
-//    {
-//        this->releaseTransfFocus();
-//        this->systemTransF = Scaling;
-
-//        this->ui->buttonTransfScaling->setDisabled(true);
-
-//        /////////////////////////////////////////////////
-//        ///  Mouse Scaling
-//        ///
-//        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-
-//        MouseInteractorStyleScalingAndControlTrackBall * style =
-//            MouseInteractorStyleScalingAndControlTrackBall::New();
-//        interactor->SetInteractorStyle(style);
-
-//    }
-//    this->ui->qvtkWidgetLeft->setFocus();
-//}
-
-//void MainWindow::leapTransRotationPressed()
-//{
-//    std::cout << "leapTransRotationPressed" << endl;
-
-//    if (this->systemTransF != Rotation)
-//    {
-//        this->releaseTransfFocus();
-//        this->systemTransF = Rotation;
-
-//        this->ui->buttonTransfRotation->setDisabled(true);
-//    }
-//    this->ui->qvtkWidgetLeft->setFocus();
-
-//}
-
-//void MainWindow::leapTransTranslationPressed()
-//{
-
-//    std::cout << "leapTransTranslationPressed" << endl;
-
-
-//    if (this->systemTransF != Translation)
-//    {
-//        this->releaseTransfFocus();
-//        this->systemTransF = Translation;
-
-//        this->ui->buttonTransfTranslation->setDisabled(true);
-//    }
-//    this->ui->qvtkWidgetLeft->setFocus();
-//}
-
-//void MainWindow::leapTransScalingPressed()
-//{
-
-//    std::cout << "leapTransScalingPressed" << endl;
-
-//    if (this->systemTransF != Scaling)
-//    {
-//        this->releaseTransfFocus();
-//        this->systemTransF = Scaling;
-
-//        this->ui->buttonTransfScaling->setDisabled(true);
-
-//    }
-//    this->ui->qvtkWidgetLeft->setFocus();
-//}
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -973,13 +596,6 @@ void MainWindow::infoTab_Triggered()
 
 void MainWindow::updateme()
 {
-    //ui->qvtkWidgetLeft->GetRenderWindow()->Render();
-
-    //        if (this->ui->checkCameraUpdate->isChecked())
-    //        {
-    //            updateCameraDetails();
-    //        }
-
 
     QFont boldFont, normalFont;
 
@@ -989,10 +605,6 @@ void MainWindow::updateme()
     this->ui->labelTranslation->setFont(normalFont);
     this->ui->labelRotation->setFont(normalFont);
     this->ui->labelScaling->setFont(normalFont);
-
-
-    //this->ui->labelRotation->font().bold() = false;
-    //this->ui->labelRotation->font().bold() = false;
 
     if (Leaping_)
     {
@@ -1038,8 +650,6 @@ void MainWindow::loadFitsFile(QString filename)
     vtkFitsReader *fitsReader = vtkFitsReader::New();
     const char *newFileName = filename.toStdString().c_str();
     fitsReader->SetFileName(newFileName);
-    //fitsReader->SetFileName("OMC.FITS");
-
 
     fitsReader->Update();
 
@@ -1286,12 +896,13 @@ void MainWindow::loadFitsFile(QString filename)
      /// \brief SETTING Default Interactor Style to Mouse Interaction
      ///
      ///
-     MouseInteractorStyle * style = MouseInteractorStyle::New();
-     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-     interactor->SetInteractorStyle(style);
-     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-     style->ui = this->ui;
-     style->defualtDistance = this->defaultCameraDistance;
+//     MouseInteractorStyle * style = MouseInteractorStyle::New();
+//     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+//     interactor->SetInteractorStyle(style);
+//     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+//     style->ui = this->ui;
+//     style->defualtDistance = this->defaultCameraDistance;
+     this->on_buttonModeMouse_clicked();
 
      ////////////////////////////////////////////////
      /// Leapmotion TRACKING Message
@@ -4394,29 +4005,6 @@ void MainWindow::on_checkArbSliceVolumeEnable_stateChanged(int arg1)
     global_Volume->SetVisibility(arg1);
 }
 
-//void MainWindow::on_radioArbSliceContourCount10_clicked()
-//{
-//    global_Contours2D->SetNumberOfContours(10);
-//    global_Contours2D->GenerateValues(10, global_Reader->GetOutput()->GetScalarRange());
-//    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
-//}
-
-//void MainWindow::on_radioArbSliceContourCount20_clicked()
-//{
-//    global_Contours2D->SetNumberOfContours(20);
-//    global_Contours2D->GenerateValues(20, global_Reader->GetOutput()->GetScalarRange());
-//    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
-
-
-//}
-
-//void MainWindow::on_radioArbSliceContourCount30_clicked()
-//{
-//    global_Contours2D->SetNumberOfContours(30);
-//    global_Contours2D->GenerateValues(30, global_Reader->GetOutput()->GetScalarRange());
-//    this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
-//}
-
 void MainWindow::on_slider_CntourDisplay_valueChanged(int value)
 {
     global_Contours2D->SetNumberOfContours(value);
@@ -4425,8 +4013,6 @@ void MainWindow::on_slider_CntourDisplay_valueChanged(int value)
 
     this->ui->lineArbSliceContours->setText(QString("%1").arg(value));
 }
-
-
 
 void MainWindow::on_buttonArbSliceContourBackground_clicked()
 {
@@ -4450,10 +4036,6 @@ void MainWindow::on_buttonArbSliceContourBackground_clicked()
     this->ui->widget_ArbPlanePreview->GetRenderWindow()->Render();
 }
 
-
-
-
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -4476,12 +4058,7 @@ void MainWindow::on_actionLeapBasic_triggered()
 {
     this->controller_= new Controller;
    Leaping_ = true;
-   //this->leapSliceMode = true;
-   //std::cout << "Leaping " << endl;
-   //CloseTabs();
 
-   //this->ui->tabLogWidget->insertTab(0, this->ui->LeapTab, "Leap Data Tab");
-   //this->ui->tabLogWidget->setCurrentIndex(0);
 
    vtkSmartPointer<KeyPressInteractorStyle> style =
            vtkSmartPointer<KeyPressInteractorStyle>::New();
@@ -5339,11 +4916,6 @@ bool MainWindow::event(QEvent *event)
     }
    return QWidget::event(event);
 }
-
-
-
-
-
 
 void MainWindow::on_actionTestButton_triggered()
 {
