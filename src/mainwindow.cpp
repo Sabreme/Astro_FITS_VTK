@@ -307,6 +307,15 @@ void MainWindow::on_buttonModeMouse_clicked()
         this->ui->actionLeapDialogToggle->setChecked(false);
         Leaping_ = false;
 
+        if(this->leapMarkerWidget != NULL)
+        {
+            this->leapMarkerWidget->SetEnabled(false);
+            this->leapMarkerWidget->Delete();
+            this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+        }
+
+
+
         ///////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////
 
@@ -380,7 +389,15 @@ void MainWindow::on_buttonModeTouch_clicked()
 
      ///DISSABLE MOUSE AND LEAP CALLS
       this->ui->actionLeapDialogToggle->setChecked(false);
-    this->leapMarkerWidget->SetEnabled(false);
+
+
+ //   this->leapMarkerWidget->Print(std::cout);
+    if(this->leapMarkerWidget != NULL)
+    {
+         this->leapMarkerWidget->SetEnabled(false);
+        this->leapMarkerWidget->Delete();
+        this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+    }
 
         std::cout << "System Mode is: " << this->systemMode << endl;
 

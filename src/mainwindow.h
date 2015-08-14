@@ -446,7 +446,7 @@ private:
 
         vtkSmartPointer< vtkPlaneWidget > customPlaneWidget;
 
-        vtkLeapMarkerWidget * leapMarkerWidget;
+        vtkLeapMarkerWidget * leapMarkerWidget   = NULL;
 
 
 };
