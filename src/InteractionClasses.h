@@ -88,6 +88,8 @@ class vtkCameraScaleCallback : public vtkCommand
          ui->line_Scale->setText(QString::number(scale, 'f', 2));
 
 
+
+
      }
 
         Ui::MainWindow * ui;
@@ -291,6 +293,13 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
 //                                 << position[2] << endl;
     }
 
+    virtual void Dolly()
+    {
+        vtkInteractorStyleTrackballCamera::Dolly();
+
+        ui->buttonTransfScaling->setEnabled(true);
+    }
+
 
     vtkCamera * camera;
     Ui::MainWindow * ui;
@@ -312,6 +321,14 @@ public:
       vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
     }
 
+    virtual void OnLeftButtonUp()
+    {
+        ui->buttonTransfRotation->setEnabled(false);
+
+        ui->buttonTransfScaling->setEnabled(false);
+        vtkInteractorStyleTrackballCamera::OnLeftButtonUp();
+    }
+
     virtual void OnRightButtonDown()
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
@@ -320,17 +337,59 @@ public:
     virtual void OnRightButtonUp()
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+
+        ui->buttonTransfTranslation->setEnabled(false);
     }
 
     virtual void OnMiddleButtonDown()
     {
         vtkInteractorStyleTrackballCamera::OnRightButtonDown();
+
+        ui->buttonTransfScaling->setEnabled(true);
+
     }
 
     virtual void OnMiddleButtonUp()
     {
         vtkInteractorStyleTrackballCamera::OnRightButtonUp();
+
+        ui->buttonTransfScaling->setEnabled(false);
+
     }
+
+    virtual void OnMouseWheelBackward()
+    {
+        this->FindPokedRenderer(this->Interactor->GetEventPosition()[0],
+                                this->Interactor->GetEventPosition()[1]);
+        if (this->CurrentRenderer == NULL)
+          {
+          return;
+          }
+
+        this->GrabFocus(this->EventCallbackCommand);
+        this->StartDolly();
+        ui->buttonTransfScaling->setEnabled(true);
+        double factor = this->MotionFactor * 0.2 * this->MouseWheelMotionFactor;
+        this->Dolly(pow(1.1, factor));
+        this->EndDolly();
+        ui->buttonTransfScaling->setEnabled(false);
+        this->ReleaseFocus();
+    }
+
+    virtual void OnMouseWheelForward()
+    {
+        ui->buttonTransfScaling->setEnabled(false);
+        vtkInteractorStyleTrackballCamera::OnMouseWheelForward();
+    }
+
+    virtual void Zoom()
+    {
+        vtkInteractorStyleTrackballCamera::Zoom();
+
+        std::cout << "Zoom" << endl;
+        ui->buttonTransfScaling->setEnabled(true);
+    }
+
 
 
     virtual void Rotate()
@@ -347,6 +406,7 @@ public:
        ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
        ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
+     ui->buttonTransfRotation->setEnabled(true);
 
    }
 
@@ -364,7 +424,12 @@ public:
         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+        ui->buttonTransfTranslation->setEnabled(true);
     }
+
+
+
 
 
     vtkCamera * camera;
