@@ -4430,7 +4430,7 @@ void MainWindow::LeapMotion()
                 //Finger leftFinger =
 
 
-                if( leftPinch > 0.7 && rightPinch > 0.7)
+                if( leftPinch > 0.6 && rightPinch > 0.6)
                 {
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -4458,25 +4458,53 @@ void MainWindow::LeapMotion()
                      std::cout << "change: " << extendedRight.count() << "\t";
 
 
+                     double *cameraAngle ;
+
+                     cameraAngle = camera->GetOrientation();
 //                    pointWidget1_->GetPosition(position);
 
                      double tempPosition[3];
+
                      pointWidget1_->GetPosition(tempPosition);
 
-                    vtkTransform * leapCamera =  vtkTransform::New();
+                    /// TRANSFORMATION MATRIX ///
+                    vtkTransform * leapCamera =  vtkTransform::New();                    
+
+
                     leapCamera->Identity();
-                //    leapCamera->
-                    leapCamera->SetMatrix(camera->GetModelViewTransformMatrix());
-                     position = leapCamera->TransformDoublePoint(tempPosition);
+                    //leapCamera->Concatenate(camera->GetModelViewTransformMatrix());
+
+                    leapCamera->Translate(change1[0],change1[1],change1[2]);
+
+                    leapCamera->RotateX((ui->line_OrientX->text().toDouble()));
+                    leapCamera->RotateX((ui->line_OrientX->text().toDouble()));
+                    leapCamera->RotateX((ui->line_OrientX->text().toDouble()));
+
+                    leapCamera->Translate(-change1[0],-change1[1],-change1[2]);
+
+
+                    //leapCamera->Inverse();
+                    position = leapCamera->TransformPoint(tempPosition);
+
+
 
                      std::cout << "Temp-pos[" << tempPosition[0] << "," << tempPosition[2] << "," <<tempPosition[3] << "]"
-                                 << "\tTrans-pos[" << position[0] << "," << position[2] << "," <<position[3] << "]\t";
+                                 << "\tTrans-pos[" << position[0] << "," << position[2] << "," <<position[3] << "]\t"
+                                 << "\tcameraAngle[" << cameraAngle[0] << "," << cameraAngle[2] << "," <<cameraAngle[3] << "]\t";
 
+                    leapCamera->Print(std::cout);
+
+
+//                    pointWidget1_->SetPosition(
+//                                position[0] + change1[0],
+//                            position[1] + change1[1],
+//                            position[2] + change1[2]);
 
                     pointWidget1_->SetPosition(
-                                position[0] + change1[0],
-                            position[1] + change1[1],
-                            position[2] + change1[2]);
+                                position[0],
+                            position[1],
+                            position[2]);
+
 
                     pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
 
