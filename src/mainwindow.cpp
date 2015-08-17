@@ -350,8 +350,8 @@ void MainWindow::on_buttonModeLeap_clicked()
         this->controller_= new Controller;
         Leaping_ = true;
 
-        vtkSmartPointer<KeyPressInteractorStyle> style =
-                vtkSmartPointer<KeyPressInteractorStyle>::New();
+        vtkSmartPointer<LeapInteractorStyle> style =
+                vtkSmartPointer<LeapInteractorStyle>::New();
 
         this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
         style->SetCurrentRenderer(this->defaultRenderer);
@@ -412,8 +412,8 @@ void MainWindow::on_buttonModeTouch_clicked()
         ///////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////
 
-        vtkSmartPointer<TouchInteractorStyleTrackBallCamera> style =
-                vtkSmartPointer<TouchInteractorStyleTrackBallCamera>::New();
+        vtkSmartPointer<TouchInteractorStyle> style =
+                vtkSmartPointer<TouchInteractorStyle>::New();
 
         this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
         style->SetCurrentRenderer(this->defaultRenderer);
@@ -575,8 +575,8 @@ void MainWindow::on_buttonTabSliceArb_pressed()
             {
                 this ->beginSliceArb();
 
-                vtkSmartPointer<TouchInteractorStyleTrackBallCamera> style =
-                        vtkSmartPointer<TouchInteractorStyleTrackBallCamera>::New();
+                vtkSmartPointer<TouchInteractorStyle> style =
+                        vtkSmartPointer<TouchInteractorStyle>::New();
 
                 this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
                 style->SetCurrentRenderer(this->defaultRenderer);
@@ -4105,8 +4105,8 @@ void MainWindow::on_actionLeapBasic_triggered()
    Leaping_ = true;
 
 
-   vtkSmartPointer<KeyPressInteractorStyle> style =
-           vtkSmartPointer<KeyPressInteractorStyle>::New();
+   vtkSmartPointer<LeapInteractorStyle> style =
+           vtkSmartPointer<LeapInteractorStyle>::New();
 
    this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
    style->SetCurrentRenderer(this->defaultRenderer);
@@ -4397,13 +4397,6 @@ void MainWindow::LeapMotion()
                 const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
                 const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
 
-                //               const FingerList indexFingerLeftList = frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX);
-                //               const FingerList indexFingerRightList = frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX);
-
-                //               const FingerList thumbFingerLeftList = frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB);
-                //               const FingerList thumbFingerRightList = frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB);
-
-
                 Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
                 Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
 
@@ -4414,18 +4407,30 @@ void MainWindow::LeapMotion()
                 std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
                 std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
 
-                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
-                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
+//                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
+//                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
 
                 std::cout << "left: #" << extendedLeft.count() << "\t";
                 std::cout << "Right #: " << extendedRight.count() << "\t";
-                std::cout << endl;
+
+//                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
+//                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
+
+                std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
+
+                std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
+
+               //
+
+                float leftPinch = frame.hands().leftmost().pinchStrength();
+
+                float rightPinch = frame.hands().rightmost().pinchStrength();
 
 
+                //Finger leftFinger =
 
-                if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()  &&
-                        frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
-                        leftThumb.isExtended() && rightThumb.isExtended() )
+
+                if( leftPinch > 0.7 && rightPinch > 0.7)
                 {
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -4435,18 +4440,38 @@ void MainWindow::LeapMotion()
                     /// Vector newPosition = hand.translation(controller_->frame(1));
                     ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
 
-                    Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-                    Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector hand1OldPos = controller_->frame(2).hands().rightmost().stabilizedPalmPosition();
+                    Vector hand1NewPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+                    ///Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
+                    ///Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
+                    /// 
+
+
 
                     double change1[3] = {
                         hand1NewPos.x - hand1OldPos.x,
                         hand1NewPos.y - hand1OldPos.y,
                         hand1NewPos.z - hand1OldPos.z
                     };
-                    double position[3];
+                    double * position;
+                    
+                     std::cout << "change: " << extendedRight.count() << "\t";
 
 
-                    pointWidget1_->GetPosition(position);
+//                    pointWidget1_->GetPosition(position);
+
+                     double tempPosition[3];
+                     pointWidget1_->GetPosition(tempPosition);
+
+                    vtkTransform * leapCamera =  vtkTransform::New();
+                    leapCamera->Identity();
+                //    leapCamera->
+                    leapCamera->SetMatrix(camera->GetModelViewTransformMatrix());
+                     position = leapCamera->TransformDoublePoint(tempPosition);
+
+                     std::cout << "Temp-pos[" << tempPosition[0] << "," << tempPosition[2] << "," <<tempPosition[3] << "]"
+                                 << "\tTrans-pos[" << position[0] << "," << position[2] << "," <<position[3] << "]\t";
+
 
                     pointWidget1_->SetPosition(
                                 position[0] + change1[0],
@@ -4470,8 +4495,13 @@ void MainWindow::LeapMotion()
                     ///Vector newPosition2 = hand2.translation(controller_->frame(1).fingers().frontmost().tipPosition());
                     ///
 
-                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+
+                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
+                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+
+
+///                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
+///                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
 
                     double change2[3] = {
                         hand2NewPos.x - hand2OldPos.x,
@@ -4501,7 +4531,123 @@ void MainWindow::LeapMotion()
                     trackSubVolume(finalPos1, finalPos2);
 
                 }
+                
+                std::cout << endl;
             }
+//            if((shouldSubVol) &&  frame.hands().count() > 1)
+//                       {
+//                           const FingerList leftFingers = frame.hands().leftmost().fingers();
+//                           const FingerList rightFingers = frame.hands().rightmost().fingers();
+//                           const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
+//                           const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
+
+//                           Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
+//                           Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
+
+//                           Finger leftIndex = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+//                           Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+
+
+//           //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
+//           //                std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
+
+//           //                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
+//           //                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
+
+//           //                std::cout << "left: #" << extendedLeft.count() << "\t";
+//           //                std::cout << "Right #: " << extendedRight.count() << "\t";
+
+//           //                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
+//           //                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
+
+//                           std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
+
+//                           std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
+
+//                           std::cout << endl;
+
+
+
+
+//                           if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()  &&
+//                                   frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
+//                                   leftThumb.isExtended() && rightThumb.isExtended() )
+//                           {
+
+//                               ////////////////////////////////////////////////////////////////////////////////////////////
+//                               ///////////////    FINGER ACCURACY BUT POOR DEPTH CAPTURE    ///////////////////////////////
+//                               ////////////////////////////////////////////////////////////////////////////////////////////
+
+//                               /// Vector newPosition = hand.translation(controller_->frame(1));
+//                               ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
+
+//                               Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+//                               Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+
+//                               double change1[3] = {
+//                                   hand1NewPos.x - hand1OldPos.x,
+//                                   hand1NewPos.y - hand1OldPos.y,
+//                                   hand1NewPos.z - hand1OldPos.z
+//                               };
+//                               double position[3];
+
+
+//                               pointWidget1_->GetPosition(position);
+
+//                               pointWidget1_->SetPosition(
+//                                           position[0] + change1[0],
+//                                       position[1] + change1[1],
+//                                       position[2] + change1[2]);
+
+//                               pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+
+//                               vtkProperty * pointerProperty =
+//                                       pointWidget1_->GetProperty();
+
+//                               pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
+
+
+//                               ////////////////////////////////////////////////////////
+//                               /// \brief Second Hand capture
+//                               ///
+
+
+//                               ///Vector newPosition2 = hand2.translation(controller_->frame(1));
+//                               ///Vector newPosition2 = hand2.translation(controller_->frame(1).fingers().frontmost().tipPosition());
+//                               ///
+
+//                               Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+//                               Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+
+//                               double change2[3] = {
+//                                   hand2NewPos.x - hand2OldPos.x,
+//                                   hand2NewPos.y - hand2OldPos.y,
+//                                   hand2NewPos.z - hand2OldPos.z
+//                               };
+
+//                               double position2[3];
+
+//                               pointWidget2_->GetPosition(position2);
+
+//                               pointWidget2_->SetPosition(
+//                                           position2[0] + change2[0] ,
+//                                       position2[1] + change2[1] ,
+//                                       position2[2] + change2[2] );
+
+//                               pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+
+//                               pointerProperty =
+//                                       pointWidget2_->GetProperty();
+
+//                               pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
+
+//                               double* finalPos1 = pointWidget1_->GetPosition();
+//                               double* finalPos2 = pointWidget2_->GetPosition();
+
+//                               trackSubVolume(finalPos1, finalPos2);
+
+//                           }
+//                       }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    TRANSLATION   //////////////////////////////////////

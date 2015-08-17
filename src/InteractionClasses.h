@@ -171,10 +171,10 @@ class vtkMySliceCallback : public vtkCommand
 
 };
 
-class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCamera
+class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
 {
     public:
-    static TouchInteractorStyleTrackBallCamera* New();
+    static TouchInteractorStyle* New();
 
     virtual void OnRightButtonDown()
     {
@@ -191,38 +191,10 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
     virtual void OnMouseMove()
     {
         vtkInteractorStyleTrackballCamera::OnMouseMove();
-
-        //this->GetInteractor()->GetRenderWindow()->Render();
-
-//        switch (this->GetState())
-//        {
-//            case 0: std::cout << "Start/Stop" << endl;
-//                break;
-
-//            case 1: std::cout << "Rotate" << endl;
-//                break;
-
-//            case 2: std::cout << "Pan" << endl;
-//                break;
-
-//            case 3: std::cout << "Spin" << endl;
-//                break;
-
-//            case 4: std::cout << "Dolly" << endl;
-//                break;
-
-//            case 5: std::cout << "Zoom" << endl;
-//                break;
-//        default : std::cout << "Defualt" << endl;
-
-//        }
     }
 
     virtual void OnMiddleButtonDown()
     {
-       // vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
-
-        //std::cout << "Translation Finished" << endl;
 
     }
 
@@ -245,11 +217,6 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
        ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
        ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
-//       std::cout << "Touch "  << orientation[0] << ", "
-//                                << orientation[1] << ", "
-//                                << orientation[2] << endl;
-
-
    }
 
     virtual void Spin()
@@ -270,7 +237,6 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
        ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
        ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
-
    }
 
 
@@ -288,9 +254,6 @@ class TouchInteractorStyleTrackBallCamera : public vtkInteractorStyleTrackballCa
         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
 
-//        std::cout << "Touch "  << position[0] << ", "
-//                                 << position[1] << ", "
-//                                 << position[2] << endl;
     }
 
     virtual void Dolly()
@@ -429,77 +392,9 @@ public:
         ui->buttonTransfTranslation->setEnabled(true);
     }
 
-
-
-
-
     vtkCamera * camera;
     Ui::MainWindow * ui;
     double defualtDistance;
-
-
-};
-
-class MouseInteractorStyleShiftAndControlTrackBall : public vtkInteractorStyleTrackballCamera
-{
-    public:
-    static MouseInteractorStyleShiftAndControlTrackBall* New();
-
-    virtual void OnLeftButtonDown()
-    {
-        if (changeType ==1 )
-        {
-            this->Interactor->SetShiftKey(1);
-        }
-        else
-        {
-            this->Interactor->SetControlKey(1);
-        }
-
-        // Forward events
-
-        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
-    }
-    int currentStyle;
-    int changeType;
-};
-
-class MouseInteractorStyleScalingAndControlTrackBall : public vtkInteractorStyleTrackballCamera
-{
-    public:
-    static MouseInteractorStyleScalingAndControlTrackBall* New();
-
-    virtual void OnLeftButtonDown()
-    {
-
-        // Forward events Right Button Mouse Events
-
-        vtkInteractorStyleTrackballCamera::OnRightButtonDown();
-    }
-};
-
-class MouseInteractorStyleShiftAndControlJoystick : public vtkInteractorStyleJoystickCamera
-{
-    public:
-    static MouseInteractorStyleShiftAndControlJoystick* New();
-
-    virtual void OnLeftButtonDown()
-    {
-        if (changeType == 1)
-        {
-            this->Interactor->SetShiftKey(1);
-        }
-        else
-        {
-            this->Interactor->SetControlKey(1);
-        }
-
-        vtkInteractorStyleJoystickCamera::OnLeftButtonDown();
-
-
-    }
-    int currentStyle;
-    int changeType;
 
 };
 
@@ -542,11 +437,11 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 // Define interaction style
-class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
+class LeapInteractorStyle : public vtkInteractorStyleTrackballCamera
 {
   public:
-    static KeyPressInteractorStyle* New();
-    vtkTypeMacro(KeyPressInteractorStyle, vtkInteractorStyleTrackballCamera);
+    static LeapInteractorStyle* New();
+    vtkTypeMacro(LeapInteractorStyle, vtkInteractorStyleTrackballCamera);
 
     virtual void OnKeyPress()
     {
@@ -641,37 +536,6 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
 
    }
 
-
-
-
-//    virtual void Pan()
-//    {
-
-
-//        vtkInteractorStyleTrackballCamera::Pan();
-
-//        double* position;
-
-//        position = camera->GetPosition();
-
-//        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-//        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-//        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
-//    }
-
-//    virtual void Dolly()
-//    {
-
-//        vtkInteractorStyleTrackballCamera::Dolly();
-
-//        double value ;
-
-//        value = this->defualtDistance /  this->GetCurrentRenderer()->GetActiveCamera()->GetDistance();
-
-//        ui->line_Scale->setText(QString::number(value, 'f', 2));
-//    }
-
-
     vtkCamera * camera;
     Ui::MainWindow * ui;
     double defualtDistance;
@@ -681,11 +545,6 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
     QCheckBox * translation;
     QCheckBox * scaling;
     MainWindow * mainWindow;
-
-//    char * rotation;
-//    char * translation;
-//    char * zooming;
-
 
 };
 
@@ -714,12 +573,9 @@ public:
     vtkTextActor* TextActor;
 };
 
-vtkStandardNewMacro(KeyPressInteractorStyle);
+vtkStandardNewMacro(LeapInteractorStyle);
 vtkStandardNewMacro(MouseInteractorStyle);
-vtkStandardNewMacro(MouseInteractorStyleShiftAndControlTrackBall);
-vtkStandardNewMacro(MouseInteractorStyleShiftAndControlJoystick);
-vtkStandardNewMacro(MouseInteractorStyleScalingAndControlTrackBall);
-vtkStandardNewMacro(TouchInteractorStyleTrackBallCamera);
+vtkStandardNewMacro(TouchInteractorStyle);
 //vtkStandardNewMacro(vtkCameraCallback);
 
 #endif // INTERACTIONCLASSES_H
