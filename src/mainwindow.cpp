@@ -628,9 +628,14 @@ void MainWindow::updateme()
     this->ui->labelRotation->setFont(normalFont);
     this->ui->labelScaling->setFont(normalFont);
 
+
     if (Leaping_)
     {
         ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+
+        this->ui->buttonTransfRotation->setEnabled(false);
+        this->ui->buttonTransfTranslation->setEnabled(false);
+        this->ui->buttonTransfScaling->setEnabled(false);
        LeapMotion();
     }
 
@@ -1473,15 +1478,20 @@ void MainWindow::on_actionFPSToggle_toggled(bool arg1)
 
 void MainWindow::scaleButtonChanged()
 {
-    this->ui->buttonTransfScaling->setEnabled(true);
-    std::cout << "Text changed" << endl;
-    this->buttonEnablerTimer.start();
+    if (systemMode != Leap)
+    {
+        this->ui->buttonTransfScaling->setEnabled(true);
+        std::cout << "Text changed" << endl;
+        this->buttonEnablerTimer.start();
+    }
 }
 
 void MainWindow::scaleButtonDelay()
 {
-
-    this->ui->buttonTransfScaling->setEnabled(false);
+    if (systemMode != Leap)
+    {
+        this->ui->buttonTransfScaling->setEnabled(false);
+    }
 }
 
 
@@ -4500,6 +4510,7 @@ void MainWindow::LeapMotion()
             if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked())
             {
                 this->ui->labelTranslation->setFont(boldFont);
+                this->ui->buttonTransfTranslation->setEnabled(true);
 
                 //////////////////////////////////////////////////////////////////////////////////////
                 /// \brief newPosition - CURRENT REPRESENTATION
@@ -4557,6 +4568,7 @@ void MainWindow::LeapMotion()
             if(chkRotate && this->ui->checkBoxLeapTracking->isChecked())
             {
                 this->ui->labelRotation->setFont(boldFont);
+                this->ui->buttonTransfRotation->setEnabled(true);
                 
                 Matrix newRotation = frame.rotationMatrix(controller_->frame(2));
                 //std::cout << newRotation.toString() << endl;
@@ -4610,6 +4622,7 @@ void MainWindow::LeapMotion()
             {
 
                 this->ui->labelScaling->setFont(boldFont);
+                this->ui->buttonTransfScaling->setEnabled(true);
 
                 //float adjustmentFactor = 0.5;
                 //float scaleFactor = frame.scaleFactor(controller_->frame(1));
