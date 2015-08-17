@@ -181,6 +181,11 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->TopMethodFrame->setVisible(false);
     this->ui->TopModeFrame->setVisible(false);
 
+    buttonEnablerTimer.setSingleShot(true);
+    buttonEnablerTimer.setInterval(150);
+    connect(this->ui->line_Scale, SIGNAL(textChanged(const QString&)),this,SLOT(scaleButtonChanged()));
+    connect(&buttonEnablerTimer, SIGNAL(timeout()), this, SLOT(scaleButtonDelay()));
+
     //this->on_buttonModeMouse_clicked();
 /////
 /// //////////////////////////////////////////////////////////
@@ -1464,6 +1469,19 @@ void MainWindow::on_actionInfoBarToggle_toggled(bool arg1)
 void MainWindow::on_actionFPSToggle_toggled(bool arg1)
 {
     frameRateToggle(arg1);
+}
+
+void MainWindow::scaleButtonChanged()
+{
+    this->ui->buttonTransfScaling->setEnabled(true);
+    std::cout << "Text changed" << endl;
+    this->buttonEnablerTimer.start();
+}
+
+void MainWindow::scaleButtonDelay()
+{
+
+    this->ui->buttonTransfScaling->setEnabled(false);
 }
 
 

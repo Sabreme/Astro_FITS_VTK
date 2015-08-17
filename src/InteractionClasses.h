@@ -347,6 +347,21 @@ public:
 
         ui->buttonTransfScaling->setEnabled(true);
 
+        //vtkInteractorStyleTrackballCamera::St
+    }
+
+    virtual void StartDolly()
+    {
+        vtkInteractorStyleTrackballCamera::StartDolly();
+     //   std::cout << "Start Dolly" << endl;
+     //   ui->buttonTransfScaling->setEnabled(true);
+
+    }
+
+    virtual void EndDolly()
+    {
+        vtkInteractorStyleTrackballCamera::EndDolly();
+    //    ui->buttonTransfScaling->setEnabled(false);
     }
 
     virtual void OnMiddleButtonUp()
@@ -359,26 +374,12 @@ public:
 
     virtual void OnMouseWheelBackward()
     {
-        this->FindPokedRenderer(this->Interactor->GetEventPosition()[0],
-                                this->Interactor->GetEventPosition()[1]);
-        if (this->CurrentRenderer == NULL)
-          {
-          return;
-          }
-
-        this->GrabFocus(this->EventCallbackCommand);
-        this->StartDolly();
-        ui->buttonTransfScaling->setEnabled(true);
-        double factor = this->MotionFactor * 0.2 * this->MouseWheelMotionFactor;
-        this->Dolly(pow(1.1, factor));
-        this->EndDolly();
-        ui->buttonTransfScaling->setEnabled(false);
-        this->ReleaseFocus();
+       vtkInteractorStyleTrackballCamera::OnMouseWheelBackward();
     }
 
     virtual void OnMouseWheelForward()
     {
-        ui->buttonTransfScaling->setEnabled(false);
+
         vtkInteractorStyleTrackballCamera::OnMouseWheelForward();
     }
 

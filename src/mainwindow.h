@@ -121,6 +121,7 @@ public:
 
     QVTKWidget* vtkWidget;      // Used for Main loop for FrameRate Calculation
     QTimer resizeTimer;
+    QTimer buttonEnablerTimer;
 
 
     double Distance2Point(double *point1, double *point2);
@@ -304,6 +305,10 @@ private slots:
         void on_actionInfoBarToggle_toggled(bool arg1);
 
         void on_actionFPSToggle_toggled(bool arg1);
+
+        void scaleButtonChanged();
+        void scaleButtonDelay();
+
         /////////////////////////////////////////////////////////
         /// \brief on_buttonCameraReset_clicked
         ////////////////////////////////////////////////////////
