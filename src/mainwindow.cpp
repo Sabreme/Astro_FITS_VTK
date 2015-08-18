@@ -4407,30 +4407,35 @@ void MainWindow::LeapMotion()
                 std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
                 std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
 
-//                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
-//                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
+                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
+                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
 
                 std::cout << "left: #" << extendedLeft.count() << "\t";
                 std::cout << "Right #: " << extendedRight.count() << "\t";
 
-//                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
-//                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
+                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
+                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
 
-                std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
+//                std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
 
-                std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
+//                std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
 
                //
 
-                float leftPinch = frame.hands().leftmost().pinchStrength();
+//                float leftPinch = frame.hands().leftmost().pinchStrength();
 
-                float rightPinch = frame.hands().rightmost().pinchStrength();
+ //               float rightPinch = frame.hands().rightmost().pinchStrength();
 
 
                 //Finger leftFinger =
 
 
-                if( leftPinch > 0.6 && rightPinch > 0.6)
+//                if( leftPinch > 0.5 && rightPinch > 0.5)
+//                {
+
+                if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()  &&
+                        frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
+                        leftThumb.isExtended() && rightThumb.isExtended() )
                 {
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -4440,13 +4445,36 @@ void MainWindow::LeapMotion()
                     /// Vector newPosition = hand.translation(controller_->frame(1));
                     ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
 
-                    Vector hand1OldPos = controller_->frame(2).hands().rightmost().stabilizedPalmPosition();
-                    Vector hand1NewPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+                    ///Vector hand1OldPos = controller_->frame(2).hands().rightmost().stabilizedPalmPosition();
+                    ///Vector hand1NewPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
                     ///Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
                     ///Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
                     /// 
+                    ///
+                    Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
 
 
+                    Vector leapMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+
+                    double * camAngle = camera->GetOrientationWXYZ();
+                    double angle = camAngle[0];
+                    Vector cameraAngle = Vector(camAngle[1], camAngle[2], camAngle[3]);
+
+
+
+                    Matrix pointMatrix = Matrix();
+
+                    pointMatrix.identity();
+                    //std::cout << "(a) " << pointMatrix.toString() ;
+
+                    pointMatrix.setRotation(cameraAngle,angle * 0.0174532925);
+                    //std::cout << "(b) " << pointMatrix.toString() ;
+
+                 Vector changeMove = pointMatrix.transformDirection(leapMove);
+                    //std::cout << "(c) " << pointMatrix.toString() ;
+
+                    std::cout << endl;
 
                     double change1[3] = {
                         hand1NewPos.x - hand1OldPos.x,
@@ -4458,41 +4486,63 @@ void MainWindow::LeapMotion()
                      std::cout << "change: " << extendedRight.count() << "\t";
 
 
-                     double *cameraAngle ;
-
-                     cameraAngle = camera->GetOrientation();
 //                    pointWidget1_->GetPosition(position);
 
                      double tempPosition[3];
 
                      pointWidget1_->GetPosition(tempPosition);
 
+                     //pointWidget1_->Print(std::cout);
+
                     /// TRANSFORMATION MATRIX ///
-                    vtkTransform * leapCamera =  vtkTransform::New();                    
+                    vtkTransform * AggregateTransform =  vtkTransform::New();
 
 
-                    leapCamera->Identity();
-                    //leapCamera->Concatenate(camera->GetModelViewTransformMatrix());
+                    AggregateTransform->Identity();
+                    //AggregateTransform->Concatenate(camera->GetModelViewTransformMatrix());
+     ///               AggregateTransform->Concatenate(camera->GetModelViewTransformMatrix());
+                    //AggregateTransform->Translate(camera->get);
 
-                    leapCamera->Translate(change1[0],change1[1],change1[2]);
+                    AggregateTransform->Translate(changeMove.x, changeMove.y, changeMove.z);
 
-                    leapCamera->RotateX((ui->line_OrientX->text().toDouble()));
-                    leapCamera->RotateX((ui->line_OrientX->text().toDouble()));
-                    leapCamera->RotateX((ui->line_OrientX->text().toDouble()));
-
-                    leapCamera->Translate(-change1[0],-change1[1],-change1[2]);
-
-
-                    //leapCamera->Inverse();
-                    position = leapCamera->TransformPoint(tempPosition);
+                    //AggregateTransform->Translate(change1[0], change1[1], change1[2]);
+                    //AggregateTransform->Translate(0, 0, 0);
 
 
 
-                     std::cout << "Temp-pos[" << tempPosition[0] << "," << tempPosition[2] << "," <<tempPosition[3] << "]"
-                                 << "\tTrans-pos[" << position[0] << "," << position[2] << "," <<position[3] << "]\t"
-                                 << "\tcameraAngle[" << cameraAngle[0] << "," << cameraAngle[2] << "," <<cameraAngle[3] << "]\t";
+//                    AggregateTransform->RotateX(-(cameraAngle[0]));
+//                    AggregateTransform->RotateY(-(cameraAngle[1]));
+//                    AggregateTransform->RotateZ(-(cameraAngle[2]));
 
-                    leapCamera->Print(std::cout);
+                   //position =  AggregateTransform->TransformDoubleVectorAtPoint(tempPosition,change1);
+
+
+
+                    //AggregateTransform->Inverse();
+
+                    //AggregateTransform->PostMultiply();
+
+                  //  AggregateTransform->RotateX((cameraAngle[0]));
+                  //  AggregateTransform->RotateY((cameraAngle[1]));
+                  //  AggregateTransform->RotateZ((cameraAngle[2]));
+
+
+
+                // AggregateTransform->Translate(change1[0],change1[1],change1[2]);
+
+                    ///leapCamera->Translate(-change1[0],-change1[1],-change1[2]);
+
+
+                    //AggregateTransform->Inverse();
+                    position = AggregateTransform->TransformPoint(tempPosition);
+
+
+
+//                     std::cout << "Temp-pos[" << tempPosition[0] << "," << tempPosition[2] << "," <<tempPosition[3] << "]"
+//                                 << "\tTrans-pos[" << position[0] << "," << position[2] << "," <<position[3] << "]\t"
+//                                 << "\tcameraAngle[" << cameraAngle[0] << "," << cameraAngle[2] << "," <<cameraAngle[3] << "]\t";
+
+//                    AggregateTransform->Print(std::cout);
 
 
 //                    pointWidget1_->SetPosition(
@@ -4524,8 +4574,11 @@ void MainWindow::LeapMotion()
                     ///
 
 
-                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
-                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+//                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
+//                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+
+                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
 
 
 ///                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
