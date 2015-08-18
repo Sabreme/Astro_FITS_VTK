@@ -4450,119 +4450,44 @@ void MainWindow::LeapMotion()
                     ///Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
                     ///Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
                     /// 
-                    ///
+
+                    /// Get the Leap Motion Vector
                     Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
                     Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
 
-
                     Vector leapMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
 
-                    double * camAngle = camera->GetOrientationWXYZ();
-                    double angle = camAngle[0];
-                    Vector cameraAngle = Vector(camAngle[1], camAngle[2], camAngle[3]);
+                    /// Get the Camera Orientation and angle
+                    double * camOrientation = camera->GetOrientationWXYZ();
+                    double angle = camOrientation[0];
+                    Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
 
+                    /// Generate the Matrix and Transforms
+                    Matrix transformMatrix = Matrix();
+                    transformMatrix.identity();
+                    transformMatrix.setRotation(cameraAngle,angle * 0.0174532925);
+                    Vector rotatedVector = transformMatrix.transformDirection(leapMove);
 
+                    /// Get the pointWidget Position
+                    double * newPosition;
+                    double oldPosition[3];
 
-                    Matrix pointMatrix = Matrix();
+                     pointWidget1_->GetPosition(oldPosition);
 
-                    pointMatrix.identity();
-                    //std::cout << "(a) " << pointMatrix.toString() ;
-
-                    pointMatrix.setRotation(cameraAngle,angle * 0.0174532925);
-                    //std::cout << "(b) " << pointMatrix.toString() ;
-
-                 Vector changeMove = pointMatrix.transformDirection(leapMove);
-                    //std::cout << "(c) " << pointMatrix.toString() ;
-
-                    std::cout << endl;
-
-                    double change1[3] = {
-                        hand1NewPos.x - hand1OldPos.x,
-                        hand1NewPos.y - hand1OldPos.y,
-                        hand1NewPos.z - hand1OldPos.z
-                    };
-                    double * position;
-                    
-                     std::cout << "change: " << extendedRight.count() << "\t";
-
-
-//                    pointWidget1_->GetPosition(position);
-
-                     double tempPosition[3];
-
-                     pointWidget1_->GetPosition(tempPosition);
-
-                     //pointWidget1_->Print(std::cout);
-
-                    /// TRANSFORMATION MATRIX ///
+                    /// Generate the Transform and Apply it
                     vtkTransform * AggregateTransform =  vtkTransform::New();
-
-
                     AggregateTransform->Identity();
-                    //AggregateTransform->Concatenate(camera->GetModelViewTransformMatrix());
-     ///               AggregateTransform->Concatenate(camera->GetModelViewTransformMatrix());
-                    //AggregateTransform->Translate(camera->get);
+                    AggregateTransform->Translate(rotatedVector.x, rotatedVector.y, rotatedVector.z);
+                    newPosition = AggregateTransform->TransformPoint(oldPosition);
 
-                    AggregateTransform->Translate(changeMove.x, changeMove.y, changeMove.z);
-
-                    //AggregateTransform->Translate(change1[0], change1[1], change1[2]);
-                    //AggregateTransform->Translate(0, 0, 0);
-
-
-
-//                    AggregateTransform->RotateX(-(cameraAngle[0]));
-//                    AggregateTransform->RotateY(-(cameraAngle[1]));
-//                    AggregateTransform->RotateZ(-(cameraAngle[2]));
-
-                   //position =  AggregateTransform->TransformDoubleVectorAtPoint(tempPosition,change1);
-
-
-
-                    //AggregateTransform->Inverse();
-
-                    //AggregateTransform->PostMultiply();
-
-                  //  AggregateTransform->RotateX((cameraAngle[0]));
-                  //  AggregateTransform->RotateY((cameraAngle[1]));
-                  //  AggregateTransform->RotateZ((cameraAngle[2]));
-
-
-
-                // AggregateTransform->Translate(change1[0],change1[1],change1[2]);
-
-                    ///leapCamera->Translate(-change1[0],-change1[1],-change1[2]);
-
-
-                    //AggregateTransform->Inverse();
-                    position = AggregateTransform->TransformPoint(tempPosition);
-
-
-
-//                     std::cout << "Temp-pos[" << tempPosition[0] << "," << tempPosition[2] << "," <<tempPosition[3] << "]"
-//                                 << "\tTrans-pos[" << position[0] << "," << position[2] << "," <<position[3] << "]\t"
-//                                 << "\tcameraAngle[" << cameraAngle[0] << "," << cameraAngle[2] << "," <<cameraAngle[3] << "]\t";
-
-//                    AggregateTransform->Print(std::cout);
-
-
-//                    pointWidget1_->SetPosition(
-//                                position[0] + change1[0],
-//                            position[1] + change1[1],
-//                            position[2] + change1[2]);
-
-                    pointWidget1_->SetPosition(
-                                position[0],
-                            position[1],
-                            position[2]);
-
+                    /// Apply the New Position to the widget
+                    pointWidget1_->SetPosition(newPosition[0],newPosition[1],newPosition[2]);
 
                     pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
 
-                    vtkProperty * pointerProperty =
-                            pointWidget1_->GetProperty();
+                    vtkProperty * pointerProperty = pointWidget1_->GetProperty();
 
                     pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
-
 
                     ////////////////////////////////////////////////////////
                     /// \brief Second Hand capture
