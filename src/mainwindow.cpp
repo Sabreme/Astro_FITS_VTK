@@ -4296,6 +4296,16 @@ void MainWindow::LeapMotion()
             pointerProperty = pointWidget2_->GetProperty();
 
             pointerProperty->SetColor(1,1,1);
+
+            this->ui->Frame_SubVolLeapTracking->setVisible(true);
+
+            this->ui->checkbx_SubVolLeapLeftHand->setChecked(false);
+            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(false);
+            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightHand->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightIndex->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightThumb->setChecked(false);
+
         }
 
 
@@ -4530,6 +4540,25 @@ void MainWindow::LeapMotion()
 
 //                if( leftPinch > 0.5 && rightPinch > 0.5)
 //                {
+
+                if (frame.hands().rightmost().isRight())
+                    this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
+
+                if (frame.hands().leftmost().isLeft())
+                    this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
+
+                if (frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id())
+                    this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+
+                if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id())
+                    this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+
+                if(leftThumb.isExtended())
+                    this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+
+                if(rightThumb.isExtended())
+                    this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+
 
                 if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()  &&
                         frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&

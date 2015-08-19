@@ -1897,7 +1897,7 @@ padding: 5px;
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -3030,7 +3030,7 @@ border:none;
         <property name="geometry">
          <rect>
           <x>80</x>
-          <y>220</y>
+          <y>190</y>
           <width>161</width>
           <height>91</height>
          </rect>
@@ -3052,8 +3052,8 @@ border:none;
        <widget class="QLabel" name="label_38">
         <property name="geometry">
          <rect>
-          <x>140</x>
-          <y>320</y>
+          <x>130</x>
+          <y>290</y>
           <width>51</width>
           <height>21</height>
          </rect>
@@ -3261,6 +3261,103 @@ border:none;
         <property name="text">
          <string>Selected Volume of Interest</string>
         </property>
+       </widget>
+       <widget class="QFrame" name="Frame_SubVolLeapTracking">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>9</x>
+          <y>330</y>
+          <width>311</width>
+          <height>131</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QCheckBox" name="checkbx_SubVolLeapRightHand">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>10</y>
+           <width>111</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Right Hand</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkbx_SubVolLeapRightThumb">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>50</y>
+           <width>121</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Right Thumb</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkbx_SubVolLeapRightIndex">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>90</y>
+           <width>111</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Right Index</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftHand">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>111</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Left Hand</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftThumb">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Left Thumb</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftIndex">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>90</y>
+           <width>111</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Left Index</string>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QCheckBox" name="checkSubVolVolumeEnable">
