@@ -4452,10 +4452,10 @@ void MainWindow::LeapMotion()
                     /// 
 
                     /// Get the Leap Motion Vector
-                    Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-                    Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector hand1OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector hand1NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
 
-                    Vector leapMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+                    Vector leapLeftMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
 
                     /// Get the Camera Orientation and angle
                     double * camOrientation = camera->GetOrientationWXYZ();
@@ -4466,7 +4466,7 @@ void MainWindow::LeapMotion()
                     Matrix transformMatrix = Matrix();
                     transformMatrix.identity();
                     transformMatrix.setRotation(cameraAngle,angle * 0.0174532925);
-                    Vector rotatedVector = transformMatrix.transformDirection(leapMove);
+                    Vector rotatedLeftVector = transformMatrix.transformDirection(leapLeftMove);
 
                     /// Get the pointWidget Position
                     double * newPosition;
@@ -4477,7 +4477,7 @@ void MainWindow::LeapMotion()
                     /// Generate the Transform and Apply it
                     vtkTransform * AggregateTransform =  vtkTransform::New();
                     AggregateTransform->Identity();
-                    AggregateTransform->Translate(rotatedVector.x, rotatedVector.y, rotatedVector.z);
+                    AggregateTransform->Translate(rotatedLeftVector.x, rotatedLeftVector.y, rotatedLeftVector.z);
                     newPosition = AggregateTransform->TransformPoint(oldPosition);
 
                     /// Apply the New Position to the widget
@@ -4487,7 +4487,8 @@ void MainWindow::LeapMotion()
 
                     vtkProperty * pointerProperty = pointWidget1_->GetProperty();
 
-                    pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
+
+                     pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
 
                     ////////////////////////////////////////////////////////
                     /// \brief Second Hand capture
@@ -4501,35 +4502,48 @@ void MainWindow::LeapMotion()
 
 //                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
 //                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+                    /// Get the Leap Motion Vector
+                    Vector hand2OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector hand2NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
 
-                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+                    Vector leapRightMove = hand2NewPos-hand2OldPos;  /// Vector of the Finger Movement in Leap SPACE
 
+                    /// Get the Camera Orientation and angle
+                    /// WE Already have the Camera Orientation
+//                    double * camOrientation = camera->GetOrientationWXYZ();
+//                    double angle = camOrientation[0];
+//                    Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
 
-///                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
-///                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
+                    /// Generate the Matrix and Transforms
+                    ///  WE Already have the Transform Matrix
+//                    Matrix transformMatrix = Matrix();
+//                    transformMatrix.identity();
+//                    transformMatrix.setRotation(cameraAngle,angle * 0.0174532925);
+                    Vector rotatedRightVector = transformMatrix.transformDirection(leapRightMove);
 
-                    double change2[3] = {
-                        hand2NewPos.x - hand2OldPos.x,
-                        hand2NewPos.y - hand2OldPos.y,
-                        hand2NewPos.z - hand2OldPos.z
-                    };
+                    /// Get the pointWidget Position
+                    /// USE the Same Position Indicators
+                  //  double * newPosition;
+                   // double oldPosition[3];
 
-                    double position2[3];
+                     pointWidget2_->GetPosition(oldPosition);
 
-                    pointWidget2_->GetPosition(position2);
+                    /// Generate the Transform and Apply it
+                    AggregateTransform =  vtkTransform::New();
+                    AggregateTransform->Identity();
+                    AggregateTransform->Translate(rotatedRightVector.x, rotatedRightVector.y, rotatedRightVector.z);
+                    newPosition = AggregateTransform->TransformPoint(oldPosition);
 
-                    pointWidget2_->SetPosition(
-                                position2[0] + change2[0] ,
-                            position2[1] + change2[1] ,
-                            position2[2] + change2[2] );
+                    /// Apply the New Position to the widget
+                    pointWidget2_->SetPosition(newPosition[0],newPosition[1],newPosition[2]);
 
                     pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
 
                     pointerProperty =
                             pointWidget2_->GetProperty();
 
-                    pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
+                   pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
+                    //pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
 
                     double* finalPos1 = pointWidget1_->GetPosition();
                     double* finalPos2 = pointWidget2_->GetPosition();
