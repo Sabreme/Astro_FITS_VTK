@@ -633,6 +633,7 @@ void MainWindow::updateme()
     {
         ui->qvtkWidgetLeft->GetRenderWindow()->Render();
 
+
         this->ui->buttonTransfRotation->setEnabled(false);
         this->ui->buttonTransfTranslation->setEnabled(false);
         this->ui->buttonTransfScaling->setEnabled(false);
@@ -1812,11 +1813,80 @@ void MainWindow::on_buttonSubVolReset_clicked()
 {
     //on_actionReset_Camera_triggered();
 
-    boxWidget_->PlaceWidget(global_Volume->GetBounds());
-    boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
+    switch (this->systemMode)
+    {
+        case Mouse:
+        {
+            boxWidget_->PlaceWidget(global_Volume->GetBounds());
+            boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
+        }
+        break;
+
+         case Leap:
+        {
+        //// Add the Placement of the 2 Widget Points
+
+        double bounds[6];
+        global_Reader->GetOutput()->GetBounds(bounds);
+
+        double offset = 0.6;
+        double p1XOffset = bounds[1] * offset;
+        double p1YOffset = bounds[3] * offset;
+        double p1ZOffset = bounds[5] * offset;
+
+               offset = 0.3;
+        double p2xOffset = bounds[1] * offset;
+        double p2yOffset = bounds[3] * offset;
+        double p2zOffset = bounds[5] * offset;
+
+
+        double pt1[3] = {p1XOffset, p1YOffset, p1ZOffset};
+        double pt2[3] = {p2xOffset, p2yOffset, p2zOffset};
+
+        this->pointWidget1_->SetPosition(pt2);
+        this->pointWidget2_->SetPosition(pt1);
+
+        trackSubVolume(this->pointWidget2_->GetPosition(), this->pointWidget1_->GetPosition());
+
+        this->pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+        this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+
+
+        }
+        break;
+
+        case Touch:
+        {
+        //// Add the Placement of the 2 Widget Points
+
+        double bounds[6];
+        global_Reader->GetOutput()->GetBounds(bounds);
+
+        double offset = 0.6;
+        double p1XOffset = bounds[1] * offset;
+        double p1YOffset = bounds[3] * offset;
+        double p1ZOffset = bounds[5] * offset;
+
+        offset = 0.3;
+        double p2xOffset = bounds[1] * offset;
+        double p2yOffset = bounds[3] * offset;
+        double p2zOffset = bounds[5] * offset;
+
+
+        double pt1[3] = {p1XOffset, p1YOffset, p1ZOffset};
+        double pt2[3] = {p2xOffset, p2yOffset, p2zOffset};
+
+        this->pointWidget1_->SetPosition(pt2);
+        this->pointWidget2_->SetPosition(pt1);
+
+        this->pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+        this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+        }
+        break;
+    }
 
     /// Refresh the Interaction screen.  
-    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+    this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
 }
 
 //void MainWindow::loadSubVolume(QVTKWidget *qvtkWidget, vtkFitsReader *source)
@@ -2090,6 +2160,34 @@ void MainWindow::leapBeginSubVol()
     on_actionTracking_triggered();
 
     addSecondPointer();
+
+    //// Add the Placement of the 2 Widget Points
+
+    double bounds[6];
+    global_Reader->GetOutput()->GetBounds(bounds);
+
+    double offset = 0.6;
+    double p1XOffset = bounds[1] * offset;
+    double p1YOffset = bounds[3] * offset;
+    double p1ZOffset = bounds[5] * offset;
+
+           offset = 0.3;
+    double p2xOffset = bounds[1] * offset;
+    double p2yOffset = bounds[3] * offset;
+    double p2zOffset = bounds[5] * offset;
+
+
+    double pt1[3] = {p1XOffset, p1YOffset, p1ZOffset};
+    double pt2[3] = {p2xOffset, p2yOffset, p2zOffset};
+
+    this->pointWidget1_->SetPosition(pt2);
+    this->pointWidget2_->SetPosition(pt1);
+
+     trackSubVolume(this->pointWidget2_->GetPosition(), this->pointWidget1_->GetPosition());
+
+    this->pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+    this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+
     // Create a sample listener and Controller
     this->controller_= new Controller;
     Leaping_ = true;
@@ -4445,12 +4543,6 @@ void MainWindow::LeapMotion()
                     /// Vector newPosition = hand.translation(controller_->frame(1));
                     ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
 
-                    ///Vector hand1OldPos = controller_->frame(2).hands().rightmost().stabilizedPalmPosition();
-                    ///Vector hand1NewPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
-                    ///Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
-                    ///Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB)[0].stabilizedTipPosition();
-                    /// 
-
                     /// Get the Leap Motion Vector
                     Vector hand1OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
                     Vector hand1NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
@@ -4462,10 +4554,11 @@ void MainWindow::LeapMotion()
                     double angle = camOrientation[0];
                     Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
 
+                    const double PI = 3.141592653589793;
                     /// Generate the Matrix and Transforms
                     Matrix transformMatrix = Matrix();
                     transformMatrix.identity();
-                    transformMatrix.setRotation(cameraAngle,angle * 0.0174532925);
+                    transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
                     Vector rotatedLeftVector = transformMatrix.transformDirection(leapLeftMove);
 
                     /// Get the pointWidget Position
@@ -4550,124 +4643,8 @@ void MainWindow::LeapMotion()
 
                     trackSubVolume(finalPos1, finalPos2);
 
-                }
-                
-                std::cout << endl;
+                }                
             }
-//            if((shouldSubVol) &&  frame.hands().count() > 1)
-//                       {
-//                           const FingerList leftFingers = frame.hands().leftmost().fingers();
-//                           const FingerList rightFingers = frame.hands().rightmost().fingers();
-//                           const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
-//                           const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
-
-//                           Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-//                           Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-
-//                           Finger leftIndex = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-//                           Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-
-
-//           //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
-//           //                std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
-
-//           //                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
-//           //                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
-
-//           //                std::cout << "left: #" << extendedLeft.count() << "\t";
-//           //                std::cout << "Right #: " << extendedRight.count() << "\t";
-
-//           //                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
-//           //                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
-
-//                           std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
-
-//                           std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
-
-//                           std::cout << endl;
-
-
-
-
-//                           if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()  &&
-//                                   frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
-//                                   leftThumb.isExtended() && rightThumb.isExtended() )
-//                           {
-
-//                               ////////////////////////////////////////////////////////////////////////////////////////////
-//                               ///////////////    FINGER ACCURACY BUT POOR DEPTH CAPTURE    ///////////////////////////////
-//                               ////////////////////////////////////////////////////////////////////////////////////////////
-
-//                               /// Vector newPosition = hand.translation(controller_->frame(1));
-//                               ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
-
-//                               Vector hand1OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-//                               Vector hand1NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-
-//                               double change1[3] = {
-//                                   hand1NewPos.x - hand1OldPos.x,
-//                                   hand1NewPos.y - hand1OldPos.y,
-//                                   hand1NewPos.z - hand1OldPos.z
-//                               };
-//                               double position[3];
-
-
-//                               pointWidget1_->GetPosition(position);
-
-//                               pointWidget1_->SetPosition(
-//                                           position[0] + change1[0],
-//                                       position[1] + change1[1],
-//                                       position[2] + change1[2]);
-
-//                               pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
-
-//                               vtkProperty * pointerProperty =
-//                                       pointWidget1_->GetProperty();
-
-//                               pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
-
-
-//                               ////////////////////////////////////////////////////////
-//                               /// \brief Second Hand capture
-//                               ///
-
-
-//                               ///Vector newPosition2 = hand2.translation(controller_->frame(1));
-//                               ///Vector newPosition2 = hand2.translation(controller_->frame(1).fingers().frontmost().tipPosition());
-//                               ///
-
-//                               Vector hand2OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-//                               Vector hand2NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-
-//                               double change2[3] = {
-//                                   hand2NewPos.x - hand2OldPos.x,
-//                                   hand2NewPos.y - hand2OldPos.y,
-//                                   hand2NewPos.z - hand2OldPos.z
-//                               };
-
-//                               double position2[3];
-
-//                               pointWidget2_->GetPosition(position2);
-
-//                               pointWidget2_->SetPosition(
-//                                           position2[0] + change2[0] ,
-//                                       position2[1] + change2[1] ,
-//                                       position2[2] + change2[2] );
-
-//                               pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
-
-//                               pointerProperty =
-//                                       pointWidget2_->GetProperty();
-
-//                               pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
-
-//                               double* finalPos1 = pointWidget1_->GetPosition();
-//                               double* finalPos2 = pointWidget2_->GetPosition();
-
-//                               trackSubVolume(finalPos1, finalPos2);
-
-//                           }
-//                       }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    TRANSLATION   //////////////////////////////////////
