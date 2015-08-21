@@ -4438,7 +4438,7 @@ void MainWindow::LeapMotion()
             //////////////////////////  ARB  SLICE TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if((shouldArbSlice) && (frame.hands().count() ==1))
+            if((shouldArbSlice) && (frame.hands().count() ==1) && !this->ui->checkBoxLeapTracking->isChecked())
             {
                 const FingerList rightFingers = frame.hands().rightmost().fingers();
                 const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
@@ -4450,7 +4450,8 @@ void MainWindow::LeapMotion()
 
                 //  std::cout << " 1. Movement = " << leapMovement << "\t";
 
-                if(extendedRight.count() >=4)
+                std::cout << "Extended Count: " << extendedRight.count() << endl;
+                if(extendedRight.count() ==5)
                 {
 
                     //////////////////////////////////////////////////////////
@@ -4474,7 +4475,7 @@ void MainWindow::LeapMotion()
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
                 }
 
-                if(extendedRight.count() <=2)
+                if(extendedRight.count() == 0)
                 {
                     //////////////////////////////////////////////////////////////
                     //////////////////////////////////////////////////////////////
