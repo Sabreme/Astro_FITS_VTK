@@ -21,6 +21,7 @@ include(System/System.pri)
 include(Slicing/Slicing.pri)
 include(Leap/Leap.pri)
 include(Touch/Touch.pri)
+include(Usability/Usability.pri)
 
 unix {
 LIBS += -L/home/pmulumba/VTK5.10.1/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
@@ -53,3 +54,6 @@ RESOURCES += \
 #INCLUDEPATH += $$PWD/Resources/LINUX
 
 #DEPENDPATH += $$PWD/Resources/LINUX
+
+OTHER_FILES += \
+    Usability/Usability.pri

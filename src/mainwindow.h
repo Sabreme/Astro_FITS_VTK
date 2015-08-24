@@ -56,6 +56,7 @@
 
 #include "SubVolume/subvolumedialog.h"
 #include "InfoDlg/infobardialog.h"
+#include "Usability/UserTesting.h"
 
 #include <QFutureWatcher>
 #include <QtGui>
@@ -306,6 +307,8 @@ private slots:
 
         void on_actionFPSToggle_toggled(bool arg1);
 
+        void on_actionUserTesting_toggled(bool arg1);
+
         void scaleButtonChanged();
         void scaleButtonDelay();
 
@@ -327,6 +330,7 @@ private:
         bool                infoTabOpen;
         QString             currentFitsFile;
         InfoBarDialog       * infoTabDlg;
+        UserTesting         * userTestDlg;
 
 
         vtkFitsReader               * global_Reader;            // Global Pointer for the loaded FitsReader

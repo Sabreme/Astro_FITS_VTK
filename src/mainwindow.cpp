@@ -1482,6 +1482,28 @@ void MainWindow::on_actionFPSToggle_toggled(bool arg1)
     frameRateToggle(arg1);
 }
 
+void MainWindow::on_actionUserTesting_toggled(bool arg1)
+{
+    if (arg1)
+    {
+        userTestDlg = new UserTesting(this);
+        userTestDlg->setAttribute(Qt::WA_DeleteOnClose);
+       // QObject::connect(infoTabDlg, SIGNAL(destroyed()),this,SLOT(infoTabCloseSignal()));
+        //infoTabDlg->UpdateFitsInfo(global_Reader);
+        userTestDlg->show();
+
+        //this->infoTabOpen = true;
+    }
+//    else
+//    {
+//        if (this->infoTabOpen)
+//        {
+//            infoTabDlg->close();
+//        }
+//    }
+
+}
+
 void MainWindow::scaleButtonChanged()
 {
     if (systemMode != Leap)
