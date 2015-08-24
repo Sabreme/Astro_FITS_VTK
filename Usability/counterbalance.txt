@@ -1,0 +1,27 @@
+ 1,M,T,L,b,c,a
+ 2,T,L,M,c,a,b
+ 3,L,M,T,a,b,c
+ 4,M,L,T,a,b,c
+ 5,L,T,M,b,c,a
+ 6,T,M,L,c,a,b
+ 7,T,M,L,a,b,c
+ 8,L,T,M,b,c,a
+ 9,M,L,T,c,a,b
+10,T,L,M,c,b,a
+11,L,M,T,a,c,b
+12,M,T,L,b,a,c
+13,L,M,T,b,c,a
+14,M,T,L,c,a,b
+15,T,L,M,a,b,c
+16,L,T,M,a,c,b
+17,T,M,L,c,b,a
+18,M,L,T,b,a,c
+19,M,T,L,c,a,b
+20,T,L,M,a,b,c
+21,L,M,T,b,c,a
+22,L,T,M,b,a,c
+23,M,L,T,c,b,a
+24,T,M,L,a,c,b
+25,T,L,M,c,b,a
+26,L,M,T,b,a,c
+27,M,T,L,a,c,b
