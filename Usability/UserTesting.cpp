@@ -6,6 +6,7 @@
 #include "QTextStream"
 #include "QFile"
 #include "QTextStream"
+#include "QMessageBox"
 
 UserTesting::UserTesting(QWidget *parent) :
     QDialog(parent),
@@ -64,14 +65,15 @@ void UserTesting::on_btnStop_clicked()
     testingMode(false);
 
     printResult(" and Task Open");
+    printResult(" and Task Stopped");
 }
 
 void UserTesting::on_btnDone_clicked()
 {
-    timer->stop();
+    //timer->stop();
     testingMode(false);
 
-    printResult(" and Task Done");
+    SetCurrentPrototype(this->ui->spinBoxUSERID->value()-1);
 }
 
 void UserTesting::loadCounterBalance(QString filename)
@@ -79,7 +81,12 @@ void UserTesting::loadCounterBalance(QString filename)
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        this->ui->plainTextEdit_Debug->insertPlainText("File not Found !!!");
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Load Error");
+        msgBox.setText("File Not Found !!!");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
         return;
     }
     else
@@ -108,13 +115,13 @@ void UserTesting::SplitAndAdd(QString line, int lineNumber)
     for (int index = 0; index < tokens.length(); index++)
     {
         counterBalance[lineNumber][index] = tokens.at(index);
-        this->ui->plainTextEdit_Debug->insertPlainText(tokens.at(index));
+        ///this->ui->plainTextEdit_Debug->insertPlainText(tokens.at(index));
     }
     QString lineNo = QString("%1").arg(lineNumber);
     QString tokenSize = QString("%1").arg(tokens.length());
 
 
-    this->ui->plainTextEdit_Debug->insertPlainText("\n");
+    ///this->ui->plainTextEdit_Debug->insertPlainText("\n");
     tokens.clear();
 
 }
@@ -171,7 +178,7 @@ void UserTesting::PrintConfig()
            }
         }
          output += "\n";
-         this->ui->plainTextEdit_Output->insertPlainText(output);
+         //std::cout() << output << endl;
     }
 }
 

@@ -1487,21 +1487,14 @@ void MainWindow::on_actionUserTesting_toggled(bool arg1)
     if (arg1)
     {
         userTestDlg = new UserTesting(this);
-        userTestDlg->setAttribute(Qt::WA_DeleteOnClose);
-       // QObject::connect(infoTabDlg, SIGNAL(destroyed()),this,SLOT(infoTabCloseSignal()));
-        //infoTabDlg->UpdateFitsInfo(global_Reader);
-        userTestDlg->show();
-
-        //this->infoTabOpen = true;
+        userTestDlg->setAttribute(Qt::WA_DeleteOnClose);       
+        userTestDlg->show();       
+        userTestDlg->loadCounterBalance("counterbalance.txt");
     }
-//    else
-//    {
-//        if (this->infoTabOpen)
-//        {
-//            infoTabDlg->close();
-//        }
-//    }
-
+    else
+    {
+        userTestDlg->close();
+    }
 }
 
 void MainWindow::scaleButtonChanged()

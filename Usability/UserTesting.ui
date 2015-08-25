@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>680</width>
-    <height>276</height>
+    <width>487</width>
+    <height>251</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,21 +62,11 @@ QPushButton:checked
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>30</y>
-     <width>681</width>
+     <y>0</y>
+     <width>481</width>
      <height>241</height>
     </rect>
    </property>
-   <widget class="QPlainTextEdit" name="plainTextEdit_Output">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>170</y>
-      <width>121</width>
-      <height>61</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QFrame" name="frame_TASKS">
     <property name="enabled">
      <bool>true</bool>
@@ -85,20 +75,28 @@ QPushButton:checked
      <rect>
       <x>350</x>
       <y>10</y>
-      <width>161</width>
-      <height>111</height>
+      <width>121</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QRadiobutton::indicator::checked
+     <string notr="true">QFrame
 {
-	background-color:black;
-} 
+border:1px solid white;
+}
 
 QRadioButton::indicator::unchecked
 {
-	background-color:white;
-}</string>
+   color:white;
+}
+
+QRadioButton::indicator::checked
+{
+    background-color: rgb(255,67,19);
+    border: 2px solid #ffffff;
+    border-radius: 7px;
+} 
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -109,11 +107,19 @@ QRadioButton::indicator::unchecked
     <widget class="QRadioButton" name="radioTask1">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>20</x>
        <y>10</y>
        <width>81</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>TASK 1</string>
@@ -125,11 +131,16 @@ QRadioButton::indicator::unchecked
     <widget class="QRadioButton" name="radioTask2">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>20</x>
        <y>40</y>
        <width>81</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
      </property>
      <property name="text">
       <string>TASK 2</string>
@@ -138,11 +149,16 @@ QRadioButton::indicator::unchecked
     <widget class="QRadioButton" name="radioTask3">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>20</x>
        <y>70</y>
        <width>81</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
      </property>
      <property name="text">
       <string>TASK 3</string>
@@ -154,20 +170,27 @@ QRadioButton::indicator::unchecked
      <rect>
       <x>350</x>
       <y>130</y>
-      <width>161</width>
+      <width>121</width>
       <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QRadiobutton::indicator::checked
+     <string notr="true">QFrame
 {
-	background-color:black;
-} 
+border:1px solid white;
+}
 
 QRadioButton::indicator::unchecked
 {
-	background-color:white;
-}</string>
+   color:white;
+}
+
+QRadioButton::indicator::checked
+{
+    background-color: rgb(255,67,19);
+    border: 2px solid #ffffff;
+    border-radius: 7px;
+} </string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -184,6 +207,11 @@ QRadioButton::indicator::unchecked
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
+     </property>
      <property name="text">
       <string>MOUSE</string>
      </property>
@@ -196,9 +224,14 @@ QRadioButton::indicator::unchecked
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>121</width>
+       <width>91</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
      </property>
      <property name="text">
       <string>MULTITOUCH</string>
@@ -213,46 +246,15 @@ QRadioButton::indicator::unchecked
        <height>22</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
+     </property>
      <property name="text">
       <string>LEAP</string>
      </property>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="btnCounterBal">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>10</y>
-      <width>121</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Update</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit_Debug">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>80</y>
-      <width>51</width>
-      <height>61</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnTest">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>80</y>
-      <width>51</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Test</string>
-    </property>
    </widget>
    <widget class="QFrame" name="frameButtons">
     <property name="geometry">
@@ -276,7 +278,7 @@ border:none;
 
 QPushButton:checked
 {
-  background-color: rgb(225,67,19) ;
+  background-color: rgb(255,67,19) ;
   border: 2px solid #8f8f91;  
   border-radius: 6px;
  color: white ;
@@ -292,7 +294,7 @@ QPushButton:checked
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>10</y>
+       <y>80</y>
        <width>121</width>
        <height>61</height>
       </rect>
@@ -311,7 +313,7 @@ QPushButton:checked
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>80</y>
+       <y>150</y>
        <width>121</width>
        <height>61</height>
       </rect>
@@ -333,15 +335,18 @@ QPushButton:checked
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>150</y>
+       <y>10</y>
        <width>121</width>
        <height>61</height>
       </rect>
      </property>
      <property name="text">
-      <string>DONE</string>
+      <string>STANDBY</string>
      </property>
      <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
@@ -370,6 +375,11 @@ QPushButton:checked
        <height>16</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
+     </property>
      <property name="text">
       <string>USER ID</string>
      </property>
@@ -385,6 +395,7 @@ QPushButton:checked
      </property>
      <property name="font">
       <font>
+       <family>Arial</family>
        <pointsize>16</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -409,6 +420,11 @@ QPushButton:checked
        <height>16</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
+     </property>
      <property name="text">
       <string>PART</string>
      </property>
@@ -424,6 +440,7 @@ QPushButton:checked
      </property>
      <property name="font">
       <font>
+       <family>Arial</family>
        <pointsize>16</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -445,11 +462,12 @@ QPushButton:checked
        <x>10</x>
        <y>150</y>
        <width>141</width>
-       <height>61</height>
+       <height>71</height>
       </rect>
      </property>
      <property name="font">
       <font>
+       <family>Arial</family>
        <pointsize>20</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -483,16 +501,6 @@ QPushButton:checked
      </property>
     </widget>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>680</width>
-     <height>25</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="geometry">

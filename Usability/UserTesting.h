@@ -8,6 +8,7 @@ namespace Ui {
 class UserTesting;
 }
 
+
 class UserTesting : public QDialog
 {
     Q_OBJECT

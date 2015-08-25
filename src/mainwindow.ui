@@ -265,7 +265,7 @@ border:none;
 
 QPushButton:checked
 {
-  background-color: rgb(225,67,19) ;
+  background-color: rgb(255,67,19) ;
   border: 2px solid #8f8f91;  
   border-radius: 6px;
  color: white ;
@@ -1499,7 +1499,7 @@ border:none;
 
 QPushButton:disabled
 {
-  background-color: rgb(225,67,19) ;
+  background-color: rgb(255,67,19) ;
   border: 2px solid #8f8f91;  
   border-radius: 6px;
  color: white ;
@@ -1897,7 +1897,7 @@ padding: 5px;
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>4</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -4601,7 +4601,7 @@ border:none;
      <x>0</x>
      <y>0</y>
      <width>1341</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
