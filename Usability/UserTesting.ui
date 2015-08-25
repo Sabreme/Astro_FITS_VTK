@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>487</width>
-    <height>251</height>
+    <width>510</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,7 +63,7 @@ QPushButton:checked
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>481</width>
+     <width>501</width>
      <height>241</height>
     </rect>
    </property>
@@ -75,7 +75,7 @@ QPushButton:checked
      <rect>
       <x>350</x>
       <y>10</y>
-      <width>121</width>
+      <width>151</width>
       <height>101</height>
      </rect>
     </property>
@@ -105,6 +105,9 @@ QRadioButton::indicator::checked
      <enum>QFrame::Raised</enum>
     </property>
     <widget class="QRadioButton" name="radioTask1">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -129,6 +132,9 @@ QRadioButton::indicator::checked
      </property>
     </widget>
     <widget class="QRadioButton" name="radioTask2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -166,11 +172,14 @@ QRadioButton::indicator::checked
     </widget>
    </widget>
    <widget class="QFrame" name="frame_DEVICES">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>350</x>
       <y>130</y>
-      <width>121</width>
+      <width>151</width>
       <height>101</height>
      </rect>
     </property>
@@ -224,7 +233,7 @@ QRadioButton::indicator::checked
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>91</width>
+       <width>121</width>
        <height>22</height>
       </rect>
      </property>
@@ -257,6 +266,9 @@ QRadioButton::indicator::checked
     </widget>
    </widget>
    <widget class="QFrame" name="frameButtons">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -352,6 +364,9 @@ QPushButton:checked
     </widget>
    </widget>
    <widget class="QFrame" name="frame_2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -462,7 +477,7 @@ QPushButton:checked
        <x>10</x>
        <y>150</y>
        <width>141</width>
-       <height>71</height>
+       <height>61</height>
       </rect>
      </property>
      <property name="font">

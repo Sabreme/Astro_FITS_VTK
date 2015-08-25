@@ -151,6 +151,7 @@ public slots:
 
     void releaseTabFocus();
     void resizeDone();
+    void startUserTest();
 
 protected:
         void ModifiedHandler();

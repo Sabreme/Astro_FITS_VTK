@@ -45,14 +45,17 @@ public:
 
     void initiateTest(int userID);
 
+    int getCurrentJob();
+
+
+
     enum Job  {Transformation, SubVolume, Slicing};
     enum Tasks {one = 4, two = 5, three = 6};       /// Index positions in counterbalance matrix for Tasks
     enum Prototype   {Mouse, Touch, Leap};         /// Index positions in Counterbalance matrix for Prototypes
     enum Part {first = 1, second = 2, third = 3}; /// Index position in Prototype ordering matrix for Tests
 
 
-
-private slots:
+public slots:
     void on_btnStart_clicked();
     void updateCaption();
 
@@ -67,6 +70,8 @@ private slots:
     void on_btnTest_clicked();
 
 
+signals:
+    void  startTest();
 
 
 private:

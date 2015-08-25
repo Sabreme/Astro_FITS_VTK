@@ -286,7 +286,60 @@ void MainWindow::releaseTabFocus()
 
 void MainWindow::resizeDone()
 {
-     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+}
+
+void MainWindow::startUserTest()
+{
+    int currentJob = userTestDlg->getCurrentJob();
+
+    switch(currentJob)
+    {
+        case 0 :  std::cout << " Transform Question" << endl; break;
+        case 1 :
+        {
+            this->releaseTabFocus();
+
+            this->systemTab = SubVolume;
+            this->ui->buttonTabSubVol->setDisabled(true);
+            this->on_actionSubVolSelection_triggered();
+
+            switch (this->systemMode)
+            {
+                case Mouse:
+                {
+                    this->mouseBeginSubVol();
+                    this->ui->Frame_SubVolLeapTracking->setVisible(false);
+                    /////////////////////////////////////////////////
+                    ///  Mouse Interaction
+                    ///
+                    ///
+                    MouseInteractorStyle * style = MouseInteractorStyle::New();
+                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+                    interactor->SetInteractorStyle(style);
+                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                    style->ui = this->ui;
+                    style->defualtDistance = this->defaultCameraDistance;
+                }
+                break;
+
+                case Leap:  this->leapBeginSubVol();
+                break;
+
+                case Touch:
+                {
+                    this->ui->Frame_SubVolLeapTracking->setVisible(false);
+                    this->touchBeginSubVol();
+                }
+                break;
+            }
+        }
+        this->ui->qvtkWidgetLeft->setFocus();
+        break;
+
+        case 2 :  std::cout << " Slicing Question" << endl; break;
+    }
 }
 
 
@@ -1490,6 +1543,8 @@ void MainWindow::on_actionUserTesting_toggled(bool arg1)
         userTestDlg->setAttribute(Qt::WA_DeleteOnClose);       
         userTestDlg->show();       
         userTestDlg->loadCounterBalance("counterbalance.txt");
+        QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
+
     }
     else
     {

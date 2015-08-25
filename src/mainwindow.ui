@@ -72,6 +72,9 @@ border:1px solid white;
      <enum>QFrame::Raised</enum>
     </property>
     <widget class="QFrame" name="TopModeFrame">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -4601,7 +4604,7 @@ border:none;
      <x>0</x>
      <y>0</y>
      <width>1341</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

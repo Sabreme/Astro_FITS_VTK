@@ -23,6 +23,8 @@ UserTesting::UserTesting(QWidget *parent) :
     groupButtons->addButton(this->ui->btnDone);
     groupButtons->setExclusive(true);
 
+    connect(ui->btnStart, SIGNAL(clicked()),this,SIGNAL(startTest()));
+
 }
 
 UserTesting::~UserTesting()
@@ -36,6 +38,23 @@ void UserTesting::testingMode(bool testing)
     this->ui->frame_DEVICES->setEnabled(!testing);
     this->ui->frame_TASKS->setEnabled(!testing);
 }
+
+//void UserTesting::startTest()
+//{
+//    connect (timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
+
+//    timer->start(1000);
+
+//    /// Reset the Timer to ZERO
+//    this->ui->timeEdit->setTime(QTime(0,0,0,0));
+
+//    /// Dissable the various buttons and Panels
+//    testingMode(true);
+
+//    initiateTest(this->ui->spinBoxUSERID->value() -1);
+//    SetCurrentTask(this->ui->spinBoxUSERID->value() -1);
+//}
+
 
 void UserTesting::on_btnStart_clicked()
 {
@@ -145,8 +164,12 @@ void UserTesting::initiateTest(int userID)
         task = convertTask(counterBalance[userID][two]);
     if (this->ui->radioTask3->isChecked() )
         task = convertTask(counterBalance[userID][three]);
+    ///    this->ui->plainTextEdit_Debug->insertPlainText("Task = " + task );
+}
 
-///    this->ui->plainTextEdit_Debug->insertPlainText("Task = " + task );
+int UserTesting::getCurrentJob()
+{
+    return this->currentJob;
 }
 
 void UserTesting::PrintConfig()
