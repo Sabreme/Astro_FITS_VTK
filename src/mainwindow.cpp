@@ -291,7 +291,13 @@ void MainWindow::resizeDone()
 
 void MainWindow::startUserTest()
 {
-    int currentJob = userTestDlg->getCurrentJob();
+    UserTestDialog* userTestDlg = new UserTestDialog(this);
+    userTestDlg->setAttribute(Qt::WA_DeleteOnClose);
+    userTestDlg->setWindowFlags(Qt::WindowMinimizeButtonHint);
+    userTestDlg->show();
+    //QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
+
+    int currentJob = userTest->getCurrentJob();
 
     switch(currentJob)
     {
@@ -1539,16 +1545,16 @@ void MainWindow::on_actionUserTesting_toggled(bool arg1)
 {
     if (arg1)
     {
-        userTestDlg = new UserTesting(this);
-        userTestDlg->setAttribute(Qt::WA_DeleteOnClose);       
-        userTestDlg->show();       
-        userTestDlg->loadCounterBalance("counterbalance.txt");
-        QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
+        userTest = new UserTesting(this);
+        userTest->setAttribute(Qt::WA_DeleteOnClose);
+        userTest->show();
+        userTest->loadCounterBalance("counterbalance.txt");
+        QObject::connect(userTest,SIGNAL(startTest()),this,SLOT(startUserTest()));
 
     }
     else
     {
-        userTestDlg->close();
+        userTest->close();
     }
 }
 

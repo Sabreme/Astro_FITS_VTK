@@ -71,6 +71,9 @@ void UserTesting::on_btnStart_clicked()
 
     initiateTest(this->ui->spinBoxUSERID->value() -1);
     SetCurrentTask(this->ui->spinBoxUSERID->value() -1);
+
+    //this->setWindowState(Qt::WindowMinimized);
+    this->hide();
 }
 
 void UserTesting::updateCaption()

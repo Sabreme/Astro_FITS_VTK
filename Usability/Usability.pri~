@@ -1,5 +1,5 @@
-SOURCES += InfoDlg/infobardialog.cpp\      
+SOURCES += Usability/UserTesting.cpp\      
 
-HEADERS  += InfoDlg/infobardialog.h \
+HEADERS  += Usability/UserTesting.h \
 
-FORMS    += InfoDlg/InfoBarDialog.ui \
+FORMS    += Usability/UserTesting.ui \

@@ -57,6 +57,7 @@
 #include "SubVolume/subvolumedialog.h"
 #include "InfoDlg/infobardialog.h"
 #include "Usability/UserTesting.h"
+#include "Usability/usertestdialog.h"
 
 #include <QFutureWatcher>
 #include <QtGui>
@@ -331,7 +332,7 @@ private:
         bool                infoTabOpen;
         QString             currentFitsFile;
         InfoBarDialog       * infoTabDlg;
-        UserTesting         * userTestDlg;
+        UserTesting         * userTest;
 
 
         vtkFitsReader               * global_Reader;            // Global Pointer for the loaded FitsReader
