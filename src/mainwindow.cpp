@@ -293,8 +293,28 @@ void MainWindow::startUserTest()
 {
     UserTestDialog* userTestDlg = new UserTestDialog(this);
     userTestDlg->setAttribute(Qt::WA_DeleteOnClose);
-    userTestDlg->setWindowFlags(Qt::WindowMinimizeButtonHint);
+    QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().topRight();
+    QPoint ptMainWindow = this->geometry().topLeft();
+    QRect renderGeometry = this->ui->qvtkWidgetLeft->geometry();
+    //QPoint ptGlobal = ui->qvtkWidgetLeft->mapFromGlobal(renderGeometry.x(), renderGeometry.y());
+    QPoint ptGlobal = ui->qvtkWidgetLeft->mapFromGlobal(ptRenderer);
+
+    ptRenderer += ptMainWindow;
+
+    //userTest
+
+    int startPosY = ptRenderer.y() + 30;
+    int startPosX = ptRenderer.x() - (userTestDlg->geometry().width());
+    userTestDlg->move(startPosX, startPosY);
+    //userTestDlg->move
+    //userTestDlg->setWindowFlags(Qt::WindowMinimizeButtonHint);
     userTestDlg->show();
+    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
+                                        << userTestDlg->geometry().topLeft().y() << ") "
+                << "MainPos = (" << this->geometry().topLeft().x() << ", "
+                                        << this->geometry().topLeft().y() << ") "
+                                        << endl;
+
     //QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
 
     int currentJob = userTest->getCurrentJob();
@@ -346,6 +366,7 @@ void MainWindow::startUserTest()
 
         case 2 :  std::cout << " Slicing Question" << endl; break;
     }
+    this->ui->qvtkWidgetLeft->setFocus();
 }
 
 

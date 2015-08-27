@@ -14,7 +14,7 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
     timer->start(1000);
 
     /// Reset the Timer to ZERO
-    this->ui->timeEdit->setTime(QTime(0,0,0,0));
+    this->ui->timeEdit->setTime(QTime(0,0,0,0));    
 }
 
 UserTestDialog::~UserTestDialog()

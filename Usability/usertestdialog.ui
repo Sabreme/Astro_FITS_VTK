@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>291</width>
-    <height>80</height>
+    <width>241</width>
+    <height>62</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -60,8 +60,8 @@ QPushButton:checked
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>291</width>
-     <height>80</height>
+     <width>241</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -71,12 +71,15 @@ QPushButton:checked
     <enum>QFrame::Raised</enum>
    </property>
    <widget class="QTimeEdit" name="timeEdit">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>141</width>
-      <height>61</height>
+      <width>81</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -86,6 +89,21 @@ QPushButton:checked
       <weight>75</weight>
       <bold>true</bold>
      </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="buttonSymbols">
+     <enum>QAbstractSpinBox::NoButtons</enum>
+    </property>
+    <property name="keyboardTracking">
+     <bool>false</bool>
     </property>
     <property name="dateTime">
      <datetime>
@@ -120,10 +138,10 @@ QPushButton:checked
     </property>
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>110</x>
       <y>10</y>
       <width>121</width>
-      <height>61</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
