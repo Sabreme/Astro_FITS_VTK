@@ -291,29 +291,39 @@ void MainWindow::resizeDone()
 
 void MainWindow::startUserTest()
 {
-    UserTestDialog* userTestDlg = new UserTestDialog(this);
+    int currentTask = userTest->getCurrentTask();
+    QString taskTitle = "";
+
+    switch(currentTask)
+    {
+        case 4 : taskTitle = "Task 1"; break;
+        case 5 : taskTitle = "Task 2"; break;
+        case 6 : taskTitle = "Task 3"; break;
+    }
+
+
+    userTestDlg = new UserTestDialog(this);
     userTestDlg->setAttribute(Qt::WA_DeleteOnClose);
+    userTestDlg->setWindowTitle(taskTitle);
+
     QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().topRight();
     QPoint ptMainWindow = this->geometry().topLeft();
-    QRect renderGeometry = this->ui->qvtkWidgetLeft->geometry();
-    //QPoint ptGlobal = ui->qvtkWidgetLeft->mapFromGlobal(renderGeometry.x(), renderGeometry.y());
-    QPoint ptGlobal = ui->qvtkWidgetLeft->mapFromGlobal(ptRenderer);
+    QPoint ptTopBar = this->ui->menuBar->geometry().bottomLeft();
 
     ptRenderer += ptMainWindow;
 
-    //userTest
-
-    int startPosY = ptRenderer.y() + 30;
-    int startPosX = ptRenderer.x() - (userTestDlg->geometry().width());
+    int startPosY = ptRenderer.y() + ptTopBar.y() + 5;
+    int startPosX = ptRenderer.x() - (userTestDlg->geometry().width() + 5);
     userTestDlg->move(startPosX, startPosY);
-    //userTestDlg->move
-    //userTestDlg->setWindowFlags(Qt::WindowMinimizeButtonHint);
+
+     QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
+
     userTestDlg->show();
-    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
-                                        << userTestDlg->geometry().topLeft().y() << ") "
-                << "MainPos = (" << this->geometry().topLeft().x() << ", "
-                                        << this->geometry().topLeft().y() << ") "
-                                        << endl;
+//    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
+//                                        << userTestDlg->geometry().topLeft().y() << ") "
+//                << "MainPos = (" << this->geometry().topLeft().x() << ", "
+//                                        << this->geometry().topLeft().y() << ") "
+//                                        << endl;
 
     //QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
 
@@ -367,6 +377,13 @@ void MainWindow::startUserTest()
         case 2 :  std::cout << " Slicing Question" << endl; break;
     }
     this->ui->qvtkWidgetLeft->setFocus();
+}
+
+void MainWindow::stopUserTest()
+{
+    userTestDlg->close();
+    userTest->show();
+    userTest->on_btnStop_clicked();
 }
 
 
@@ -1568,6 +1585,10 @@ void MainWindow::on_actionUserTesting_toggled(bool arg1)
     {
         userTest = new UserTesting(this);
         userTest->setAttribute(Qt::WA_DeleteOnClose);
+
+        QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().center();
+        /// userTest MOve to Center of RenderWidget;
+        userTest->move(ptRenderer.x(), ptRenderer.y());
         userTest->show();
         userTest->loadCounterBalance("counterbalance.txt");
         QObject::connect(userTest,SIGNAL(startTest()),this,SLOT(startUserTest()));

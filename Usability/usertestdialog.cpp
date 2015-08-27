@@ -10,6 +10,7 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
      this->ui->timeEdit->setTime(QTime(0,0,0,0));
      timer =  new QTimer(this);
     connect (timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
+     connect(ui->btnStop, SIGNAL(clicked()),this,SIGNAL(stopTest()));
 
     timer->start(1000);
 

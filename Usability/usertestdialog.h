@@ -19,6 +19,10 @@ public:
 public slots:
     void updateCaption();
 
+signals:
+    void stopTest();
+
+
 private:
     Ui::UserTestDialog *ui;
     QTimer *timer ;

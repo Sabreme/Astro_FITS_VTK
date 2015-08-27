@@ -175,6 +175,11 @@ int UserTesting::getCurrentJob()
     return this->currentJob;
 }
 
+int UserTesting::getCurrentTask()
+{
+    return this->currentTask;
+}
+
 void UserTesting::PrintConfig()
 {
     QString output, word ;

@@ -474,9 +474,9 @@ QPushButton:checked
     <widget class="QTimeEdit" name="timeEdit">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>150</y>
-       <width>141</width>
+       <width>131</width>
        <height>61</height>
       </rect>
      </property>
@@ -487,6 +487,12 @@ QPushButton:checked
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="dateTime">
       <datetime>

@@ -153,6 +153,7 @@ public slots:
     void releaseTabFocus();
     void resizeDone();
     void startUserTest();
+    void stopUserTest();
 
 protected:
         void ModifiedHandler();
@@ -333,6 +334,7 @@ private:
         QString             currentFitsFile;
         InfoBarDialog       * infoTabDlg;
         UserTesting         * userTest;
+        UserTestDialog* userTestDlg;
 
 
         vtkFitsReader               * global_Reader;            // Global Pointer for the loaded FitsReader
