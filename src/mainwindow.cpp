@@ -1586,9 +1586,16 @@ void MainWindow::on_actionUserTesting_toggled(bool arg1)
         userTest = new UserTesting(this);
         userTest->setAttribute(Qt::WA_DeleteOnClose);
 
+        QRect rect = userTest->geometry();
         QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().center();
         /// userTest MOve to Center of RenderWidget;
-        userTest->move(ptRenderer.x(), ptRenderer.y());
+        //userTest->move(ptRenderer.x(), ptRenderer.y());
+        QPoint ptMainWindow = this->geometry().topLeft();
+
+        ptRenderer += ptMainWindow;
+
+        rect.moveCenter(ptRenderer);
+        userTest->setGeometry(rect);
         userTest->show();
         userTest->loadCounterBalance("counterbalance.txt");
         QObject::connect(userTest,SIGNAL(startTest()),this,SLOT(startUserTest()));
