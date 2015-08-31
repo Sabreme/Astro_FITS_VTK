@@ -296,9 +296,9 @@ void MainWindow::startUserTest()
 
     switch(currentTask)
     {
-        case 4 : taskTitle = "Task 1"; break;
-        case 5 : taskTitle = "Task 2"; break;
-        case 6 : taskTitle = "Task 3"; break;
+    case 4 : taskTitle = "Task 1"; break;
+    case 5 : taskTitle = "Task 2"; break;
+    case 6 : taskTitle = "Task 3"; break;
     }
 
 
@@ -316,22 +316,22 @@ void MainWindow::startUserTest()
     int startPosX = ptRenderer.x() - (userTestDlg->geometry().width() + 5);
     userTestDlg->move(startPosX, startPosY);
 
-     QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
-     //connect(this,SIGNAL(countRotation()),userTestDlg,SLOT(updateRotation()));
-     //connect(ui->buttonTransfRotation, SIGNAL(clicked()),this, SLOT(countRotation()));
+    QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
+    //connect(this,SIGNAL(countRotation()),userTestDlg,SLOT(updateRotation()));
+    //connect(ui->buttonTransfRotation, SIGNAL(clicked()),this, SLOT(countRotation()));
 
-     connect(ui->line_OrientX, SIGNAL(textEdited(QString)), this, SLOT(countRotation()));
-             //connect(static_cast<qwidget*>(ui->buttonTransfRotation).
-     //connect(this->ui->buttonTransfRotation,SIGNAL())
+    connect(ui->line_OrientX, SIGNAL(textEdited(QString)), this, SLOT(countRotation()));
+    //connect(static_cast<qwidget*>(ui->buttonTransfRotation).
+    //connect(this->ui->buttonTransfRotation,SIGNAL())
 
-     //QObject::connect(this->ui->buttonTransfRotation,SIGNAL()
+    //QObject::connect(this->ui->buttonTransfRotation,SIGNAL()
 
     userTestDlg->show();
-//    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
-//                                        << userTestDlg->geometry().topLeft().y() << ") "
-//                << "MainPos = (" << this->geometry().topLeft().x() << ", "
-//                                        << this->geometry().topLeft().y() << ") "
-//                                        << endl;
+    //    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
+    //                                        << userTestDlg->geometry().topLeft().y() << ") "
+    //                << "MainPos = (" << this->geometry().topLeft().x() << ", "
+    //                                        << this->geometry().topLeft().y() << ") "
+    //                                        << endl;
 
     //QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
 
@@ -343,51 +343,118 @@ void MainWindow::startUserTest()
 
     switch(currentJob)
     {
-        case 0 :  std::cout << " Transform Question" << endl; break;
-        case 1 :
+    ///////////////////////////////////////////////////
+    /////   TRANSFORMATION JOB
+    ///
+    case 0 :  std::cout << " Transform Question" << endl; break;
+
+    ///////////////////////////////////////////////////
+    /////   SUB VOLUME JOB
+    ///
+    case 1 :
+    {
+        this->releaseTabFocus();
+
+        this->systemTab = SubVolume;
+        this->ui->buttonTabSubVol->setDisabled(true);
+        this->on_actionSubVolSelection_triggered();
+
+        switch (this->systemMode)
         {
-            this->releaseTabFocus();
+        case Mouse:
+        {
+            this->mouseBeginSubVol();
+            this->ui->Frame_SubVolLeapTracking->setVisible(false);
+            /////////////////////////////////////////////////
+            ///  Mouse Interaction
+            ///
+            ///
+            MouseInteractorStyle * style = MouseInteractorStyle::New();
+            vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-            this->systemTab = SubVolume;
-            this->ui->buttonTabSubVol->setDisabled(true);
-            this->on_actionSubVolSelection_triggered();
-
-            switch (this->systemMode)
-            {
-                case Mouse:
-                {
-                    this->mouseBeginSubVol();
-                    this->ui->Frame_SubVolLeapTracking->setVisible(false);
-                    /////////////////////////////////////////////////
-                    ///  Mouse Interaction
-                    ///
-                    ///
-                    MouseInteractorStyle * style = MouseInteractorStyle::New();
-                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-
-                    interactor->SetInteractorStyle(style);
-                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-                    style->ui = this->ui;
-                    style->mainWindow = this;
-                    style->defualtDistance = this->defaultCameraDistance;
-                }
-                break;
-
-                case Leap:  this->leapBeginSubVol();
-                break;
-
-                case Touch:
-                {
-                    this->ui->Frame_SubVolLeapTracking->setVisible(false);
-                    this->touchBeginSubVol();
-                }
-                break;
-            }
+            interactor->SetInteractorStyle(style);
+            style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+            style->ui = this->ui;
+            style->mainWindow = this;
+            style->defualtDistance = this->defaultCameraDistance;
         }
+            break;
+
+        case Leap:  this->leapBeginSubVol();
+            break;
+
+        case Touch:
+        {
+            this->ui->Frame_SubVolLeapTracking->setVisible(false);
+            this->touchBeginSubVol();
+        }
+            break;
+        }
+    }
         this->ui->qvtkWidgetLeft->setFocus();
         break;
 
-        case 2 :  std::cout << " Slicing Question" << endl; break;
+    ///////////////////////////////////////////////////
+    /////   ARB SLICE JOB
+    ///
+    case 2 :
+    {
+        this->releaseTabFocus();
+
+        this->systemTab = SliceArb;
+        this->ui->buttonTabSliceArb->setDisabled(true);
+        this->on_actionSliceAxisArbitrary_triggered();
+
+        switch (this->systemMode)
+        {
+        case Mouse:
+        {
+            this->beginSliceArb();
+
+            /////////////////////////////////////////////////
+            ///  Mouse Rotation
+            ///
+            ///
+            MouseInteractorStyle * style = MouseInteractorStyle::New();
+
+
+            vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+            interactor->SetInteractorStyle(style);
+            style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+            style->ui = this->ui;
+            style->mainWindow = this;
+            style->defualtDistance = this->defaultCameraDistance;
+        }
+
+            break;
+
+        case Leap:
+
+            this->leapBeginSliceArb();
+            break;
+
+        case Touch:
+        {
+            this ->beginSliceArb();
+
+            vtkSmartPointer<TouchInteractorStyle> style =
+                    vtkSmartPointer<TouchInteractorStyle>::New();
+
+            this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+            style->SetCurrentRenderer(this->defaultRenderer);
+
+            style->ui = this->ui;
+            style->mainWindow = this;
+            style->defualtDistance = this->defaultCameraDistance;
+            style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                    GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+            this->ui->qvtkWidgetLeft->enableGestures();
+        }
+            break;
+        }
+    }
+        this->ui->qvtkWidgetLeft->setFocus();
     }
     this->ui->qvtkWidgetLeft->setFocus();
 }
@@ -414,6 +481,7 @@ void MainWindow::countInteraction(int testType)
         case ScaleCount : userTestDlg->incScaling();    break;
         case ResetCount : userTestDlg->incReset(); break;
         case SubVolResetCount : userTestDlg->incSubVolReset(); break;
+        case SliceResetCount : userTestDlg->incSliceReset(); break;
     }
 }
 
@@ -2006,6 +2074,8 @@ void MainWindow::mouseBeginSubVol()
 void MainWindow::on_buttonSubVolReset_clicked()
 {
     //on_actionReset_Camera_triggered();
+    if(this->userTestRunning())
+        this->countInteraction(SliceResetCount);
 
     switch (this->systemMode)
     {
@@ -4265,10 +4335,19 @@ void MainWindow::beginSliceArb()
 
     this->ui->widget_ArbPlanePreview->setDisabled(true);
 
+    if(this->userTestRunning())
+    {
+      vtkEventQtSlotConnect * vtkEventConnector = vtkEventQtSlotConnect::New();
+      vtkEventConnector->Connect(customArbPlaneWidget,vtkCommand::StartInteractionEvent, userTestDlg, SLOT(incSliceReSize()));
+    }
+
 }
 
 void MainWindow::on_buttonArbReset_clicked()
 {
+    if(this->userTestRunning())
+        this->countInteraction(SliceResetCount);
+
     customArbPlaneWidget->PlaceWidget(global_Volume->GetBounds());
     customArbPlaneWidget->SetOrigin(global_Volume->GetCenter());
 

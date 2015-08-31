@@ -144,8 +144,8 @@ class vtkArbSliceCallback : public vtkCommand
 
         //impPlaneWidget->Print(std::cout);
 //        std::cout << "Origin = " << origin[0] << "," << origin[1] << "," << origin[2] << " \t";
-//        std::cout << "position = " << position[0] << "," << position[1] << "," << position[2] << " \t";
-//        std::cout << "normal = " << normal[0] << ", " << normal[1] << ",  " << normal[2] << " \t";
+  //      std::cout << "position = " << position[0] << "," << position[1] << "," << position[2] << " \t";
+  //      std::cout << "normal = " << normal[0] << ", " << normal[1] << ",  " << normal[2] << " \t";
 
 
         ui->lineArbSlicePosX->setText(QString::number(position[0], 'f', 0));

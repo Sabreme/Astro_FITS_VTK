@@ -1903,7 +1903,7 @@ padding: 5px;
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>4</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>

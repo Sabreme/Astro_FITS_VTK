@@ -33,6 +33,9 @@ public slots:
     void incSubVolResize();
     void incSubVolReset();
 
+    void incSliceReSize();
+    void incSliceReset();
+
 
 
 signals:
@@ -50,14 +53,13 @@ private:
     int countLeapStarts;
     int countResets;
 
-    int countSubVolResize;
-    int countSubVolReset;
-    int countSubVolLeapPt1;
-    int countSubVolLeapPt2;
+    int countSubVolResize = 0 ;
+    int countSubVolReset = 0;
+    int countSubVolLeapPt1 = 0;
+    int countSubVolLeapPt2 = 0 ;
 
-    int countSliceNormal;
-    int countSlicePlane;
-    int countSliceReset;
+    int countSliceResize = 0;
+    int countSliceReset = 0;
 
 };
 
