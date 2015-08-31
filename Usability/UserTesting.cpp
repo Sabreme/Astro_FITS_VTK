@@ -396,3 +396,5 @@ QString UserTesting::GetCurrentPrototype(int userID)
 void UserTesting::extractProtOrder(QString line)
 {
 }
+
+

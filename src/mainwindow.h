@@ -120,6 +120,7 @@ public:
     enum app_Mode_t {Mouse, Leap, Touch};
     enum app_Tab_t {Information, SubVolume, SliceAxis, SliceArb};
     enum app_TransForm_t {Rotation, Translation, Scaling, None};
+    enum userTest_t {RotateCount, TranslateCount, ScaleCount, ResetCount};
 
     QVTKWidget* vtkWidget;      // Used for Main loop for FrameRate Calculation
     QTimer resizeTimer;
@@ -152,8 +153,22 @@ public slots:
 
     void releaseTabFocus();
     void resizeDone();
+
+    /////////////////////////////////////////////////////
+    ///USERTESTING PUBLIC SLOTS
+    ///
     void startUserTest();
     void stopUserTest();
+
+    bool userTestRunning();
+
+    void countInteraction(int testType);
+
+
+     void countRotation();
+     void countRotation(QString temp);
+
+
 
 protected:
         void ModifiedHandler();
@@ -333,8 +348,14 @@ private:
         bool                infoTabOpen;
         QString             currentFitsFile;
         InfoBarDialog       * infoTabDlg;
+
+        //////////////////////////// USER TESTING /////////////////////////
         UserTesting         * userTest;
         UserTestDialog* userTestDlg;
+        bool userTestActive  = false;
+
+        int userTestCountRotation = 0;
+
 
 
         vtkFitsReader               * global_Reader;            // Global Pointer for the loaded FitsReader

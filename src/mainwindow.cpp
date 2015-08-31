@@ -317,6 +317,14 @@ void MainWindow::startUserTest()
     userTestDlg->move(startPosX, startPosY);
 
      QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
+     //connect(this,SIGNAL(countRotation()),userTestDlg,SLOT(updateRotation()));
+     //connect(ui->buttonTransfRotation, SIGNAL(clicked()),this, SLOT(countRotation()));
+
+     connect(ui->line_OrientX, SIGNAL(textEdited(QString)), this, SLOT(countRotation()));
+             //connect(static_cast<qwidget*>(ui->buttonTransfRotation).
+     //connect(this->ui->buttonTransfRotation,SIGNAL())
+
+     //QObject::connect(this->ui->buttonTransfRotation,SIGNAL()
 
     userTestDlg->show();
 //    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
@@ -328,6 +336,10 @@ void MainWindow::startUserTest()
     //QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
 
     int currentJob = userTest->getCurrentJob();
+
+    userTestActive = true;
+
+
 
     switch(currentJob)
     {
@@ -356,6 +368,7 @@ void MainWindow::startUserTest()
                     interactor->SetInteractorStyle(style);
                     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
                     style->ui = this->ui;
+                    style->mainWindow = this;
                     style->defualtDistance = this->defaultCameraDistance;
                 }
                 break;
@@ -381,9 +394,38 @@ void MainWindow::startUserTest()
 
 void MainWindow::stopUserTest()
 {
+    userTestActive = false;
     userTestDlg->close();
     userTest->show();
     userTest->on_btnStop_clicked();
+}
+
+bool MainWindow::userTestRunning()
+{
+    return this->userTestActive;
+}
+
+void MainWindow::countInteraction(int testType)
+{
+    switch (testType)
+    {
+        case RotateCount : userTestDlg->incRotation(); break;
+        case TranslateCount : userTestDlg->incTranslation(); break;
+        case ScaleCount : userTestDlg->incScaling();    break;
+        case ResetCount : userTestDlg->incReset(); break;
+    }
+}
+
+void MainWindow::countRotation()
+{
+    userTestCountRotation++;
+    std::cout << "Rotations: " << userTestCountRotation << endl;
+}
+
+void MainWindow::countRotation(QString temp)
+{
+        userTestCountRotation++;
+        std::cout << "STRING Rotations: " << userTestCountRotation << endl;
 }
 
 
@@ -427,6 +469,7 @@ void MainWindow::on_buttonModeMouse_clicked()
         interactor->SetInteractorStyle(style);
         style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
         style->ui = this->ui;
+        style->mainWindow = this;
         style->defualtDistance = this->defaultCameraDistance;
 }
 
@@ -516,6 +559,7 @@ void MainWindow::on_buttonModeTouch_clicked()
         style->SetCurrentRenderer(this->defaultRenderer);
 
         style->ui = this->ui;
+        style->mainWindow = this;
         style->defualtDistance = this->defaultCameraDistance;
         style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
                 GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
@@ -576,6 +620,7 @@ void MainWindow::on_buttonTabSubVol_pressed()
                     interactor->SetInteractorStyle(style);
                     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
                     style->ui = this->ui;
+                    style->mainWindow = this;
                     style->defualtDistance = this->defaultCameraDistance;
                 }
                 break;
@@ -622,6 +667,7 @@ void MainWindow::on_buttonTabSliceAxis_pressed()
                     interactor->SetInteractorStyle(style);
                     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
                     style->ui = this->ui;
+                    style->mainWindow = this;
                     style->defualtDistance = this->defaultCameraDistance;
                 }
                 break;
@@ -663,6 +709,7 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 interactor->SetInteractorStyle(style);
                 style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
                 style->ui = this->ui;
+                style->mainWindow = this;
                 style->defualtDistance = this->defaultCameraDistance;
             }
 
@@ -684,6 +731,7 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 style->SetCurrentRenderer(this->defaultRenderer);
 
                 style->ui = this->ui;
+                style->mainWindow = this;
                 style->defualtDistance = this->defaultCameraDistance;
                 style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
                         GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
@@ -1641,10 +1689,14 @@ void MainWindow::scaleButtonDelay()
 void MainWindow::on_buttonCameraReset_clicked()
 {
     on_actionReset_Camera_triggered();
+
+    if (this->userTestRunning())
+          this->countInteraction(ResetCount);
 }
 
 void MainWindow::on_actionReset_Camera_triggered()
 {
+
     vtkSmartPointer<vtkRenderer> theRenderer =
             vtkSmartPointer<vtkRenderer>::New();
 
@@ -1931,6 +1983,17 @@ void MainWindow::mouseBeginSubVol()
     boxWidget_->PlaceWidget();
     boxWidget_->EnabledOff();
     vtkEventConnector->Connect(boxWidget_, vtkCommand::InteractionEvent, this, SLOT(boxWidgetCallback()));
+
+
+    if (this->userTestRunning())
+        vtkEventConnector->Connect(boxWidget_,vtkCommand::StartInteractionEvent, userTestDlg, SLOT(incSubVolResize()));
+
+//    if (this->userTestRunning())
+//    {vtkEventQtSlotConnect* vtkUserTestEventConnector =
+//                vtkEventQtSlotConnect::New();
+
+//        vtkUserTestEventConnector->Connect(boxWidget_,vtkCommand::StartInteractionEvent, this, SLOT(countInteraction(SubVolResizeCount)));
+//    }
 
     boxWidget_->SetHandleSize(0.008);
 
@@ -2403,6 +2466,7 @@ void MainWindow::boxWidgetCallback()
 
     //get the cube bounds
 
+
     boxWidget_->GetProp3D()->GetBounds(newBounds);
 
     /// This is where we validate the Bounds of the new cube vs the Global Volume
@@ -2445,6 +2509,9 @@ void MainWindow::boxWidgetCallback()
     }
 
 //    PrintBounds("subVol", global_subVolBounds_);
+
+
+
 
     this->ui->lineSubVolXMin->setText(QString::number(global_subVolBounds_[0], 'f', 2));
     this->ui->lineSubVolXMax->setText(QString::number(global_subVolBounds_[1], 'f', 2));
@@ -3828,6 +3895,7 @@ void MainWindow::on_actionLeap_Slice_triggered()
      interactor->SetInteractorStyle(style);
      style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
      style->ui = this->ui;
+     style->mainWindow = this;
      style->defualtDistance = this->defaultCameraDistance;
 }
 
@@ -4170,8 +4238,8 @@ void MainWindow::beginSliceArb()
 
     /// Handle the events
 
-    vtkSmartPointer<vtkMySliceCallback> ProbeData =
-            vtkSmartPointer<vtkMySliceCallback>::New();
+    vtkSmartPointer<vtkArbSliceCallback> ProbeData =
+            vtkSmartPointer<vtkArbSliceCallback>::New();
     ProbeData->polyPlane = polyPlane;
     ProbeData->plane = plane;
     ProbeData->cutter = cutter;

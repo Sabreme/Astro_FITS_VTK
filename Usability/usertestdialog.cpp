@@ -11,6 +11,7 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
      timer =  new QTimer(this);
     connect (timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
      connect(ui->btnStop, SIGNAL(clicked()),this,SIGNAL(stopTest()));
+     connect(ui->btnStop,SIGNAL(clicked()), this, SLOT(collectResults()));
 
     timer->start(1000);
 
@@ -25,5 +26,51 @@ UserTestDialog::~UserTestDialog()
 
 void UserTestDialog::updateCaption()
 {
-   this->ui->timeEdit->setTime(this->ui->timeEdit->time().addSecs(1));
+    this->ui->timeEdit->setTime(this->ui->timeEdit->time().addSecs(1));
 }
+
+void UserTestDialog::updateRotation()
+{
+    this->countRotation++;
+  //  std::cout << "Rotation Counter: " << countRotation << std::endl;
+}
+
+void UserTestDialog::collectResults()
+{
+    std::cout   << "Rotations: " << countRotate << ", "
+                  << "Translations: " << countTranslate  << ", "
+                  << "Scaling: " << countScale << ", "
+                  << "SubVolResize: " << countSubVolResize << ","
+                  << "Resets: " << countResets << ","
+                 << std::endl;
+}
+
+void UserTestDialog::incRotation()
+{
+    this->countRotate++;
+ //   std::cout << "rotation: " << countRotate;
+}
+
+void UserTestDialog::incTranslation()
+{
+    this->countTranslate++;
+ //   std::cout << "Translate: " << countTranslate;
+}
+
+void UserTestDialog::incScaling()
+{
+    this->countScale++;
+    //   std::cout << "Scale: " << countScale;
+}
+
+void UserTestDialog::incReset()
+{
+    this->countResets++;
+}
+
+void UserTestDialog::incSubVolResize()
+{
+    this->countSubVolResize++;
+}
+
+

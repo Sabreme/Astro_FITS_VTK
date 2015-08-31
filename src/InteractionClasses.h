@@ -30,6 +30,7 @@
 
 #include <vtkCallbackCommand.h>
 
+enum userTest_t {RotateCount, TranslateCount, ScaleCount};
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -99,13 +100,12 @@ class vtkCameraScaleCallback : public vtkCommand
 
 };
 
-
-class vtkMySliceCallback : public vtkCommand
+class vtkArbSliceCallback : public vtkCommand
 {
    public:
-    static vtkMySliceCallback * New()
+    static vtkArbSliceCallback * New()
     {
-        return new vtkMySliceCallback;
+        return new vtkArbSliceCallback;
     }
     void Delete()
     {
@@ -161,7 +161,7 @@ class vtkMySliceCallback : public vtkCommand
 
     }
 
-    vtkMySliceCallback (): polyPlane(0), plane(0), cutter(0), camera(0) {}
+    vtkArbSliceCallback (): polyPlane(0), plane(0), cutter(0), camera(0) {}
     vtkPolyData* polyPlane;
     vtkPlane* plane;
     vtkCutter* cutter;
@@ -267,6 +267,8 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
 
     vtkCamera * camera;
     Ui::MainWindow * ui;
+    MainWindow * mainWindow;
+
     double defualtDistance;
 
 };
@@ -283,6 +285,9 @@ public:
     {
 
       vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+
+      if (mainWindow->userTestRunning())
+            mainWindow->countInteraction(RotateCount);                        ////USERTEST
     }
 
     virtual void OnLeftButtonUp()
@@ -296,6 +301,9 @@ public:
     virtual void OnRightButtonDown()
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
+
+        if (mainWindow->userTestRunning())
+            mainWindow->countInteraction(TranslateCount);                  ////USERTEST
     }
 
     virtual void OnRightButtonUp()
@@ -310,6 +318,9 @@ public:
         vtkInteractorStyleTrackballCamera::OnRightButtonDown();
 
         ui->buttonTransfScaling->setEnabled(true);
+
+        if (mainWindow->userTestRunning())
+            mainWindow->countInteraction(ScaleCount);                  ////USERTEST
 
         //vtkInteractorStyleTrackballCamera::St
     }
@@ -339,12 +350,19 @@ public:
     virtual void OnMouseWheelBackward()
     {
        vtkInteractorStyleTrackballCamera::OnMouseWheelBackward();
+
+       if (mainWindow->userTestRunning())
+            mainWindow->countInteraction(ScaleCount);           ////USERTEST
     }
 
     virtual void OnMouseWheelForward()
     {
 
         vtkInteractorStyleTrackballCamera::OnMouseWheelForward();
+
+        if (mainWindow->userTestRunning())
+            mainWindow->countInteraction(ScaleCount);         ////USERTEST
+
     }
 
     virtual void Zoom()
@@ -371,7 +389,12 @@ public:
        ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
        ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
-     ui->buttonTransfRotation->setEnabled(true);
+       ui->buttonTransfRotation->setEnabled(true);
+
+
+       ///// IF TEST METHOD IS ON ?
+       /// COUNT MOUSE ROTATION
+
 
    }
 
@@ -395,6 +418,7 @@ public:
 
     vtkCamera * camera;
     Ui::MainWindow * ui;
+    MainWindow * mainWindow;
     double defualtDistance;
 
 };
@@ -578,5 +602,6 @@ vtkStandardNewMacro(LeapInteractorStyle);
 vtkStandardNewMacro(MouseInteractorStyle);
 vtkStandardNewMacro(TouchInteractorStyle);
 //vtkStandardNewMacro(vtkCameraCallback);
+
 
 #endif // INTERACTIONCLASSES_H
