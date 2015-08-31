@@ -31,6 +31,7 @@ public slots:
     void incReset();
 
     void incSubVolResize();
+    void incSubVolReset();
 
 
 

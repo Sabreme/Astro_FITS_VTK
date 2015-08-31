@@ -413,6 +413,7 @@ void MainWindow::countInteraction(int testType)
         case TranslateCount : userTestDlg->incTranslation(); break;
         case ScaleCount : userTestDlg->incScaling();    break;
         case ResetCount : userTestDlg->incReset(); break;
+        case SubVolResetCount : userTestDlg->incSubVolReset(); break;
     }
 }
 
@@ -2010,6 +2011,9 @@ void MainWindow::on_buttonSubVolReset_clicked()
     {
         case Mouse:
         {
+            if(this->userTestRunning())
+                this->countInteraction(SubVolResetCount);
+
             boxWidget_->PlaceWidget(global_Volume->GetBounds());
             boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
         }
