@@ -317,37 +317,90 @@ void MainWindow::startUserTest()
     userTestDlg->move(startPosX, startPosY);
 
     QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
-    //connect(this,SIGNAL(countRotation()),userTestDlg,SLOT(updateRotation()));
-    //connect(ui->buttonTransfRotation, SIGNAL(clicked()),this, SLOT(countRotation()));
 
     connect(ui->line_OrientX, SIGNAL(textEdited(QString)), this, SLOT(countRotation()));
-    //connect(static_cast<qwidget*>(ui->buttonTransfRotation).
-    //connect(this->ui->buttonTransfRotation,SIGNAL())
-
-    //QObject::connect(this->ui->buttonTransfRotation,SIGNAL()
 
     userTestDlg->show();
-    //    std::cout << "StartPos = (" << userTestDlg->geometry().topLeft().x() << ", "
-    //                                        << userTestDlg->geometry().topLeft().y() << ") "
-    //                << "MainPos = (" << this->geometry().topLeft().x() << ", "
-    //                                        << this->geometry().topLeft().y() << ") "
-    //                                        << endl;
-
-    //QObject::connect(userTestDlg,SIGNAL(startTest()),this,SLOT(startUserTest()));
-
     int currentJob = userTest->getCurrentJob();
 
     userTestActive = true;
-
-
 
     switch(currentJob)
     {
     ///////////////////////////////////////////////////
     /////   TRANSFORMATION JOB
     ///
-    case 0 :  std::cout << " Transform Question" << endl; break;
+    case 0 :
+    {
+        this->releaseTabFocus();
+        this->systemTab = Information;
 
+        this->ui->buttonTabInfo->setDisabled(true);
+
+        this->infoTab_Triggered();
+        /// Refresh the Interaction screen.
+        this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+
+        switch (systemMode)
+        {
+        case Mouse:
+        {
+            /////////////////////////////////////////////////
+            ///  Mouse Interaction
+            ///
+            ///
+            MouseInteractorStyle * style = MouseInteractorStyle::New();
+            vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+            interactor->SetInteractorStyle(style);
+            style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+            style->ui = this->ui;
+            style->mainWindow = this;
+            style->defualtDistance = this->defaultCameraDistance;
+        }
+            break;
+        case Touch:
+        {
+            vtkSmartPointer<TouchInteractorStyle> style =
+                    vtkSmartPointer<TouchInteractorStyle>::New();
+
+            this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+            style->SetCurrentRenderer(this->defaultRenderer);
+
+            style->ui = this->ui;
+            style->mainWindow = this;
+            style->defualtDistance = this->defaultCameraDistance;
+            style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                    GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+            this->ui->qvtkWidgetLeft->enableGestures();
+        }
+            break;
+        case Leap:
+        {
+            vtkSmartPointer<LeapInteractorStyle> style =
+                    vtkSmartPointer<LeapInteractorStyle>::New();
+
+            this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+            style->SetCurrentRenderer(this->defaultRenderer);
+
+            style->rotation = this->ui->checkBox_Rotation;
+            style->translation = this->ui->checkBox_Translation;
+            style->scaling = this->ui->checkBox_Scaling;
+            style->mainWindow = this;
+
+
+            vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+            interactor->SetInteractorStyle(style);
+            style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+            style->ui = this->ui;
+            style->defualtDistance = this->defaultCameraDistance;
+        }
+            break;
+        }
+    }   // CASE 0
+    break;
     ///////////////////////////////////////////////////
     /////   SUB VOLUME JOB
     ///
@@ -390,7 +443,7 @@ void MainWindow::startUserTest()
         }
             break;
         }
-    }
+    }   // CASE 1
         this->ui->qvtkWidgetLeft->setFocus();
         break;
 
@@ -453,7 +506,8 @@ void MainWindow::startUserTest()
         }
             break;
         }
-    }
+   }   // CASE 0
+        break;
         this->ui->qvtkWidgetLeft->setFocus();
     }
     this->ui->qvtkWidgetLeft->setFocus();
@@ -654,6 +708,65 @@ void MainWindow::on_buttonTabInfo_pressed()
             this->ui->buttonTabInfo->setDisabled(true);
 
             this->infoTab_Triggered();
+
+            switch(systemMode)
+            {
+                case Mouse:
+                {
+                    MouseInteractorStyle * style = MouseInteractorStyle::New();
+                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+                    interactor->SetInteractorStyle(style);
+                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                    style->ui = this->ui;
+                    style->mainWindow = this;
+                    style->defualtDistance = this->defaultCameraDistance;
+                }
+                break;
+
+                case Touch:
+                {
+                vtkSmartPointer<TouchInteractorStyle> style =
+                        vtkSmartPointer<TouchInteractorStyle>::New();
+
+                this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+                style->SetCurrentRenderer(this->defaultRenderer);
+
+                style->ui = this->ui;
+                style->mainWindow = this;
+                style->defualtDistance = this->defaultCameraDistance;
+                style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                        GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+                this->ui->qvtkWidgetLeft->enableGestures();
+                }
+                break;
+                case Leap:
+                {
+                    vtkSmartPointer<LeapInteractorStyle> style =
+                            vtkSmartPointer<LeapInteractorStyle>::New();
+
+                    this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+                    style->SetCurrentRenderer(this->defaultRenderer);
+
+                    style->rotation = this->ui->checkBox_Rotation;
+                    style->translation = this->ui->checkBox_Translation;
+                    style->scaling = this->ui->checkBox_Scaling;
+                    style->mainWindow = this;
+
+
+                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+
+                    interactor->SetInteractorStyle(style);
+                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                    style->ui = this->ui;
+                    style->defualtDistance = this->defaultCameraDistance;
+                }
+            break;
+            }
+
+            /// Refresh the Interaction screen.
+            this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
         }
     }
     this->ui->qvtkWidgetLeft->setFocus();
