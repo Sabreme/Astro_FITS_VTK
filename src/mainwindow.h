@@ -454,6 +454,12 @@ private:
         bool longSubVolMode_ = true;                // Global Val for default SubVolumeMode Selection
 
         bool leapMovement = false;
+        int leapFrameBuffer = 0;                      //Global Variable for counting # of action frames
+        int leapNewGestureCounter = 0;              // Global Variable for Keeping track of new gestures
+
+        int rotateCountBuffer = 0 ;
+        int translateCountBuffer = 0;
+        int scaleCountBuffer = 0;
 
         char *rotationPressed [1] ;
         char *translationPressed [1];

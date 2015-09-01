@@ -317,7 +317,6 @@ void MainWindow::startUserTest()
     userTestDlg->move(startPosX, startPosY);
 
     QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
-
     connect(ui->line_OrientX, SIGNAL(textEdited(QString)), this, SLOT(countRotation()));
 
     userTestDlg->show();
@@ -2583,6 +2582,11 @@ void MainWindow::leapBeginSubVol()
     this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"Sub-Volume Extraction");
     this->ui->tabLogWidget->setCurrentIndex(0);
 
+    if (userTestRunning())
+    {
+        vtkEventQtSlotConnect * testConnector = vtkEventQtSlotConnect::New();
+        testConnector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolResize()));
+    }
 }
 
 void MainWindow::leapBeginSliceAxis()
@@ -4656,6 +4660,15 @@ void MainWindow::LeapMotion()
         bool shouldAxisSlice =  this->leapAxisSliceMode;
         bool shouldArbSlice = this->leapArbSliceMode;
 
+        int activeFrameCount = 0;
+
+        int gestureState ;
+
+        bool rotateMovement = false;
+        bool translateMovement = false;
+        bool scaleMovememnt = false;
+
+
 
         //bool chkTranslate = this->ui->checkBox_Translation->isChecked();
         //bool chkRotate = this->ui->checkBox_Rotation->isChecked();
@@ -4675,7 +4688,16 @@ void MainWindow::LeapMotion()
         vtkRenderer * renderer = this->defaultRenderer;
         vtkCamera *camera = renderer->GetActiveCamera();
 
+
         if (shouldAxisSlice)
+        {
+
+        }
+
+        /// IF Rotation Gesture is detected, we set the leapMovement Flag to True
+        /// If the LeapMovement is already True, then  NO new gesture was detected
+        ///
+        if(chkRotate)
         {
 
         }
@@ -4684,6 +4706,8 @@ void MainWindow::LeapMotion()
         {
             vtkProperty * pointerProperty =
                     pointWidget1_->GetProperty();
+
+            //if pointerProperty->GetColor()
 
             pointerProperty->SetColor(1, 1,1 );
 
@@ -5000,7 +5024,7 @@ void MainWindow::LeapMotion()
 
                 if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()
                         &&   leftThumb.isExtended()  && leftHandActive)
-                {
+                {          
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
                     ///////////////    FINGER ACCURACY BUT POOR DEPTH CAPTURE    ///////////////////////////////
@@ -5048,6 +5072,7 @@ void MainWindow::LeapMotion()
 
 
                     pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
+                    pointWidget1_->InvokeEvent(vtkCommand::StartInteractionEvent);
                 }
 
                 //// WE TRACK THE RIGHT HAND
@@ -5120,6 +5145,11 @@ void MainWindow::LeapMotion()
 
             if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked())
             {
+                leapMovement = true;
+                leapFrameBuffer ++;
+                translateCountBuffer++;
+                translateMovement = true;
+
                 this->ui->labelTranslation->setFont(boldFont);
                 this->ui->buttonTransfTranslation->setEnabled(true);
 
@@ -5178,6 +5208,11 @@ void MainWindow::LeapMotion()
             //////////////////////////////////////////////////////////////////////////////////
             if(chkRotate && this->ui->checkBoxLeapTracking->isChecked())
             {
+                leapMovement = true;
+                leapFrameBuffer ++;
+                rotateCountBuffer++;
+                rotateMovement = true;
+
                 this->ui->labelRotation->setFont(boldFont);
                 this->ui->buttonTransfRotation->setEnabled(true);
                 
@@ -5231,6 +5266,12 @@ void MainWindow::LeapMotion()
 
             if(chkScale && this->ui->checkBoxLeapTracking->isChecked())
             {
+                leapMovement = true;
+                leapFrameBuffer ++;
+                scaleCountBuffer++;
+                scaleMovememnt = true;
+
+
 
                 this->ui->labelScaling->setFont(boldFont);
                 this->ui->buttonTransfScaling->setEnabled(true);
@@ -5436,9 +5477,66 @@ void MainWindow::LeapMotion()
             ////////////////////////////////////////////////////////////
             ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
             this->ui->qvtkWidgetLeft->setFocus();
+        } // (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+
+
+        /// If  No Movement =  Decrease the Action Counter
+        /// && Decrease the Gesture Counter
+        /// If  Yes Movement = Increase the Gesture Counter
+        if (!leapMovement)
+        {
+            leapFrameBuffer--;
+            leapNewGestureCounter = 0;
         }
-    }
-}
+        else
+            leapNewGestureCounter++;
+
+        /// If Action Counter is > 5 = Set Action Counter MAX to 4 (Buffer)
+        /// && Gesture Counter Reset to ZERO
+        if (leapFrameBuffer > 5)
+        {
+            leapFrameBuffer = 5;
+            leapNewGestureCounter = 0;
+        }
+
+        ///If Action Counter is < 1  =  Set Action Counter MIN to 0 (Buffer)
+        if(leapFrameBuffer < 1)
+        {
+            leapFrameBuffer = 0;
+            leapNewGestureCounter = 0;
+        }
+
+        /// If Gesture Counter is 3 = WE have Detected a New Gesture
+
+
+
+        if (leapFrameBuffer > 0 || leapMovement)
+        {
+
+            std::cout   << "Frame ID: " << frame.id()  << ", "
+                        << "Action: " << leapFrameBuffer <<", "
+                        << "Bool: " << leapMovement << ","
+                        << "Gestures: " << leapNewGestureCounter << ","
+                           ;
+
+            if (leapNewGestureCounter == 3)
+            {
+                if(rotateMovement)
+                    std::cout << "\t Rotated" ;
+                if(translateMovement)
+                    std::cout << "\t Translated" ;
+                if(scaleMovememnt)
+                    std::cout << "\t Scaled" ;
+            }
+
+            std::cout << endl;
+
+        }
+
+        /// Reset Movement Flag to False after All Possible Actions are DONE
+         leapMovement = false;
+    } //    if(controller_->isConnected())  // controller is a controller object
+}   //void MainWindow::LeapMotion()
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
