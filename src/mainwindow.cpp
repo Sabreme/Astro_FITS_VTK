@@ -1855,6 +1855,8 @@ void MainWindow::scaleButtonDelay()
 }
 
 
+
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -4667,6 +4669,9 @@ void MainWindow::LeapMotion()
         bool rotateMovement = false;
         bool translateMovement = false;
         bool scaleMovememnt = false;
+        bool subVolLefHand = false;
+        bool subVolRightHand = false;
+        bool sliceMovement = false;
 
 
 
@@ -4744,7 +4749,7 @@ void MainWindow::LeapMotion()
 
                 //leapMovement = false;
 
-                std::cout << " 1. Movement = " << leapMovement << "\t";
+                std::cout << " 1. Movement = " << leapHand1Move << "\t";
 
                 if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
                         rightThumb.isExtended())
@@ -4758,7 +4763,7 @@ void MainWindow::LeapMotion()
 
                     if (this->ui->checkBox_SliceX_Enable->isChecked())
                     {
-                        leapMovement = true;
+                        leapHand1Move = true;
 
                         int changeX = (int) (newPosition.x * moveFactor);
 
@@ -4770,7 +4775,7 @@ void MainWindow::LeapMotion()
                         (static_cast<vtkSliderRepresentation *>
                                 (sliderWidgetX->GetRepresentation()))->SetValue(currentPosX);
 
-                        std::cout << " 2. Movement = " << leapMovement << "\t";
+                        std::cout << " 2. Movement = " << leapHand1Move << "\t";
                     }
 
                     ///
@@ -4779,7 +4784,7 @@ void MainWindow::LeapMotion()
 
                     if (this->ui->checkBox_SliceY_Enable->isChecked())
                     {
-                        leapMovement = true;
+                        leapHand1Move = true;
 
                         int changeY = (int) (newPosition.y * moveFactor);
 
@@ -4791,7 +4796,7 @@ void MainWindow::LeapMotion()
                         (static_cast<vtkSliderRepresentation *>
                                 (sliderWidgetY->GetRepresentation()))->SetValue(currentPosY);
 
-                        std::cout << " 3. Movement = " << leapMovement << "\t";
+                        std::cout << " 3. Movement = " << leapHand1Move << "\t";
                     }
 
 
@@ -4801,7 +4806,7 @@ void MainWindow::LeapMotion()
 
                     if (this->ui->checkBox_SliceZ_Enable->isChecked())
                     {
-                        leapMovement = true;
+                        leapHand1Move = true;
 
 
                         int changeZ = (int) (newPosition.z * moveFactor);
@@ -4814,20 +4819,20 @@ void MainWindow::LeapMotion()
                         (static_cast<vtkSliderRepresentation *>
                                 (sliderWidgetZ->GetRepresentation()))->SetValue(currentPosZ);
 
-                        std::cout << " 4. Movement = " << leapMovement << "\t";
+                        std::cout << " 4. Movement = " << leapHand1Move << "\t";
 
                     }
 
-                    std::cout << " 5. Movement = " << leapMovement << "\t";
+                    std::cout << " 5. Movement = " << leapHand1Move << "\t";
                 }
 
-                std::cout << " 6. Movement = " << leapMovement << "\t";
+                std::cout << " 6. Movement = " << leapHand1Move << "\t";
 
                 if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id() &&
-                        !rightThumb.isExtended() && leapMovement)
+                        !rightThumb.isExtended() && leapHand1Move)
                 {
 
-                    std::cout << " 7. Movement = " << leapMovement << "\t";
+                    std::cout << " 7. Movement = " << leapHand1Move << "\t";
 
                     if (this->ui->checkBox_SliceX_Enable->isChecked())
                         this->UpdateSliceX();
@@ -4838,10 +4843,10 @@ void MainWindow::LeapMotion()
                     if (this->ui->checkBox_SliceZ_Enable->isChecked())
                         this->UpdateSliceZ();
 
-                    leapMovement = false;
+                    leapHand1Move = false;
                 }
 
-                std::cout << " 8. Movement = " << leapMovement << "\t";
+                std::cout << " 8. Movement = " << leapHand1Move << "\t";
 
                 std::cout << endl;
 
@@ -4863,7 +4868,7 @@ void MainWindow::LeapMotion()
 
                 //  std::cout << " 1. Movement = " << leapMovement << "\t";
 
-                std::cout << "Extended Count: " << extendedRight.count() << endl;
+                //std::cout << "Extended Count: " << extendedRight.count() << endl;
                 if(extendedRight.count() ==5)
                 {
 
@@ -4886,6 +4891,10 @@ void MainWindow::LeapMotion()
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
+
+                    leapHand1Move = true;
+                    leapHand1FrameBuffer ++;
+                    sliceMovement = true;
                 }
 
                 if(extendedRight.count() == 0)
@@ -4910,6 +4919,10 @@ void MainWindow::LeapMotion()
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
+
+                    leapHand1Move = true;
+                    leapHand1FrameBuffer ++;
+                    sliceMovement = true;
                 }
             }
 
@@ -5073,6 +5086,10 @@ void MainWindow::LeapMotion()
 
                     pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
                     pointWidget1_->InvokeEvent(vtkCommand::StartInteractionEvent);
+
+                    leapHand2Move = true;
+                    leapHand2FrameBuffer ++;
+                    subVolLefHand = true;
                 }
 
                 //// WE TRACK THE RIGHT HAND
@@ -5132,6 +5149,11 @@ void MainWindow::LeapMotion()
 
                     pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
                     //pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
+
+                    leapHand1Move = true;
+                    leapHand1FrameBuffer ++;
+                    subVolRightHand = true;
+
                 }
                 double* finalPos1 = pointWidget1_->GetPosition();
                 double* finalPos2 = pointWidget2_->GetPosition();
@@ -5145,9 +5167,8 @@ void MainWindow::LeapMotion()
 
             if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked())
             {
-                leapMovement = true;
-                leapFrameBuffer ++;
-                translateCountBuffer++;
+                leapHand1Move = true;
+                leapHand1FrameBuffer ++;
                 translateMovement = true;
 
                 this->ui->labelTranslation->setFont(boldFont);
@@ -5208,9 +5229,8 @@ void MainWindow::LeapMotion()
             //////////////////////////////////////////////////////////////////////////////////
             if(chkRotate && this->ui->checkBoxLeapTracking->isChecked())
             {
-                leapMovement = true;
-                leapFrameBuffer ++;
-                rotateCountBuffer++;
+                leapHand1Move = true;
+                leapHand1FrameBuffer ++;
                 rotateMovement = true;
 
                 this->ui->labelRotation->setFont(boldFont);
@@ -5266,9 +5286,8 @@ void MainWindow::LeapMotion()
 
             if(chkScale && this->ui->checkBoxLeapTracking->isChecked())
             {
-                leapMovement = true;
-                leapFrameBuffer ++;
-                scaleCountBuffer++;
+                leapHand1Move = true;
+                leapHand1FrameBuffer ++;
                 scaleMovememnt = true;
 
 
@@ -5469,57 +5488,55 @@ void MainWindow::LeapMotion()
 //                                          << "\tRGB(1,: " << colourRange * 0.8
 //                                          << "," << colourRange * 0.8 << endl;
                     }
-                }
-                leapFrameFreqCount = 0;
-            }
-            leapFrameFreqCount++;
+                }                
+            }            
             ////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////
             ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
             this->ui->qvtkWidgetLeft->setFocus();
         } // (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
 
+        //////////////////////////////////////////////////
+        ///// USER TEST PRINTOUT
+        /////// SECOND HAND OPERATION
 
         /// If  No Movement =  Decrease the Action Counter
         /// && Decrease the Gesture Counter
         /// If  Yes Movement = Increase the Gesture Counter
-        if (!leapMovement)
+        if(!leapHand2Move)
         {
-            leapFrameBuffer--;
-            leapNewGestureCounter = 0;
+            leapHand2FrameBuffer--;
+            leapHand2GestureCounter = 0;
         }
         else
-            leapNewGestureCounter++;
+            leapHand2GestureCounter++;
 
         /// If Action Counter is > 5 = Set Action Counter MAX to 4 (Buffer)
         /// && Gesture Counter Reset to ZERO
-        if (leapFrameBuffer > 5)
+        if (leapHand2FrameBuffer > 5)
         {
-            leapFrameBuffer = 5;
-            leapNewGestureCounter = 0;
+            leapHand2FrameBuffer = 5;
+            leapHand2GestureCounter = 0;
         }
 
         ///If Action Counter is < 1  =  Set Action Counter MIN to 0 (Buffer)
-        if(leapFrameBuffer < 1)
+        if(leapHand2FrameBuffer < 1)
         {
-            leapFrameBuffer = 0;
-            leapNewGestureCounter = 0;
+            leapHand2FrameBuffer = 0;
+            leapHand2GestureCounter = 0;
         }
 
         /// If Gesture Counter is 3 = WE have Detected a New Gesture
 
-
-
-        if (leapFrameBuffer > 0 || leapMovement)
+        if (leapHand2FrameBuffer > 0 || leapHand2Move)
         {
-
-            std::cout   << "Frame ID: " << frame.id()  << ", "
-                        << "Action: " << leapFrameBuffer <<", "
-                        << "Bool: " << leapMovement << ","
-                        << "Gestures: " << leapNewGestureCounter << ","
+            std::cout   << "Frame ID2: " << frame.id()  << ", "
+                        << "Action2: " << leapHand2FrameBuffer <<", "
+                        << "Bool2: " << leapHand2Move << ","
+                        << "Gestures2: " << leapHand2GestureCounter << ","
                            ;
 
-            if (leapNewGestureCounter == 3)
+            if (leapHand2GestureCounter == 3)
             {
                 if(rotateMovement)
                     std::cout << "\t Rotated" ;
@@ -5527,14 +5544,71 @@ void MainWindow::LeapMotion()
                     std::cout << "\t Translated" ;
                 if(scaleMovememnt)
                     std::cout << "\t Scaled" ;
+                if(subVolLefHand)
+                    std::cout << "\t SubVolLeft" ;
             }
-
             std::cout << endl;
-
         }
 
         /// Reset Movement Flag to False after All Possible Actions are DONE
-         leapMovement = false;
+        leapHand2Move = false;
+
+        /// If  No Movement =  Decrease the Action Counter
+        /// && Decrease the Gesture Counter
+        /// If  Yes Movement = Increase the Gesture Counter
+        if (!leapHand1Move)
+        {
+            leapHand1FrameBuffer--;
+            leapHand1GestureCounter = 0;
+        }
+        else
+            leapHand1GestureCounter++;
+
+        /// If Action Counter is > 5 = Set Action Counter MAX to 4 (Buffer)
+        /// && Gesture Counter Reset to ZERO
+        if (leapHand1FrameBuffer > 5)
+        {
+            leapHand1FrameBuffer = 5;
+            leapHand1GestureCounter = 0;
+        }
+
+        ///If Action Counter is < 1  =  Set Action Counter MIN to 0 (Buffer)
+        if(leapHand1FrameBuffer < 1)
+        {
+            leapHand1FrameBuffer = 0;
+            leapHand1GestureCounter = 0;
+        }
+
+        /// If Gesture Counter is 3 = WE have Detected a New Gesture
+
+        if (leapHand1FrameBuffer > 0 || leapHand1Move)
+        {
+
+            std::cout   << "Frame ID: " << frame.id()  << ", "
+                        << "Action: " << leapHand1FrameBuffer <<", "
+                        << "Bool: " << leapHand1Move << ","
+                        << "Gestures: " << leapHand1GestureCounter << ","
+                           ;
+
+            if (leapHand1GestureCounter == 3)
+            {
+                if(rotateMovement)
+                    std::cout << "\t Rotated" ;
+                if(translateMovement)
+                    std::cout << "\t Translated" ;
+                if(scaleMovememnt)
+                    std::cout << "\t Scaled" ;
+                if(subVolRightHand)
+                    std::cout << "\t SubVolRight" ;
+                if(sliceMovement)
+                    std::cout << "\t SliceMovement";
+            }
+            std::cout << endl;
+        }
+
+        /// Reset Movement Flag to False after All Possible Actions are DONE
+         leapHand1Move = false;
+
     } //    if(controller_->isConnected())  // controller is a controller object
 }   //void MainWindow::LeapMotion()
 

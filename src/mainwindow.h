@@ -453,22 +453,13 @@ private:
         bool leapSubVolMode = false;
         bool longSubVolMode_ = true;                // Global Val for default SubVolumeMode Selection
 
-        bool leapMovement = false;
-        int leapFrameBuffer = 0;                      //Global Variable for counting # of action frames
-        int leapNewGestureCounter = 0;              // Global Variable for Keeping track of new gestures
+        bool leapHand1Move = false;
+        int leapHand1FrameBuffer = 0;                      //Global Variable for counting # of action frames
+        int leapHand1GestureCounter = 0;              // Global Variable for Keeping track of new gestures
 
-        int rotateCountBuffer = 0 ;
-        int translateCountBuffer = 0;
-        int scaleCountBuffer = 0;
-
-        char *rotationPressed [1] ;
-        char *translationPressed [1];
-        char *zoomingPressed[1] ;
-        QCheckBox * rotationPress;
-
-        int leapFrameFreqCount = 0;                 // Used a temporary Variable for Counting Number of Frames
-
-
+        bool leapHand2Move = false;
+        int leapHand2FrameBuffer = 0;
+        int leapHand2GestureCounter = 0;
 
         vtkSmartPointer< vtkResliceImageViewer > riw[3];
         vtkSmartPointer< vtkImagePlaneWidget > planeWidget[3];
