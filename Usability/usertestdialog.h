@@ -32,6 +32,8 @@ public slots:
 
     void incSubVolResize();
     void incSubVolReset();
+    void incSubVolPointLeft();
+    void incSubVolPointRight();
 
     void incSliceReSize();
     void incSliceReset();
@@ -55,8 +57,10 @@ private:
 
     int countSubVolResize = 0 ;
     int countSubVolReset = 0;
-    int countSubVolLeapPt1 = 0;
-    int countSubVolLeapPt2 = 0 ;
+    int countSubVolPnt1 = 0;
+    int countSubVolPnt2 = 0 ;
+    int countSubVolPntLeft = 0;
+    int countSubVolPntRight = 0;
 
     int countSliceResize = 0;
     int countSliceReset = 0;

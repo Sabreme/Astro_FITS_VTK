@@ -45,6 +45,8 @@ void UserTestDialog::collectResults()
                   << "SubVolReset: " << countSubVolReset << ","
                   << "SliceResize:" << countSliceResize << ","
                   << "SliceReset:" << countSliceReset << ",'"
+                  << "SubVolPntLeft:" << countSubVolPntLeft << ","
+                  << "SubVolPntRight:" << countSubVolPntRight << ","
                  << std::endl;
 }
 
@@ -79,6 +81,16 @@ void UserTestDialog::incSubVolResize()
 void UserTestDialog::incSubVolReset()
 {
     this->countSubVolReset++;
+}
+
+void UserTestDialog::incSubVolPointLeft()
+{
+    this->countSubVolPntLeft++;
+}
+
+void UserTestDialog::incSubVolPointRight()
+{
+    this->countSubVolPntRight++;
 }
 
 void UserTestDialog::incSliceReSize()
