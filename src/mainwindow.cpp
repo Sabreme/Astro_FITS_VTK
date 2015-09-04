@@ -373,6 +373,7 @@ void MainWindow::startUserTest()
                     GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
             this->ui->qvtkWidgetLeft->enableGestures();
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
         }
             break;
         case Leap:
@@ -1841,7 +1842,7 @@ void MainWindow::scaleButtonChanged()
     if (systemMode != Leap)
     {
         this->ui->buttonTransfScaling->setEnabled(true);
-        std::cout << "Text changed" << endl;
+//        std::cout << "Text changed" << endl;
         this->buttonEnablerTimer.start();
     }
 }

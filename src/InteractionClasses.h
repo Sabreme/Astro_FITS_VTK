@@ -180,8 +180,10 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
     virtual void OnRightButtonDown()
     {
         vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
+        if (mainWindow->userTestRunning())
+            mainWindow->countInteraction(TranslateCount);                  ////USERTEST
 
-       // std::cout << "Translation triggered" << endl;
+        std::cout << "Translation triggered" << endl;
     }
 
     virtual void OnRightButtonUp()
@@ -195,16 +197,21 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
 //        vtkInteractorStyleTrackballCamera::OnMouseMove();
 //    }
 
-//    virtual void OnMiddleButtonDown()
-//    {
+    virtual void OnMiddleButtonDown()
+    {
+//       // vtkInteractorStyleTrackballCamera::OnRightButtonDown();
+//        if (mainWindow->userTestRunning())
+//            mainWindow->countInteraction(ScaleCount);                  ////USERTEST
+//        std::cout <<"Scale button pushed" << endl;
 
-//    }
+    }
 
     virtual void OnMiddleButtonUp()
     {
 
-        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
+        vtkInteractorStyleTrackballCamera::OnRightButtonUp();
     }
+
 
     virtual void OnLeftButtonUp()
     {
@@ -215,6 +222,8 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
     virtual void OnLeftButtonDown()
     {
         vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+        if (mainWindow->userTestRunning())
+              mainWindow->countInteraction(RotateCount);                        ////USERTEST
     }
 
     virtual void Rotate()

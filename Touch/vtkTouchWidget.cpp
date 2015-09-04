@@ -13,7 +13,6 @@
 #include "vtkTransform.h"
 #include "vtkMatrix4x4.h"
 #include "vtkInteractorStyleTrackballCamera.h"
-//#include "src/InteractionClasses.h"
 #include "vtkInteractorStyleSwitch.h"
 #include "vtkInteractorObserver.h"
 #include "vtkObjectFactory.h"
@@ -267,8 +266,29 @@ void QVTKTouchWidget::enableGestures()
 
     void QVTKTouchWidget::pinchTriggered(QPinchGesture *pinch)
     {
+        //std::cout << "SCALING" << "\t" << "Pinch: " << pinch->state() << endl;
+
         QPinchGesture::ChangeFlags changeFlags = pinch->changeFlags();
+
+
+        /// IF We are starting the Pinch Gesture we EMIT a MiddleMouseButton PRESS Signal
+        if (pinch->state() == Qt::GestureStarted)
+        {
+            ///std::cout << "SCALING Started" << "\t" << endl;
+          //  this->GetInteractor()->MiddleButtonPressEvent();
+            scaleTriggered();
+        }
+
+        /// IF We are ending the Pinch Gesture we EMIT a MiddleMouseButton RELEASE Signal
+        if (pinch->state() == Qt::GestureFinished)
+        {
+           // this->GetInteractor()->MiddleButtonReleaseEvent();
+        }
+
+
+
         if (changeFlags & QPinchGesture::ScaleFactorChanged) {
+
             //std::cout << "SCALING" << endl;
 
             vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();

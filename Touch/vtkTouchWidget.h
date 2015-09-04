@@ -7,6 +7,7 @@
 
 #include "vtkCamera.h"
 #include "vtkSystemIncludes.h"
+#include <src/mainwindow.h>
 
 
 using namespace std;
@@ -46,6 +47,7 @@ private:
     bool gesturesActive = false;
 
 signals:
+    void scaleTriggered();
 
 public slots:
 
