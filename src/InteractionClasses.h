@@ -186,17 +186,30 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
 
     virtual void OnRightButtonUp()
     {
+        ui->buttonTransfTranslation->setEnabled(false);
         vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
     }
 
-    virtual void OnMouseMove()
+//    virtual void OnMouseMove()
+//    {
+//        vtkInteractorStyleTrackballCamera::OnMouseMove();
+//    }
+
+//    virtual void OnMiddleButtonDown()
+//    {
+
+//    }
+
+    virtual void OnMiddleButtonUp()
     {
-        vtkInteractorStyleTrackballCamera::OnMouseMove();
+
+        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
     }
 
-    virtual void OnMiddleButtonDown()
+    virtual void OnLeftButtonUp()
     {
-
+        ui->buttonTransfRotation->setEnabled(false);
+        vtkInteractorStyleTrackballCamera::OnLeftButtonUp();
     }
 
     virtual void OnLeftButtonDown()
@@ -217,6 +230,9 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
        ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
        ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
        ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+       ui->buttonTransfRotation->setEnabled(true);
+       ui->Frame_LEFT->repaint();
 
    }
 
@@ -254,6 +270,9 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+        ui->buttonTransfTranslation->setEnabled(true);
+        ui->Frame_LEFT->repaint();
 
     }
 
