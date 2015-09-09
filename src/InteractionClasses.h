@@ -253,9 +253,9 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
     virtual void OnMiddleButtonDown()
     {
        // vtkInteractorStyleTrackballCamera::OnRightButtonDown();
-        if (mainWindow->userTestRunning())
-            mainWindow->countInteraction(ScaleCount);                  ////USERTEST
-        std::cout <<"Scale button pushed" << endl;
+//        if (mainWindow->userTestRunning())
+//            mainWindow->countInteraction(ScaleCount);                  ////USERTEST
+//        std::cout <<"Scale button pushed" << endl;
 
     }
 
@@ -276,7 +276,7 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
     {
 //        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
 //        if (mainWindow->userTestRunning())
-              mainWindow->countInteraction(RotateCount);                        ////USERTEST
+//             mainWindow->countInteraction(RotateCount);                        ////USERTEST
     }
 
     virtual void Rotate()

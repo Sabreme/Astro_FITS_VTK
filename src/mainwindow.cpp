@@ -103,7 +103,7 @@
 #include "InteractionClasses.h"
 
 #ifdef __WIN32__
-    #include "windows.h"
+#include "windows.h"
 #endif
 
 /////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->ui->centralWidget = ui->qvtkWidgetLeft;    
+    this->ui->centralWidget = ui->qvtkWidgetLeft;
     this->vtkWidget = ui->qvtkWidgetLeft;               // Used for FrameRate Calculation
 
     ///MAIN WINDOW GUI LAYOUT CONFIGURATION
@@ -187,21 +187,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&buttonEnablerTimer, SIGNAL(timeout()), this, SLOT(scaleButtonDelay()));
 
     //this->on_buttonModeMouse_clicked();
-/////
-/// //////////////////////////////////////////////////////////
-/// //////////////////////////////////////////////////////////
-///// STYLE SHEET CUSTOMIZATION FOR THE APPLICATION
-/// //////////////////////////////////////////////////////////
-///
-///
+    /////
+    /// //////////////////////////////////////////////////////////
+    /// //////////////////////////////////////////////////////////
+    ///// STYLE SHEET CUSTOMIZATION FOR THE APPLICATION
+    /// //////////////////////////////////////////////////////////
+    ///
+    ///
 
 
     this->ui->menuBar->setStyleSheet("QMenuBar::item { background: black; color: white}");
-//    this->ProgressDialog = new QProgressDialog();
+    //    this->ProgressDialog = new QProgressDialog();
 
-//    connect (&this->FutureWatcher, SIGNAL(finished()), this, SLOT(slot_Load_Finished()));
-//    connect (&this->FutureWatcher, SIGNAL(finished()), this->ProgressDialog, SLOT(cancel()));
-//    connect (&this->ProgressDialog, SIGNAL(cancel()), &this->FutureWatcher, SLOT(slot_Load_Finished()));
+    //    connect (&this->FutureWatcher, SIGNAL(finished()), this, SLOT(slot_Load_Finished()));
+    //    connect (&this->FutureWatcher, SIGNAL(finished()), this->ProgressDialog, SLOT(cancel()));
+    //    connect (&this->ProgressDialog, SIGNAL(cancel()), &this->FutureWatcher, SLOT(slot_Load_Finished()));
 
 
     //connect(ui->button_Rotate, SIGNAL(clicked()), this, SLOT(mySlot()));
@@ -216,9 +216,9 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::closeTabs (){
     for (int i=0; i < TabCount; i++)
     {
-       // QApplication::sendEvent(this->ui->tabLogWidget, this->ui->tabLogWidget->closeEvent(;)
+        // QApplication::sendEvent(this->ui->tabLogWidget, this->ui->tabLogWidget->closeEvent(;)
         //this->ui->tabLogWidget->setCurrentIndex(i);
-//        QMetaObject::invokeMethod(this->ui->tabLogWidget->tabCloseRequested(i));
+        //        QMetaObject::invokeMethod(this->ui->tabLogWidget->tabCloseRequested(i));
         int currentIndex = this->ui->tabLogWidget->currentIndex();
 
         //this->ui->tabLogWidget-;
@@ -262,20 +262,20 @@ void MainWindow::releaseTabFocus()
 {
     switch (this->systemTab)
     {
-        case Information:   this->ui->buttonTabInfo->setEnabled(true);
-                            this->ui->InfoTab->close();
+    case Information:   this->ui->buttonTabInfo->setEnabled(true);
+        this->ui->InfoTab->close();
         break;
 
-        case SubVolume:   this->ui->buttonTabSubVol->setEnabled(true);
-                            this->ui->SubVolTab->close();
+    case SubVolume:   this->ui->buttonTabSubVol->setEnabled(true);
+        this->ui->SubVolTab->close();
         break;
 
-        case SliceAxis:   this->ui->buttonTabSliceAxis->setEnabled(true);
-                         this->ui->SliceVolTab->close();
+    case SliceAxis:   this->ui->buttonTabSliceAxis->setEnabled(true);
+        this->ui->SliceVolTab->close();
         break;
 
-        case SliceArb:   this->ui->buttonTabSliceArb->setEnabled(true);
-                         this->ui->SliceVolTab2->close();
+    case SliceArb:   this->ui->buttonTabSliceArb->setEnabled(true);
+        this->ui->SliceVolTab2->close();
         break;
     }
 
@@ -339,6 +339,11 @@ void MainWindow::startUserTest()
 
     userTestActive = true;
 
+    /////////////////////////
+    //// FOR QVTKWIDGET TOUCH TEST TRACKING
+    ///
+    this->ui->qvtkWidgetLeft->setUserTestMode(true);
+
     switch(currentJob)
     {
     ///////////////////////////////////////////////////
@@ -389,6 +394,8 @@ void MainWindow::startUserTest()
 
             this->ui->qvtkWidgetLeft->enableGestures();
             connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
         }
             break;
         case Leap:
@@ -415,10 +422,10 @@ void MainWindow::startUserTest()
             break;
         }
     }   // CASE 0
-    break;
-    ///////////////////////////////////////////////////
-    /////   SUB VOLUME JOB
-    ///
+        break;
+        ///////////////////////////////////////////////////
+        /////   SUB VOLUME JOB
+        ///
     case 1 :
     {
         this->releaseTabFocus();
@@ -462,9 +469,9 @@ void MainWindow::startUserTest()
         this->ui->qvtkWidgetLeft->setFocus();
         break;
 
-    ///////////////////////////////////////////////////
-    /////   ARB SLICE JOB
-    ///
+        ///////////////////////////////////////////////////
+        /////   ARB SLICE JOB
+        ///
     case 2 :
     {
         this->releaseTabFocus();
@@ -521,7 +528,7 @@ void MainWindow::startUserTest()
         }
             break;
         }
-   }   // CASE 0
+    }   // CASE 0
         break;
         this->ui->qvtkWidgetLeft->setFocus();
     }
@@ -534,6 +541,10 @@ void MainWindow::stopUserTest()
     userTestDlg->close();
     userTest->show();
     userTest->on_btnStop_clicked();
+
+    /// FOR TOUCH WIDGET Test Flag
+
+    this->ui->qvtkWidgetLeft->setUserTestMode(false);
 }
 
 bool MainWindow::userTestRunning()
@@ -545,12 +556,12 @@ void MainWindow::countInteraction(int testType)
 {
     switch (testType)
     {
-        case RotateCount : userTestDlg->incRotation(); break;
-        case TranslateCount : userTestDlg->incTranslation(); break;
-        case ScaleCount : userTestDlg->incScaling();    break;
-        case ResetCount : userTestDlg->incReset(); break;
-        case SubVolResetCount : userTestDlg->incSubVolReset(); break;
-        case SliceResetCount : userTestDlg->incSliceReset(); break;
+    case RotateCount : userTestDlg->incRotation(); break;
+    case TranslateCount : userTestDlg->incTranslation(); break;
+    case ScaleCount : userTestDlg->incScaling();    break;
+    case ResetCount : userTestDlg->incReset(); break;
+    case SubVolResetCount : userTestDlg->incSubVolReset(); break;
+    case SliceResetCount : userTestDlg->incSliceReset(); break;
     }
 }
 
@@ -562,8 +573,8 @@ void MainWindow::countRotation()
 
 void MainWindow::countRotation(QString temp)
 {
-        userTestCountRotation++;
-        std::cout << "STRING Rotations: " << userTestCountRotation << endl;
+    userTestCountRotation++;
+    std::cout << "STRING Rotations: " << userTestCountRotation << endl;
 }
 
 
@@ -581,150 +592,150 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::on_buttonModeMouse_clicked()
 {     
-        this->systemMode = Mouse; 
-        std::cout << "System Mode is: " << this->systemMode << endl;
+    this->systemMode = Mouse;
+    std::cout << "System Mode is: " << this->systemMode << endl;
 
-        ///DISSABLE LEAP AND TOUCH CALLS
-        this->ui->qvtkWidgetLeft->dissableGestures();
-        this->ui->actionLeapDialogToggle->setChecked(false);
-        Leaping_ = false;
+    ///DISSABLE LEAP AND TOUCH CALLS
+    this->ui->qvtkWidgetLeft->dissableGestures();
+    this->ui->actionLeapDialogToggle->setChecked(false);
+    Leaping_ = false;
 
-        if(this->leapMarkerWidget != NULL)
-        {
-            this->leapMarkerWidget->SetEnabled(false);
-            this->leapMarkerWidget->Delete();
-            this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
-        }
+    if(this->leapMarkerWidget != NULL)
+    {
+        this->leapMarkerWidget->SetEnabled(false);
+        this->leapMarkerWidget->Delete();
+        this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+    }
 
 
 
-        ///////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
-        MouseInteractorStyle * style = MouseInteractorStyle::New();
-        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+    MouseInteractorStyle * style = MouseInteractorStyle::New();
+    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-        interactor->SetInteractorStyle(style);
-        style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-        style->ui = this->ui;
-        style->mainWindow = this;
-        style->defualtDistance = this->defaultCameraDistance;
+    interactor->SetInteractorStyle(style);
+    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    style->ui = this->ui;
+    style->mainWindow = this;
+    style->defualtDistance = this->defaultCameraDistance;
 }
 
 
 void MainWindow::on_buttonModeLeap_clicked()
 {
-        this->systemMode = Leap;    
-        this->ui->actionLeapDialogToggle->setChecked(true);
+    this->systemMode = Leap;
+    this->ui->actionLeapDialogToggle->setChecked(true);
 
-        ///DISSABLE MOUSE AND TOUCH CALLS
-        this->ui->qvtkWidgetLeft->dissableGestures();
+    ///DISSABLE MOUSE AND TOUCH CALLS
+    this->ui->qvtkWidgetLeft->dissableGestures();
 
-        std::cout << "System Mode is: " << this->systemMode << endl;
+    std::cout << "System Mode is: " << this->systemMode << endl;
 
-        ///////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
-        this->controller_= new Controller;
-        Leaping_ = true;
+    this->controller_= new Controller;
+    Leaping_ = true;
 
-        vtkSmartPointer<LeapInteractorStyle> style =
-                vtkSmartPointer<LeapInteractorStyle>::New();
+    vtkSmartPointer<LeapInteractorStyle> style =
+            vtkSmartPointer<LeapInteractorStyle>::New();
 
-        this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
-        style->SetCurrentRenderer(this->defaultRenderer);
+    this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+    style->SetCurrentRenderer(this->defaultRenderer);
 
-        style->rotation = this->ui->checkBox_Rotation;
-        style->translation = this->ui->checkBox_Translation;
-        style->scaling = this->ui->checkBox_Scaling;
-        style->mainWindow = this;
+    style->rotation = this->ui->checkBox_Rotation;
+    style->translation = this->ui->checkBox_Translation;
+    style->scaling = this->ui->checkBox_Scaling;
+    style->mainWindow = this;
 
 
-        vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-        interactor->SetInteractorStyle(style);
-        style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-        style->ui = this->ui;
-        style->defualtDistance = this->defaultCameraDistance;
+    interactor->SetInteractorStyle(style);
+    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    style->ui = this->ui;
+    style->defualtDistance = this->defaultCameraDistance;
 
-        this->leapMatrixTotalMotionRotation = Leap::Matrix::identity();
-        this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
-        this->leapFloatTotalMotionScale = 1.0f;
+    this->leapMatrixTotalMotionRotation = Leap::Matrix::identity();
+    this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
+    this->leapFloatTotalMotionScale = 1.0f;
 
-        connect(this->ui->checkBoxLeapTracking, SIGNAL(toggled(bool)), this,SLOT(leapTrackingOn(bool)));
+    connect(this->ui->checkBoxLeapTracking, SIGNAL(toggled(bool)), this,SLOT(leapTrackingOn(bool)));
 
-        this->ui->qvtkWidgetLeft->setFocus();
-        //////
-        /// \brief INTRODUCTION OF LEAP WIDGET
-        ///
+    this->ui->qvtkWidgetLeft->setFocus();
+    //////
+    /// \brief INTRODUCTION OF LEAP WIDGET
+    ///
 
-        this->leapMarkerWidget = vtkLeapMarkerWidget::New();
-        this->leapMarkerWidget->SetInteractor(interactor);
-        this->leapMarkerWidget->GeneratActors();
-         this->leapMarkerWidget->SetEnabled(true);
-         this->leapMarkerWidget->InteractiveOff();
+    this->leapMarkerWidget = vtkLeapMarkerWidget::New();
+    this->leapMarkerWidget->SetInteractor(interactor);
+    this->leapMarkerWidget->GeneratActors();
+    this->leapMarkerWidget->SetEnabled(true);
+    this->leapMarkerWidget->InteractiveOff();
 
 }
 
 void MainWindow::on_buttonModeTouch_clicked()
 {    
-        this->systemMode = Touch; 
+    this->systemMode = Touch;
 
-     ///DISSABLE MOUSE AND LEAP CALLS
-      this->ui->actionLeapDialogToggle->setChecked(false);
+    ///DISSABLE MOUSE AND LEAP CALLS
+    this->ui->actionLeapDialogToggle->setChecked(false);
 
 
- //   this->leapMarkerWidget->Print(std::cout);
+    //   this->leapMarkerWidget->Print(std::cout);
     if(this->leapMarkerWidget != NULL)
     {
-         this->leapMarkerWidget->SetEnabled(false);
+        this->leapMarkerWidget->SetEnabled(false);
         this->leapMarkerWidget->Delete();
         this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
     }
 
-        std::cout << "System Mode is: " << this->systemMode << endl;
+    std::cout << "System Mode is: " << this->systemMode << endl;
 
 
 
 
-        ///////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
-        vtkSmartPointer<TouchInteractorStyle> style =
-                vtkSmartPointer<TouchInteractorStyle>::New();
+    vtkSmartPointer<TouchInteractorStyle> style =
+            vtkSmartPointer<TouchInteractorStyle>::New();
 
-        this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
-        style->SetCurrentRenderer(this->defaultRenderer);
+    this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+    style->SetCurrentRenderer(this->defaultRenderer);
 
-        style->ui = this->ui;
-        style->mainWindow = this;
-        style->defualtDistance = this->defaultCameraDistance;
-        style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
-                GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    style->ui = this->ui;
+    style->mainWindow = this;
+    style->defualtDistance = this->defaultCameraDistance;
+    style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+            GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
-        this->ui->qvtkWidgetLeft->enableGestures();
-
-
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(translationAction()), this,SLOT(touchInteractionEvent()));
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(translationPressed()), this,SLOT(touchTranslatePressed()));
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(translationReleased()), this,SLOT(touchTranslateReleased()));
-
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
-
-//        ////////////////////////////////////////////////ui////////////////////////////////
-//        /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
-//        ///
-
-//        vtkSmartPointer<vtkCameraTranslationCallback> cameraObserver =
-//                vtkSmartPointer<vtkCameraTranslationCallback>::New();
-//        vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-
-//        cameraObserver->ui = this->ui;
-//       // cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+    this->ui->qvtkWidgetLeft->enableGestures();
 
 
-//        thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(translationAction()), this,SLOT(touchInteractionEvent()));
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(translationPressed()), this,SLOT(touchTranslatePressed()));
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(translationReleased()), this,SLOT(touchTranslateReleased()));
+
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
+
+    //        ////////////////////////////////////////////////ui////////////////////////////////
+    //        /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
+    //        ///
+
+    //        vtkSmartPointer<vtkCameraTranslationCallback> cameraObserver =
+    //                vtkSmartPointer<vtkCameraTranslationCallback>::New();
+    //        vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+    //        cameraObserver->ui = this->ui;
+    //       // cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+
+
+    //        thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
 }
 
 
@@ -748,21 +759,21 @@ void MainWindow::on_buttonTabInfo_pressed()
 
             switch(systemMode)
             {
-                case Mouse:
-                {
-                    MouseInteractorStyle * style = MouseInteractorStyle::New();
-                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+            case Mouse:
+            {
+                MouseInteractorStyle * style = MouseInteractorStyle::New();
+                vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-                    interactor->SetInteractorStyle(style);
-                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-                    style->ui = this->ui;
-                    style->mainWindow = this;
-                    style->defualtDistance = this->defaultCameraDistance;
-                }
+                interactor->SetInteractorStyle(style);
+                style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                style->ui = this->ui;
+                style->mainWindow = this;
+                style->defualtDistance = this->defaultCameraDistance;
+            }
                 break;
 
-                case Touch:
-                {
+            case Touch:
+            {
                 vtkSmartPointer<TouchInteractorStyle> style =
                         vtkSmartPointer<TouchInteractorStyle>::New();
 
@@ -776,30 +787,30 @@ void MainWindow::on_buttonTabInfo_pressed()
                         GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
                 this->ui->qvtkWidgetLeft->enableGestures();
-                }
+            }
                 break;
-                case Leap:
-                {
-                    vtkSmartPointer<LeapInteractorStyle> style =
-                            vtkSmartPointer<LeapInteractorStyle>::New();
+            case Leap:
+            {
+                vtkSmartPointer<LeapInteractorStyle> style =
+                        vtkSmartPointer<LeapInteractorStyle>::New();
 
-                    this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
-                    style->SetCurrentRenderer(this->defaultRenderer);
+                this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+                style->SetCurrentRenderer(this->defaultRenderer);
 
-                    style->rotation = this->ui->checkBox_Rotation;
-                    style->translation = this->ui->checkBox_Translation;
-                    style->scaling = this->ui->checkBox_Scaling;
-                    style->mainWindow = this;
+                style->rotation = this->ui->checkBox_Rotation;
+                style->translation = this->ui->checkBox_Translation;
+                style->scaling = this->ui->checkBox_Scaling;
+                style->mainWindow = this;
 
 
-                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+                vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-                    interactor->SetInteractorStyle(style);
-                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-                    style->ui = this->ui;
-                    style->defualtDistance = this->defaultCameraDistance;
-                }
-            break;
+                interactor->SetInteractorStyle(style);
+                style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                style->ui = this->ui;
+                style->defualtDistance = this->defaultCameraDistance;
+            }
+                break;
             }
 
             /// Refresh the Interaction screen.
@@ -825,33 +836,33 @@ void MainWindow::on_buttonTabSubVol_pressed()
 
             switch (this->systemMode)
             {
-                case Mouse:
-                {
-                    this->mouseBeginSubVol();
-                    this->ui->Frame_SubVolLeapTracking->setVisible(false);
-                    /////////////////////////////////////////////////
-                    ///  Mouse Interaction
-                    ///
-                    ///
-                    MouseInteractorStyle * style = MouseInteractorStyle::New();
-                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+            case Mouse:
+            {
+                this->mouseBeginSubVol();
+                this->ui->Frame_SubVolLeapTracking->setVisible(false);
+                /////////////////////////////////////////////////
+                ///  Mouse Interaction
+                ///
+                ///
+                MouseInteractorStyle * style = MouseInteractorStyle::New();
+                vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
 
-                    interactor->SetInteractorStyle(style);
-                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-                    style->ui = this->ui;
-                    style->mainWindow = this;
-                    style->defualtDistance = this->defaultCameraDistance;
-                }
+                interactor->SetInteractorStyle(style);
+                style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                style->ui = this->ui;
+                style->mainWindow = this;
+                style->defualtDistance = this->defaultCameraDistance;
+            }
                 break;
 
-                case Leap:  this->leapBeginSubVol();
+            case Leap:  this->leapBeginSubVol();
                 break;
 
-                case Touch:
-                {
-                    this->ui->Frame_SubVolLeapTracking->setVisible(false);
-                    this->touchBeginSubVol();
-                }
+            case Touch:
+            {
+                this->ui->Frame_SubVolLeapTracking->setVisible(false);
+                this->touchBeginSubVol();
+            }
                 break;
             }
         }
@@ -865,7 +876,7 @@ void MainWindow::on_buttonTabSliceAxis_pressed()
     {
         if (this->MessageBoxQuery("Switch to Axis Slice?","Are you sure you want to continue?"))
         {
-             this->releaseTabFocus();
+            this->releaseTabFocus();
 
             this->systemTab = SliceAxis;
             this->ui->buttonTabSliceAxis->setDisabled(true);
@@ -874,24 +885,24 @@ void MainWindow::on_buttonTabSliceAxis_pressed()
 
             switch (this->systemMode)
             {
-                case Mouse:
-                {
-                    this->beginSliceAxis();
-                    /////////////////////////////////////////////////
-                    ///  Mouse Interactor
-                    ///
-                    ///
-                    MouseInteractorStyle * style = MouseInteractorStyle::New();
-                    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-                    interactor->SetInteractorStyle(style);
-                    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-                    style->ui = this->ui;
-                    style->mainWindow = this;
-                    style->defualtDistance = this->defaultCameraDistance;
-                }
+            case Mouse:
+            {
+                this->beginSliceAxis();
+                /////////////////////////////////////////////////
+                ///  Mouse Interactor
+                ///
+                ///
+                MouseInteractorStyle * style = MouseInteractorStyle::New();
+                vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+                interactor->SetInteractorStyle(style);
+                style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+                style->ui = this->ui;
+                style->mainWindow = this;
+                style->defualtDistance = this->defaultCameraDistance;
+            }
                 break;
 
-                case Leap: this->leapBeginSliceAxis();
+            case Leap: this->leapBeginSliceAxis();
                 break;
             }
         }
@@ -932,7 +943,7 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 style->defualtDistance = this->defaultCameraDistance;
             }
 
-            break;
+                break;
 
             case Leap:
 
@@ -957,7 +968,7 @@ void MainWindow::on_buttonTabSliceArb_pressed()
 
                 this->ui->qvtkWidgetLeft->enableGestures();
             }
-            break;
+                break;
             }
         }
         this->ui->qvtkWidgetLeft->setFocus();
@@ -1006,7 +1017,7 @@ void MainWindow::updateme()
         this->ui->buttonTransfRotation->setEnabled(false);
         this->ui->buttonTransfTranslation->setEnabled(false);
         this->ui->buttonTransfScaling->setEnabled(false);
-       LeapMotion();
+        LeapMotion();
     }
 
     if (systemMode == Touch)
@@ -1041,12 +1052,12 @@ void MainWindow::loadFitsFile(QString filename)
 {
     //////////////////////////////////////////////////////////////////
     ///////////VTK FITS READER CODE FROM FITS.CXX ////////////////////
-    //////////////////////////////////////////////////////////////////       
+    //////////////////////////////////////////////////////////////////
 
     // vtk pipeline
     vtkFitsReader *fitsReader = vtkFitsReader::New();
     const char *newFileName = filename.toStdString().c_str();
-   /// fitsReader->SetFileName(newFileName);
+    /// fitsReader->SetFileName(newFileName);
     fitsReader->SetFileName("OMC.FITS");
 
     fitsReader->Update();
@@ -1055,7 +1066,7 @@ void MainWindow::loadFitsFile(QString filename)
     /// \brief Outline Object
     ///
     //qDebug() << "Adding Outline" << endl;
-    vtkOutlineFilter *outline = vtkOutlineFilter::New();    
+    vtkOutlineFilter *outline = vtkOutlineFilter::New();
     outline->SetInputConnection(fitsReader->GetOutputPort());
 
     vtkPolyDataMapper *outlineMapper = vtkPolyDataMapper::New();
@@ -1073,7 +1084,7 @@ void MainWindow::loadFitsFile(QString filename)
     ///
     vtkImageResample *resample = vtkImageResample::New();
 
-    resample->SetInputConnection( fitsReader->GetOutputPort() );    
+    resample->SetInputConnection( fitsReader->GetOutputPort() );
     resample->SetAxisMagnificationFactor(0, 1.0);
     resample->SetAxisMagnificationFactor(1, 1.0);
     resample->SetAxisMagnificationFactor(2, 1.0);
@@ -1087,7 +1098,7 @@ void MainWindow::loadFitsFile(QString filename)
     global_Mapper = mapper;
 
     //mapper->SetInputConnection(fitsReader->GetOutputPort());
-    mapper->SetInputConnection(resample->GetOutputPort());    
+    mapper->SetInputConnection(resample->GetOutputPort());
 
     /// Create our transfer function
     vtkPiecewiseFunction *opacityFun = vtkPiecewiseFunction::New();
@@ -1104,54 +1115,54 @@ void MainWindow::loadFitsFile(QString filename)
 
     /// Opacity Function Colour point ( x,  r,  g,  b, midpoint, sharpness, rgb range [0,255])
     /// WHITE contrast
-///    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 255.0, 1.0, 1.0, 1.0 );
+    ///    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 255.0, 1.0, 1.0, 1.0 );
 
-//    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 5.0, 1.0, 1.0, 1.0 );
-///    colorFun->AddRGBPoint(5, 1,1,1);
+    //    colorFun->AddRGBSegment(0.0, 1.0, 1.0, 1.0, 5.0, 1.0, 1.0, 1.0 );
+    ///    colorFun->AddRGBPoint(5, 1,1,1);
     //colorFun->AddPoi(0.0, 1.0, 1.0, 1.0, 255.0, 1.0, 1.0, 1.0 );
 
 
 
-//    /// Black and White
-//    colorFun->AddRGBSegment(opacityLevel - 0.5*opacityWindow, 0.0, 0.0, 0.0,
-//                            opacityLevel + 0.5*opacityWindow, 1.0, 1.0, 1.0 );
-//    ///
+    //    /// Black and White
+    //    colorFun->AddRGBSegment(opacityLevel - 0.5*opacityWindow, 0.0, 0.0, 0.0,
+    //                            opacityLevel + 0.5*opacityWindow, 1.0, 1.0, 1.0 );
+    //    ///
     colorFun->AddRGBPoint( -3024, 0, 0, 0, 0.5, 0.0 );
-   colorFun->AddRGBPoint( -1000, .62, .36, .18, 0.5, 0.0 );    /// REDISH COLOUR
-   colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
+    colorFun->AddRGBPoint( -1000, .62, .36, .18, 0.5, 0.0 );    /// REDISH COLOUR
+    colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
     colorFun->AddRGBPoint( 3071, .83, .66, 1, 0.5, 0.0 );
 
- /// Add Point x, y, midpoint, sharpness
-//    opacityFun->AddPoint(0,  0.0);
+    /// Add Point x, y, midpoint, sharpness
+    //    opacityFun->AddPoint(0,  0.0);
 
-        opacityFun->AddPoint(1,  0.0);
-        opacityFun->AddPoint(26,  0.5);
+    opacityFun->AddPoint(1,  0.0);
+    opacityFun->AddPoint(26,  0.5);
     ///
     ///
 
     /// Add a Colour Lookup Table
-//    vtkSmartPointer<vtkLookupTable> lut3D =
-//            vtkSmartPointer<vtkLookupTable>::New();
-//    lut3D->SetTableRange(0,1000);
-//    lut3D->SetSaturationRange(0,0);
-//    lut3D->SetHueRange(0,0);
-//    lut3D->SetValueRange(0,1);
+    //    vtkSmartPointer<vtkLookupTable> lut3D =
+    //            vtkSmartPointer<vtkLookupTable>::New();
+    //    lut3D->SetTableRange(0,1000);
+    //    lut3D->SetSaturationRange(0,0);
+    //    lut3D->SetHueRange(0,0);
+    //    lut3D->SetValueRange(0,1);
 
 
 
 
 
-//    double min = this->global_Reader->GetDataMin();
-//    double max = this->global_Reader->GetDataMin();
-//    double mid = (min + max) / 2;
+    //    double min = this->global_Reader->GetDataMin();
+    //    double max = this->global_Reader->GetDataMin();
+    //    double mid = (min + max) / 2;
 
-//    //opacityFun->AddPoint(, 0.0);
-//    opacityFun->AddPoint(min, 0.0);
-//    //opacityFun->AddPoint(mid, 0.1);
-//    //opacityFun->AddPoint(max, 0.55);
+    //    //opacityFun->AddPoint(, 0.0);
+    //    opacityFun->AddPoint(min, 0.0);
+    //    //opacityFun->AddPoint(mid, 0.1);
+    //    //opacityFun->AddPoint(max, 0.55);
 
-//      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
-//      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
+    //      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
+    //      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
 
     mapper->SetBlendModeToComposite();
     //mapper->SetBlendModeToMaximumIntensity();
@@ -1165,9 +1176,9 @@ void MainWindow::loadFitsFile(QString filename)
 
     // connect up the volume to the property and the mapper
     volume->SetProperty( property );
-    volume->SetMapper( mapper );        
+    volume->SetMapper( mapper );
 
-    global_Volume = volume;    
+    global_Volume = volume;
 
 
     /// Create the Actor
@@ -1191,9 +1202,9 @@ void MainWindow::loadFitsFile(QString filename)
 
 
 
-//    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
-//    vtkSmartPointer<vtkInteractorStyleSwitch> style =
-//            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
+    //    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
+    //    vtkSmartPointer<vtkInteractorStyleSwitch> style =
+    //            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
 
     ////////////////////////////////////
     /// \brief Cube Axes Labels
@@ -1202,9 +1213,9 @@ void MainWindow::loadFitsFile(QString filename)
 
     cubeAxesActor->SetCamera(ren1->GetActiveCamera());
     cubeAxesActor->SetBounds(volume->GetBounds());
-    #if VTK_MAJOR_VERSION > 5
+#if VTK_MAJOR_VERSION > 5
     cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
-    #endif
+#endif
     cubeAxesActor->GetTitleTextProperty(0)->SetColor(1.0, 0.0, 0.0);
     cubeAxesActor->GetLabelTextProperty(0)->SetColor(1.0, 0.0, 0.0);
 
@@ -1221,7 +1232,7 @@ void MainWindow::loadFitsFile(QString filename)
 
     //qDebug() << "Adding Objects to RenderWindow" << endl;
 
-    ren1->AddVolume(volume);    
+    ren1->AddVolume(volume);
 
 
     this->ui->qvtkWidgetLeft->SetRenderWindow(renderWindow);
@@ -1246,77 +1257,77 @@ void MainWindow::loadFitsFile(QString filename)
 
     AddScalarBar(this->ui->qvtkWidgetLeft, fitsReader);
 
-////    // global_Points = tempSet;
-     global_Reader = fitsReader;
+    ////    // global_Points = tempSet;
+    global_Reader = fitsReader;
 
-  //   global_Volume = sliceA;
+    //   global_Volume = sliceA;
 
-     //qDebug() << "Resetting Camera" << endl;
-     ren1->ResetCamera();
-     //qDebug() << "Complete" << endl;
-
-
-     ////////////////////////////////////
-     /// \brief FrameRate Widget
-     ////
-     //qDebug() << "Adding FrameRate" << endl;
-     reloadFrameRate();
-
-     ////////////////////////////////////
-     /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
-     ///
-     ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);
-
-     ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
+    //qDebug() << "Resetting Camera" << endl;
+    ren1->ResetCamera();
+    //qDebug() << "Complete" << endl;
 
 
-     ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
-     ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
-     ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
-     defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
+    ////////////////////////////////////
+    /// \brief FrameRate Widget
+    ////
+    //qDebug() << "Adding FrameRate" << endl;
+    reloadFrameRate();
 
-     ////////////////////////////////////////////////////////////////////////////////
-     /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
-     ///
+    ////////////////////////////////////
+    /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
+    ///
+    ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);
 
-     vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
-             vtkSmartPointer<vtkCameraScaleCallback>::New();
-     vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-
-     cameraObserver->ui = this->ui;
-     cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+    ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
 
 
-     thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
+    ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
+    ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
+    ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
+    defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
+    ///
+
+    vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
+            vtkSmartPointer<vtkCameraScaleCallback>::New();
+    vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+    cameraObserver->ui = this->ui;
+    cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
 
 
-     ///////////////////////////////////////////////
-     /// \brief SETTING Default Interactor Style to Mouse Interaction
-     ///
-     ///
-//     MouseInteractorStyle * style = MouseInteractorStyle::New();
-//     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-//     interactor->SetInteractorStyle(style);
-//     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-//     style->ui = this->ui;
-//     style->defualtDistance = this->defaultCameraDistance;
-     this->on_buttonModeMouse_clicked();
+    thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
 
-     ////////////////////////////////////////////////
-     /// Leapmotion TRACKING Message
-     ///
-     ///
 
-     this->leapTrackingActor = vtkTextActor::New();
-     this->leapTrackingActor->GetTextProperty()->SetFontSize(20);
-     this->leapTrackingActor->GetTextProperty()->SetBold(true);
+    ///////////////////////////////////////////////
+    /// \brief SETTING Default Interactor Style to Mouse Interaction
+    ///
+    ///
+    //     MouseInteractorStyle * style = MouseInteractorStyle::New();
+    //     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+    //     interactor->SetInteractorStyle(style);
+    //     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    //     style->ui = this->ui;
+    //     style->defualtDistance = this->defaultCameraDistance;
+    this->on_buttonModeMouse_clicked();
 
-     this->leapTrackingActor->SetPosition(20,550);
-     this->leapTrackingActor->SetInput("TRACKING..");
-     this->leapTrackingActor->GetTextProperty()->SetColor(1,1,1);
+    ////////////////////////////////////////////////
+    /// Leapmotion TRACKING Message
+    ///
+    ///
 
-     this->defaultRenderer->AddActor2D(leapTrackingActor);
-     this->leapTrackingActor->SetVisibility(false);
+    this->leapTrackingActor = vtkTextActor::New();
+    this->leapTrackingActor->GetTextProperty()->SetFontSize(20);
+    this->leapTrackingActor->GetTextProperty()->SetBold(true);
+
+    this->leapTrackingActor->SetPosition(20,550);
+    this->leapTrackingActor->SetInput("TRACKING..");
+    this->leapTrackingActor->GetTextProperty()->SetColor(1,1,1);
+
+    this->defaultRenderer->AddActor2D(leapTrackingActor);
+    this->leapTrackingActor->SetVisibility(false);
 }
 
 
@@ -1356,70 +1367,70 @@ void MainWindow::on_actionOpen_triggered()
 
         currentFitsFile = fileName;
 
-    //Thread
+        //Thread
 
-//    connect (&this->FutureWatcher, SIGNAL(finished()), this, SLOT(slot_Load_Finished()));
-//    connect (&this->FutureWatcher, SIGNAL(canceled()), this->ProgressDialog, SLOT(cancel()));
-//    //connect (&this->ProgressDialog, SIGNAL(cancel()),  FutureWatcher, SLOT(cancel()));
+        //    connect (&this->FutureWatcher, SIGNAL(finished()), this, SLOT(slot_Load_Finished()));
+        //    connect (&this->FutureWatcher, SIGNAL(canceled()), this->ProgressDialog, SLOT(cancel()));
+        //    //connect (&this->ProgressDialog, SIGNAL(cancel()),  FutureWatcher, SLOT(cancel()));
 
-//    //QFuture<void> future = QtConcurrent::run(this->ProcessFileObject, &ProcessFile::loadFitsFile, fileName);
-//    QFuture<void> future = QtConcurrent::run(this, &MainWindow::loadFitsFile,fileName);
-//    //QFuture<void> future = QtConcurrent::run(this->ProgressDialog, QProgressDialog::exec());
-//    this->FutureWatcher.setFuture(future);
+        //    //QFuture<void> future = QtConcurrent::run(this->ProcessFileObject, &ProcessFile::loadFitsFile, fileName);
+        //    QFuture<void> future = QtConcurrent::run(this, &MainWindow::loadFitsFile,fileName);
+        //    //QFuture<void> future = QtConcurrent::run(this->ProgressDialog, QProgressDialog::exec());
+        //    this->FutureWatcher.setFuture(future);
 
-//    this->ProgressDialog->setMinimum(0);
-//    this->ProgressDialog->setMaximum(0);
-//    this->ProgressDialog->setWindowModality(Qt::WindowModal);
+        //    this->ProgressDialog->setMinimum(0);
+        //    this->ProgressDialog->setMaximum(0);
+        //    this->ProgressDialog->setWindowModality(Qt::WindowModal);
 
-//    this->ProgressDialog->exec();
+        //    this->ProgressDialog->exec();
 
-//    this->ProgressDialog = new QProgressDialog();
-//    this->ProgressDialog->setMinimum(0);
-//    this->ProgressDialog->setMaximum(0);
-//    this->ProgressDialog->setWindowModality(Qt::WindowModal);
-
-
+        //    this->ProgressDialog = new QProgressDialog();
+        //    this->ProgressDialog->setMinimum(0);
+        //    this->ProgressDialog->setMaximum(0);
+        //    this->ProgressDialog->setWindowModality(Qt::WindowModal);
 
 
 
-   // std::thread(&QProgressDialog::exec, this->ProgressDialog).detach();
-
-   // std::thread(&MainWindow::loadFitsFile, this, fileName);
-
-    //this->ProgressDialog->show();
 
 
-    //QFuture<int> future = QtConcurrent::run(ProgressDialog, &QProgressDialog::exec);
-    //this->FutureWatcher.setFuture(future);
-    loadFitsFile(fileName);
-    //////////////////////////////////////////////////////////////////////
-    QString padding = "                                                   ";
-    statusBar()->showMessage(padding + fileName);
+        // std::thread(&QProgressDialog::exec, this->ProgressDialog).detach();
 
-    this->ui->tabLogWidget->setVisible(true);
-    this->ui->LeftCameraFrame->setVisible(true);
-    this->ui->TopMethodFrame->setVisible(true);
-    this->ui->TopModeFrame->setVisible(true);
+        // std::thread(&MainWindow::loadFitsFile, this, fileName);
 
-    closeTabs();
+        //this->ProgressDialog->show();
 
-    this->ui->tabLogWidget->insertTab(0, this->ui->InfoTab, "Information");
-    this->ui->tabLogWidget->setCurrentIndex(0);
 
-    this->UpdateFitsFileInfo();
+        //QFuture<int> future = QtConcurrent::run(ProgressDialog, &QProgressDialog::exec);
+        //this->FutureWatcher.setFuture(future);
+        loadFitsFile(fileName);
+        //////////////////////////////////////////////////////////////////////
+        QString padding = "                                                   ";
+        statusBar()->showMessage(padding + fileName);
 
-    /// We initialised the default Transformation state
-    ///
-    //on_buttonTransfRotation_clicked();
-    //this->buttonTransRotationPressed();
+        this->ui->tabLogWidget->setVisible(true);
+        this->ui->LeftCameraFrame->setVisible(true);
+        this->ui->TopMethodFrame->setVisible(true);
+        this->ui->TopModeFrame->setVisible(true);
 
-    /// We Update the Transformation Coordinates from the Camera Details
-    ///
-    this->resetTransformCoords();
+        closeTabs();
 
-    this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+        this->ui->tabLogWidget->insertTab(0, this->ui->InfoTab, "Information");
+        this->ui->tabLogWidget->setCurrentIndex(0);
 
-    this->ui->qvtkWidgetLeft->update();
+        this->UpdateFitsFileInfo();
+
+        /// We initialised the default Transformation state
+        ///
+        //on_buttonTransfRotation_clicked();
+        //this->buttonTransRotationPressed();
+
+        /// We Update the Transformation Coordinates from the Camera Details
+        ///
+        this->resetTransformCoords();
+
+        this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+
+        this->ui->qvtkWidgetLeft->update();
     }
 }
 
@@ -1501,9 +1512,9 @@ void MainWindow::on_actionReload_triggered()
 
     cubeAxesActor->SetCamera(ren1->GetActiveCamera());
     cubeAxesActor->SetBounds(volume->GetBounds());
-    #if VTK_MAJOR_VERSION > 5
+#if VTK_MAJOR_VERSION > 5
     cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
-    #endif
+#endif
     cubeAxesActor->GetTitleTextProperty(0)->SetColor(1.0, 0.0, 0.0);
     cubeAxesActor->GetLabelTextProperty(0)->SetColor(1.0, 0.0, 0.0);
 
@@ -1529,98 +1540,98 @@ void MainWindow::on_actionReload_triggered()
 
     ////////////////////////////////////
     /// \brief OrientationMarker Widget
-    ////    
+    ////
 
     AddOrientationAxes(this->ui->qvtkWidgetLeft);
 
     ////////////////////////////////////
     /// \brief ScalarBar Widget
-    ////    
+    ////
 
     AddScalarBar(this->ui->qvtkWidgetLeft, global_Reader);
 
-     ren1->ResetCamera();     
+    ren1->ResetCamera();
 
-     ////////////////////////////////////
-     /// \brief FrameRate Widget
-     ////     
-     reloadFrameRate();
+    ////////////////////////////////////
+    /// \brief FrameRate Widget
+    ////
+    reloadFrameRate();
 
-     ////////////////////////////////////
-     /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
-     ///
-     ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);         
+    ////////////////////////////////////
+    /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
+    ///
+    ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);
 
-     ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
-
-
-     ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
-     ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
-     ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
-
-     ////////////////////////////////////////////////////////////////////////////////
-     /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
-     ///
-
-     vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
-             vtkSmartPointer<vtkCameraScaleCallback>::New();
-     vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-
-     cameraObserver->ui = this->ui;
-     cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+    ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
 
 
-     thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
+    ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
+    ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
+    ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
 
-     ////////////////////////////////////////////////
-     /// Leapmotion TRACKING Message
-     ///
-     ///
+    ////////////////////////////////////////////////////////////////////////////////
+    /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
+    ///
 
-     this->leapTrackingActor = vtkTextActor::New();
-     this->leapTrackingActor->GetTextProperty()->SetFontSize(20);
-     this->leapTrackingActor->GetTextProperty()->SetBold(true);
+    vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
+            vtkSmartPointer<vtkCameraScaleCallback>::New();
+    vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
-     this->leapTrackingActor->SetPosition(20,550);
-     this->leapTrackingActor->SetInput("TRACKING..");
-     this->leapTrackingActor->GetTextProperty()->SetColor(1,1,1);
-
-     defaultRenderer->AddActor2D(leapTrackingActor);
-     this->leapTrackingActor->SetVisibility(false);
+    cameraObserver->ui = this->ui;
+    cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
 
 
-     //this->defaultRenderer = ren1;
-     /// We initialised the default Transformation state
+    thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
+
+    ////////////////////////////////////////////////
+    /// Leapmotion TRACKING Message
+    ///
+    ///
+
+    this->leapTrackingActor = vtkTextActor::New();
+    this->leapTrackingActor->GetTextProperty()->SetFontSize(20);
+    this->leapTrackingActor->GetTextProperty()->SetBold(true);
+
+    this->leapTrackingActor->SetPosition(20,550);
+    this->leapTrackingActor->SetInput("TRACKING..");
+    this->leapTrackingActor->GetTextProperty()->SetColor(1,1,1);
+
+    defaultRenderer->AddActor2D(leapTrackingActor);
+    this->leapTrackingActor->SetVisibility(false);
+
+
+    //this->defaultRenderer = ren1;
+    /// We initialised the default Transformation state
     ///
     //on_buttonTransfRotation_clicked();
-     //this->buttonTransRotationPressed();
+    //this->buttonTransRotationPressed();
 
 
-     ////////////////////////////////////////////////////
-     /////
-     /// vtk LeapMarkerWidget should only be active if we are in the leap state
-     ///
+    ////////////////////////////////////////////////////
+    /////
+    /// vtk LeapMarkerWidget should only be active if we are in the leap state
+    ///
 
-     if (this->systemMode == Leap )
-     {
-         this->leapMarkerWidget = vtkLeapMarkerWidget::New();
-         this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+    if (this->systemMode == Leap )
+    {
+        this->leapMarkerWidget = vtkLeapMarkerWidget::New();
+        this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
 
-         this->leapMarkerWidget->GeneratActors();
+        this->leapMarkerWidget->GeneratActors();
 
-          this->leapMarkerWidget->SetEnabled(true);
-         //marker->InteractiveOn();
-          this->leapMarkerWidget->InteractiveOff();
-     }
+        this->leapMarkerWidget->SetEnabled(true);
+        //marker->InteractiveOn();
+        this->leapMarkerWidget->InteractiveOff();
+    }
 
 }
 
 void MainWindow::printBounds(const char* name, double bounds[6])
 {
     std::cout << name << " Bounds (x1-x2,y1-y2,z1-z2) = ( "
-                      << bounds[0] << " - " << bounds[1] << " , "
-                      << bounds[2] << " - " << bounds[3] << " , "
-                      << bounds[4] << " - " << bounds[5] << " )" << std::endl ;
+              << bounds[0] << " - " << bounds[1] << " , "
+              << bounds[2] << " - " << bounds[3] << " , "
+              << bounds[4] << " - " << bounds[5] << " )" << std::endl ;
 }
 
 
@@ -1727,13 +1738,13 @@ void MainWindow::on_actionBlue_Red_triggered()
     property->SetInterpolationTypeToLinear();
 
     /// Black and White
-//    colorFun->AddRGBSegment(opacityLevel - 0.5*opacityWindow, 0.0, 0.0, 0.0,
-//                            opacityLevel + 0.5*opacityWindow, 1.0, 1.0, 0.0 );
+    //    colorFun->AddRGBSegment(opacityLevel - 0.5*opacityWindow, 0.0, 0.0, 0.0,
+    //                            opacityLevel + 0.5*opacityWindow, 1.0, 1.0, 0.0 );
 
-//    /// DEFAULT
-//    colorFun->AddRGBPoint( -3024, 0, 0, 0, 0.5, 0.0 );
+    //    /// DEFAULT
+    //    colorFun->AddRGBPoint( -3024, 0, 0, 0, 0.5, 0.0 );
     colorFun->AddRGBPoint( -1000, .62, .36, .18, 0.5, 0.0 );
-//    colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
+    //    colorFun->AddRGBPoint( -500, .88, .60, .29, 0.33, 0.45 );
     colorFun->AddRGBPoint( 3071, .83, .66, 1, 0.5, 0.0 );
 
     opacityFun->AddPoint(0,  0.0);
@@ -1771,7 +1782,7 @@ void MainWindow::on_actionDemo_triggered()
                 pow((position[2]-focalPoint[2]),2));
         theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
-       // theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
+        // theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
 
         theRenderer->GetActiveCamera()->Azimuth(i);  //WORKS
         std::cout << "Roll Angle= " << theRenderer->GetActiveCamera()->GetRoll() << " i = " << i ;
@@ -1880,7 +1891,7 @@ void MainWindow::scaleButtonChanged()
     if (systemMode != Leap)
     {
         this->ui->buttonTransfScaling->setEnabled(true);
-//        std::cout << "Text changed" << endl;
+        //        std::cout << "Text changed" << endl;
         this->buttonEnablerTimer.start();
     }
 }
@@ -1913,7 +1924,7 @@ void MainWindow::on_buttonCameraReset_clicked()
     on_actionReset_Camera_triggered();
 
     if (this->userTestRunning())
-          this->countInteraction(ResetCount);
+        this->countInteraction(ResetCount);
 }
 
 void MainWindow::on_actionReset_Camera_triggered()
@@ -1934,8 +1945,8 @@ void MainWindow::on_actionReset_Camera_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
 
@@ -1975,8 +1986,8 @@ void MainWindow::on_actionFront_Side_View_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
     theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
@@ -2004,8 +2015,8 @@ void MainWindow::on_actionRear_Side_View_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
     theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
@@ -2035,8 +2046,8 @@ void MainWindow::on_actionLeft_Side_View_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
     theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
@@ -2063,8 +2074,8 @@ void MainWindow::on_actionRight_Side_View_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
     theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
@@ -2090,8 +2101,8 @@ void MainWindow::on_actionTop_Side_View_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
     theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
@@ -2119,8 +2130,8 @@ void MainWindow::on_actionBottom_Side_View_triggered()
     focalPoint = theRenderer->GetActiveCamera()->GetFocalPoint();
     position = theRenderer->GetActiveCamera()->GetPosition();
     dist =  sqrt(pow((position[0]-focalPoint[0]),2) +
-                 pow((position[1]-focalPoint[1]),2) +
-                 pow((position[2]-focalPoint[2]),2));
+            pow((position[1]-focalPoint[1]),2) +
+            pow((position[2]-focalPoint[2]),2));
     theRenderer->GetActiveCamera()->SetPosition(focalPoint[0], focalPoint[1], focalPoint[2] + dist);
 
     theRenderer->GetActiveCamera()->SetViewUp(0.0,1.0,0.0);
@@ -2182,9 +2193,9 @@ void MainWindow::mouseBeginSubVol()
     cubeActor->GetProperty()->SetOpacity(0.2);
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
-                GetRenderers()->GetFirstRenderer()->AddActor(cubeActor);
+            GetRenderers()->GetFirstRenderer()->AddActor(cubeActor);
 
-   // global_subVolume = cubeVolume;
+    // global_subVolume = cubeVolume;
 
     ////
     /// \brief vtkBoxWidget
@@ -2210,12 +2221,12 @@ void MainWindow::mouseBeginSubVol()
     if (this->userTestRunning())
         vtkEventConnector->Connect(boxWidget_,vtkCommand::StartInteractionEvent, userTestDlg, SLOT(incSubVolResize()));
 
-//    if (this->userTestRunning())
-//    {vtkEventQtSlotConnect* vtkUserTestEventConnector =
-//                vtkEventQtSlotConnect::New();
+    //    if (this->userTestRunning())
+    //    {vtkEventQtSlotConnect* vtkUserTestEventConnector =
+    //                vtkEventQtSlotConnect::New();
 
-//        vtkUserTestEventConnector->Connect(boxWidget_,vtkCommand::StartInteractionEvent, this, SLOT(countInteraction(SubVolResizeCount)));
-//    }
+    //        vtkUserTestEventConnector->Connect(boxWidget_,vtkCommand::StartInteractionEvent, this, SLOT(countInteraction(SubVolResizeCount)));
+    //    }
 
     boxWidget_->SetHandleSize(0.008);
 
@@ -2232,18 +2243,18 @@ void MainWindow::on_buttonSubVolReset_clicked()
 
     switch (this->systemMode)
     {
-        case Mouse:
-        {
-            if(this->userTestRunning())
-                this->countInteraction(SubVolResetCount);
+    case Mouse:
+    {
+        if(this->userTestRunning())
+            this->countInteraction(SubVolResetCount);
 
-            boxWidget_->PlaceWidget(global_Volume->GetBounds());
-            boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
-        }
+        boxWidget_->PlaceWidget(global_Volume->GetBounds());
+        boxWidget_->InvokeEvent(vtkCommand::InteractionEvent);
+    }
         break;
 
-         case Leap:
-        {
+    case Leap:
+    {
         //// Add the Placement of the 2 Widget Points
 
         double bounds[6];
@@ -2254,7 +2265,7 @@ void MainWindow::on_buttonSubVolReset_clicked()
         double p1YOffset = bounds[3] * offset;
         double p1ZOffset = bounds[5] * offset;
 
-               offset = 0.3;
+        offset = 0.3;
         double p2xOffset = bounds[1] * offset;
         double p2yOffset = bounds[3] * offset;
         double p2zOffset = bounds[5] * offset;
@@ -2272,11 +2283,11 @@ void MainWindow::on_buttonSubVolReset_clicked()
         this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
 
 
-        }
+    }
         break;
 
-        case Touch:
-        {
+    case Touch:
+    {
         //// Add the Placement of the 2 Widget Points
 
         double bounds[6];
@@ -2301,11 +2312,11 @@ void MainWindow::on_buttonSubVolReset_clicked()
 
         this->pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
         this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
-        }
+    }
         break;
     }
 
-    /// Refresh the Interaction screen.  
+    /// Refresh the Interaction screen.
     this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
 }
 
@@ -2364,7 +2375,7 @@ void MainWindow::on_buttonSubVolExport_clicked()
 
 
     if (this->systemMode == Mouse)
-////    if (longSubVolMode_)
+        ////    if (longSubVolMode_)
     {
         subVolBounds[0] = global_subVolBounds_[0];
         subVolBounds[1] = global_subVolBounds_[1];
@@ -2409,7 +2420,7 @@ void MainWindow::on_actionSubVol_Export_triggered()
 void MainWindow::on_actionSubVolSelection_triggered()
 {
     this->closeTabs();
-//    this->ui->SubVolTab = new QWidget();
+    //    this->ui->SubVolTab = new QWidget();
     this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"Sub-Volume Extraction");
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
@@ -2591,7 +2602,7 @@ void MainWindow::leapBeginSubVol()
     double p1YOffset = bounds[3] * offset;
     double p1ZOffset = bounds[5] * offset;
 
-           offset = 0.3;
+    offset = 0.3;
     double p2xOffset = bounds[1] * offset;
     double p2yOffset = bounds[3] * offset;
     double p2zOffset = bounds[5] * offset;
@@ -2603,7 +2614,7 @@ void MainWindow::leapBeginSubVol()
     this->pointWidget1_->SetPosition(pt2);
     this->pointWidget2_->SetPosition(pt1);
 
-     trackSubVolume(this->pointWidget2_->GetPosition(), this->pointWidget1_->GetPosition());
+    trackSubVolume(this->pointWidget2_->GetPosition(), this->pointWidget1_->GetPosition());
 
     this->pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
     this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
@@ -2617,8 +2628,8 @@ void MainWindow::leapBeginSubVol()
 
 
 
-//    this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Information");
-//    this->ui->tabLogWidget->setCurrentIndex(2);
+    //    this->ui->tabLogWidget->insertTab(2, this->ui->LeapTab,"Leap Information");
+    //    this->ui->tabLogWidget->setCurrentIndex(2);
 
     this->ui->tabLogWidget->insertTab(0, this->ui->SubVolTab,"Sub-Volume Extraction");
     this->ui->tabLogWidget->setCurrentIndex(0);
@@ -2740,7 +2751,7 @@ void MainWindow::boxWidgetCallback()
         }
     }
 
-//    PrintBounds("subVol", global_subVolBounds_);
+    //    PrintBounds("subVol", global_subVolBounds_);
 
 
 
@@ -2775,7 +2786,7 @@ void MainWindow::on_actionStats_triggered()
     vtkRenderer* renderer = this->defaultRenderer;
     vtkCamera * camera = renderer->GetActiveCamera();
 
-    double * pointDouble;    
+    double * pointDouble;
     QString message = "";
 
     this->ui->plainTextEdit_Leap->insertPlainText("--------------------------------------\n");
@@ -2792,10 +2803,10 @@ void MainWindow::on_actionStats_triggered()
     pointDouble = camera->GetDirectionOfProjection();
     message += QString("Camera DirOfProj: (%1, %2, %3)\n").arg(pointDouble[0]).arg(pointDouble[1]).arg(pointDouble[2]);
 
-//    message += QString("Camera ViewAngle: (%1)\n").arg(camera->GetViewAngle());
+    //    message += QString("Camera ViewAngle: (%1)\n").arg(camera->GetViewAngle());
 
-//    pointInt = renderer->GetOrigin();
-//    message += QString("Renderer Origin: (%1, %2, %3)\n").arg(pointInt[0]).arg(pointInt[1]).arg(pointInt[2]);
+    //    pointInt = renderer->GetOrigin();
+    //    message += QString("Renderer Origin: (%1, %2, %3)\n").arg(pointInt[0]).arg(pointInt[1]).arg(pointInt[2]);
 
 
     this->ui->plainTextEdit_Leap->insertPlainText(message);
@@ -2818,9 +2829,9 @@ void MainWindow::touchInteractionEvent()
 
 
 
-//    double value ;
+    //    double value ;
 
-//    value = this->defaultCameraDistance /  this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera()->GetDistance();
+    //    value = this->defaultCameraDistance /  this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera()->GetDistance();
 
     //this->ui->line_Scale->setText(QString::number(value, 'f', 2));
 }
@@ -2842,7 +2853,7 @@ void MainWindow::touchBeginSubVol()
     double p1YOffset = bounds[3] * offset;
     double p1ZOffset = bounds[5] * offset;
 
-           offset = 0.3;
+    offset = 0.3;
     double p2xOffset = bounds[1] * offset;
     double p2yOffset = bounds[3] * offset;
     double p2zOffset = bounds[5] * offset;
@@ -2856,79 +2867,79 @@ void MainWindow::touchBeginSubVol()
     ////////////////////////////////////////////
     /// POINT 1
     {
-    /// The plane widget is used probe the dataset.
-    vtkSmartPointer<vtkPolyData> point =
-            vtkSmartPointer<vtkPolyData>::New();
+        /// The plane widget is used probe the dataset.
+        vtkSmartPointer<vtkPolyData> point =
+                vtkSmartPointer<vtkPolyData>::New();
 
-    vtkSmartPointer<vtkProbeFilter> probe =
-            vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+        vtkSmartPointer<vtkProbeFilter> probe =
+                vtkSmartPointer<vtkProbeFilter>::New();
+        probe->SetInput(point);
+        probe->SetSource(global_Reader->GetOutput());
 
-    /// create glyph
-    ///
-    ///
-    vtkSmartPointer<vtkSphereSource> pointMarker =
-            vtkSmartPointer<vtkSphereSource>::New();
-    pointMarker->SetRadius(0.15);
+        /// create glyph
+        ///
+        ///
+        vtkSmartPointer<vtkSphereSource> pointMarker =
+                vtkSmartPointer<vtkSphereSource>::New();
+        pointMarker->SetRadius(0.15);
 
-    vtkSmartPointer<vtkGlyph3D> glyph =
-            vtkSmartPointer<vtkGlyph3D>::New();
-    glyph->SetInputConnection(probe->GetOutputPort());
-    glyph->SetSourceConnection(pointMarker->GetOutputPort());
-    glyph->SetVectorModeToUseVector();
-    glyph->SetScaleModeToDataScalingOff();
-    glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
+        vtkSmartPointer<vtkGlyph3D> glyph =
+                vtkSmartPointer<vtkGlyph3D>::New();
+        glyph->SetInputConnection(probe->GetOutputPort());
+        glyph->SetSourceConnection(pointMarker->GetOutputPort());
+        glyph->SetVectorModeToUseVector();
+        glyph->SetScaleModeToDataScalingOff();
+        glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
 
-    vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    glyphMapper->SetInputConnection(glyph->GetOutputPort());
+        vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
+                vtkSmartPointer<vtkPolyDataMapper>::New();
+        glyphMapper->SetInputConnection(glyph->GetOutputPort());
 
-    vtkSmartPointer<vtkActor> glyphActor =
-            vtkSmartPointer<vtkActor>::New();
-    glyphActor->SetMapper(glyphMapper);
-    glyphActor->VisibilityOn();
+        vtkSmartPointer<vtkActor> glyphActor =
+                vtkSmartPointer<vtkActor>::New();
+        glyphActor->SetMapper(glyphMapper);
+        glyphActor->VisibilityOn();
 
-    /// A Text Widget showing the point location
-    ///
-    ///
-    vtkSmartPointer<vtkTextActor> textActor =
-            vtkSmartPointer<vtkTextActor>::New();
-    textActor->GetTextProperty()->SetFontSize(16);
-    textActor->SetPosition(10, 20);
-    textActor->SetInput("cursor:");
-    textActor->GetTextProperty()->SetColor(0.8900, 0.8100, 0.3400);
+        /// A Text Widget showing the point location
+        ///
+        ///
+        vtkSmartPointer<vtkTextActor> textActor =
+                vtkSmartPointer<vtkTextActor>::New();
+        textActor->GetTextProperty()->SetFontSize(16);
+        textActor->SetPosition(10, 20);
+        textActor->SetInput("cursor:");
+        textActor->GetTextProperty()->SetColor(0.8900, 0.8100, 0.3400);
 
-    /// Extract the RenderWindow, Renderer and  add both Actors
-    ///
-    ///
+        /// Extract the RenderWindow, Renderer and  add both Actors
+        ///
+        ///
 
-    vtkSmartPointer<vtkRenderer> renderer =
-            this->defaultRenderer;
+        vtkSmartPointer<vtkRenderer> renderer =
+                this->defaultRenderer;
 
-    // The SetInteractor method is how 3D widgets are associated with the render
-    // window interactor. Internally, SetInteractor sets up a bunch of callbacks
-    // using the Command/Observer mechanism (AddObserver()).
-    vtkSmartPointer<vtkmyPWCallback> myCallback =
-            vtkSmartPointer<vtkmyPWCallback>::New();
-    myCallback->PolyData = point;
-    myCallback->Actor = glyphActor;
-    myCallback->TextActor = textActor;
+        // The SetInteractor method is how 3D widgets are associated with the render
+        // window interactor. Internally, SetInteractor sets up a bunch of callbacks
+        // using the Command/Observer mechanism (AddObserver()).
+        vtkSmartPointer<vtkmyPWCallback> myCallback =
+                vtkSmartPointer<vtkmyPWCallback>::New();
+        myCallback->PolyData = point;
+        myCallback->Actor = glyphActor;
+        myCallback->TextActor = textActor;
 
-    pointWidget1_ = vtkPointWidget::New();
-    pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    pointWidget1_->SetInput(global_Reader->GetOutput());
-    pointWidget1_->AllOff();
-    pointWidget1_->PlaceWidget();
-    pointWidget1_->GetPolyData(point);
-    pointWidget1_->EnabledOff();
-    //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
-    pointWidget1_->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
+        pointWidget1_ = vtkPointWidget::New();
+        pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+        pointWidget1_->SetInput(global_Reader->GetOutput());
+        pointWidget1_->AllOff();
+        pointWidget1_->PlaceWidget();
+        pointWidget1_->GetPolyData(point);
+        pointWidget1_->EnabledOff();
+        //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
+        pointWidget1_->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
 
-    renderer->AddActor(glyphActor);
-    renderer->AddActor2D(textActor);
+        renderer->AddActor(glyphActor);
+        renderer->AddActor2D(textActor);
 
-    pointWidget1_->EnabledOn();
+        pointWidget1_->EnabledOn();
     }
     pointWidget1_->SetPosition(pt1);
     pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
@@ -2939,78 +2950,78 @@ void MainWindow::touchBeginSubVol()
     /// THIS IS THE 2nd POINTER
 
     {
-    /// The plane widget is used probe the dataset.
-    vtkSmartPointer<vtkPolyData> point =
-            vtkSmartPointer<vtkPolyData>::New();
+        /// The plane widget is used probe the dataset.
+        vtkSmartPointer<vtkPolyData> point =
+                vtkSmartPointer<vtkPolyData>::New();
 
-    vtkSmartPointer<vtkProbeFilter> probe =
-            vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+        vtkSmartPointer<vtkProbeFilter> probe =
+                vtkSmartPointer<vtkProbeFilter>::New();
+        probe->SetInput(point);
+        probe->SetSource(global_Reader->GetOutput());
 
-    /// create glyph
-    ///
-    ///
-    vtkSmartPointer<vtkSphereSource> pointMarker =
-            vtkSmartPointer<vtkSphereSource>::New();
-    pointMarker->SetRadius(0.15);
+        /// create glyph
+        ///
+        ///
+        vtkSmartPointer<vtkSphereSource> pointMarker =
+                vtkSmartPointer<vtkSphereSource>::New();
+        pointMarker->SetRadius(0.15);
 
-    vtkSmartPointer<vtkGlyph3D> glyph =
-            vtkSmartPointer<vtkGlyph3D>::New();
-    glyph->SetInputConnection(probe->GetOutputPort());
-    glyph->SetSourceConnection(pointMarker->GetOutputPort());
-    glyph->SetVectorModeToUseVector();
-    glyph->SetScaleModeToDataScalingOff();
-    glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
+        vtkSmartPointer<vtkGlyph3D> glyph =
+                vtkSmartPointer<vtkGlyph3D>::New();
+        glyph->SetInputConnection(probe->GetOutputPort());
+        glyph->SetSourceConnection(pointMarker->GetOutputPort());
+        glyph->SetVectorModeToUseVector();
+        glyph->SetScaleModeToDataScalingOff();
+        glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
 
-    vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    glyphMapper->SetInputConnection(glyph->GetOutputPort());
+        vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
+                vtkSmartPointer<vtkPolyDataMapper>::New();
+        glyphMapper->SetInputConnection(glyph->GetOutputPort());
 
-    vtkSmartPointer<vtkActor> glyphActor =
-            vtkSmartPointer<vtkActor>::New();
-    glyphActor->SetMapper(glyphMapper);
-    glyphActor->VisibilityOn();
+        vtkSmartPointer<vtkActor> glyphActor =
+                vtkSmartPointer<vtkActor>::New();
+        glyphActor->SetMapper(glyphMapper);
+        glyphActor->VisibilityOn();
 
-    /// A Text Widget showing the point location
-    ///
-    ///
-    vtkSmartPointer<vtkTextActor> textActor =
-            vtkSmartPointer<vtkTextActor>::New();
-    textActor->GetTextProperty()->SetFontSize(16);
-    textActor->SetPosition(400, 20);
-    textActor->SetInput("cursor:");
-    textActor->GetTextProperty()->SetColor(0.3400, 0.8100, 0.8900);
+        /// A Text Widget showing the point location
+        ///
+        ///
+        vtkSmartPointer<vtkTextActor> textActor =
+                vtkSmartPointer<vtkTextActor>::New();
+        textActor->GetTextProperty()->SetFontSize(16);
+        textActor->SetPosition(400, 20);
+        textActor->SetInput("cursor:");
+        textActor->GetTextProperty()->SetColor(0.3400, 0.8100, 0.8900);
 
-    /// Extract the RenderWindow, Renderer and  add both Actors
-    ///
-    ///
+        /// Extract the RenderWindow, Renderer and  add both Actors
+        ///
+        ///
 
-    vtkSmartPointer<vtkRenderer> renderer =
-            this->defaultRenderer;
-    // The SetInteractor method is how 3D widgets are associated with the render
-    // window interactor. Internally, SetInteractor sets up a bunch of callbacks
-    // using the Command/Observer mechanism (AddObserver()).
-    vtkSmartPointer<vtkmyPWCallback> myCallback =
-            vtkSmartPointer<vtkmyPWCallback>::New();
-    myCallback->PolyData = point;
-    myCallback->Actor = glyphActor;
-    myCallback->TextActor = textActor;
+        vtkSmartPointer<vtkRenderer> renderer =
+                this->defaultRenderer;
+        // The SetInteractor method is how 3D widgets are associated with the render
+        // window interactor. Internally, SetInteractor sets up a bunch of callbacks
+        // using the Command/Observer mechanism (AddObserver()).
+        vtkSmartPointer<vtkmyPWCallback> myCallback =
+                vtkSmartPointer<vtkmyPWCallback>::New();
+        myCallback->PolyData = point;
+        myCallback->Actor = glyphActor;
+        myCallback->TextActor = textActor;
 
-    pointWidget2_ = vtkPointWidget::New();
-    pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    pointWidget2_->SetInput(global_Reader->GetOutput());
-    pointWidget2_->AllOff();
-    pointWidget2_->PlaceWidget();
-    pointWidget2_->GetPolyData(point);
-    pointWidget2_->EnabledOff();
-    //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
-    pointWidget2_->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
+        pointWidget2_ = vtkPointWidget::New();
+        pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+        pointWidget2_->SetInput(global_Reader->GetOutput());
+        pointWidget2_->AllOff();
+        pointWidget2_->PlaceWidget();
+        pointWidget2_->GetPolyData(point);
+        pointWidget2_->EnabledOff();
+        //vtkEventConnector->Connect(pointWidget_, vtkCommand::InteractionEvent, this, SLOT(pointWidgetCallBack()));
+        pointWidget2_->AddObserver(vtkCommand::InteractionEvent  ,myCallback);
 
-    renderer->AddActor(glyphActor);
-    renderer->AddActor2D(textActor);
+        renderer->AddActor(glyphActor);
+        renderer->AddActor2D(textActor);
 
-    pointWidget2_->EnabledOn();
+        pointWidget2_->EnabledOn();
     }
 
     loadSubVolume();
@@ -3277,10 +3288,10 @@ void MainWindow::addSecondPointer()
 
     pointWidget2_->EnabledOn();
 
-//    if((vtkPointWidget::WidgetState)::Moving == pointWidget_->Moving)
-//    {
-//        std::cout << "Moving... " << std::endl;
-//    }
+    //    if((vtkPointWidget::WidgetState)::Moving == pointWidget_->Moving)
+    //    {
+    //        std::cout << "Moving... " << std::endl;
+    //    }
     loadSubVolume();
 }
 
@@ -3409,8 +3420,8 @@ void MainWindow::trackSubVolume(double* point1, double* point2)
 double MainWindow::Distance2Point(double *point1, double *point2)
 {
     double dist =  sqrt(pow((point1[0]-point2[0]),2) +
-                 pow((point1[1]-point2[1]),2) +
-                 pow((point1[2]-point2[2]),2));
+            pow((point1[1]-point2[1]),2) +
+            pow((point1[2]-point2[2]),2));
 
     return dist;
 }
@@ -3435,7 +3446,7 @@ void MainWindow::loadSubVolume()
     subVolActor->GetProperty()->SetOpacity(0.5);
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
-                GetRenderers()->GetFirstRenderer()->AddActor(subVolActor);
+            GetRenderers()->GetFirstRenderer()->AddActor(subVolActor);
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
 
@@ -3518,25 +3529,25 @@ void MainWindow::ResetViewX()
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->Reset();
-        static_cast<vtkSliderRepresentation3D*>(this->sliderWidgetX->GetRepresentation())->SetValue(imageDims[i]/2);
-        this->ui->lbl_XSlice->setText(QString("%1").arg(xAxisSlice));
-        //riw[i]->SetSlice();
+    riw[i]->Reset();
+    static_cast<vtkSliderRepresentation3D*>(this->sliderWidgetX->GetRepresentation())->SetValue(imageDims[i]/2);
+    this->ui->lbl_XSlice->setText(QString("%1").arg(xAxisSlice));
+    //riw[i]->SetSlice();
 
     //}
 
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3548,23 +3559,23 @@ void MainWindow::ResetViewY()
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->Reset();
-        static_cast<vtkSliderRepresentation3D*>(this->sliderWidgetY->GetRepresentation())->SetValue(imageDims[i]/2);
-        this->ui->lbl_YSlice->setText(QString("%1").arg(yAxisSlice));
+    riw[i]->Reset();
+    static_cast<vtkSliderRepresentation3D*>(this->sliderWidgetY->GetRepresentation())->SetValue(imageDims[i]/2);
+    this->ui->lbl_YSlice->setText(QString("%1").arg(yAxisSlice));
     //}
 
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3576,23 +3587,23 @@ void MainWindow::ResetViewZ()
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->Reset();
-        static_cast<vtkSliderRepresentation3D*>(this->sliderWidgetZ->GetRepresentation())->SetValue(imageDims[i]/2);
-        this->ui->lbl_ZSlice->setText(QString("%1").arg(zAxisSlice));
+    riw[i]->Reset();
+    static_cast<vtkSliderRepresentation3D*>(this->sliderWidgetZ->GetRepresentation())->SetValue(imageDims[i]/2);
+    this->ui->lbl_ZSlice->setText(QString("%1").arg(zAxisSlice));
     //}
 
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3604,24 +3615,24 @@ void MainWindow::UpdateSliceX(int slice)
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->SetSlice(slice);
+    riw[i]->SetSlice(slice);
 
     //}
 
-        this->ui->lbl_XSlice->setText(QString("%1").arg(slice));
+    this->ui->lbl_XSlice->setText(QString("%1").arg(slice));
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
-        planeWidget[i]->SetSliceIndex(slice);
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    planeWidget[i]->SetSliceIndex(slice);
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3634,24 +3645,24 @@ void MainWindow::UpdateSliceX()
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->SetSlice(slice);
+    riw[i]->SetSlice(slice);
 
     //}
 
-        this->ui->lbl_XSlice->setText(QString("%1").arg(slice));
+    this->ui->lbl_XSlice->setText(QString("%1").arg(slice));
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
-        planeWidget[i]->SetSliceIndex(slice);
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    planeWidget[i]->SetSliceIndex(slice);
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3663,24 +3674,24 @@ void MainWindow::UpdateSliceY(int slice)
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->SetSlice(slice);
+    riw[i]->SetSlice(slice);
 
     //}
 
-        this->ui->lbl_YSlice->setText(QString("%1").arg(slice));
+    this->ui->lbl_YSlice->setText(QString("%1").arg(slice));
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
-        planeWidget[i]->SetSliceIndex(slice);
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    planeWidget[i]->SetSliceIndex(slice);
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3693,24 +3704,24 @@ void MainWindow::UpdateSliceY()
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->SetSlice(slice);
+    riw[i]->SetSlice(slice);
 
     //}
 
-        this->ui->lbl_YSlice->setText(QString("%1").arg(slice));
+    this->ui->lbl_YSlice->setText(QString("%1").arg(slice));
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
-        planeWidget[i]->SetSliceIndex(slice);
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    planeWidget[i]->SetSliceIndex(slice);
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3722,24 +3733,24 @@ void MainWindow::UpdateSliceZ(int slice)
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->SetSlice(slice);
+    riw[i]->SetSlice(slice);
 
     //}
-       this->ui->lbl_ZSlice->setText(QString("%1").arg(slice));
+    this->ui->lbl_ZSlice->setText(QString("%1").arg(slice));
 
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
-        planeWidget[i]->SetSliceIndex(slice);
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    planeWidget[i]->SetSliceIndex(slice);
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3752,24 +3763,24 @@ void MainWindow::UpdateSliceZ()
     // Reset the reslice image views
     //for (int i = 0; i < 3; i++)
     //{
-        riw[i]->SetSlice(slice);
+    riw[i]->SetSlice(slice);
 
     //}
-       this->ui->lbl_ZSlice->setText(QString("%1").arg(slice));
+    this->ui->lbl_ZSlice->setText(QString("%1").arg(slice));
 
     // Also sync the Image plane widget on the 3D top right view with any
     // changes to the reslice cursor.
-   // for (int i = 0; i < 3; i++)
+    // for (int i = 0; i < 3; i++)
     //{
-        vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
-                    planeWidget[i]->GetPolyDataAlgorithm());
-        ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
-        ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
-        planeWidget[i]->SetSliceIndex(slice);
+    vtkPlaneSource *ps = static_cast< vtkPlaneSource * >(
+                planeWidget[i]->GetPolyDataAlgorithm());
+    ps->SetNormal(riw[0]->GetResliceCursor()->GetPlane(i)->GetNormal());
+    ps->SetCenter(riw[0]->GetResliceCursor()->GetPlane(i)->GetOrigin());
+    planeWidget[i]->SetSliceIndex(slice);
 
-        // If the reslice plane has modified, update it on the 3D widget
-        this->planeWidget[i]->UpdatePlacement();
-   // }
+    // If the reslice plane has modified, update it on the 3D widget
+    this->planeWidget[i]->UpdatePlacement();
+    // }
 
     // Render in response to changes.
     this->Render();
@@ -3808,7 +3819,7 @@ void MainWindow::AddDistanceMeasurementToView(int i)
                 this->riw[i]->GetResliceCursorWidget()->GetPriority() + 0.01);
 
     //vtkSmartPointer< vtkPointHandleRepresentation2D > handleRep =
-      //      vtkSmartPointer< vtkPointHandleRepresentation2D >::New();
+    //      vtkSmartPointer< vtkPointHandleRepresentation2D >::New();
     vtkSmartPointer< vtkDistanceRepresentation2D > distanceRep =
             vtkSmartPointer< vtkDistanceRepresentation2D >::New();
     this->DistanceWidget[i]->SetRepresentation(distanceRep);
@@ -3908,66 +3919,66 @@ void MainWindow::on_actionLeap_Slice_triggered()
     ///
     /// \brief resample
     ///
-//    vtkImageResample *resample = vtkImageResample::New();
+    //    vtkImageResample *resample = vtkImageResample::New();
 
-//    resample->SetInputConnection( fitsReader->GetOutputPort() );
-//    resample->SetAxisMagnificationFactor(0, 1.0);
-//    resample->SetAxisMagnificationFactor(1, 1.0);
-//    resample->SetAxisMagnificationFactor(2, 1.0);
+    //    resample->SetInputConnection( fitsReader->GetOutputPort() );
+    //    resample->SetAxisMagnificationFactor(0, 1.0);
+    //    resample->SetAxisMagnificationFactor(1, 1.0);
+    //    resample->SetAxisMagnificationFactor(2, 1.0);
 
-//    global_Resample = resample;
+    //    global_Resample = resample;
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Create the Volume & mapper
 
-//    vtkVolume *volume = vtkVolume::New();
-//    vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
-//    global_Mapper = mapper;
+    //    vtkVolume *volume = vtkVolume::New();
+    //    vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
+    //    global_Mapper = mapper;
 
-//    //mapper->SetInputConnection(fitsReader->GetOutputPort());
-//    mapper->SetInputConnection(resample->GetOutputPort());
+    //    //mapper->SetInputConnection(fitsReader->GetOutputPort());
+    //    mapper->SetInputConnection(resample->GetOutputPort());
 
-//    /// Create our transfer function
-//    vtkPiecewiseFunction *opacityFun = vtkPiecewiseFunction::New();
-//    vtkColorTransferFunction *colorFun = vtkColorTransferFunction::New();
+    //    /// Create our transfer function
+    //    vtkPiecewiseFunction *opacityFun = vtkPiecewiseFunction::New();
+    //    vtkColorTransferFunction *colorFun = vtkColorTransferFunction::New();
 
-//    // Create the property and attach the transfer functions
+    //    // Create the property and attach the transfer functions
 
-//    vtkVolumeProperty * property = vtkVolumeProperty::New();
-//    property->SetColor(colorFun);
-//    property->SetScalarOpacity(opacityFun);
-//    property->SetInterpolationTypeToLinear();
-//    //property->SetIndependentComponents(1);//
+    //    vtkVolumeProperty * property = vtkVolumeProperty::New();
+    //    property->SetColor(colorFun);
+    //    property->SetScalarOpacity(opacityFun);
+    //    property->SetInterpolationTypeToLinear();
+    //    //property->SetIndependentComponents(1);//
 
-//    double min = this->global_Reader->GetDataMin();
-//    double max = this->global_Reader->GetDataMin();
-//    double mid = (min + max) / 2;
+    //    double min = this->global_Reader->GetDataMin();
+    //    double max = this->global_Reader->GetDataMin();
+    //    double mid = (min + max) / 2;
 
-//    //opacityFun->AddPoint(, 0.0);
-//    opacityFun->AddPoint(min, 0.0);
-//    //opacityFun->AddPoint(mid, 0.1);
-//    //opacityFun->AddPoint(max, 0.55);
+    //    //opacityFun->AddPoint(, 0.0);
+    //    opacityFun->AddPoint(min, 0.0);
+    //    //opacityFun->AddPoint(mid, 0.1);
+    //    //opacityFun->AddPoint(max, 0.55);
 
-//      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
-//      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
+    //      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
+    //      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
 
-//   mapper->SetBlendModeToComposite();
-//    //  mapper->SetBlendModeToMinimumIntensity();
-//    //mapper->SetBlendModeToMaximumIntensity();
-//    property->ShadeOn();
-//    property->SetAmbient(0.4);
-//    property->SetDiffuse(0.6);
+    //   mapper->SetBlendModeToComposite();
+    //    //  mapper->SetBlendModeToMinimumIntensity();
+    //    //mapper->SetBlendModeToMaximumIntensity();
+    //    property->ShadeOn();
+    //    property->SetAmbient(0.4);
+    //    property->SetDiffuse(0.6);
 
-//    property->SetSpecular(0.2);
-//    property->SetSpecularPower(1.0);
-//    property->SetScalarOpacityUnitDistance(0.8919);
+    //    property->SetSpecular(0.2);
+    //    property->SetSpecularPower(1.0);
+    //    property->SetScalarOpacityUnitDistance(0.8919);
 
-//    // connect up the volume to the property and the mapper
-//    volume->SetProperty( property );
-//    volume->SetMapper( mapper );
+    //    // connect up the volume to the property and the mapper
+    //    volume->SetProperty( property );
+    //    volume->SetMapper( mapper );
 
-//    global_Volume = volume;
+    //    global_Volume = volume;
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     vtkPolyData * polyPlane = vtkPolyData::New();
@@ -4032,8 +4043,8 @@ void MainWindow::on_actionLeap_Slice_triggered()
 
     renderer->AddActor(sliceActor);
 
-   // sliceActor->Print(std::cout);
-   // lut3D->Print(std::cout);
+    // sliceActor->Print(std::cout);
+    // lut3D->Print(std::cout);
 
 
     customArbPlaneWidget->PlaceWidget(outlineMapper->GetBounds());
@@ -4067,9 +4078,9 @@ void MainWindow::on_actionLeap_Slice_triggered()
 
 
 
-//    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
-//    vtkSmartPointer<vtkInteractorStyleSwitch> style =
-//            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
+    //    // Set the vtkInteractorStyleSwitch for renderWindowInteractor
+    //    vtkSmartPointer<vtkInteractorStyleSwitch> style =
+    //            vtkSmartPointer<vtkInteractorStyleSwitch>::New();
 
     ////////////////////////////////////
     /// \brief Cube Axes Labels
@@ -4079,9 +4090,9 @@ void MainWindow::on_actionLeap_Slice_triggered()
     cubeAxesActor->SetCamera(ren1->GetActiveCamera());
     //cubeAxesActor->SetBounds(->GetBounds());
     cubeAxesActor->SetBounds(outlineMapper->GetBounds());
-    #if VTK_MAJOR_VERSION > 5
+#if VTK_MAJOR_VERSION > 5
     cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
-    #endif
+#endif
     cubeAxesActor->GetTitleTextProperty(0)->SetColor(1.0, 0.0, 0.0);
     cubeAxesActor->GetLabelTextProperty(0)->SetColor(1.0, 0.0, 0.0);
 
@@ -4123,47 +4134,47 @@ void MainWindow::on_actionLeap_Slice_triggered()
 
     AddScalarBar(this->ui->qvtkWidgetLeft, fitsReader);
 
-////    // global_Points = tempSet;
-     global_Reader = fitsReader;
+    ////    // global_Points = tempSet;
+    global_Reader = fitsReader;
 
-  //   global_Volume = sliceA;
+    //   global_Volume = sliceA;
 
-     //qDebug() << "Resetting Camera" << endl;
-     ren1->ResetCamera();
-     //qDebug() << "Complete" << endl;
-
-
-     ////////////////////////////////////
-     /// \brief FrameRate Widget
-     ////
-     //qDebug() << "Adding FrameRate" << endl;
-     reloadFrameRate();
-
-     ////////////////////////////////////
-     /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
-     ///
-     ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);
-
-     ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
+    //qDebug() << "Resetting Camera" << endl;
+    ren1->ResetCamera();
+    //qDebug() << "Complete" << endl;
 
 
-     ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
-     ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
-     ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
-     defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
+    ////////////////////////////////////
+    /// \brief FrameRate Widget
+    ////
+    //qDebug() << "Adding FrameRate" << endl;
+    reloadFrameRate();
+
+    ////////////////////////////////////
+    /// Important assignment to get the Camera's Center Focus & clipping Range for Leap manipulation
+    ///
+    ren1->GetActiveCamera()->GetFocalPoint(cameraFocalPoint);
+
+    ren1->GetActiveCamera()->SetClippingRange(100.00, 900.00);
 
 
-     ///////////////////////////////////////////////
-     /// \brief SETTING Default Interactor Style to Mouse Interaction
-     ///
-     ///
-     MouseInteractorStyle * style = MouseInteractorStyle::New();
-     vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
-     interactor->SetInteractorStyle(style);
-     style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-     style->ui = this->ui;
-     style->mainWindow = this;
-     style->defualtDistance = this->defaultCameraDistance;
+    ren1->GetActiveCamera()->GetFocalPoint(defaultCameraFocalPnt);
+    ren1->GetActiveCamera()->GetPosition(defaultCameraPosition);
+    ren1->GetActiveCamera()->GetViewUp(defaultCameraViewUp);
+    defaultCameraDistance = ren1->GetActiveCamera()->GetDistance();
+
+
+    ///////////////////////////////////////////////
+    /// \brief SETTING Default Interactor Style to Mouse Interaction
+    ///
+    ///
+    MouseInteractorStyle * style = MouseInteractorStyle::New();
+    vtkRenderWindowInteractor * interactor = this->ui->qvtkWidgetLeft->GetInteractor();
+    interactor->SetInteractorStyle(style);
+    style->camera = interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    style->ui = this->ui;
+    style->mainWindow = this;
+    style->defualtDistance = this->defaultCameraDistance;
 }
 
 void MainWindow::on_actionSliceAxisArbitrary_triggered()
@@ -4495,7 +4506,7 @@ void MainWindow::beginSliceArb()
             vtkSmartPointer<vtkRenderWindow>::New();
 
     /// Add the 2nd Renderer to the 2D RenderWindow
-    renWindow2D->AddRenderer(ren2D);    
+    renWindow2D->AddRenderer(ren2D);
 
     /// Add the 2nd RenderWindow to the 2D sidewindow
     this->ui->widget_ArbPlanePreview->SetRenderWindow(renWindow2D);
@@ -4530,8 +4541,8 @@ void MainWindow::beginSliceArb()
 
     if(this->userTestRunning() )
     {
-      vtkEventQtSlotConnect * vtkEventConnector = vtkEventQtSlotConnect::New();
-      vtkEventConnector->Connect(customArbPlaneWidget,vtkCommand::StartInteractionEvent, userTestDlg, SLOT(incSliceReSize()));
+        vtkEventQtSlotConnect * vtkEventConnector = vtkEventQtSlotConnect::New();
+        vtkEventConnector->Connect(customArbPlaneWidget,vtkCommand::StartInteractionEvent, userTestDlg, SLOT(incSliceReSize()));
     }
 
 }
@@ -4567,7 +4578,7 @@ vtkLookupTable* MainWindow::BuildHueIntensityBaseMap(double min, double max)
     del_weight = (max_weight-min_weight) / n_steps;
 
     vtkLookupTable *lut = vtkLookupTable::New();
-      lut->SetNumberOfTableValues( 256 );
+    lut->SetNumberOfTableValues( 256 );
 
     int i;
     int it = 0;
@@ -4674,29 +4685,29 @@ void MainWindow::leapTrackingOn(bool arg1)
 void MainWindow::on_actionLeapBasic_triggered()
 {
     this->controller_= new Controller;
-   Leaping_ = true;
+    Leaping_ = true;
 
 
-   vtkSmartPointer<LeapInteractorStyle> style =
-           vtkSmartPointer<LeapInteractorStyle>::New();
+    vtkSmartPointer<LeapInteractorStyle> style =
+            vtkSmartPointer<LeapInteractorStyle>::New();
 
-   this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
-   style->SetCurrentRenderer(this->defaultRenderer);
+    this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+    style->SetCurrentRenderer(this->defaultRenderer);
 
-   //this->rotationPress = this->ui->checkBox_Rotation;
-   style->rotation = this->ui->checkBox_Rotation;
-   style->translation = this->ui->checkBox_Translation;
-   style->scaling = this->ui->checkBox_Scaling;
-   style->mainWindow = this;
+    //this->rotationPress = this->ui->checkBox_Rotation;
+    style->rotation = this->ui->checkBox_Rotation;
+    style->translation = this->ui->checkBox_Translation;
+    style->scaling = this->ui->checkBox_Scaling;
+    style->mainWindow = this;
 
-   style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-   style->ui = this->ui;
+    style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    style->ui = this->ui;
 
-   this->leapMatrixTotalMotionRotation = Leap::Matrix::identity();
-   this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
-   this->leapFloatTotalMotionScale = 1.0f;
+    this->leapMatrixTotalMotionRotation = Leap::Matrix::identity();
+    this->leapVectorTotalMotionalTranslation = Leap::Vector::zero();
+    this->leapFloatTotalMotionScale = 1.0f;
 
-   this->ui->qvtkWidgetLeft->setFocus();
+    this->ui->qvtkWidgetLeft->setFocus();
 }
 
 
@@ -4993,8 +5004,8 @@ void MainWindow::LeapMotion()
 
                     ///////////////////////////////////////////////////////////
 
-                 //   this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
-                  //  this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
+                    //   this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
+                    //  this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
                     this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
 
                     if(this->userTestRunning())
@@ -5046,8 +5057,8 @@ void MainWindow::LeapMotion()
 
 
 
-//                const FingerList leftFingers = frame.hands().leftmost().fingers();
-//                const FingerList rightFingers = frame.hands().rightmost().fingers();
+                //                const FingerList leftFingers = frame.hands().leftmost().fingers();
+                //                const FingerList rightFingers = frame.hands().rightmost().fingers();
                 const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
                 const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
 
@@ -5058,17 +5069,17 @@ void MainWindow::LeapMotion()
                 Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
 
                 /// PRINTOUT OF STATUSSES
-//                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
-//                std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
+                //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
+                //                std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
 
-//                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
-//                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
+                //                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
+                //                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
 
-//                std::cout << "left: #" << extendedLeft.count() << "\t";
-//                std::cout << "Right #: " << extendedRight.count() << "\t";
+                //                std::cout << "left: #" << extendedLeft.count() << "\t";
+                //                std::cout << "Right #: " << extendedRight.count() << "\t";
 
-//                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
-//                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
+                //                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
+                //                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
 
                 /////////////////////////////////////////////////////////////
                 //                std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
@@ -5117,7 +5128,7 @@ void MainWindow::LeapMotion()
 
                 if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()
                         &&   leftThumb.isExtended()  && leftHandActive)
-                {          
+                {
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
                     ///////////////    FINGER ACCURACY BUT POOR DEPTH CAPTURE    ///////////////////////////////
@@ -5211,8 +5222,8 @@ void MainWindow::LeapMotion()
 
                     /// Get the pointWidget Position
                     /// USE the Same Position Indicators
-                     double * newPosition;
-                     double oldPosition[3];
+                    double * newPosition;
+                    double oldPosition[3];
 
                     pointWidget2_->GetPosition(oldPosition);
 
@@ -5519,7 +5530,7 @@ void MainWindow::LeapMotion()
                 /// We also have a skip value to true to not invert the slider.
 
                 if (frame.scaleProbability(controller_->frame(1)) > 0.6)
-                {                    
+                {
                     if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
                     {
                         this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>
@@ -5540,15 +5551,15 @@ void MainWindow::LeapMotion()
 
                     /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
 
-//                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+                    //                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
 
-//                    if (colourRange < 0) colourRange = 0;
-//                    else
-//                        if(colourRange > 1) colourRange = 1;
+                    //                    if (colourRange < 0) colourRange = 0;
+                    //                    else
+                    //                        if(colourRange > 1) colourRange = 1;
 
-//                    std::cout << "Scale Factor: " << scaleFactor
-//                              << "\tPosition: " << newPosition
-//                              << "\tColourRange: " << colourRange << endl;
+                    //                    std::cout << "Scale Factor: " << scaleFactor
+                    //                              << "\tPosition: " << newPosition
+                    //                              << "\tColourRange: " << colourRange << endl;
 
                     if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting BIGGER - Blue Adjustment
                     {
@@ -5578,13 +5589,13 @@ void MainWindow::LeapMotion()
                                 //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
                                 GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
 
-//                                std::cout << "Scale Factor: " << scaleFactor
-//                                          << "\tPosition: " << newPosition
-//                                          << "\tRGB(1,: " << colourRange * 0.8
-//                                          << "," << colourRange * 0.8 << endl;
+                        //                                std::cout << "Scale Factor: " << scaleFactor
+                        //                                          << "\tPosition: " << newPosition
+                        //                                          << "\tRGB(1,: " << colourRange * 0.8
+                        //                                          << "," << colourRange * 0.8 << endl;
                     }
-                }                
-            }            
+                }
+            }
             ////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////
             ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
@@ -5686,11 +5697,11 @@ void MainWindow::LeapMotion()
             if (leapHand1FrameBuffer > 0 || leapHand1Move)
             {
 
-//                            std::cout   << "Frame ID: " << frame.id()  << ", "
-//                                        << "Action: " << leapHand1FrameBuffer <<", "
-//                                        << "Bool: " << leapHand1Move << ","
-//                                        << "Gestures: " << leapHand1GestureCounter << ","
-                                           ;
+                //                            std::cout   << "Frame ID: " << frame.id()  << ", "
+                //                                        << "Action: " << leapHand1FrameBuffer <<", "
+                //                                        << "Bool: " << leapHand1Move << ","
+                //                                        << "Gestures: " << leapHand1GestureCounter << ","
+                ;
 
                 if (leapHand1GestureCounter == 3)
                 {
@@ -5735,58 +5746,58 @@ void MainWindow::LeapMotion()
 void MainWindow::on_actionWorldCoords_triggered()
 {
 
-//    AddDistanceMeasurementToView1();
-//    // remove existing widgets.
-//    if (this->lineWidget[0])
-//    {
-//        this->lineWidget[0]->SetEnabled(0);
-//        this->lineWidget[0] = NULL;
-//    }
+    //    AddDistanceMeasurementToView1();
+    //    // remove existing widgets.
+    //    if (this->lineWidget[0])
+    //    {
+    //        this->lineWidget[0]->SetEnabled(0);
+    //        this->lineWidget[0] = NULL;
+    //    }
 
-//    // add new widget
-//    this->lineWidget[0] = vtkSmartPointer<vtkLineWidget>::New();
-//    this->lineWidget[0]->SetInteractor(
-//                this->riw[0]->GetResliceCursorWidget()->GetInteractor());
+    //    // add new widget
+    //    this->lineWidget[0] = vtkSmartPointer<vtkLineWidget>::New();
+    //    this->lineWidget[0]->SetInteractor(
+    //                this->riw[0]->GetResliceCursorWidget()->GetInteractor());
 
-//    // Set a priority higher than our reslice cursor widget
-//    this->lineWidget[0]->SetPriority(
-//                this->riw[0]->GetResliceCursorWidget()->GetPriority() + 0.01);
+    //    // Set a priority higher than our reslice cursor widget
+    //    this->lineWidget[0]->SetPriority(
+    //                this->riw[0]->GetResliceCursorWidget()->GetPriority() + 0.01);
 
-//    vtkSmartPointer<vtkLineCallback> lineCallback =
-//            vtkSmartPointer<vtkLineCallback>::New();
-//    lineCallback->riw = riw[0];
+    //    vtkSmartPointer<vtkLineCallback> lineCallback =
+    //            vtkSmartPointer<vtkLineCallback>::New();
+    //    lineCallback->riw = riw[0];
 
-//    lineWidget[0]->AddObserver(vtkCommand::InteractionEvent, lineCallback);
-
-
-//    vtkSmartPointer<vtkLineRepresentation> lineRepresentation =
-//          vtkSmartPointer<vtkLineRepresentation>::New();
+    //    lineWidget[0]->AddObserver(vtkCommand::InteractionEvent, lineCallback);
 
 
-//    double pos1 [3] = {115, 31.87, 13.05};
-//    double pos2 [3] = {115, 31.87, 40.55};
-//    lineRepresentation->SetPoint1DisplayPosition(pos1);
-//    lineRepresentation->SetPoint2DisplayPosition(pos2);
-
-//    lineWidget[0]->SetPoint1(pos1);
-//    lineWidget[0]->SetPoint2(pos2);
-
-//    lineWidget[0]->On();
+    //    vtkSmartPointer<vtkLineRepresentation> lineRepresentation =
+    //          vtkSmartPointer<vtkLineRepresentation>::New();
 
 
-//    riw[0]->Render();
+    //    double pos1 [3] = {115, 31.87, 13.05};
+    //    double pos2 [3] = {115, 31.87, 40.55};
+    //    lineRepresentation->SetPoint1DisplayPosition(pos1);
+    //    lineRepresentation->SetPoint2DisplayPosition(pos2);
+
+    //    lineWidget[0]->SetPoint1(pos1);
+    //    lineWidget[0]->SetPoint2(pos2);
+
+    //    lineWidget[0]->On();
 
 
-//    vtkSmartPointer<MouseInteractorStyle> style =
-//            vtkSmartPointer<MouseInteractorStyle>::New();
-//    style->SetDefaultRenderer(this->riw[0]->GetResliceCursorWidget()->GetCurrentRenderer());
-//    this->riw[0]->GetInteractor()->SetInteractorStyle(style);
-//    this->riw[0]->GetResliceCursorWidget()->GetInteractor()->SetInteractorStyle(style);
-////    //this->ui->sliceView1->update();
-////    riw[0]->GetInteractor()->SetInteractorStyle(style);
-///
-///
-///
+    //    riw[0]->Render();
+
+
+    //    vtkSmartPointer<MouseInteractorStyle> style =
+    //            vtkSmartPointer<MouseInteractorStyle>::New();
+    //    style->SetDefaultRenderer(this->riw[0]->GetResliceCursorWidget()->GetCurrentRenderer());
+    //    this->riw[0]->GetInteractor()->SetInteractorStyle(style);
+    //    this->riw[0]->GetResliceCursorWidget()->GetInteractor()->SetInteractorStyle(style);
+    ////    //this->ui->sliceView1->update();
+    ////    riw[0]->GetInteractor()->SetInteractorStyle(style);
+    ///
+    ///
+    ///
 
     vtkSmartPointer<vtkCameraScaleCallback> cameraObserver =
             vtkSmartPointer<vtkCameraScaleCallback>::New();
@@ -5804,13 +5815,13 @@ void MainWindow::on_actionWorldCoords_triggered()
 
 void MainWindow::closeTab(int index)
 {
-    this->ui->tabLogWidget->removeTab(index);   
+    this->ui->tabLogWidget->removeTab(index);
 }
 
 void MainWindow::resetTransformCoords()
 {
     vtkCamera* camera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-        ///
+    ///
     /// \brief Rotation
     ///
     double* orientation;
@@ -5824,23 +5835,23 @@ void MainWindow::resetTransformCoords()
     ///
     /// \brief Translation
     ///
-     double* position;
+    double* position;
 
-     position = camera->GetPosition();
+    position = camera->GetPosition();
 
-     ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-     ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-     ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
 
-     ///
-     /// \brief Scaling
-     ///
-     ///
-     double value ;
+    ///
+    /// \brief Scaling
+    ///
+    ///
+    double value ;
 
-     value = this->defaultCameraDistance /  camera->GetDistance();
+    value = this->defaultCameraDistance /  camera->GetDistance();
 
-     ui->line_Scale->setText(QString::number(value, 'f', 2));
+    ui->line_Scale->setText(QString::number(value, 'f', 2));
 }
 
 bool MainWindow::event(QEvent *event)
@@ -5853,7 +5864,7 @@ bool MainWindow::event(QEvent *event)
             return true;
         }
     }
-   return QWidget::event(event);
+    return QWidget::event(event);
 }
 
 void MainWindow::on_actionTestButton_triggered()

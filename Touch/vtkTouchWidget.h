@@ -220,6 +220,7 @@ public:
 
     void printGestureInfo(QGestureEvent *event);
     void setGesturesActive(bool status);
+    void setUserTestMode(bool status);
 
 protected:
     bool event(QEvent *event);
@@ -240,6 +241,10 @@ private:
     float lastScaleFactor;
     bool scaleSequenceNew;
     int lastGesture = 0;        /// 1 = Rotation, 2 = Translation, 3 = Scaling
+    int touchPointBuffer = 0;
+    int touchGestureCounter = 0;
+    int rotationPointBuffer = 0;
+    int touchEventDelay = 8;         /// Used as a buffer to simulate delay
 
     Qt::GestureType pan2Finger;
 
@@ -249,15 +254,22 @@ private:
 
     bool gesturesActive = false;
 
+    bool userTestRunning = false;
+
 signals:
+
+    void rotateTriggered();
+    void translateTriggered();
     void scaleTriggered();
 
     void rotationPressed();
     void rotationReleased();
 
-    void translationAction();
+    void translationAction();           /// USED FOR TRANSLATION LABEL UPDATES
     void translationPressed();
     void translationReleased();
+
+    void userTestTranslateCount();
 
 public slots:
 
