@@ -462,6 +462,28 @@ void MainWindow::startUserTest()
         {
             this->ui->Frame_SubVolLeapTracking->setVisible(false);
             this->touchBeginSubVol();
+
+            /////////////////////////////////////////////////
+            ///  Touch Interaction
+            ///
+            ///
+
+            vtkSmartPointer<TouchInteractorStyle> style =
+                    vtkSmartPointer<TouchInteractorStyle>::New();
+
+            this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+            style->SetCurrentRenderer(this->defaultRenderer);
+
+            style->ui = this->ui;
+            style->mainWindow = this;
+            style->defualtDistance = this->defaultCameraDistance;
+            style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                    GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+            this->ui->qvtkWidgetLeft->enableGestures();
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
         }
             break;
         }
@@ -525,6 +547,10 @@ void MainWindow::startUserTest()
                     GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
             this->ui->qvtkWidgetLeft->enableGestures();
+
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
         }
             break;
         }
@@ -2636,8 +2662,12 @@ void MainWindow::leapBeginSubVol()
 
     if (userTestRunning())
     {
-        vtkEventQtSlotConnect * testConnector = vtkEventQtSlotConnect::New();
-        testConnector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolResize()));
+        vtkEventQtSlotConnect * ptWidget1Connector = vtkEventQtSlotConnect::New();
+        ptWidget1Connector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolResize()));
+
+        vtkEventQtSlotConnect * ptWidget2Connector = vtkEventQtSlotConnect::New();
+        ptWidget2Connector->Connect(this->pointWidget2_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolResize()));
+
     }
 }
 
@@ -3036,6 +3066,21 @@ void MainWindow::touchBeginSubVol()
 
     pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
     pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+
+    if (userTestRunning())
+    {
+        vtkEventQtSlotConnect * ptWidget1Connector = vtkEventQtSlotConnect::New();
+        ptWidget1Connector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolPointRight()));
+
+        vtkEventQtSlotConnect * ptWidget2Connector = vtkEventQtSlotConnect::New();
+        ptWidget2Connector->Connect(this->pointWidget2_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolPointLeft()));
+    }
+
+//    if (userTestRunning())
+//    {
+//        vtkEventQtSlotConnect * testConnector = vtkEventQtSlotConnect::New();
+//        testConnector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolResize()));
+//    }
 
 }
 
