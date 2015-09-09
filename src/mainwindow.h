@@ -154,6 +154,9 @@ public slots:
     void releaseTabFocus();
     void resizeDone();
 
+    /// VTK TOuch Widget Public Slots
+    void updateCameraPosition();
+
     /////////////////////////////////////////////////////
     ///USERTESTING PUBLIC SLOTS
     ///
@@ -313,6 +316,17 @@ private slots:
         void touchInteractionEvent();
         void touchBeginSubVol();
         void touchUpdateSubVol();
+
+        void touchTranslatePressed();
+        void touchTranslateReleased();
+
+        void touchRotationPressed();
+        void touchRotationReleased();
+
+
+
+
+
     ///    void touchBeginSliceAxis();
     ///    void touchBeginSliceArb();
 

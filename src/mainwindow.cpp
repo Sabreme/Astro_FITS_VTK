@@ -289,6 +289,21 @@ void MainWindow::resizeDone()
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
 }
 
+void MainWindow::updateCameraPosition()
+{
+
+    vtkRenderer * renderer = this->defaultRenderer;
+    vtkCamera *camera = renderer->GetActiveCamera();
+
+    double* position;
+
+    position = camera->GetPosition();
+
+    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+}
+
 void MainWindow::startUserTest()
 {
     int currentTask = userTest->getCurrentTask();
@@ -687,7 +702,29 @@ void MainWindow::on_buttonModeTouch_clicked()
         style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
                 GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 
-        this->ui->qvtkWidgetLeft->enableGestures();    
+        this->ui->qvtkWidgetLeft->enableGestures();
+
+
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(translationAction()), this,SLOT(touchInteractionEvent()));
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(translationPressed()), this,SLOT(touchTranslatePressed()));
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(translationReleased()), this,SLOT(touchTranslateReleased()));
+
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
+
+//        ////////////////////////////////////////////////ui////////////////////////////////
+//        /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
+//        ///
+
+//        vtkSmartPointer<vtkCameraTranslationCallback> cameraObserver =
+//                vtkSmartPointer<vtkCameraTranslationCallback>::New();
+//        vtkCamera* thisCamera = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+//        cameraObserver->ui = this->ui;
+//       // cameraObserver->defualtCameraDistance = this->defaultCameraDistance;
+
+
+//        thisCamera->AddObserver(vtkCommand::ModifiedEvent, cameraObserver);
 }
 
 
@@ -2768,11 +2805,24 @@ void MainWindow::on_actionStats_triggered()
 
 void MainWindow::touchInteractionEvent()
 {
-    double value ;
 
-    value = this->defaultCameraDistance /  this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera()->GetDistance();
+    vtkRenderer* renderer = this->defaultRenderer;
+    vtkCamera * camera = renderer->GetActiveCamera();
 
-    this->ui->line_Scale->setText(QString::number(value, 'f', 2));
+    double * position = camera->GetPosition();
+
+    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+
+
+
+//    double value ;
+
+//    value = this->defaultCameraDistance /  this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera()->GetDistance();
+
+    //this->ui->line_Scale->setText(QString::number(value, 'f', 2));
 }
 
 void MainWindow::touchBeginSubVol()
@@ -3045,6 +3095,28 @@ void MainWindow::touchUpdateSubVol()
     this->ui->lineSubVolZMin->setText(QString::number(minZ, 'f', 2));
     this->ui->lineSubVolZMax->setText(QString::number(maxZ, 'f', 2));
 }
+
+void MainWindow::touchTranslatePressed()
+{
+    this->ui->buttonTransfTranslation->setEnabled(true);
+}
+
+void MainWindow::touchTranslateReleased()
+{
+    this->ui->buttonTransfTranslation->setEnabled(false);
+}
+
+void MainWindow::touchRotationPressed()
+{
+    this->ui->buttonTransfRotation->setEnabled(true);
+}
+
+void MainWindow::touchRotationReleased()
+{
+    this->ui->buttonTransfRotation->setEnabled(false);
+}
+
+
 
 void MainWindow::on_actionTracking_triggered()
 {

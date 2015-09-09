@@ -80,6 +80,16 @@ class vtkCameraScaleCallback : public vtkCommand
          ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
          ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
+//         //         /// Camera Translation
+//         //         ///
+//         //         ///
+//         double * position = cam->GetPosition();
+
+//         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+
          /// Camera Zoom
 
          double scale ;
@@ -95,6 +105,49 @@ class vtkCameraScaleCallback : public vtkCommand
 
         Ui::MainWindow * ui;
         double defualtCameraDistance;
+
+
+
+};
+
+class vtkCameraTranslationCallback : public vtkCommand
+{
+    public:
+
+        static vtkCameraTranslationCallback * New(){
+            return new vtkCameraTranslationCallback();};
+
+
+
+    virtual void Execute(vtkObject *caller, unsigned long , void *)
+    {
+         vtkCamera *cam = reinterpret_cast<vtkCamera*> (caller);
+
+//         /// Camera Translation
+//         ///
+//         ///
+         double * position = cam->GetPosition();
+
+         ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+         ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+         ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+
+//         /// Camera Zoom
+
+//         double scale ;
+
+//         scale = this->defualtCameraDistance /  cam->GetDistance();
+
+//         ui->line_Scale->setText(QString::number(scale, 'f', 2));
+
+
+
+
+     }
+
+        Ui::MainWindow * ui;
+  //      double defualtCameraDistance;
 
 
 
@@ -215,14 +268,14 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
 
     virtual void OnLeftButtonUp()
     {
-        ui->buttonTransfRotation->setEnabled(false);
-        vtkInteractorStyleTrackballCamera::OnLeftButtonUp();
+//        ui->buttonTransfRotation->setEnabled(false);
+//        vtkInteractorStyleTrackballCamera::OnLeftButtonUp();
     }
 
     virtual void OnLeftButtonDown()
     {
-        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
-        if (mainWindow->userTestRunning())
+//        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+//        if (mainWindow->userTestRunning())
               mainWindow->countInteraction(RotateCount);                        ////USERTEST
     }
 
