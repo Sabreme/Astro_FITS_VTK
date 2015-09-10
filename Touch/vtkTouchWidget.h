@@ -221,6 +221,8 @@ public:
     void printGestureInfo(QGestureEvent *event);
     void setGesturesActive(bool status);
     void setUserTestMode(bool status);
+    void setTransformsOn(bool status);
+
 
 protected:
     bool event(QEvent *event);
@@ -255,6 +257,8 @@ private:
     bool gesturesActive = false;
 
     bool userTestRunning = false;
+
+    bool transformsOn = true;
 
 signals:
 

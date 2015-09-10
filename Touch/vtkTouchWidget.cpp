@@ -123,7 +123,7 @@ bool QVTKTouchWidget::event(QEvent *event)
     bool rotateMovement = false;
     bool touch1movement = false;
 
-    if (gesturesActive)
+    if (gesturesActive && transformsOn)
     {
         if(
                 event->type() == QEvent::TouchBegin ||
@@ -321,7 +321,7 @@ bool QVTKTouchWidget::event(QEvent *event)
                     // Camera motion is reversed
 
                     motionVector[0] = oldPickPoint[0] - newPickPoint[0];
-                    motionVector[1] = newPickPoint[1] - oldPickPoint[1];
+                    motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
                     motionVector[2] = oldPickPoint[2] - newPickPoint[2];
 
                     camera->GetFocalPoint(viewFocus);
@@ -493,15 +493,18 @@ bool QVTKTouchWidget::event(QEvent *event)
             if (gestureDone)
             {
                 std::cout << "Gesture Done" << endl;
-                switch (lastGesture)
-                {
-                case 0: std::cout << "case 0" << endl; break;
-                case 1: rotationReleased()          ; break;
-                case 2: translationReleased()          ; break;
-                case 3: std::cout << "case 3" << endl; break;
-                default:
-                    break;
-                }
+
+                rotationReleased();
+                translationReleased();
+//                switch (lastGesture)
+//                {
+//                case 0: std::cout << "case 0" << endl; break;
+//                case 1: rotationReleased()          ; break;
+//                case 2: translationReleased()          ; break;
+//                case 3: std::cout << "case 3" << endl; break;
+//                default:
+//                    break;
+//                }
 
                 lastGesture = 0;
             }
@@ -601,6 +604,12 @@ void QVTKTouchWidget::setGesturesActive(bool status)
 void QVTKTouchWidget::setUserTestMode(bool status)
 {
     this->userTestRunning = status;
+}
+
+void QVTKTouchWidget::setTransformsOn(bool status)
+{
+    this->transformsOn = status;
+    std::cout << "Transform:" << status << endl;
 }
 
 

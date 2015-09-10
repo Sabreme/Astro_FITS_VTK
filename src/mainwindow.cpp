@@ -748,6 +748,10 @@ void MainWindow::on_buttonModeTouch_clicked()
 
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
+    connect(this->ui->buttonTransformActive,SIGNAL(toggled(bool)),this, SLOT(touchTransformsOn(bool)));
+    this->ui->buttonTransformActive->setChecked(true);
+
+
 
     //        ////////////////////////////////////////////////ui////////////////////////////////
     //        /// \brief cameraObserver for Global Scaling Events for ALl Mouse, Touch and Leap
@@ -888,6 +892,20 @@ void MainWindow::on_buttonTabSubVol_pressed()
             {
                 this->ui->Frame_SubVolLeapTracking->setVisible(false);
                 this->touchBeginSubVol();
+
+                vtkSmartPointer<TouchInteractorStyle> style =
+                        vtkSmartPointer<TouchInteractorStyle>::New();
+
+                this->ui->qvtkWidgetLeft->GetInteractor()->SetInteractorStyle(style);
+                style->SetCurrentRenderer(this->defaultRenderer);
+
+                style->ui = this->ui;
+                style->mainWindow = this;
+                style->defualtDistance = this->defaultCameraDistance;
+                style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
+                        GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
+                this->ui->qvtkWidgetLeft->enableGestures();
             }
                 break;
             }
@@ -3170,6 +3188,11 @@ void MainWindow::touchRotationPressed()
 void MainWindow::touchRotationReleased()
 {
     this->ui->buttonTransfRotation->setEnabled(false);
+}
+
+void MainWindow::touchTransformsOn(bool status)
+{
+    this->ui->qvtkWidgetLeft->setTransformsOn(status);
 }
 
 
