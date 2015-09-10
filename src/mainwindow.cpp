@@ -2337,12 +2337,12 @@ void MainWindow::on_buttonSubVolReset_clicked()
         double bounds[6];
         global_Reader->GetOutput()->GetBounds(bounds);
 
-        double offset = 0.6;
+        double offset = 0.3;
         double p1XOffset = bounds[1] * offset;
         double p1YOffset = bounds[3] * offset;
         double p1ZOffset = bounds[5] * offset;
 
-        offset = 0.3;
+        offset = 0.6;
         double p2xOffset = bounds[1] * offset;
         double p2yOffset = bounds[3] * offset;
         double p2zOffset = bounds[5] * offset;
@@ -2351,8 +2351,8 @@ void MainWindow::on_buttonSubVolReset_clicked()
         double pt1[3] = {p1XOffset, p1YOffset, p1ZOffset};
         double pt2[3] = {p2xOffset, p2yOffset, p2zOffset};
 
-        this->pointWidget1_->SetPosition(pt2);
-        this->pointWidget2_->SetPosition(pt1);
+        this->pointWidget1_->SetPosition(pt1);
+        this->pointWidget2_->SetPosition(pt2);
 
         this->pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
         this->pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
@@ -2896,12 +2896,12 @@ void MainWindow::touchBeginSubVol()
     global_Reader->GetOutput()->GetBounds(bounds);
 
 
-    double offset = 0.6;
+    double offset = 0.3;
     double p1XOffset = bounds[1] * offset;
     double p1YOffset = bounds[3] * offset;
     double p1ZOffset = bounds[5] * offset;
 
-    offset = 0.3;
+    offset = 0.6;
     double p2xOffset = bounds[1] * offset;
     double p2yOffset = bounds[3] * offset;
     double p2zOffset = bounds[5] * offset;
@@ -2990,6 +2990,9 @@ void MainWindow::touchBeginSubVol()
         pointWidget1_->EnabledOn();
     }
     pointWidget1_->SetPosition(pt1);
+    //pointWidget1_->GetProperty()->SetColor(0.8900, 0.8100, 0.3400);
+    pointWidget1_->GetProperty()->SetColor(0.8900, 0.8100, 0.3400);
+
     pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
 
 
@@ -3070,6 +3073,7 @@ void MainWindow::touchBeginSubVol()
         renderer->AddActor2D(textActor);
 
         pointWidget2_->EnabledOn();
+        pointWidget2_->GetProperty()->SetColor(0.3400, 0.8100, 0.8900);
     }
 
     loadSubVolume();
@@ -3085,7 +3089,7 @@ void MainWindow::touchBeginSubVol()
     pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
     pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
 
-    if (userTestRunning())
+    if (userTestRunning())              ///USERTEST
     {
         vtkEventQtSlotConnect * ptWidget1Connector = vtkEventQtSlotConnect::New();
         ptWidget1Connector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolPointRight()));
@@ -3093,13 +3097,6 @@ void MainWindow::touchBeginSubVol()
         vtkEventQtSlotConnect * ptWidget2Connector = vtkEventQtSlotConnect::New();
         ptWidget2Connector->Connect(this->pointWidget2_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolPointLeft()));
     }
-
-//    if (userTestRunning())
-//    {
-//        vtkEventQtSlotConnect * testConnector = vtkEventQtSlotConnect::New();
-//        testConnector->Connect(this->pointWidget1_,vtkCommand::StartInteractionEvent,userTestDlg,SLOT(incSubVolResize()));
-//    }
-
 }
 
 void MainWindow::touchUpdateSubVol()
