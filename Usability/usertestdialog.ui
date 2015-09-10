@@ -138,9 +138,9 @@ QPushButton:checked
     </property>
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>170</x>
       <y>10</y>
-      <width>121</width>
+      <width>61</width>
       <height>41</height>
      </rect>
     </property>
@@ -152,6 +152,19 @@ QPushButton:checked
     </property>
     <property name="checked">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonSaveScreen">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SAVE</string>
     </property>
    </widget>
   </widget>

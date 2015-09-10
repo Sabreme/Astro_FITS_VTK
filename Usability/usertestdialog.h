@@ -36,12 +36,13 @@ public slots:
     void incSubVolPointRight();
 
     void incSliceReSize();
-    void incSliceReset();
+    void incSliceReset();    
 
 
 
 signals:
     void stopTest();
+    void saveScreen();
 
 
 private:

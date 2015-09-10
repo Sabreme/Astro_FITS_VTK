@@ -12,6 +12,7 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
     connect (timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
      connect(ui->btnStop, SIGNAL(clicked()),this,SIGNAL(stopTest()));
      connect(ui->btnStop,SIGNAL(clicked()), this, SLOT(collectResults()));
+     connect(ui->buttonSaveScreen, SIGNAL(clicked()),this,SIGNAL(saveScreen()));
 
     timer->start(1000);
 

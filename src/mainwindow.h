@@ -166,6 +166,7 @@ public slots:
     bool userTestRunning();
 
     void countInteraction(int testType);
+    void saveScreenShot();
 
 
      void countRotation();

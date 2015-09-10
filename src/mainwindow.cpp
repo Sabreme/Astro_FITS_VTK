@@ -333,6 +333,7 @@ void MainWindow::startUserTest()
 
     QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
     connect(ui->line_OrientX, SIGNAL(textEdited(QString)), this, SLOT(countRotation()));
+    QObject::connect(userTestDlg,SIGNAL(saveScreen()),this, SLOT(saveScreenShot()));
 
     userTestDlg->show();
     int currentJob = userTest->getCurrentJob();
@@ -589,6 +590,45 @@ void MainWindow::countInteraction(int testType)
     case SubVolResetCount : userTestDlg->incSubVolReset(); break;
     case SliceResetCount : userTestDlg->incSliceReset(); break;
     }
+}
+
+void MainWindow::saveScreenShot()
+{
+    vtkSmartPointer<vtkWindowToImageFilter> windowToImageFilter =
+        vtkSmartPointer<vtkWindowToImageFilter>::New();
+      windowToImageFilter->SetInput(this->defaultRenWindow);
+      windowToImageFilter->SetInputBufferTypeToRGBA(); //also record the alpha (transparency) channel
+      windowToImageFilter->ReadFrontBufferOff(); // read from the back buffer
+      windowToImageFilter->Update();
+
+      vtkSmartPointer<vtkPNGWriter> writer =
+        vtkSmartPointer<vtkPNGWriter>::New();
+      writer->SetFileName("screenshot2.png");
+      writer->SetInputConnection(windowToImageFilter->GetOutputPort());
+      writer->Write();
+
+//    QLabel *label=new QLabel(this);
+
+//    QDesktopWidget dw;
+//    QWidget *screen=dw.screen(dw.screenNumber(this));
+
+//    QTemporaryFile *tfile=new QTemporaryFile;
+//    if(!tfile->open()){
+//        qDebug()<<"Failed to open tfile";
+//        return;
+//    }
+
+//    QRect rect=geometry();
+//    QPixmap p=QPixmap::grabWindow(
+//                screen->winId(),
+//                rect.x(),
+//                rect.y(),
+//                rect.width(),
+//                rect.height());
+//    label->setPixmap(p);
+
+
+
 }
 
 void MainWindow::countRotation()
