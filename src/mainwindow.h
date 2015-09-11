@@ -169,11 +169,6 @@ public slots:
     void saveScreenShot();
 
 
-     void countRotation();
-     void countRotation(QString temp);
-
-
-
 protected:
         void ModifiedHandler();
         void resizeEvent(QResizeEvent* event);
@@ -222,6 +217,13 @@ private slots:
         ///// INFORMAITON SLOTS
         ///
         void infoTab_Triggered();
+
+        /////////////////////////////////////////////////////
+        ///// INTERACTOR SLOTS
+        ///
+        void setMouseInteractor();
+        void setTouchInteractor();
+        void setLeapInteractor();
 
         /////////////////////////////////////////////////////
         //// CAMERA SLOTS

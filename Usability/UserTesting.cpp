@@ -39,22 +39,6 @@ void UserTesting::testingMode(bool testing)
     this->ui->frame_TASKS->setEnabled(!testing);
 }
 
-//void UserTesting::startTest()
-//{
-//    connect (timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
-
-//    timer->start(1000);
-
-//    /// Reset the Timer to ZERO
-//    this->ui->timeEdit->setTime(QTime(0,0,0,0));
-
-//    /// Dissable the various buttons and Panels
-//    testingMode(true);
-
-//    initiateTest(this->ui->spinBoxUSERID->value() -1);
-//    SetCurrentTask(this->ui->spinBoxUSERID->value() -1);
-//}
-
 
 void UserTesting::on_btnStart_clicked()
 {
@@ -72,7 +56,6 @@ void UserTesting::on_btnStart_clicked()
     initiateTest(this->ui->spinBoxUSERID->value() -1);
     SetCurrentTask(this->ui->spinBoxUSERID->value() -1);
 
-    //this->setWindowState(Qt::WindowMinimized);
     this->hide();
 }
 
@@ -91,8 +74,7 @@ void UserTesting::on_btnStop_clicked()
 }
 
 void UserTesting::on_btnDone_clicked()
-{
-    //timer->stop();
+{    
     testingMode(false);
 
     SetCurrentPrototype(this->ui->spinBoxUSERID->value()-1);
@@ -208,8 +190,7 @@ void UserTesting::PrintConfig()
                    break;          
            }
         }
-         output += "\n";
-         //std::cout() << output << endl;
+         output += "\n";         
     }
 }
 
@@ -250,7 +231,6 @@ void UserTesting::printResult(QString status)
 
     saveResult(result);
 
-    //this->ui->plainTextEdit_Output->insertPlainText(result);
 }
 
 void UserTesting::saveResult(QString result)
@@ -283,8 +263,6 @@ void UserTesting::on_btnCounterBal_clicked()
 
 void UserTesting::on_btnTest_clicked()
 {
-    //PrintConfig();
-//    QString taskNo;
 
     SetCurrentPrototype(this->ui->spinBoxUSERID->value()-1);
 }
