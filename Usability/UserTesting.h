@@ -30,7 +30,9 @@ public:
 
     QString GetCurrentTask(int userID);
 
-    QString GetCurrentPrototype(int userID);        
+    QString GetCurrentPrototype(int userID);
+
+    int GetCurrentUserID();
 
     void extractProtOrder(QString line);
 

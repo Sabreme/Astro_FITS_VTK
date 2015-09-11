@@ -393,6 +393,11 @@ QString UserTesting::GetCurrentPrototype(int userID)
     return prototype;
 }
 
+int UserTesting::GetCurrentUserID()
+{
+    return this->ui->spinBoxUSERID->value();
+}
+
 void UserTesting::extractProtOrder(QString line)
 {
 }

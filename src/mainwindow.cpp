@@ -601,31 +601,40 @@ void MainWindow::saveScreenShot()
       windowToImageFilter->ReadFrontBufferOff(); // read from the back buffer
       windowToImageFilter->Update();
 
+      int userID = userTest->GetCurrentUserID();
+
+      int currentTask = userTest->getCurrentTask();
+      int taskNo = 0;
+
+      switch(currentTask)
+      {
+      case 4 : taskNo = 1; break;
+      case 5 : taskNo = 2; break;
+      case 6 : taskNo = 3; break;
+      }
+
+
+      QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+              .arg(userID)
+              .arg(taskNo)
+              .arg(userTest->GetCurrentTask(userID - 1))
+              .arg(userTest->GetCurrentPrototype(userID - 1));
+
+      /// UserID, Job#, Task#, Prototype
+//      QString userDetails = userTest->GetCurrentUserID() << ".png" ;
+
+      const char* fileName = userDetails.toStdString().c_str();
+
+
+
+
+
+
       vtkSmartPointer<vtkPNGWriter> writer =
         vtkSmartPointer<vtkPNGWriter>::New();
-      writer->SetFileName("screenshot2.png");
+      writer->SetFileName(fileName);
       writer->SetInputConnection(windowToImageFilter->GetOutputPort());
       writer->Write();
-
-//    QLabel *label=new QLabel(this);
-
-//    QDesktopWidget dw;
-//    QWidget *screen=dw.screen(dw.screenNumber(this));
-
-//    QTemporaryFile *tfile=new QTemporaryFile;
-//    if(!tfile->open()){
-//        qDebug()<<"Failed to open tfile";
-//        return;
-//    }
-
-//    QRect rect=geometry();
-//    QPixmap p=QPixmap::grabWindow(
-//                screen->winId(),
-//                rect.x(),
-//                rect.y(),
-//                rect.width(),
-//                rect.height());
-//    label->setPixmap(p);
 
 
 
