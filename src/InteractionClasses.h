@@ -325,13 +325,15 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
 
         vtkInteractorStyleTrackballCamera::Pan();
 
-        double* position;
+//        double* position;
 
-        position = camera->GetPosition();
+//        position = camera->GetPosition();
 
-        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+        mainWindow->updateCameraPosition();
 
         ui->buttonTransfTranslation->setEnabled(true);
         ui->Frame_LEFT->repaint();
@@ -486,13 +488,14 @@ public:
 
         vtkInteractorStyleTrackballCamera::Pan();
 
-        double* position;
+//        double* position;
 
-        position = camera->GetPosition();
+//        position = camera->GetPosition();
 
-        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+        mainWindow->updateCameraPosition();
 
         ui->buttonTransfTranslation->setEnabled(true);
     }

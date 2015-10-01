@@ -289,8 +289,15 @@ void MainWindow::resizeDone()
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
 }
 
+double MainWindow::getDefaultCameraPos(int dimension)
+{
+
+}
+
 void MainWindow::updateCameraPosition()
 {
+
+//    std::cout <<"UPDATE POSITION" << endl;
 
     vtkRenderer * renderer = this->defaultRenderer;
     vtkCamera *camera = renderer->GetActiveCamera();
@@ -299,9 +306,34 @@ void MainWindow::updateCameraPosition()
 
     position = camera->GetPosition();
 
-    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+    double relativePos[3];
+
+    relativePos[0] = position[0] - defaultCameraPosition[0] ;
+    relativePos[1] = position[1] - defaultCameraPosition[1] ;
+    relativePos[2] = position[2] - defaultCameraPosition[2] ;
+
+    //std::cout << relativePos[1] <<  endl;
+
+//    if (relativePos[0] == -0)
+//        relativePos[0] = 0;
+
+//    if (relativePos[1] == -0)
+//        relativePos[1] = 0;
+
+//    if (relativePos[2] == -0)
+//        relativePos[2] = 0;
+
+//    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+//    ui->line_PosX->setText(QString::number(relativePos[0], 'd', 0));
+//    ui->line_PosY->setText(QString::number(relativePos[1], 'd', 0));
+//    ui->line_PosZ->setText(QString::number(relativePos[2], 'd', 0));
+
+    ui->line_PosX->setText(QString::number((int) relativePos[0], 10));
+    ui->line_PosY->setText(QString::number((int) relativePos[1], 10));
+    ui->line_PosZ->setText(QString::number((int) relativePos[2], 10));
 }
 
 void MainWindow::startUserTest()
@@ -3025,14 +3057,15 @@ void MainWindow::on_actionStats_triggered()
 void MainWindow::touchInteractionEvent()
 {
 
-    vtkRenderer* renderer = this->defaultRenderer;
-    vtkCamera * camera = renderer->GetActiveCamera();
+//    vtkRenderer* renderer = this->defaultRenderer;
+//    vtkCamera * camera = renderer->GetActiveCamera();
 
-    double * position = camera->GetPosition();
+//    double * position = camera->GetPosition();
 
-    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+    updateCameraPosition();
 
 
 
@@ -5517,13 +5550,15 @@ void MainWindow::LeapMotion()
 
                 /// ADDED INTERACTION CAPTURE
                 ///
-                double* position;
+//                double* position;
 
-                position = camera->GetPosition();
+//                position = camera->GetPosition();
 
-                ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-                ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-                ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//                ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//                ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//                ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+                updateCameraPosition();
 
             }
 
@@ -6042,13 +6077,15 @@ void MainWindow::resetTransformCoords()
     ///
     /// \brief Translation
     ///
-    double* position;
+//    double* position;
 
-    position = camera->GetPosition();
+//    position = camera->GetPosition();
 
-    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+//    ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//    ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//    ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+    updateCameraPosition();
 
     ///
     /// \brief Scaling

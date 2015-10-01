@@ -155,6 +155,9 @@ public slots:
     void releaseTabFocus();
     void resizeDone();
 
+    //// Interactor Slots
+    double getDefaultCameraPos(int dimension);
+
     /// VTK TOuch Widget Public Slots
     void updateCameraPosition();
 
