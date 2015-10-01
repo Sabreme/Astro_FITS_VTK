@@ -9,7 +9,7 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
      this->ui->timeEdit->setDisplayFormat("mm:ss");
      this->ui->timeEdit->setTime(QTime(0,0,0,0));
      timer =  new QTimer(this);
-    connect (timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
+     connect (timer, SIGNAL(timeout()), this, SLOT(updateClock()));
      connect(ui->btnStop, SIGNAL(clicked()),this,SIGNAL(stopTest()));
      connect(ui->btnStop,SIGNAL(clicked()), this, SLOT(collectResults()));
      connect(ui->buttonSaveScreen, SIGNAL(clicked()),this,SIGNAL(saveScreen()));
@@ -17,7 +17,8 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
     timer->start(1000);
 
     /// Reset the Timer to ZERO
-    this->ui->timeEdit->setTime(QTime(0,0,0,0));    
+    this->ui->timeEdit->setTime(QTime(0,0,0,0));
+    this->ui->timeEdit->setVisible(false);
 }
 
 UserTestDialog::~UserTestDialog()
@@ -25,9 +26,14 @@ UserTestDialog::~UserTestDialog()
     delete ui;
 }
 
-void UserTestDialog::updateCaption()
+void UserTestDialog::setTaskLabel(QString task)
 {
-    this->ui->timeEdit->setTime(this->ui->timeEdit->time().addSecs(1));
+    this->ui->taskLabel->setText(task);
+}
+
+void UserTestDialog::updateClock()
+{
+    this->ui->timeEdit->setTime(this->ui->timeEdit->time().addSecs(1));    
 }
 
 void UserTestDialog::updateRotation()

@@ -316,10 +316,21 @@ void MainWindow::startUserTest()
     case 6 : taskTitle = "Task 3"; break;
     }
 
+    int currentJob = userTest->getCurrentJob();
+    QString jobTitle = "";
+
+    switch (currentJob)
+    {
+    case 0 : jobTitle = "Transformations"; break;
+    case 1 : jobTitle = "Sub-Volume Extraction"; break;
+    case 2 : jobTitle = "Arbitrary - Slice"; break;
+    }
 
     userTestDlg = new UserTestDialog(this);
     userTestDlg->setAttribute(Qt::WA_DeleteOnClose);
-    userTestDlg->setWindowTitle(taskTitle);
+    userTestDlg->setWindowTitle(jobTitle);
+    userTestDlg->setTaskLabel(taskTitle);
+
 
     QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().topRight();
     QPoint ptMainWindow = this->geometry().topLeft();
@@ -335,7 +346,7 @@ void MainWindow::startUserTest()
     QObject::connect(userTestDlg,SIGNAL(saveScreen()),this, SLOT(saveScreenShot()));
 
     userTestDlg->show();
-    int currentJob = userTest->getCurrentJob();
+
 
     userTestActive = true;
 
@@ -771,7 +782,7 @@ void MainWindow::on_buttonTabSubVol_pressed()
                 this->ui->Frame_SubVolLeapTracking->setVisible(false);
                 this->touchBeginSubVol();
 
-                setTouchInteractor();
+               /// setTouchInteractor();
 
                 this->ui->qvtkWidgetLeft->enableGestures();
             }
@@ -5800,6 +5811,7 @@ bool MainWindow::event(QEvent *event)
 
 void MainWindow::on_actionTestButton_triggered()
 {
-
+    vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    camera->SetViewAngle(120);
     //this->customArbPlaneWidget->GetNormal()->
 }

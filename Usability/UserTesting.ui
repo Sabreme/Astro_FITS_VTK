@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>510</width>
+    <width>514</width>
     <height>246</height>
    </rect>
   </property>
@@ -63,7 +63,7 @@ QPushButton:checked
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>501</width>
+     <width>511</width>
      <height>241</height>
     </rect>
    </property>
@@ -233,7 +233,7 @@ QRadioButton::indicator::checked
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>121</width>
+       <width>101</width>
        <height>22</height>
       </rect>
      </property>
@@ -243,7 +243,7 @@ QRadioButton::indicator::checked
       </font>
      </property>
      <property name="text">
-      <string>MULTITOUCH</string>
+      <string>TOUCH</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="radioLeap">

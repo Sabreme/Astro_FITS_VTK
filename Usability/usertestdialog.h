@@ -19,8 +19,10 @@ public:
 
     int countRotation = 0;
 
+    void setTaskLabel(QString task);
+
 public slots:
-    void updateCaption();
+    void updateClock();
     void updateRotation();
 
     void collectResults();
