@@ -661,20 +661,98 @@ void MainWindow::startUserPractice()
 
 void MainWindow::stopUserPractice()
 {
+    //this->getUserTestResults(1);
     userPractice->close();
     //userTest->show();
     //userTest->on_btnStop_clicked();
 
     /// FOR TOUCH WIDGET Test Flag
 
-   // this->ui->qvtkWidgetLeft->setUserTestMode(false);
+    // this->ui->qvtkWidgetLeft->setUserTestMode(false);
+}
+
+QString MainWindow::getUserTestResults(int job)
+{
+
+
+       //QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+    QString orientation = "[" + this->ui->line_OrientX->text() +
+                                " ," + this->ui->line_OrientY->text() +
+                                " ," + this->ui->line_OrientZ->text() + "] ";
+
+    QString position =    "[" + this->ui->line_PosX->text() +
+                                " ," + this->ui->line_PosY->text() +
+                                " ," + this->ui->line_PosZ->text() + "] ";
+
+    QString zoom =  "[" + this->ui->line_Scale->text() + "] ";
+
+    QString subVolumeX = "[" + this->ui->lineSubVolXMin->text() +
+                                   " ," + this->ui->lineSubVolXMax->text() + "] ";
+
+    QString subVolumeY =  "[" + this->ui->lineSubVolYMin->text() +
+                                    " ,"+ this->ui->lineSubVolYMax->text() + "] ";
+
+    QString subVolumeZ =  "[" +  this->ui->lineSubVolZMin->text() +
+                                    " ,"+ this->ui->lineSubVolZMax->text() + "] ";
+
+    QString slicePos = "[" + this->ui->lineArbSlicePosX->text() +
+                                " ," + this->ui->lineArbSlicePosY->text() +
+                                " ," + this->ui->lineArbSlicePosZ->text() + "] ";
+
+    QString sliceAngle =  "[" + this->ui->lineArbSliceAngleX->text() +
+                                 " ," + this->ui->lineArbSliceAngleY->text() +
+                                 " ," + this->ui->lineArbSliceAngleZ->text() + "]";
+
+
+    //////////////////////////////////////////////////////////////////////////
+    //// PRINTOUT
+    /////////////////////////
+
+    std::cout   << "Rotations: " << orientation.toStdString() << "; "
+                  << "Translations: " << position.toStdString()  << "; "
+                  << "Scaling: " << zoom.toStdString() << "; "
+
+                  << "SubVolX: " << subVolumeX.toStdString() << "; "
+                  << "SubVolY: " << subVolumeY.toStdString() << "; "
+                  << "SubVolZ: " << subVolumeZ.toStdString() << "; "
+
+                  << "SlicePos: " << slicePos.toStdString() << "; "
+                  << "SliceAngle: " << sliceAngle.toStdString() << "; "
+
+
+                 << std::endl;
+    ////////////////////////////////////////////////////////////
+    QString result = "";
+
+      //QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+
+
+    //// Transformations =0 , SubVol=1, Slicing = 3;
+
+    switch(job)
+    {
+    case 0 : result = QString("orientation=%1 ,position=%2 ,zoom=%3")
+                                    .arg(orientation).arg(position).arg(zoom); break;
+    case 1 : result = QString("orientation=%1 ,position=%2 ,zoom=%3 ,subVol=%4%5%6")
+                                    .arg(orientation).arg(position).arg(zoom).arg(subVolumeX).arg(subVolumeY).arg(subVolumeZ); break;
+    case 2 : result = QString("orientation=%1 ,position=%2 ,zoom=%3 ,slicePos=%4 ,sliceAngle=%5")
+                                    .arg(orientation).arg(position).arg(zoom).arg(slicePos).arg(sliceAngle); break;
+//    case 6 : result = "orientation=" + orientation  + ", position="+ position + ", zoom=" = zoom +
+//                            "slicePos=" + slicePos + ", sliceAngle=" + sliceAngle; break;
+    }
+
+    return result;
 }
 
 void MainWindow::stopUserTest()
 {
+    int currentJob = userTest->getCurrentJob();
+
     userTestActive = false;
     userTestDlg->close();
     userTest->show();
+    userTest->importSystemResults(getUserTestResults(currentJob));
+
     userTest->on_btnStop_clicked();
 
     /// FOR TOUCH WIDGET Test Flag

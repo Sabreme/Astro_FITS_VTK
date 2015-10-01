@@ -165,6 +165,9 @@ public slots:
     void startUserPractice();
     void stopUserPractice();
 
+    QString getUserTestResults(int task);
+
+
     void stopUserTest();
 
     bool userTestRunning();
