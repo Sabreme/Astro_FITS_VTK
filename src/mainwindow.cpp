@@ -491,6 +491,185 @@ void MainWindow::startUserTest()
     this->ui->qvtkWidgetLeft->setFocus();
 }
 
+void MainWindow::startUserPractice()
+{
+
+    userPractice = new countDialog(this);
+    userPractice->setAttribute(Qt::WA_DeleteOnClose);
+    userPractice->setWindowTitle("Practice Session");
+  ///  userPractice->setWindowTitle(jobTitle);
+  ///  userPractice->setTaskLabel(taskTitle);
+
+
+    QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().topRight();
+    QPoint ptMainWindow = this->geometry().topLeft();
+    QPoint ptTopBar = this->ui->menuBar->geometry().bottomLeft();
+
+    ptRenderer += ptMainWindow;
+
+    int startPosY = ptRenderer.y() + ptTopBar.y() + 5;
+    int startPosX = ptRenderer.x() - (userPractice->geometry().width() + 5);
+    userPractice->move(startPosX, startPosY);
+
+    QObject::connect(userPractice,SIGNAL(stopTest()),this,SLOT(stopUserPractice()));
+
+    userPractice->show();
+
+
+
+
+//    /////////////////////////
+//    //// FOR QVTKWIDGET TOUCH TEST TRACKING
+//    ///
+//    this->ui->qvtkWidgetLeft->setUserTestMode(true);
+
+//    switch(currentJob)
+//    {
+//    ///////////////////////////////////////////////////
+//    /////   TRANSFORMATION JOB
+//    ///
+//    case 0 :
+//    {
+//        this->releaseTabFocus();
+//        this->systemTab = Information;
+
+//        this->ui->buttonTabInfo->setDisabled(true);
+
+//        this->infoTab_Triggered();
+//        /// Refresh the Interaction screen.
+//        this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+
+//        switch (systemMode)
+//        {
+//        case Mouse:
+//        {
+//            setMouseInteractor();
+//        }
+//            break;
+//        case Touch:
+//        {
+//            setTouchInteractor();
+
+//            this->ui->qvtkWidgetLeft->enableGestures();
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
+//        }
+//            break;
+//        case Leap:
+//        {
+//           setLeapInteractor();
+//        }
+//            break;
+//        }
+//    }   // CASE 0
+//        break;
+//        ///////////////////////////////////////////////////
+//        /////   SUB VOLUME JOB
+//        ///
+//    case 1 :
+//    {
+//        this->releaseTabFocus();
+
+//        this->systemTab = SubVolume;
+//        this->ui->buttonTabSubVol->setDisabled(true);
+//        this->on_actionSubVolSelection_triggered();
+
+//        switch (this->systemMode)
+//        {
+//        case Mouse:
+//        {
+//            this->mouseBeginSubVol();
+//            this->ui->Frame_SubVolLeapTracking->setVisible(false);
+//            setMouseInteractor();
+//        }
+//            break;
+
+//        case Leap:  this->leapBeginSubVol();
+//            break;
+
+//        case Touch:
+//        {
+//            this->ui->Frame_SubVolLeapTracking->setVisible(false);
+//            this->touchBeginSubVol();
+
+//            /////////////////////////////////////////////////
+//            ///  Touch Interaction
+//            ///
+//            ///
+
+//            setTouchInteractor();
+
+//            this->ui->qvtkWidgetLeft->enableGestures();
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
+//        }
+//            break;
+//        }
+//    }   // CASE 1
+//        this->ui->qvtkWidgetLeft->setFocus();
+//        break;
+
+//        ///////////////////////////////////////////////////
+//        /////   ARB SLICE JOB
+//        ///
+//    case 2 :
+//    {
+//        this->releaseTabFocus();
+
+//        this->systemTab = SliceArb;
+//        this->ui->buttonTabSliceArb->setDisabled(true);
+//        this->on_actionSliceAxisArbitrary_triggered();
+
+//        switch (this->systemMode)
+//        {
+//        case Mouse:
+//        {
+//            this->beginSliceArb();
+
+//            setMouseInteractor();
+//        }
+
+//            break;
+
+//        case Leap:
+
+//            this->leapBeginSliceArb();
+//            break;
+
+//        case Touch:
+//        {
+//            this ->beginSliceArb();
+
+//            setTouchInteractor();
+
+//            this->ui->qvtkWidgetLeft->enableGestures();
+
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
+//        }
+//            break;
+//        }
+//    }   // CASE 0
+//        break;
+//        this->ui->qvtkWidgetLeft->setFocus();
+//    }
+    this->ui->qvtkWidgetLeft->setFocus();
+}
+
+void MainWindow::stopUserPractice()
+{
+    userPractice->close();
+    //userTest->show();
+    //userTest->on_btnStop_clicked();
+
+    /// FOR TOUCH WIDGET Test Flag
+
+   // this->ui->qvtkWidgetLeft->setUserTestMode(false);
+}
+
 void MainWindow::stopUserTest()
 {
     userTestActive = false;
@@ -5811,7 +5990,8 @@ bool MainWindow::event(QEvent *event)
 
 void MainWindow::on_actionTestButton_triggered()
 {
-    vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-    camera->SetViewAngle(120);
+///    vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+///    camera->SetViewAngle(120);
+    this->startUserPractice();
     //this->customArbPlaneWidget->GetNormal()->
 }

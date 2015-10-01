@@ -58,6 +58,7 @@
 #include "InfoDlg/infobardialog.h"
 #include "Usability/UserTesting.h"
 #include "Usability/usertestdialog.h"
+#include "Usability/countDialog.h"
 
 #include <QFutureWatcher>
 #include <QtGui>
@@ -161,6 +162,9 @@ public slots:
     ///USERTESTING PUBLIC SLOTS
     ///
     void startUserTest();
+    void startUserPractice();
+    void stopUserPractice();
+
     void stopUserTest();
 
     bool userTestRunning();
@@ -370,6 +374,8 @@ private:
         //////////////////////////// USER TESTING /////////////////////////
         UserTesting         * userTest;
         UserTestDialog* userTestDlg;
+        countDialog* userPractice;
+
         bool userTestActive  = false;
 
         int userTestCountRotation = 0;
