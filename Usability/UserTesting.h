@@ -68,6 +68,7 @@ public slots:
     void on_btnDone_clicked();
 
     void importSystemResults(QString results);
+    void importUserResults(QString results);
 
 
 

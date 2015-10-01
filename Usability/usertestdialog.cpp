@@ -39,7 +39,12 @@ void UserTestDialog::updateClock()
 void UserTestDialog::updateRotation()
 {
     this->countRotation++;
-  //  std::cout << "Rotation Counter: " << countRotation << std::endl;
+    //  std::cout << "Rotation Counter: " << countRotation << std::endl;
+}
+
+void UserTestDialog::setCurrentJob(int job)
+{
+    this->currentJob = job;
 }
 
 void UserTestDialog::collectResults()
@@ -108,6 +113,40 @@ void UserTestDialog::incSliceReSize()
 void UserTestDialog::incSliceReset()
 {
     this->countSliceReset++;
+}
+
+QString UserTestDialog::getUserResults()
+{
+    QString result;
+//    std::cout   << "Rotations: " << countRotate << ", "
+//                  << "Translations: " << countTranslate  << ", "
+//                  << "Scaling: " << countScale << ", "
+//                  << "SubVolResize: " << countSubVolResize << ","
+//                  << "Resets: " << countResets << ","
+//                  << "SubVolReset: " << countSubVolReset << ","
+//                  << "SliceResize:" << countSliceResize << ","
+//                  << "SliceReset:" << countSliceReset << ",'"
+//                  << "SubVolPntLeft:" << countSubVolPntLeft << ","
+//                  << "SubVolPntRight:" << countSubVolPntRight << ","
+//                 << std::endl;
+
+
+    switch(currentJob)
+    {
+    case 0 : result = QString("rotation=%1 ,translation=%2 ,scale=%3, resets=%4")
+                                    .arg(countRotate).arg(countTranslate).arg(countScale).arg(countResets); break;
+    case 1 : result = QString("rotation=%1 ,translation=%2 ,scale=%3 ,resets=%4, subVolResize=%5, subVolReset%6")
+                                    .arg(countRotate).arg(countTranslate).arg(countScale).arg(countResets).arg(countSubVolResize).arg(countSubVolReset); break;
+    case 2 : result = QString("rotation=%1 ,translation=%2 ,scale=%3 ,resets=%4, sliceResize=%5 ,sliceReset=%6")
+                                    .arg(countRotate).arg(countTranslate).arg(countScale).arg(countResets).arg(countSliceResize).arg(countSliceReset); break;
+//    case 6 : result = "orientation=" + orientation  + ", position="+ position + ", zoom=" = zoom +
+//                            "slicePos=" + slicePos + ", sliceAngle=" + sliceAngle; break;
+    }
+
+    if (countSubVolPntLeft > 0)
+        result += QString(" ,subVolLeftCount=%1").arg(countSubVolPntLeft);
+
+    return result;
 }
 
 

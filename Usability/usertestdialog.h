@@ -24,8 +24,10 @@ public:
 public slots:
     void updateClock();
     void updateRotation();
+    void setCurrentJob(int job);
 
-    void collectResults();
+
+    void collectResults();    
 
     void incRotation();
     void incTranslation();
@@ -38,7 +40,9 @@ public slots:
     void incSubVolPointRight();
 
     void incSliceReSize();
-    void incSliceReset();    
+    void incSliceReset();
+
+    QString getUserResults();
 
 
 
@@ -51,6 +55,8 @@ private:
     Ui::UserTestDialog *ui;
     QTimer *timer ;
 
+    int currentJob = -1;
+
     int countRotate = 0;
     int countTranslate = 0;
     int countScale = 0;
@@ -60,8 +66,8 @@ private:
 
     int countSubVolResize = 0 ;
     int countSubVolReset = 0;
-    int countSubVolPnt1 = 0;
-    int countSubVolPnt2 = 0 ;
+    //int countSubVolPnt1 = 0;
+    //int countSubVolPnt2 = 0 ;
     int countSubVolPntLeft = 0;
     int countSubVolPntRight = 0;
 

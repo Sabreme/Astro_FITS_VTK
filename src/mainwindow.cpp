@@ -331,6 +331,8 @@ void MainWindow::startUserTest()
     userTestDlg->setWindowTitle(jobTitle);
     userTestDlg->setTaskLabel(taskTitle);
 
+    userTestDlg->setCurrentJob(currentJob);
+
 
     QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().topRight();
     QPoint ptMainWindow = this->geometry().topLeft();
@@ -369,7 +371,8 @@ void MainWindow::startUserTest()
 
         this->infoTab_Triggered();
         /// Refresh the Interaction screen.
-        this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+        //this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+        on_actionReset_Camera_triggered();
 
         switch (systemMode)
         {
@@ -484,7 +487,7 @@ void MainWindow::startUserTest()
         }
             break;
         }
-    }   // CASE 0
+    }   // CASE 2
         break;
         this->ui->qvtkWidgetLeft->setFocus();
     }
@@ -747,6 +750,8 @@ QString MainWindow::getUserTestResults(int job)
 void MainWindow::stopUserTest()
 {
     int currentJob = userTest->getCurrentJob();
+    /// We first grab the Results before we close the Dialogbox
+    userTest->importUserResults(userTestDlg->getUserResults());
 
     userTestActive = false;
     userTestDlg->close();
@@ -1001,7 +1006,8 @@ void MainWindow::on_buttonTabInfo_pressed()
             }
 
             /// Refresh the Interaction screen.
-            this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+            //this->ui->qvtkWidgetLeft->GetRenderWindow()->Render();
+            on_actionReset_Camera_triggered();
         }
     }
     this->ui->qvtkWidgetLeft->setFocus();
@@ -4579,7 +4585,9 @@ void MainWindow::LoadSliderWidgets()
 /////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 void MainWindow::beginSliceArb()
-{
+{    
+    on_actionReset_Camera_triggered();
+
     vtkPolyData * polyPlane = vtkPolyData::New();
 
     double range[2] ;
