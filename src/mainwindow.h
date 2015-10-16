@@ -18,6 +18,7 @@
 #include <vtkCubeSource.h>
 #include <vtkOutlineFilter.h>
 #include <vtkDecimatePro.h>
+#include <vtkScalarBarActor.h>
 
 #include <System/vtkfitsreader.h>
 #include <vtkMarchingCubes.h>
@@ -176,7 +177,7 @@ public slots:
     bool userTestRunning();
 
     void countInteraction(int testType);
-    void saveScreenShot();
+    void saveScreenShot();        
 
 
 protected:
@@ -203,6 +204,9 @@ private slots:
         void on_actionBlue_Red_triggered();
 
         void on_actionDefault_triggered();
+
+        void spectrumToggled(bool status);
+        void cubeAxesToggled(bool status);
 
         void closeTab(int index);
 
@@ -315,7 +319,6 @@ private slots:
         void leapBeginSliceAxis();
         void leapBeginSliceArb();
 
-        void on_actionLeap_Slice_triggered();
         void on_actionLeapBasic_triggered();
 
         void on_actionTracking_triggered();
@@ -392,13 +395,14 @@ private:
       //  vtkStructuredPoints *global_Points;                   // Global Pointer for the point Dataset
         vtkVolume                   * global_Volume;            // Global Pointer for the Current Volume
         vtkActor                    * global_Outline;           // Global pointer for the Outline volume
-        vtkCubeAxesActor            * global_CubeAxes;          // Global pointer for the axes of volume
+        vtkCubeAxesActor            * defaultCubeAxes;          // Global pointer for the axes of volume
         vtkGPUVolumeRayCastMapper   * global_Mapper;            // Global Pointer for Volume Mapper
         vtkLookupTable              * default_Volume_Colours;   // Global Pointer for the Default Volume schema
         vtkRenderWindowInteractor   * defaultInter;             // Global Pointer for the Default Interactor
         vtkRenderer                 * defaultRenderer;          // Global Pointer for the Default Renderer
         vtkRenderWindow             * defaultRenWindow;         // Global Pointer for Default RenderWindow
         vtkImageResample            * global_Resample;           // Global Pointer for the Input Image Source;
+        vtkScalarBarActor               * defaultScalarBar;         //Global Pointer for the ScalarBar;
 
         QTime Timer;
         QProgressDialog             * ProgressDialog;

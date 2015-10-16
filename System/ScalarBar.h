@@ -19,7 +19,7 @@
 
 #endif // SCALARBAR_H
 
-void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
+void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource, vtkScalarBarActor *defaultScalarBar )
 {
     assert (qvtkWidget != 0);
 
@@ -54,9 +54,11 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
 
         vtkSmartPointer<vtkScalarBarActor> scalarBar =
           vtkSmartPointer<vtkScalarBarActor>::New();
-        scalarBar->SetLookupTable(mapper->GetLookupTable());
-        scalarBar->SetTitle("Point Spread");
-        scalarBar->SetNumberOfLabels(4);
+        defaultScalarBar->SetLookupTable(mapper->GetLookupTable());
+        defaultScalarBar->SetTitle("Point Spread");
+        defaultScalarBar->SetNumberOfLabels(4);
+
+        //defaultScalarBar = scalarBar;
 
         // Create a lookup table to share between the mapper and the scalarbar
         vtkSmartPointer<vtkLookupTable> hueLut =
@@ -68,12 +70,12 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
         hueLut->Build();
 
         mapper->SetLookupTable( hueLut );
-        scalarBar->SetLookupTable( hueLut );
-        scalarBar->SetLookupTable(mapper->GetLookupTable());
-        scalarBar->SetMaximumHeightInPixels(120);
-        scalarBar->SetMaximumWidthInPixels(20);
+        defaultScalarBar->SetLookupTable( hueLut );
+        defaultScalarBar->SetLookupTable(mapper->GetLookupTable());
+        defaultScalarBar->SetMaximumHeightInPixels(120);
+        defaultScalarBar->SetMaximumWidthInPixels(20);
 
-        scalarBar->SetPosition(0.9, 0.1);
+        defaultScalarBar->SetPosition(0.9, 0.1);
 
         // Create a renderer and render window
         vtkSmartPointer<vtkRenderer> renderer =
@@ -83,5 +85,5 @@ void AddScalarBar(QVTKWidget *qvtkWidget, vtkFitsReader *fitsSource )
                 GetRenderers()->GetFirstRenderer();
 
 
-        renderer->AddActor2D(scalarBar);
+        renderer->AddActor2D(defaultScalarBar);
 }

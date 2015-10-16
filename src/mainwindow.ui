@@ -4669,6 +4669,8 @@ border:none;
     <addaction name="actionInfoBarToggle"/>
     <addaction name="actionFPSToggle"/>
     <addaction name="actionLeapDialogToggle"/>
+    <addaction name="actionSpectrum_Toggle"/>
+    <addaction name="actionCubeAxes_Toggle"/>
    </widget>
    <widget class="QMenu" name="menuColourMaps">
     <property name="title">
@@ -4954,6 +4956,28 @@ border:none;
    </property>
    <property name="text">
     <string>UserTesting</string>
+   </property>
+  </action>
+  <action name="actionSpectrum_Toggle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spectrum Toggle</string>
+   </property>
+  </action>
+  <action name="actionCubeAxes_Toggle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>CubeAxes Toggle</string>
    </property>
   </action>
  </widget>
