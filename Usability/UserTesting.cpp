@@ -122,7 +122,7 @@ void UserTesting::importSystemResults(QString results)
     /// SAVE RESULT FOR SYSTEM RESULTS
     ///
 
-     QString output = QString("TESTS/UserID_%1_Task_%2_SYSTEM.txt").arg(userID).arg(taskNo);
+     QString output = QString("TESTS/UserID_%1_Task_%2_%3_SYSTEM.txt").arg(userID).arg(taskNo).arg(medium);
 
     QFile file(output);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
