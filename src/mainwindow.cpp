@@ -2995,6 +2995,7 @@ void MainWindow::boxWidgetCallback()
     if (!transformPassed)
     {
         boxWidget_->GetProp3D()->SetUserTransform(oldCubeTransform);
+        boxWidget_->GetOutlineProperty()->SetColor(1,0,0);
         for (unsigned int i=0; i < 6; i++)
         {
             global_subVolBounds_[i] = oldBounds[i];
@@ -3006,6 +3007,7 @@ void MainWindow::boxWidgetCallback()
         {
             //cubeVector.push_back(newBounds[i]);
             global_subVolBounds_[i] = newBounds[i];
+            boxWidget_->GetOutlineProperty()->SetColor(1,1,1);
         }
     }
 
