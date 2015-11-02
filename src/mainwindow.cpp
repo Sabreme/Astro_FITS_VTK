@@ -2444,7 +2444,9 @@ void MainWindow::mouseBeginSubVol()
 
     cubeActor->SetMapper(cubeMapper);
     cubeActor->GetProperty()->SetColor(1,1,1);
-    cubeActor->GetProperty()->SetOpacity(0.2);
+
+    /// MADE THE Cube Prop3D Invisible to maintain the cordinates of the SUbVolume Selected.
+    cubeActor->GetProperty()->SetOpacity(0.0);
 
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->
             GetRenderers()->GetFirstRenderer()->AddActor(cubeActor);
@@ -2470,6 +2472,8 @@ void MainWindow::mouseBeginSubVol()
     boxWidget_->PlaceWidget();
     boxWidget_->EnabledOff();
     vtkEventConnector->Connect(boxWidget_, vtkCommand::InteractionEvent, this, SLOT(boxWidgetCallback()));
+
+
 
 
     if (this->userTestRunning())
@@ -2958,6 +2962,7 @@ void MainWindow::boxWidgetCallback()
 
     vtkLinearTransform* oldCubeTransform = boxWidget_->GetProp3D()->GetUserTransform();
     boxWidget_->GetProp3D()->GetBounds(oldBounds);
+    //boxWidget_->Get
 
 
     vtkTransform* newCubeTransform = vtkTransform::New();
@@ -3007,13 +3012,14 @@ void MainWindow::boxWidgetCallback()
         {
             //cubeVector.push_back(newBounds[i]);
             global_subVolBounds_[i] = newBounds[i];
-            boxWidget_->GetOutlineProperty()->SetColor(1,1,1);
+            boxWidget_->GetOutlineProperty()->SetColor(1,1,1);            
         }
     }
 
     //    PrintBounds("subVol", global_subVolBounds_);
 
-
+    /// We set the SubVolume Extract Button Enabled to the Passing of the Transform
+    this->ui->buttonSubVolExport->setEnabled(transformPassed);
 
 
     this->ui->lineSubVolXMin->setText(QString::number(global_subVolBounds_[0], 'f', 2));
@@ -3022,6 +3028,7 @@ void MainWindow::boxWidgetCallback()
     this->ui->lineSubVolYMax->setText(QString::number(global_subVolBounds_[3], 'f', 2));
     this->ui->lineSubVolZMin->setText(QString::number(global_subVolBounds_[4], 'f', 2));
     this->ui->lineSubVolZMax->setText(QString::number(global_subVolBounds_[5], 'f', 2));
+
 
 
 }
