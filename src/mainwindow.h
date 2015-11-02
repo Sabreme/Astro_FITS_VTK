@@ -34,7 +34,8 @@
 #include <vtkAxesActor.h>
 #include <vtkPropAssembly.h>
 #include <vtkExtractVOI.h>
-#include <vtkBoxWidget.h>
+//#include <vtkBoxWidget.h>
+#include <SubVolume/vtkCustomBoxWidget.h>
 #include <vtkCubeAxesActor.h>
 
 #include "vtkResliceImageViewer.h"
@@ -434,7 +435,7 @@ private:
 
          SubVolumeDialog *subVolDialog;              // Global pointer for the SubVolume
          vtkCubeSource *global_subVolume;            // Global Pointer for the Sub-Volume
-         vtkBoxWidget* boxWidget_;                   // Global Pointer for the BoxWidget;
+         vtkCustomBoxWidget* boxWidget_;                   // Global Pointer for the BoxWidget;
 
 
         //////////////////////////////////////////////////

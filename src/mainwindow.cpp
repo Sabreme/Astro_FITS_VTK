@@ -11,7 +11,8 @@
 #include "SubVolume/XYHighlightSelection.h"
 #include "SubVolume/ZHighlightSelection.h"
 
-#include "vtkBoxWidget.h"
+//#include "vtkBoxWidget.h"
+#include "SubVolume/vtkCustomBoxWidget.h"
 #include "vtkCellPicker.h"
 
 #include <QFileDialog>
@@ -28,7 +29,7 @@
 #include <vtkVolumeProperty.h>
 #include <vtkColorTransferFunction.h>
 #include <vtkVolumeRayCastFunction.h>
-#include <vtkBoxWidget.h>
+//#include <vtkBoxWidget.h>
 
 #include <vtkActor2DCollection.h>
 #include <vtkTextProperty.h>
@@ -2459,7 +2460,7 @@ void MainWindow::mouseBeginSubVol()
     vtkEventQtSlotConnect* vtkEventConnector =
             vtkEventQtSlotConnect::New();
 
-    boxWidget_ = vtkBoxWidget::New();
+    boxWidget_ = vtkCustomBoxWidget::New();
     boxWidget_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
     boxWidget_->SetPlaceFactor(1.0);
     boxWidget_->KeyPressActivationOff();
@@ -4375,6 +4376,9 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->TubingOn();
     customArbPlaneWidget->PlaceWidget();
     customArbPlaneWidget->DrawPlaneOff();
+    customArbPlaneWidget->SetScaleEnabled(false);
+    customArbPlaneWidget->SetOriginTranslation(false);
+    //customArbPlaneWidget->
 
     customArbPlaneWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
 
