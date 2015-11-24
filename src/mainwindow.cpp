@@ -5401,6 +5401,78 @@ void MainWindow::LeapMotion()
                 }
             }
 
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    HANDMODELLER       //////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            if (this->handModelActive)
+            {
+                if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+                {
+                    //                    Get the first hand
+                    const Hand rightHandMoving = frame.hands().rightmost();
+                    //                    Get the 2nd hand
+                    const Hand leftHandMoving = frame.hands().leftmost();
+
+                    bool leftHandActive = true;
+                    bool rightHandActive = true;
+
+                    /// If we have a single hand, we must determine which 1 it is
+                    /// If not the Right hand, then reverse outcome
+                    /// Otherwise we swap hands accordingly
+                    if(frame.hands().count() == 1)
+                    {
+                        if (frame.hands().frontmost().isRight())
+                            leftHandActive = false;
+                        else
+                            rightHandActive = false;
+                    }
+
+                    /// The Leap MOTION Interaction Box
+                    InteractionBox leapBox = frame.interactionBox();
+
+
+                    if (rightHandActive)
+                    {
+                        ////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+                        //////////////////////////////////////////////////////////////////////////////////
+
+                        Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
+
+
+                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+                        handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds);
+                    }/// if(hand.isLeft())
+
+                    if (leftHandActive)
+                    {
+                        ////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+                        //////////////////////////////////////////////////////////////////////////////////
+
+                        Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
+
+
+                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+                        handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds);
+                    }   /// if(hand.isLeft())
+                }   ///    if (!frame.hands().isEmpty()
+            }
+
+
+
+
+
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    DIAGNOSTIC TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
@@ -5849,6 +5921,40 @@ void MainWindow::on_actionTestButton_triggered()
 {
 ///    vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
 ///    camera->SetViewAngle(120);
-    this->startUserPractice();
+    //this->startUserPractice();
+    /// THE VTK Interaction Box
+        ///
+        vtkSmartPointer<vtkCubeSource> centerBox =
+                vtkSmartPointer<vtkCubeSource>::New();
+        //centerBox->SetCenter(0,0,0);
+        double * center = global_Outline->GetCenter();
+        centerBox->SetCenter(global_Outline->GetCenter());
+        centerBox->SetBounds(global_Outline->GetBounds());
+        //centerBox->SetBounds(boxBounds);
+
+        vtkSmartPointer<vtkPolyDataMapper> centerMapper =
+              vtkSmartPointer<vtkPolyDataMapper>::New();
+      centerMapper->SetInputConnection(centerBox->GetOutputPort());
+
+      vtkSmartPointer<vtkActor>  boxActor =
+              vtkSmartPointer<vtkActor>::New();
+      boxActor->GetProperty()->SetOpacity(0.2);
+       boxActor->SetMapper(centerMapper);
+
+       this->defaultRenderer->AddActor(boxActor);
+
+//       handRenderer = new HandRenderer();
+
+//       handRenderer->drawJoints(rightHand,defaultRenderer);
+//       handRenderer->drawBones(rightHand, defaultRenderer);
+
+//        handRenderer->drawJoints(leftHand, defaultRenderer);
+//        handRenderer->drawBones(leftHand, defaultRenderer);
+
+//        handModelActive = true;
+
+
+
+
     //this->customArbPlaneWidget->GetNormal()->
 }

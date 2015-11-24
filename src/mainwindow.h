@@ -81,6 +81,8 @@
 #include "Leap/Leap.h"
 #include "Leap/Sample.h"
 
+#include "Hands/handRenderer.h"
+
 using namespace Leap;
 
 namespace Ui {
@@ -454,6 +456,12 @@ private:
         ///
         vtkImplicitCustomPlaneWidget * customArbPlaneWidget ;
 
+        //////////////////////////////////////////////////
+        /// HAND MODEL SETTINGS
+        ///
+        double                              boxBounds[6] = {-3, 3, 1, 5, -2,3};
+        HandRenderer                * handRenderer;
+        bool                                    handModelActive = false;
 
         //////////////////////////////////////////////////
         /// LEAP MOTION SETTINGS
