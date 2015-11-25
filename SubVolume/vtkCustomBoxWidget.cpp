@@ -177,7 +177,7 @@ vtkCustomBoxWidget::~vtkCustomBoxWidget()
   this->HexOutline->Delete();
   this->OutlineMapper->Delete();
   this->OutlinePolyData->Delete();
-  
+
   for (int i=0; i<7; i++)
     {
     this->HandleGeometry[i]->Delete();
@@ -187,12 +187,12 @@ vtkCustomBoxWidget::~vtkCustomBoxWidget()
   delete [] this->Handle;
   delete [] this->HandleMapper;
   delete [] this->HandleGeometry;
-  
+
   this->HandlePicker->Delete();
   this->HexPicker->Delete();
 
   this->Transform->Delete();
-  
+
   this->HandleProperty->Delete();
   this->SelectedHandleProperty->Delete();
   this->FaceProperty->Delete();
@@ -208,7 +208,7 @@ void vtkCustomBoxWidget::PrintSelf(ostream& os, vtkIndent indent)
   double *bounds=this->InitialBounds;
   os << indent << "Initial Bounds: "
      << "(" << bounds[0] << "," << bounds[1] << ") "
-     << "(" << bounds[2] << "," << bounds[3] << ") " 
+     << "(" << bounds[2] << "," << bounds[3] << ") "
      << "(" << bounds[4] << "," << bounds[5] << ")\n";
 
   if ( this->HandleProperty )
@@ -221,7 +221,7 @@ void vtkCustomBoxWidget::PrintSelf(ostream& os, vtkIndent indent)
     }
   if ( this->SelectedHandleProperty )
     {
-    os << indent << "Selected Handle Property: " 
+    os << indent << "Selected Handle Property: "
        << this->SelectedHandleProperty << "\n";
     }
   else
@@ -239,7 +239,7 @@ void vtkCustomBoxWidget::PrintSelf(ostream& os, vtkIndent indent)
     }
   if ( this->SelectedFaceProperty )
     {
-    os << indent << "Selected Face Property: " 
+    os << indent << "Selected Face Property: "
        << this->SelectedFaceProperty << "\n";
     }
   else
@@ -257,7 +257,7 @@ void vtkCustomBoxWidget::PrintSelf(ostream& os, vtkIndent indent)
     }
   if ( this->SelectedOutlineProperty )
     {
-    os << indent << "Selected Outline Property: " 
+    os << indent << "Selected Outline Property: "
        << this->SelectedOutlineProperty << "\n";
     }
   else
@@ -271,7 +271,7 @@ void vtkCustomBoxWidget::PrintSelf(ostream& os, vtkIndent indent)
   os << indent << "Translation Enabled: " << (this->TranslationEnabled ? "On\n" : "Off\n");
   os << indent << "Scaling Enabled: " << (this->ScalingEnabled ? "On\n" : "Off\n");
   os << indent << "Rotation Enabled: " << (this->RotationEnabled ? "On\n" : "Off\n");
-  
+
 }
 
 #define VTK_AVERAGE(a,b,c) \
@@ -291,7 +291,7 @@ void vtkCustomBoxWidget::OnRightButtonDown()
     this->State = vtkCustomBoxWidget::Outside;
     return;
     }
-  
+
   vtkAssemblyPath *path;
   this->HandlePicker->Pick(X,Y,0.0,this->CurrentRenderer);
   path = this->HandlePicker->GetPath();
@@ -322,7 +322,7 @@ void vtkCustomBoxWidget::OnRightButtonDown()
       return;
       }
     }
-  
+
   this->EventCallbackCommand->SetAbortFlag(1);
   this->StartInteraction();
   this->InvokeEvent(vtkCommand::StartInteractionEvent, NULL);
@@ -345,7 +345,7 @@ void vtkCustomBoxWidget::OnRightButtonUp()
   this->EndInteraction();
   this->InvokeEvent(vtkCommand::EndInteractionEvent, NULL);
   this->Interactor->Render();
-  
+
 }
 
 void vtkCustomBoxWidget::OnMiddleButtonDown()
@@ -360,7 +360,7 @@ void vtkCustomBoxWidget::OnMiddleButtonDown()
     this->State = vtkCustomBoxWidget::Outside;
     return;
     }
-  
+
   vtkAssemblyPath *path;
   this->HandlePicker->Pick(X,Y,0.0,this->CurrentRenderer);
   path = this->HandlePicker->GetPath();
@@ -388,7 +388,7 @@ void vtkCustomBoxWidget::OnMiddleButtonDown()
       return;
       }
     }
-  
+
   this->EventCallbackCommand->SetAbortFlag(1);
   this->StartInteraction();
   this->InvokeEvent(vtkCommand::StartInteractionEvent, NULL);
@@ -405,7 +405,7 @@ void vtkCustomBoxWidget::OnMiddleButtonUp()
   this->State = vtkCustomBoxWidget::Start;
   this->HighlightOutline(0);
   this->SizeHandles();
-  
+
   this->EventCallbackCommand->SetAbortFlag(1);
   this->EndInteraction();
   this->InvokeEvent(vtkCommand::EndInteractionEvent, NULL);

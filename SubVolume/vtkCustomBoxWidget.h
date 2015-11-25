@@ -51,7 +51,7 @@
 // transformation (use the GetTransform() method). Typical usage of the
 // widget is to make use of the StartInteractionEvent, InteractionEvent, and
 // EndInteractionEvent events. The InteractionEvent is called on mouse
-// motion; the other two events are called on button down and button up 
+// motion; the other two events are called on button down and button up
 // (either left or right button).
 //
 // Some additional features of this class include the ability to control the
@@ -70,7 +70,7 @@
 // to a unit box centered at the origin; this is wrong!
 
 // .SECTION See Also
-// vtk3DWidget vtkPointWidget vtkLineWidget vtkPlaneWidget 
+// vtk3DWidget vtkPointWidget vtkLineWidget vtkPlaneWidget
 // vtkImplicitPlaneWidget vtkImagePlaneWidget
 
 #ifndef __vtkCustomBoxWidget_h
@@ -79,8 +79,8 @@
 //#include "vtk3DWidget.h"
 #include "vtkBoxWidget.h"
 
-
-class VTK_WIDGETS_EXPORT vtkCustomBoxWidget : public vtkBoxWidget
+///class VTK_WIDGETS_EXPORT vtkCustomBoxWidget : public vtkBoxWidget
+class vtkCustomBoxWidget : public vtkBoxWidget
 {
 public:
   // Description:
@@ -99,7 +99,7 @@ protected:
   vtkCustomBoxWidget();
   ~vtkCustomBoxWidget();
 };
-    
+
 
 
 #endif
