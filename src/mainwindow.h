@@ -86,7 +86,7 @@
 using namespace Leap;
 
 namespace Ui {
-    class MainWindow;    
+    class MainWindow;
 }
 
 class Thread :public QThread{
@@ -98,7 +98,7 @@ public:
 
 protected:
     void run(){
-        exec();        
+        exec();
     }
 };
 
@@ -110,9 +110,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void log(QString message);    
+    void log(QString message);
 
-    void loadFitsFile(QString filename);    
+    void loadFitsFile(QString filename);
 
 
     void closeTabs();
@@ -146,7 +146,7 @@ public:
     vtkLookupTable *BuildHueIntensityBaseMap(double min, double max);
 
     //// LEAP MOTION
-    void LeapMotion();    
+    void LeapMotion();
 
     bool event(QEvent *event);
 
@@ -154,7 +154,7 @@ public:
 public slots:
     virtual void slotExit();
     void infoTabCloseSignal();
-    bool MessageBoxQuery(QString title, QString question);    
+    bool MessageBoxQuery(QString title, QString question);
 
     void releaseTabFocus();
     void resizeDone();
@@ -180,7 +180,7 @@ public slots:
     bool userTestRunning();
 
     void countInteraction(int testType);
-    void saveScreenShot();        
+    void saveScreenShot();
 
 
 protected:
@@ -275,7 +275,7 @@ private slots:
         //// AXIS-SLICE SLOTS
 
         void beginSliceAxis();
-        void on_actionSliceAxisAligned_triggered();       
+        void on_actionSliceAxisAligned_triggered();
         void on_checkAxisSliceVolumeEnable_stateChanged(int arg1);
 
         void ResetViews();
@@ -309,7 +309,7 @@ private slots:
         void beginSliceArb();
         void on_buttonArbReset_clicked();
 
-        void on_actionSliceAxisArbitrary_triggered();        
+        void on_actionSliceAxisArbitrary_triggered();
         void on_checkArbSliceVolumeEnable_stateChanged(int arg1);
         void on_buttonArbSliceContourBackground_clicked();
         void on_slider_CntourDisplay_valueChanged(int value);

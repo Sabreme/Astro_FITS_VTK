@@ -10,6 +10,7 @@
 #include "vtkActor.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkProperty.h"
+#include "vtkTransform.h"
 
 
 
@@ -107,7 +108,7 @@ void HandRenderer::translateHand(visibleHand activeHand, Leap::Hand movingHand, 
         Leap::Vector midpointMETA  = mcp.prevJoint() + mcp.prevJoint() / 2.0;
 
         /// We Get the location of the joint inside the hand
-        double sensitivity = 0.01;
+        double sensitivity = 0.1;
         double jointPosPoint[3] = {midpointMETA.x * sensitivity ,
                                    midpointMETA.y * sensitivity,
                                    midpointMETA.z * sensitivity
@@ -124,7 +125,7 @@ void HandRenderer::translateHand(visibleHand activeHand, Leap::Hand movingHand, 
             Leap::Bone bone = finger.bone(static_cast<Leap::Bone::Type>(b));
             Leap::Vector bonePosition  = bone.nextJoint() + bone.nextJoint() / 2.0;
 
-            double sensitivity = 0.01;
+            double sensitivity = 0.1;
             double jointPosPoint[3] = { bonePosition.x * sensitivity ,
                                         bonePosition.y * sensitivity,
                                         bonePosition.z * sensitivity
@@ -163,5 +164,44 @@ void HandRenderer::translateHand(visibleHand activeHand, Leap::Hand movingHand, 
 
         }    /// for (int b = 0)
     }   ///  for (int f = 0; )
+}
+
+void HandRenderer::setStartLocation(visibleHand startHand, double  *cubeCenter)
+{
+    for (int f = 0; f < 5; f++)
+    {
+        for(int j = 0 ; j < 5; j++)                     /// We loop through each joint and create actor
+        {
+
+            vtkTransform * translation = vtkTransform::New();
+            translation->Identity();
+
+            translation->Translate(cubeCenter[0] , cubeCenter[1] , cubeCenter[2]);
+
+            (global_Joints[startHand][f][j])->SetUserMatrix(translation->GetMatrix());
+
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////    Right Finger BONES  TRACKING  /////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+
+
+    for (int f = 0; f < 5; f++)
+    {
+
+        for(int b = 0 ; b < 4; b++)                     /// We loop through each Bone and create actor
+        {
+            vtkTransform * translation = vtkTransform::New();
+
+            translation->Identity();
+
+            translation->Translate(cubeCenter[0], cubeCenter[1] , cubeCenter[2]);
+
+            (global_Bone_Actor[startHand][f][b])->SetUserMatrix(translation->GetMatrix());
+
+        }
+    }
 }
 

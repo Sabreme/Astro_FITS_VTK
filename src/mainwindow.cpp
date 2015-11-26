@@ -377,7 +377,7 @@ void MainWindow::startUserTest()
     int startPosX = ptRenderer.x() - (userTestDlg->geometry().width() + 5);
     userTestDlg->move(startPosX, startPosY);
 
-    QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));    
+    QObject::connect(userTestDlg,SIGNAL(stopTest()),this,SLOT(stopUserTest()));
     QObject::connect(userTestDlg,SIGNAL(saveScreen()),this, SLOT(saveScreenShot()));
 
     userTestDlg->show();
@@ -878,7 +878,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 
 void MainWindow::on_buttonModeMouse_clicked()
-{     
+{
     this->systemMode = Mouse;
     std::cout << "System Mode is: " << this->systemMode << endl;
 
@@ -943,7 +943,7 @@ void MainWindow::on_buttonModeLeap_clicked()
 }
 
 void MainWindow::on_buttonModeTouch_clicked()
-{    
+{
     this->systemMode = Touch;
 
     ///DISSABLE MOUSE AND LEAP CALLS
@@ -2192,7 +2192,7 @@ void MainWindow::on_actionReset_Camera_triggered()
             GetRenderers()->GetFirstRenderer();
 
     theRenderer->ResetCamera();
-    
+
     double  * focalPoint;
     double  * position ;
     double  dist ;
@@ -3013,7 +3013,7 @@ void MainWindow::boxWidgetCallback()
         {
             //cubeVector.push_back(newBounds[i]);
             global_subVolBounds_[i] = newBounds[i];
-            boxWidget_->GetOutlineProperty()->SetColor(1,1,1);            
+            boxWidget_->GetOutlineProperty()->SetColor(1,1,1);
         }
     }
 
@@ -4349,7 +4349,7 @@ void MainWindow::LoadSliderWidgets()
 /////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 void MainWindow::beginSliceArb()
-{    
+{
     on_actionReset_Camera_triggered();
 
     vtkPolyData * polyPlane = vtkPolyData::New();
@@ -5306,7 +5306,7 @@ void MainWindow::LeapMotion()
 
                 this->ui->labelRotation->setFont(boldFont);
                 this->ui->buttonTransfRotation->setEnabled(true);
-                
+
                 Matrix newRotation = frame.rotationMatrix(controller_->frame(2));
                 //std::cout << newRotation.toString() << endl;
 
@@ -5927,9 +5927,48 @@ void MainWindow::on_actionTestButton_triggered()
         vtkSmartPointer<vtkCubeSource> centerBox =
                 vtkSmartPointer<vtkCubeSource>::New();
         //centerBox->SetCenter(0,0,0);
-        double * center = global_Outline->GetCenter();
-        centerBox->SetCenter(global_Outline->GetCenter());
-        centerBox->SetBounds(global_Outline->GetBounds());
+        double * bounds = global_Volume->GetBounds();
+        double * cubeCenter = global_Volume->GetCenter();
+
+//        cubeCenter[0] = &cubeCenter [0] * 0.6;
+//        cubeCenter[1] =& cubeCenter [1] * 0.6;
+//        cubeCenter[2] = &cubeCenter [2] * 0.6;
+
+        double leftHandOffset[3] = {
+                                                                    cubeCenter[0]  / 1.0 ,
+                                                                    cubeCenter[1] * 0.0 ,
+                                                                    cubeCenter[2] * 0.6
+                                                                };
+
+        double rightHandOffset[3] = {
+                                                                    cubeCenter[0] * 0.9 ,
+                                                                    cubeCenter[1] * 0.0 ,
+                                                                    cubeCenter[2] * 0.6
+                                                                };
+
+
+        //std::cout << "CubeCenter is : " << center[0] << ", " << center[1] << "," << center[2] << endl;
+        //global_Outline->GetCenter()
+
+   //     global_Outline->Print(std::cout);
+
+
+        centerBox->SetCenter(global_Volume->GetCenter());
+
+
+
+        bounds[0] = bounds[0] + (bounds[1] * 0.2) ;
+        bounds[1] = bounds[1]  -  (bounds[1] * 0.2) ;
+        bounds[2] = bounds[2] + (bounds[3] * 0.2) ;
+        bounds[3] = bounds[3]  -  (bounds[3] * 0.2) ;
+        bounds[4] = bounds[4] + (bounds[5] * 0.0) ;
+        bounds[5] = bounds[5] +  (bounds[5] * 0.1) ;
+
+        centerBox->SetBounds(bounds);
+
+
+        //this->defaultRenderer->Print(std::cout);
+        //this->defaultRenWindow->Print(std::cout);
         //centerBox->SetBounds(boxBounds);
 
         vtkSmartPointer<vtkPolyDataMapper> centerMapper =
@@ -5943,15 +5982,20 @@ void MainWindow::on_actionTestButton_triggered()
 
        this->defaultRenderer->AddActor(boxActor);
 
-//       handRenderer = new HandRenderer();
+       handRenderer = new HandRenderer();
 
-//       handRenderer->drawJoints(rightHand,defaultRenderer);
-//       handRenderer->drawBones(rightHand, defaultRenderer);
+       handRenderer->drawJoints(rightHand,defaultRenderer);
+       handRenderer->drawBones(rightHand, defaultRenderer);
 
-//        handRenderer->drawJoints(leftHand, defaultRenderer);
-//        handRenderer->drawBones(leftHand, defaultRenderer);
+        handRenderer->drawJoints(leftHand, defaultRenderer);
+        handRenderer->drawBones(leftHand, defaultRenderer);
 
-//        handModelActive = true;
+       handRenderer->setStartLocation(leftHand,leftHandOffset);
+       handRenderer->setStartLocation(rightHand,rightHandOffset);
+
+
+
+        handModelActive = true;
 
 
 

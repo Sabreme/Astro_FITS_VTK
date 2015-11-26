@@ -1,9 +1,9 @@
 #ifndef HANDRENDERER_H
 #define HANDRENDERER_H
 
-#define scale_ 0.01
-#define jointSize 0.15
-#define fingerSize 20
+#define scale_ 0.08
+#define jointSize 1.5
+#define fingerSize 15
 #define fingerColourNormal 2,2,2
 #define fingerColourWarning 250,0,0
 
@@ -28,6 +28,8 @@ public:
     void drawBones(visibleHand activeHand, vtkRenderer *renderer);
 
      void translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds );
+
+     void setStartLocation(visibleHand startHand, double *cubeCenter);
 
     HandModeller            *handModel;
 
