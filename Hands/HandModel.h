@@ -12,9 +12,6 @@ public:
 
     void jointRightStartPos(fingerJoints& joints, int finger);
     void jointLeftStartPos(fingerJoints& joints, int finger);
-    void boneRightStartPos(fingerBones &bones, int finger);
-    void boneLeftStartPos(fingerBones& bones, int finger);
-
 
 };
 
