@@ -5995,10 +5995,44 @@ void MainWindow::on_actionTestButton_triggered()
 
 
 
+
+
         handModelActive = true;
 
 
 
 
     //this->customArbPlaneWidget->GetNormal()->
+}
+
+void MainWindow::on_actionTestButton2_triggered()
+{
+    for (int f = 0; f < 5;  f++)
+    {
+        std::cout << "Left Hand: Joints Finger : " << f+1 << endl;
+         handRenderer->printFingerJoints(leftHand,f);
+        std::cout << endl;
+    }
+     std::cout << "----------------------------" << endl;
+    for (int f = 0; f < 5;  f++)
+    {
+        std::cout << "Right Hand: Joints Finger: " << f +1 << endl;
+         handRenderer->printFingerJoints(rightHand,f);
+         std::cout << endl;
+    }
+
+    for (int f = 0; f < 5;  f++)
+    {
+        std::cout << "Left Hand: Bones Finger: " << f+1 << endl;
+         handRenderer->printFingerBones(leftHand,f);
+        std::cout << endl;
+    }
+     std::cout << "----------------------------" << endl;
+    for (int f = 0; f < 5;  f++)
+    {
+        std::cout << "Right Hand: Bones Finger: " << f +1 << endl;
+         handRenderer->printFingerBones(rightHand,f);
+         std::cout << endl;
+    }
+
 }

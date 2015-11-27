@@ -368,6 +368,8 @@ private slots:
         /// \brief on_buttonCameraReset_clicked
         ////////////////////////////////////////////////////////
 
+        void on_actionTestButton2_triggered();
+
 private:
 
         //////////////////////////////////////////////////
@@ -526,3 +528,5 @@ private:
 };
 
 #endif // MAINWINDOW_H
+
+

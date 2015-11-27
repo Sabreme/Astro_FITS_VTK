@@ -4618,7 +4618,7 @@ border:none;
      <x>0</x>
      <y>0</y>
      <width>1341</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -4645,6 +4645,7 @@ border:none;
     <addaction name="separator"/>
     <addaction name="actionLeapBasic"/>
     <addaction name="actionTestButton"/>
+    <addaction name="actionTestButton2"/>
     <addaction name="separator"/>
     <addaction name="actionUserTesting"/>
    </widget>
@@ -4978,6 +4979,11 @@ border:none;
    </property>
    <property name="text">
     <string>CubeAxes Toggle</string>
+   </property>
+  </action>
+  <action name="actionTestButton2">
+   <property name="text">
+    <string>TestButton2</string>
    </property>
   </action>
  </widget>

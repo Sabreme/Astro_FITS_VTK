@@ -43,6 +43,8 @@ public:
 //    double fingerColourNormal [3] =  {2, 2, 2};
 //    double fingerColourWarning [3] =  {255, 0, 0};
 
+    void printFingerJoints(visibleHand hand, int finger);
+    void printFingerBones(visibleHand hand, int finger);
 };
 
 #endif // HANDRENDERER_H

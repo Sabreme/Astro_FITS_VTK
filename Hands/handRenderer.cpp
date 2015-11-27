@@ -62,6 +62,30 @@ void HandRenderer::drawJoints(visibleHand activeHand, vtkRenderer *renderer)
     }
 }
 
+void HandRenderer::printFingerJoints(visibleHand hand, int finger)
+{
+    double position[3];
+    std::cout << std::setprecision(3) << std::fixed ;
+    for (int j = 0; j < 5; j++)
+    {
+        global_Joints[hand][finger][j]->GetPosition(position);
+        //std::cout << "Joint: " << j +1 << "\t" << position[0] << ", " <<position[1] << ", " << position[2] << endl;
+        std::cout << "\t {" << position[0] << ", " <<position[1] << ", " << position[2] << "}," << endl;
+    }
+}
+
+void HandRenderer::printFingerBones(visibleHand hand, int finger)
+{
+    double position[3];
+    std::cout << std::setprecision(3) << std::fixed ;
+    for (int b = 0; b < 4; b++)
+    {
+        global_Bone_Actor[hand][finger][b]->GetPosition(position);
+        //std::cout << "Joint: " << j +1 << "\t" << position[0] << ", " <<position[1] << ", " << position[2] << endl;
+        std::cout << "\t {" << position[0] << ", " <<position[1] << ", " << position[2] << "}," << endl;
+    }
+}
+
 void HandRenderer::drawBones(visibleHand activeHand, vtkRenderer *renderer)
 {
     /// Loop through each of the Fingers
