@@ -1,7 +1,7 @@
 #ifndef HANDRENDERER_H
 #define HANDRENDERER_H
 
-#define scale_ 0.08
+#define scale_ 1.0
 #define jointSize 1.5
 #define fingerSize 15
 #define fingerColourNormal 2,2,2

@@ -80,6 +80,14 @@ void HandRenderer::printFingerBones(visibleHand hand, int finger)
     std::cout << std::setprecision(3) << std::fixed ;
     for (int b = 0; b < 4; b++)
     {
+
+        double* point1Pos = global_Joints[hand][finger][b]->GetPosition();
+        double* point2Pos = global_Joints[hand][finger][b+1]->GetPosition();
+
+
+          global_Bones[hand][finger][b]->SetPoint1(point1Pos);
+          global_Bones[hand][finger][b]->SetPoint2(point2Pos);
+
         global_Bone_Actor[hand][finger][b]->GetPosition(position);
         //std::cout << "Joint: " << j +1 << "\t" << position[0] << ", " <<position[1] << ", " << position[2] << endl;
         std::cout << "\t {" << position[0] << ", " <<position[1] << ", " << position[2] << "}," << endl;

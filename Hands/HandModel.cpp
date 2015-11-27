@@ -15,11 +15,11 @@ void HandModeller::jointRightStartPos(fingerJoints& joints, int finger)
 
         fingerJoints finger1 =
         {
-            {174.7,140.9,169.3},
-            {174.7,140.9,169.3},
-            {145.5,173.9,121.4},
-            {129.4,194.6,85.6},
-            {121.0,207.4,59.2},
+            {10.837, 14.818, 11.009},
+            {10.837, 14.818, 11.009},
+            {7.908, 18.119, 5.197},
+            {6.314, 20.188, 0.952},
+            {5.511, 21.465, -2.118},
         };
         memcpy(joints,finger1,sizeof(joints));
         break;
@@ -30,11 +30,11 @@ void HandModeller::jointRightStartPos(fingerJoints& joints, int finger)
 
         fingerJoints finger2 =
         {
-            {195.4,162.1,178.2},
-            {202.8,222.5,104.2},
-            {207.2,265.6,68.7},
-            {206.0,281.0,41.3},
-            {202.7,283.8,19.4},
+            {13.071, 17.322, 11.875},
+            {12.389, 24.559, 3.949},
+            {12.803, 29.517, 0.116},
+            {12.285, 30.342, -3.280},
+            {11.563, 29.259, -5.412},
         };
         memcpy(joints,finger2,sizeof(joints));
         break;
@@ -43,11 +43,11 @@ void HandModeller::jointRightStartPos(fingerJoints& joints, int finger)
     {
         fingerJoints finger3 =
         {
-            {211.2,159.8,176.9},
-            {230.0,213.0,105.7},
-            {245.1,262.7,70.4},
-            {248.4,284.6,40.7},
-            {246.7,292.5,17.6},
+            {14.831, 17.221, 11.514},
+            {15.510, 23.746, 3.705},
+            {16.674, 29.305, -0.465},
+            {16.066, 30.625, -4.359},
+            {14.985, 29.819, -6.752},
         };
         memcpy(joints,finger3,sizeof(joints));
         break;
@@ -57,11 +57,11 @@ void HandModeller::jointRightStartPos(fingerJoints& joints, int finger)
     {
         fingerJoints finger4 =
         {
-            {225.8,153.5,174.7},
-            {253.8,196.1,111.0},
-            {279.8,234.0,75.3},
-            {289.5,250.0,44.4},
-            {290.9,254.2,20.5},
+            {16.476, 16.674, 11.043},
+            {18.372, 22.049, 3.876},
+            {19.770, 25.920, -1.195},
+            {19.606, 26.994, -5.096},
+            {18.823, 26.675, -7.693},
         };
         memcpy(joints,finger4,sizeof(joints));
         break;
@@ -71,11 +71,11 @@ void HandModeller::jointRightStartPos(fingerJoints& joints, int finger)
     {
         fingerJoints finger5 =
         {
-            {236.4,139.3,169.5},
-            {272.4,175.5,113.7},
-            {304.7,196.7,88.7},
-            {318.2,205.1,68.8},
-            {325.0,208.7,47.7},
+            {17.711, 15.212, 10.226},
+            {20.650, 19.904, 3.808},
+            {22.536, 22.314, -0.357},
+            {22.656, 22.896, -3.154},
+            {21.925, 22.642, -5.552},
         };
         memcpy(joints,finger5,sizeof(joints));
         break;
@@ -94,11 +94,11 @@ void HandModeller::jointLeftStartPos(fingerJoints& joints, int finger)
 
         fingerJoints finger1 =
         {
-            {-174.7,140.9,169.3},
-            {-174.7,140.9,169.3},
-            {-145.5,173.9,121.4},
-            {-129.4,194.6,85.6},
-            {-121.0,207.4,59.2},
+            {-10.837, 14.818, 11.009},
+            {-10.837, 14.818, 11.009},
+            {-7.908, 18.119, 5.197},
+            {-6.314, 20.188, 0.952},
+            {-5.511, 21.465, -2.118},
         };
         memcpy(joints,finger1,sizeof(joints));
         break;
@@ -109,11 +109,11 @@ void HandModeller::jointLeftStartPos(fingerJoints& joints, int finger)
 
         fingerJoints finger2 =
         {
-            {-195.4,162.1,178.2},
-            {-202.8,222.5,104.2},
-            {-207.2,265.6,68.7},
-            {-206.0,281.0,41.3},
-            {-202.7,283.8,19.4},
+            {-13.071, 17.322, 11.875},
+            {-12.389, 24.559, 3.949},
+            {-12.803, 29.517, 0.116},
+            {-12.285, 30.342, -3.280},
+            {-11.563, 29.259, -5.412},
         };
         memcpy(joints,finger2,sizeof(joints));
         break;
@@ -122,11 +122,11 @@ void HandModeller::jointLeftStartPos(fingerJoints& joints, int finger)
     {
         fingerJoints finger3 =
         {
-            {-211.2,159.8,176.9},
-            {-230.0,213.0,105.7},
-            {-245.1,262.7,70.4},
-            {-248.4,284.6,40.7},
-            {-246.7,292.5,17.6},
+            {-14.831, 17.221, 11.514},
+            {-15.510, 23.746, 3.705},
+            {-16.674, 29.305, -0.465},
+            {-16.066, 30.625, -4.359},
+            {-14.985, 29.819, -6.752},
         };
         memcpy(joints,finger3,sizeof(joints));
         break;
@@ -136,11 +136,11 @@ void HandModeller::jointLeftStartPos(fingerJoints& joints, int finger)
     {
         fingerJoints finger4 =
         {
-            {-225.8,153.5,174.7},
-            {-253.8,196.1,111.0},
-            {-279.8,234.0,75.3},
-            {-289.5,250.0,44.4},
-            {-290.9,254.2,20.5},
+            {-16.476, 16.674, 11.043},
+            {-18.372, 22.049, 3.876},
+            {-19.770, 25.920, -1.195},
+            {-19.606, 26.994, -5.096},
+            {-18.823, 26.675, -7.693},
         };
         memcpy(joints,finger4,sizeof(joints));
         break;
@@ -150,11 +150,11 @@ void HandModeller::jointLeftStartPos(fingerJoints& joints, int finger)
     {
         fingerJoints finger5 =
         {
-            {-236.4,139.3,169.5},
-            {-272.4,175.5,113.7},
-            {-304.7,196.7,88.7},
-            {-318.2,205.1,68.8},
-            {-325.0,208.7,47.7},
+            {-17.711, 15.212, 10.226},
+            {-20.650, 19.904, 3.808},
+            {-22.536, 22.314, -0.357},
+            {-22.656, 22.896, -3.154},
+            {-21.925, 22.642, -5.552},
         };
         memcpy(joints,finger5,sizeof(joints));
         break;
