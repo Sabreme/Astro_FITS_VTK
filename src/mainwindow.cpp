@@ -5919,43 +5919,26 @@ bool MainWindow::event(QEvent *event)
 
 void MainWindow::on_actionTestButton_triggered()
 {
-///    vtkCamera * camera = this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
-///    camera->SetViewAngle(120);
-    //this->startUserPractice();
-    /// THE VTK Interaction Box
         ///
         vtkSmartPointer<vtkCubeSource> centerBox =
                 vtkSmartPointer<vtkCubeSource>::New();
-        //centerBox->SetCenter(0,0,0);
+
         double * bounds = global_Volume->GetBounds();
         double * cubeCenter = global_Volume->GetCenter();
 
-//        cubeCenter[0] = &cubeCenter [0] * 0.6;
-//        cubeCenter[1] =& cubeCenter [1] * 0.6;
-//        cubeCenter[2] = &cubeCenter [2] * 0.6;
-
         double leftHandOffset[3] = {
-                                                                    cubeCenter[0]  / 1.0 ,
-                                                                    cubeCenter[1] * 0.0 ,
-                                                                    cubeCenter[2] * 0.6
-                                                                };
+            cubeCenter[0]  / 1.0 ,
+            cubeCenter[1] * 0.0 ,
+            cubeCenter[2] * 0.6
+        };
 
         double rightHandOffset[3] = {
-                                                                    cubeCenter[0] * 0.9 ,
-                                                                    cubeCenter[1] * 0.0 ,
-                                                                    cubeCenter[2] * 0.6
-                                                                };
-
-
-        //std::cout << "CubeCenter is : " << center[0] << ", " << center[1] << "," << center[2] << endl;
-        //global_Outline->GetCenter()
-
-   //     global_Outline->Print(std::cout);
-
+            cubeCenter[0] * 0.9 ,
+            cubeCenter[1] * 0.0 ,
+            cubeCenter[2] * 0.6
+        };
 
         centerBox->SetCenter(global_Volume->GetCenter());
-
-
 
         bounds[0] = bounds[0] + (bounds[1] * 0.2) ;
         bounds[1] = bounds[1]  -  (bounds[1] * 0.2) ;
