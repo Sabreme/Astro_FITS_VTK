@@ -917,7 +917,7 @@ void MainWindow::on_buttonModeLeap_clicked()
     ///////////////////////////////////////////////////////////////
 
     this->controller_= new Controller;
-    Leaping_ = true;
+    //Leaping_ = true;
 
     setLeapInteractor();
 
@@ -933,6 +933,13 @@ void MainWindow::on_buttonModeLeap_clicked()
     //////
     /// \brief INTRODUCTION OF LEAP WIDGET
     ///
+    ///
+
+    this->leapHandWidget = vtkLeapHandWidget::New();
+    this->leapHandWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+    this->leapHandWidget->GeneratActors();
+    this->leapHandWidget->SetEnabled(true);
+    this->leapHandWidget->InteractiveOff();
 
     this->leapMarkerWidget = vtkLeapMarkerWidget::New();
     this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
@@ -5948,11 +5955,6 @@ void MainWindow::on_actionTestButton_triggered()
         bounds[5] = bounds[5] +  (bounds[5] * 0.1) ;
 
         centerBox->SetBounds(bounds);
-
-
-        //this->defaultRenderer->Print(std::cout);
-        //this->defaultRenWindow->Print(std::cout);
-        //centerBox->SetBounds(boxBounds);
 
         vtkSmartPointer<vtkPolyDataMapper> centerMapper =
               vtkSmartPointer<vtkPolyDataMapper>::New();

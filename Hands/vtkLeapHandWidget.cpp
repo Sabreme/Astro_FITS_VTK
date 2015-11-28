@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Visualization Toolkit
-  Module:    vtkLeapMarkerWidget.cxx
+  Module:    vtkLeapHandWidget.cxx
 
   Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
   All rights reserved.
@@ -12,7 +12,7 @@
      PURPOSE.  See the above copyright notice for more information.
 
 =========================================================================*/
-#include "vtkLeapMarkerWidget.h"
+#include "vtkLeapHandWidget.h"
 
 #include "vtkActor2D.h"
 #include "vtkCallbackCommand.h"
@@ -38,18 +38,18 @@
 #include "vtkTextProperty.h"
 #include "vtkProperty2D.h"
 
-vtkStandardNewMacro(vtkLeapMarkerWidget);
+vtkStandardNewMacro(vtkLeapHandWidget);
 
-vtkCxxSetObjectMacro(vtkLeapMarkerWidget, LeapMarker, vtkProp);
+vtkCxxSetObjectMacro(vtkLeapHandWidget, LeapMarker, vtkProp);
 
 
-class vtkLeapMarkerWidgetObserver : public vtkCommand
+class vtkLeapHandWidgetObserver : public vtkCommand
 {
 public:
-  static vtkLeapMarkerWidgetObserver *New()
-    {return new vtkLeapMarkerWidgetObserver;};
+  static vtkLeapHandWidgetObserver *New()
+    {return new vtkLeapHandWidgetObserver;};
 
-  vtkLeapMarkerWidgetObserver()
+  vtkLeapHandWidgetObserver()
     {
     this->LeapMarkerWidget = 0;
     }
@@ -62,30 +62,29 @@ public:
         }
     }
   
-  vtkLeapMarkerWidget *LeapMarkerWidget;
+  vtkLeapHandWidget *LeapMarkerWidget;
 };
 
 //-------------------------------------------------------------------------
-vtkLeapMarkerWidget::vtkLeapMarkerWidget()
+vtkLeapHandWidget::vtkLeapHandWidget()
 {
   this->StartEventObserverId = 0;
-  this->EventCallbackCommand->SetCallback( vtkLeapMarkerWidget::ProcessEvents );
+  this->EventCallbackCommand->SetCallback( vtkLeapHandWidget::ProcessEvents );
 
-  this->Observer = vtkLeapMarkerWidgetObserver::New();
+  this->Observer = vtkLeapHandWidgetObserver::New();
   this->Observer->LeapMarkerWidget = this;
 
   this->Tolerance = 7;
   this->Moving = 0;
   
   this->Renderer = vtkRenderer::New();  
-  this->Renderer->SetViewport( 0.8, 0.8, 1.0, 1.0 );
-  ///this->Renderer->SetViewport( 0.0, 0.8, 0.2, 1.0 );
+  this->Renderer->SetViewport( 0.0, 0.8, 0.2, 1.0 );
   this->Renderer->SetLayer(1);
   this->Renderer->InteractiveOff();
 
   this->Priority = 0.55;
   this->LeapMarker = NULL;
-  this->State = vtkLeapMarkerWidget::Outside;
+  this->State = vtkLeapHandWidget::Outside;
   this->Interactive = 1;
 
   this->Outline = vtkPolyData::New();
@@ -120,7 +119,7 @@ vtkLeapMarkerWidget::vtkLeapMarkerWidget()
 }
 
 //-------------------------------------------------------------------------
-vtkLeapMarkerWidget::~vtkLeapMarkerWidget()
+vtkLeapHandWidget::~vtkLeapHandWidget()
 {
   this->Observer->Delete();
   this->Renderer->Delete();
@@ -130,7 +129,7 @@ vtkLeapMarkerWidget::~vtkLeapMarkerWidget()
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::SetEnabled(int enabling)
+void vtkLeapHandWidget::SetEnabled(int enabling)
 {
   if (!this->Interactor)
     {
@@ -235,7 +234,7 @@ void vtkLeapMarkerWidget::SetEnabled(int enabling)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::ExecuteCameraUpdateEvent(vtkObject *vtkNotUsed(o),
+void vtkLeapHandWidget::ExecuteCameraUpdateEvent(vtkObject *vtkNotUsed(o),
                                    unsigned long vtkNotUsed(event),
                                    void *vtkNotUsed(calldata))
 {
@@ -246,20 +245,20 @@ void vtkLeapMarkerWidget::ExecuteCameraUpdateEvent(vtkObject *vtkNotUsed(o),
 }
 
 //-------------------------------------------------------------------------
-int vtkLeapMarkerWidget::ComputeStateBasedOnPosition(int X, int Y,
+int vtkLeapHandWidget::ComputeStateBasedOnPosition(int X, int Y,
                                                     int *pos1, int *pos2)
 {
   if ( X < (pos1[0]-this->Tolerance) || (pos2[0]+this->Tolerance) < X || 
        Y < (pos1[1]-this->Tolerance) || (pos2[1]+this->Tolerance) < Y )
     {
-    return vtkLeapMarkerWidget::Outside;
+    return vtkLeapHandWidget::Outside;
     }
 
   // if we are not outside and the left mouse button wasn't clicked,
   // then we are inside, otherwise we are moving
   
-  int result = this->Moving ? vtkLeapMarkerWidget::Translating :
-      vtkLeapMarkerWidget::Inside;
+  int result = this->Moving ? vtkLeapHandWidget::Translating :
+      vtkLeapHandWidget::Inside;
   
   int e1 = 0;
   int e2 = 0;
@@ -287,22 +286,22 @@ int vtkLeapMarkerWidget::ComputeStateBasedOnPosition(int X, int Y,
     {
     if (e2)
       {
-      result = vtkLeapMarkerWidget::AdjustingP1; // lower left
+      result = vtkLeapHandWidget::AdjustingP1; // lower left
       }
     if (e4)
       {
-      result = vtkLeapMarkerWidget::AdjustingP4; // upper left
+      result = vtkLeapHandWidget::AdjustingP4; // upper left
       }
     }
   if (e3)
     {
     if (e2)
       {
-      result = vtkLeapMarkerWidget::AdjustingP2; // lower right
+      result = vtkLeapHandWidget::AdjustingP2; // lower right
       }
     if (e4)
       {
-      result = vtkLeapMarkerWidget::AdjustingP3;  // upper right
+      result = vtkLeapHandWidget::AdjustingP3;  // upper right
       }
     }
   
@@ -310,42 +309,42 @@ int vtkLeapMarkerWidget::ComputeStateBasedOnPosition(int X, int Y,
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::SetCursor(int state)
+void vtkLeapHandWidget::SetCursor(int state)
 {
   switch (state)
     {
-    case vtkLeapMarkerWidget::AdjustingP1:
+    case vtkLeapHandWidget::AdjustingP1:
       this->RequestCursorShape( VTK_CURSOR_SIZESW );
       break;
-    case vtkLeapMarkerWidget::AdjustingP3:
+    case vtkLeapHandWidget::AdjustingP3:
       this->RequestCursorShape( VTK_CURSOR_SIZENE );
       break;
-    case vtkLeapMarkerWidget::AdjustingP2:
+    case vtkLeapHandWidget::AdjustingP2:
       this->RequestCursorShape( VTK_CURSOR_SIZESE );
       break;
-    case vtkLeapMarkerWidget::AdjustingP4:
+    case vtkLeapHandWidget::AdjustingP4:
       this->RequestCursorShape( VTK_CURSOR_SIZENW );
       break;
-    case vtkLeapMarkerWidget::Translating:
+    case vtkLeapHandWidget::Translating:
       this->RequestCursorShape( VTK_CURSOR_SIZEALL );
       break;
-    case vtkLeapMarkerWidget::Inside:
+    case vtkLeapHandWidget::Inside:
       this->RequestCursorShape( VTK_CURSOR_SIZEALL );
       break;
-    case vtkLeapMarkerWidget::Outside:
+    case vtkLeapHandWidget::Outside:
       this->RequestCursorShape( VTK_CURSOR_DEFAULT );
       break;
     }
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::ProcessEvents(vtkObject* vtkNotUsed(object),
+void vtkLeapHandWidget::ProcessEvents(vtkObject* vtkNotUsed(object),
                                     unsigned long event,
                                     void *clientdata,
                                     void* vtkNotUsed(calldata))
 {
-  vtkLeapMarkerWidget *self =
-    reinterpret_cast<vtkLeapMarkerWidget*>( clientdata );
+  vtkLeapHandWidget *self =
+    reinterpret_cast<vtkLeapHandWidget*>( clientdata );
 
   if (!self->GetInteractive())
     {
@@ -367,7 +366,7 @@ void vtkLeapMarkerWidget::ProcessEvents(vtkObject* vtkNotUsed(object),
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::OnLeftButtonDown()
+void vtkLeapHandWidget::OnLeftButtonDown()
 {
   // We're only here if we are enabled
   int X = this->Interactor->GetEventPosition()[0];
@@ -391,7 +390,7 @@ void vtkLeapMarkerWidget::OnLeftButtonDown()
   this->State = this->ComputeStateBasedOnPosition( X, Y, pos1, pos2 );
   this->SetCursor( this->State );
 
-  if (this->State == vtkLeapMarkerWidget::Outside)
+  if (this->State == vtkLeapHandWidget::Outside)
     {
     this->Moving = 0;
     return;
@@ -403,9 +402,9 @@ void vtkLeapMarkerWidget::OnLeftButtonDown()
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::OnLeftButtonUp()
+void vtkLeapHandWidget::OnLeftButtonUp()
 {
-  if (this->State == vtkLeapMarkerWidget::Outside)
+  if (this->State == vtkLeapHandWidget::Outside)
     {
     return;
     }
@@ -415,7 +414,7 @@ void vtkLeapMarkerWidget::OnLeftButtonUp()
   this->UpdateOutline();
 
   // stop adjusting
-  this->State = vtkLeapMarkerWidget::Outside;
+  this->State = vtkLeapHandWidget::Outside;
   this->Moving = 0;
   
   this->RequestCursorShape( VTK_CURSOR_DEFAULT );
@@ -425,7 +424,7 @@ void vtkLeapMarkerWidget::OnLeftButtonUp()
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::SquareRenderer()
+void vtkLeapHandWidget::SquareRenderer()
 {
   int *size = this->Renderer->GetSize();
   if (size[0] == 0 || size[1] == 0)
@@ -450,23 +449,23 @@ void vtkLeapMarkerWidget::SquareRenderer()
 
     switch (this->State)
       {
-      case vtkLeapMarkerWidget::AdjustingP1:
+      case vtkLeapHandWidget::AdjustingP1:
         vp[2] = vp[0] + delta;
         vp[3] = vp[1] + delta;
         break;
-      case vtkLeapMarkerWidget::AdjustingP2:
+      case vtkLeapHandWidget::AdjustingP2:
         vp[0] = vp[2] - delta;
         vp[3] = vp[1] + delta;
         break;
-      case vtkLeapMarkerWidget::AdjustingP3:
+      case vtkLeapHandWidget::AdjustingP3:
         vp[0] = vp[2] - delta;
         vp[1] = vp[3] - delta;
         break;
-      case vtkLeapMarkerWidget::AdjustingP4:
+      case vtkLeapHandWidget::AdjustingP4:
         vp[2] = vp[0] + delta;
         vp[1] = vp[3] - delta;
         break;
-      case vtkLeapMarkerWidget::Translating:
+      case vtkLeapHandWidget::Translating:
         delta = (dx + dy)*0.5;
         vp[0] = ((vp[0]+vp[2])-delta)*0.5;
         vp[1] = ((vp[1]+vp[3])-delta)*0.5;
@@ -481,7 +480,7 @@ void vtkLeapMarkerWidget::SquareRenderer()
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::UpdateOutline()
+void vtkLeapHandWidget::UpdateOutline()
 {
   double vp[4];
   this->Renderer->GetViewport( vp );
@@ -497,7 +496,7 @@ void vtkLeapMarkerWidget::UpdateOutline()
   points->SetPoint( 3, vp[0]+1, vp[3]-1, 0 );
 }
 
-void vtkLeapMarkerWidget::GeneratActors()
+void vtkLeapHandWidget::GeneratActors()
 {
 
     double sphereCenter[3];
@@ -792,7 +791,7 @@ void vtkLeapMarkerWidget::GeneratActors()
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::SetInteractive(int interact)
+void vtkLeapHandWidget::SetInteractive(int interact)
 {
   if (this->Interactor && this->Enabled)
     {
@@ -828,7 +827,7 @@ void vtkLeapMarkerWidget::SetInteractive(int interact)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::OnMouseMove()
+void vtkLeapHandWidget::OnMouseMove()
 {
   // compute some info we need for all cases
   int X = this->Interactor->GetEventPosition()[0];
@@ -849,7 +848,7 @@ void vtkLeapMarkerWidget::OnMouseMove()
   this->SetCursor( this->State );
   this->OutlineActor->SetVisibility( this->State );
 
-  if (this->State == vtkLeapMarkerWidget::Outside || !this->Moving)
+  if (this->State == vtkLeapHandWidget::Outside || !this->Moving)
     { 
     this->Interactor->Render();
     return;          
@@ -859,19 +858,19 @@ void vtkLeapMarkerWidget::OnMouseMove()
   // adjust the renderer's viewport
   switch (this->State)
     {
-    case vtkLeapMarkerWidget::AdjustingP1:
+    case vtkLeapHandWidget::AdjustingP1:
       this->ResizeBottomLeft( X, Y );
       break;
-    case vtkLeapMarkerWidget::AdjustingP2:
+    case vtkLeapHandWidget::AdjustingP2:
       this->ResizeBottomRight( X, Y );
       break;
-    case vtkLeapMarkerWidget::AdjustingP3:
+    case vtkLeapHandWidget::AdjustingP3:
       this->ResizeTopRight( X, Y );
       break;
-    case vtkLeapMarkerWidget::AdjustingP4:
+    case vtkLeapHandWidget::AdjustingP4:
       this->ResizeTopLeft( X, Y );
       break;
-    case vtkLeapMarkerWidget::Translating:
+    case vtkLeapHandWidget::Translating:
       this->MoveWidget( X, Y );
       break;
     }
@@ -883,7 +882,7 @@ void vtkLeapMarkerWidget::OnMouseMove()
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::MoveWidget(int X, int Y)
+void vtkLeapHandWidget::MoveWidget(int X, int Y)
 {
   int dx = X - this->StartPosition[0];
   int dy = Y - this->StartPosition[1];
@@ -934,7 +933,7 @@ void vtkLeapMarkerWidget::MoveWidget(int X, int Y)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::ResizeTopLeft(int X, int Y)
+void vtkLeapHandWidget::ResizeTopLeft(int X, int Y)
 {
   int dx = X - this->StartPosition[0];
   int dy = Y - this->StartPosition[1];
@@ -991,7 +990,7 @@ void vtkLeapMarkerWidget::ResizeTopLeft(int X, int Y)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::ResizeTopRight(int X, int Y)
+void vtkLeapHandWidget::ResizeTopRight(int X, int Y)
 {
   int dx = X - this->StartPosition[0];
   int dy = Y - this->StartPosition[1];
@@ -1048,7 +1047,7 @@ void vtkLeapMarkerWidget::ResizeTopRight(int X, int Y)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::ResizeBottomRight(int X, int Y)
+void vtkLeapHandWidget::ResizeBottomRight(int X, int Y)
 {   
   int dx = X - this->StartPosition[0];
   int dy = Y - this->StartPosition[1];
@@ -1105,7 +1104,7 @@ void vtkLeapMarkerWidget::ResizeBottomRight(int X, int Y)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::ResizeBottomLeft(int X, int Y)
+void vtkLeapHandWidget::ResizeBottomLeft(int X, int Y)
 {
   int dx = X - this->StartPosition[0];
   int dy = Y - this->StartPosition[1];
@@ -1160,7 +1159,7 @@ void vtkLeapMarkerWidget::ResizeBottomLeft(int X, int Y)
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::SetOutlineColor(double r, double g, double b)
+void vtkLeapHandWidget::SetOutlineColor(double r, double g, double b)
 {
   this->OutlineActor->GetProperty()->SetColor( r, g, b );
   if (this->Interactor)
@@ -1170,26 +1169,26 @@ void vtkLeapMarkerWidget::SetOutlineColor(double r, double g, double b)
 }
 
 //-------------------------------------------------------------------------
-double* vtkLeapMarkerWidget::GetOutlineColor()
+double* vtkLeapHandWidget::GetOutlineColor()
 {
   return this->OutlineActor->GetProperty()->GetColor();
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::SetViewport(double minX, double minY,
+void vtkLeapHandWidget::SetViewport(double minX, double minY,
                                   double maxX, double maxY)
 {
   this->Renderer->SetViewport( minX, minY, maxX, maxY );
 }
 
 //-------------------------------------------------------------------------
-double* vtkLeapMarkerWidget::GetViewport()
+double* vtkLeapHandWidget::GetViewport()
 {
   return this->Renderer->GetViewport();
 }
 
 //-------------------------------------------------------------------------
-void vtkLeapMarkerWidget::PrintSelf(ostream& os, vtkIndent indent)
+void vtkLeapHandWidget::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
 

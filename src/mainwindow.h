@@ -77,6 +77,8 @@
 
 #include <Leap/vtkLeapMarkerWidget.h>
 
+#include <Hands/vtkLeapHandWidget.h>
+
 
 #include "Leap/Leap.h"
 #include "Leap/Sample.h"
@@ -523,6 +525,7 @@ private:
         vtkSmartPointer< vtkPlaneWidget > customPlaneWidget;
 
         vtkLeapMarkerWidget * leapMarkerWidget   = NULL;
+        vtkLeapHandWidget * leapHandWidget = NULL;
 
 
 };
