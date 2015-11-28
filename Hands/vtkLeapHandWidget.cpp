@@ -499,293 +499,54 @@ void vtkLeapHandWidget::UpdateOutline()
 void vtkLeapHandWidget::GeneratActors()
 {
 
-    double sphereCenter[3];
-    double sphereRadius;
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// SPHERE ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    vtkSmartPointer<vtkPolyData> inputPolyData ;
-
-    vtkSmartPointer<vtkSphereSource> sphereSource =
-            vtkSmartPointer<vtkSphereSource>::New();
-    sphereSource->SetPhiResolution(10);
-    sphereSource->SetThetaResolution(10);
-    sphereSource->Update();
-    inputPolyData = sphereSource->GetOutput();
-
-    vtkSmartPointer<vtkPolyDataMapper> mapperSphere =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapperSphere->SetInput(inputPolyData);
-
-    vtkSmartPointer<vtkActor> sphereActor =
-            vtkSmartPointer<vtkActor>::New();
-    sphereActor->SetMapper(mapperSphere);
-    sphereActor->GetProperty()->SetRepresentationToWireframe();
-    sphereActor->GetProperty()->SetColor(1.0, 1.0, 1.0);
-
-    sphereSource->GetCenter(sphereCenter);
-    sphereRadius =  sphereSource->GetRadius();
-
-    sphereActor->RotateY(-90);
-    leapDbgSphere = sphereSource;
-    leapDbgSphereActor = sphereActor;
+    //// THE VTK Interaction Box
     ///
-    ///
-    ///
-
-
-
-    //this->Renderer->GetActiveCamera()->Dolly(0.2);
-
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// ARROW ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-
-    vtkSmartPointer<vtkArrowSource> arrowSource =
-            vtkSmartPointer<vtkArrowSource>::New();
-
-    double startPoint[3], endPoint[3];
-#ifndef main
-    vtkMath::RandomSeed(time(NULL));
-#else
-    vtkMath::RandomSeed(8775070);
-#endif
-
-    startPoint[0] = 0;
-    startPoint[1] = 0;
-    startPoint[2] = 0.5;
-
-    endPoint[0] = 0;
-    endPoint[1] = 0;
-    endPoint[2] = -0.5;
-
-    // Compute a basis
-    double normalizedX[3];
-    double normalizedY[3];
-    double normalizedZ[3];
-
-    //THe X axis is a vector from start to end
-
-    vtkMath::Subtract(endPoint, startPoint, normalizedX);
-    ///double length = vtkMath::Norm(normalizedX);
-    double length = sphereRadius * 2;
-
-
-    vtkMath::Normalize(normalizedX);
-
-    // THe Z axis is an arbitrary vector cross X
-
-    double arbitratry[3];
-
-    arbitratry[0]  = vtkMath::Random(-10, 10);
-    arbitratry[1]  = vtkMath::Random(-10, 10);
-    arbitratry[2]  = vtkMath::Random(-10, 10);
-    vtkMath::Cross(normalizedX,arbitratry,normalizedZ);
-    vtkMath::Normalize(normalizedZ);
-
-    // The Y axis is Z cross X
-    vtkMath::Cross(normalizedZ,normalizedX,normalizedY);
-    vtkSmartPointer<vtkMatrix4x4> matrix =
-            vtkSmartPointer<vtkMatrix4x4>::New();
-
-
-    //Create the direction cosine matrix
-    matrix->Identity();
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        matrix->SetElement(i, 0,normalizedX[i]);
-        matrix->SetElement(i, 1, normalizedY[i]);
-        matrix->SetElement(i, 2, normalizedZ[i]);
-    }
-
-    // Apply the transforms
-    vtkSmartPointer<vtkTransform> transform =
-            vtkSmartPointer<vtkTransform>::New();
-
-    transform->Translate(startPoint);
-    transform->Concatenate(matrix);
-    transform->Scale(length, length, length);
-
-    // Transform the polydata
-    vtkSmartPointer<vtkTransformPolyDataFilter> transformPD =
-            vtkSmartPointer<vtkTransformPolyDataFilter>::New();
-    transformPD->SetTransform(transform);
-    transformPD->SetInputConnection(arrowSource->GetOutputPort());
-
-    //Create a mapper and actor for the arrow
-    vtkSmartPointer<vtkPolyDataMapper> mapperArrow =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    vtkSmartPointer<vtkActor> arrowActor =
-            vtkSmartPointer<vtkActor>::New();
-
-#ifdef USER_MATRIX
-    mapperArrow->SetInputConnection(arrowSource->GetOutputPort());
-    arrowActor->SetUserMatrix(transform->GetMatrix());
-#else
-    mapperArrow->SetInputConnection(transformPD->GetOutputPort());
-#endif
-    arrowActor->SetMapper(mapperArrow);
-
-
-    this->Renderer->AddActor(arrowActor);
-
-    leapDbgArrow = arrowSource;
-    leapDbgArrowActor = arrowActor;
-    //global_Arrow = arrowSource;
-
-
-    /// Align the arrow with the Widget
-    arrowActor->RotateY(-90);
-
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// PLANE ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-
-    leapDbgPlaneWidget = vtkPlaneWidget::New();
-    leapDbgPlaneWidget->SetInput(leapDbgSphere->GetOutput());
-    leapDbgPlaneWidget->NormalToXAxisOn();
-    leapDbgPlaneWidget->SetResolution(20);
-    leapDbgPlaneWidget->SetRepresentationToOutline();
-    leapDbgPlaneWidget->PlaceWidget();
-
-    leapDbgPlaneWidget->SetInteractor(this->Interactor);
-    leapDbgPlaneWidget->EnabledOn();
-
-    ////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    /// POINTWIDGET ACTOR
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-
-
-    vtkSmartPointer<vtkCubeSource> cubeSource =
+    vtkSmartPointer<vtkCubeSource> centerBox =
             vtkSmartPointer<vtkCubeSource>::New();
-    //cubeSource->SetBounds(global_Renderer->ComputeVisiblePropBounds());
-    cubeSource->SetBounds(-1, 1, -1, 1, -1, 1);
-    cubeSource->Update();
+    centerBox->SetCenter(0,0,0);
+    centerBox->SetBounds(boxBounds);
 
-    vtkSmartPointer<vtkPolyDataMapper> mapperCube =
-        vtkSmartPointer<vtkPolyDataMapper>::New();
-//    mapper->SetInput();
+    vtkSmartPointer<vtkPolyDataMapper> centerMapper =
+          vtkSmartPointer<vtkPolyDataMapper>::New();
+  centerMapper->SetInputConnection(centerBox->GetOutputPort());
 
+  vtkSmartPointer<vtkActor>  boxActor =
+          vtkSmartPointer<vtkActor>::New();
+  boxActor->GetProperty()->SetOpacity(0.2);
+   boxActor->SetMapper(centerMapper);
 
-    /// The plane widget is used probe the dataset.
-    vtkSmartPointer<vtkPolyData> point =
-            vtkSmartPointer<vtkPolyData>::New();
+   this->Renderer->AddActor(boxActor);
 
-    vtkSmartPointer<vtkProbeFilter> probe =
-            vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(cubeSource->GetOutput());
-
-    ///
-    /// create glyph
-    ///
-
-    vtkSmartPointer<vtkSphereSource> pointMarker =
-            vtkSmartPointer<vtkSphereSource>::New();
-    pointMarker->SetRadius(0.1);
-
-    vtkSmartPointer<vtkGlyph3D> glyph =
-            vtkSmartPointer<vtkGlyph3D>::New();
-    glyph->SetInputConnection(probe->GetOutputPort());
-    glyph->SetSourceConnection(pointMarker->GetOutputPort());
-    glyph->SetVectorModeToUseVector();
-    glyph->SetScaleModeToDataScalingOff();
-//    glyph->SetScaleFactor(global_Volume->GetLength() * 0.1);
-
-    vtkSmartPointer<vtkPolyDataMapper> glyphMapper =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-    glyphMapper->SetInputConnection(glyph->GetOutputPort());
-
-    vtkSmartPointer<vtkActor> glyphActor =
-            vtkSmartPointer<vtkActor>::New();
-    glyphActor->SetMapper(glyphMapper);
-    glyphActor->VisibilityOn();
+   SetLeapMarker(boxActor);
 
 
-    leapDbgPointWidget = vtkPointWidget::New();
-    leapDbgPointWidget->SetCurrentRenderer(this->Renderer);
-    leapDbgPointWidget->SetInteractor(this->Interactor);
 
-    //pointWidget->SetInput(global_Reader->GetOutput());
-    leapDbgPointWidget->AllOff();
-    leapDbgPointWidget->PlaceWidget(-1, 1, -1, 1, -1, 1);
-    leapDbgPointWidget->GetPolyData(point);
-    leapDbgPointWidget->EnabledOff();
+   ///// WE INITIALISE THE HAND FIRST /////
+   ////    THEN JOINTS
+   ///     THEN BONES
+   ///     RIGHT THEN LEFT
+   ///
 
-    leapDbgPointWidget->GetProperty()->SetLineWidth(1.5);
-
-    // Set the widget colour to GREEN
-    //pointWidget->GetProperty()->SetColor(0.0, 1.0, 0.0);
-
-    this->Renderer->AddActor(glyphActor);
-//    global_Renderer->AddActor2D(textActor);
-
-    leapDbgPointWidget->EnabledOn();
+  handRenderer = new HandRenderer();
+  handRenderer->setScale(0.1);
+  handRenderer->setJoinSize(0.15);
+  handRenderer->setFingerSize(1.5);
 
 
-     SetLeapMarker(sphereActor);
+  handRenderer->drawJoints(rightHand,this->Renderer);
+  handRenderer->drawBones(rightHand, this->Renderer);
 
-     this->Renderer->GetActiveCamera()->Dolly(0.2);
+   handRenderer->drawJoints(leftHand, this->Renderer);
+   handRenderer->drawBones(leftHand, this->Renderer);
 
-     ////////////////////////////////////////////////
-     ///////////////////////////////////////////////
-     /// SLIDERWIDGET ACTOR
-     ///////////////////////////////////////////////
-     ///////////////////////////////////////////////
 
-     vtkSmartPointer<vtkSliderRepresentation3D> sliderRep =
-       vtkSmartPointer<vtkSliderRepresentation3D>::New();
+   this->Renderer->GetActiveCamera()->Dolly(0.1);
 
-     sliderRep->SetMinimumValue(scaling_Min);
-     sliderRep->SetMaximumValue(scaling_Max);
-     sliderRep->SetValue(scaling_Start);
+   this->Renderer->GetActiveCamera()->Pitch(10);
 
-     // Set color properties:
-     // Change the color of the knob that slides
-     sliderRep->GetSliderProperty()->SetColor(0,1,0);//Green
-     sliderRep->SetSliderLength(0.06);          //THICKNESS
-     sliderRep->SetSliderWidth(0.1);           // TALL
 
-     //Change the color of the text displaying the value location
-     sliderRep->ShowSliderLabelOff();
 
-     // Change the color of the knob when the mouse is held on it
-     sliderRep->GetSelectedProperty()->SetColor(0,1,0);//green
 
-     // Change the color and Width of the bar
-     sliderRep->GetTubeProperty()->SetColor(1,1,1);//white
-     sliderRep->SetTubeWidth(0.03);
-
-     // Change the color and Width of the ends of the bar
-     sliderRep->GetCapProperty()->SetColor(0,1,0);//Green
-     sliderRep->SetEndCapLength(0.06);          //THICKNESS
-     sliderRep->SetEndCapWidth(0.02);           // TALL
-
-     sliderRep->GetPoint2Coordinate()->SetCoordinateSystemToWorld();
-     sliderRep->GetPoint2Coordinate()->SetValue(-0.8, 0.8, 0.3);
-     sliderRep->GetPoint1Coordinate()->SetCoordinateSystemToWorld();
-     sliderRep->GetPoint1Coordinate()->SetValue(0.8, 0.8, 0.3);
-
-   //  std::cout << "Point Viewport: " << sliderRep->GetPoint1Coordinate()->GetComputedViewportValue(sliderRep->GetPoint1Coordinate()->GetViewport()) << endl;
-
-     leapDbgSliderWidget  = vtkSliderWidget::New();
-     leapDbgSliderWidget->SetInteractor(this->Interactor);
-     leapDbgSliderWidget->SetCurrentRenderer(this->Renderer);
-     leapDbgSliderWidget->SetRepresentation(sliderRep);
-     leapDbgSliderWidget->SetAnimationModeToOff();
-
-     leapDbgSliderWidget->EnabledOn();
      global_CameraPosition = 7;
 
 }

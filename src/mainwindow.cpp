@@ -937,7 +937,7 @@ void MainWindow::on_buttonModeLeap_clicked()
 
     this->leapHandWidget = vtkLeapHandWidget::New();
     this->leapHandWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    this->leapHandWidget->GeneratActors();
+    this->leapHandWidget->GeneratActors();    
     this->leapHandWidget->SetEnabled(true);
     this->leapHandWidget->InteractiveOff();
 

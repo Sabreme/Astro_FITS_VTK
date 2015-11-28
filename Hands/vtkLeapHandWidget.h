@@ -88,6 +88,10 @@
 #include "vtkPointWidget.h"
 #include "vtkSliderWidget.h"
 
+#include "Hands/handRenderer.h""
+
+
+
 class vtkActor2D;
 class vtkPolyData;
 class vtkProp;
@@ -142,6 +146,17 @@ public:
   vtkSetClampMacro(Tolerance,int,1,10);
   vtkGetMacro(Tolerance,int);
 
+
+  /////////////////////////////////////////////////////////////////////////////////
+  /// Hand Renderer
+  /////////////////////////////////////////////////////////////////////////////////
+  ///
+  HandRenderer              *handRenderer;
+
+
+  double boxBounds[6] = {-3, 3, 1, 5, -2,3};
+
+  /////////////////////////////////////////////////////////////////////////////////
 
   void GeneratActors();
 

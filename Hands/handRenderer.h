@@ -1,9 +1,15 @@
 #ifndef HANDRENDERER_H
 #define HANDRENDERER_H
 
-#define scale_ 1.0
-#define jointSize 1.5
-#define fingerSize 15
+//#define scale_ 1.0
+//#define jointSize 1.5
+//#define fingerSize 15
+//#define fingerColourNormal 2,2,2
+//#define fingerColourWarning 250,0,0
+
+//#define scale_ 0.1
+//#define jointSize 0.15
+//#define fingerSize 1.5
 #define fingerColourNormal 2,2,2
 #define fingerColourWarning 250,0,0
 
@@ -31,15 +37,21 @@ public:
 
      void setStartLocation(visibleHand startHand, double *cubeCenter);
 
+     void setScale(double scale);
+
+     void setJoinSize(double jointSize);
+
+     void setFingerSize(int fingerSize);
+
     HandModeller            *handModel;
 
     vtkActor                    *global_Joints[2][5][5];        /// 2 Hands,  5 FINGERS / 5 Joints
     vtkLineSource        *global_Bones[2][5][4];            /// 2 Hands, 5 FINGERS / 4 Bones
     vtkActor                    *global_Bone_Actor[2][5][4];            /// 5 Fingers / 4 Bones
 
-    //double scale_ = 0.01;
-//    double jointSize = 0.15;
-//    double fingerSize = 20;
+double scale_ = 0.01;
+double jointSize = 0.15;
+ double fingerSize = 20;
 //    double fingerColourNormal [3] =  {2, 2, 2};
 //    double fingerColourWarning [3] =  {255, 0, 0};
 

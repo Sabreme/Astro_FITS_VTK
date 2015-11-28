@@ -237,3 +237,18 @@ void HandRenderer::setStartLocation(visibleHand startHand, double  *cubeCenter)
     }
 }
 
+void HandRenderer::setScale(double scale)
+{
+    this->scale_ = scale;
+}
+
+void HandRenderer::setJoinSize(double jointSize)
+{
+    this->jointSize = jointSize;
+}
+
+void HandRenderer::setFingerSize(int fingerSize)
+{
+    this->fingerSize = fingerSize;
+}
+
