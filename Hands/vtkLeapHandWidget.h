@@ -69,26 +69,19 @@
 #include "vtkInteractorObserver.h"
 
 #include "vtkSmartPointer.h"
-#include "vtkPlaneWidget.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkSmartPointer.h"
-#include "vtkSphereSource.h"
-#include "vtkLeapHandWidget.h"
-#include "vtkArrowSource.h"
 #include "vtkMath.h"
 #include "vtkMatrix4x4.h"
 #include "vtkTransformPolyDataFilter.h"
 #include "vtkActor.h"
-#include "vtkPlaneWidget.h"
 #include "vtkCubeSource.h"
-#include "vtkProbeFilter.h"
 #include "vtkTransform.h"
 #include "vtkGlyph3D.h"
 #include "vtkProperty.h"
-#include "vtkPointWidget.h"
-#include "vtkSliderWidget.h"
 
-#include "Hands/handRenderer.h""
+#include "Leap/Leap.h"
+#include "Hands/handRenderer.h"
 
 
 
@@ -155,19 +148,12 @@ public:
 
 
   double boxBounds[6] = {-3, 3, 1, 5, -2,3};
+  void GeneratActors();
+  void  translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds);
 
   /////////////////////////////////////////////////////////////////////////////////
 
-  void GeneratActors();
 
-  vtkActor        * leapDbgSphereActor;
-  vtkActor        * leapDbgArrowActor;
-  vtkArrowSource  * leapDbgArrow;
-  vtkPlaneSource  * leapDbgPlane;
-  vtkSphereSource * leapDbgSphere;
-  vtkPlaneWidget * leapDbgPlaneWidget;
-  vtkPointWidget * leapDbgPointWidget;
-  vtkSliderWidget* leapDbgSliderWidget;
 
   double global_CameraPosition;
 
