@@ -31,6 +31,7 @@
 #include "vtkSphereSource.h"
 #include "vtkPointWidget.h"
 #include "vtkTextActor.h"
+#include "vtkOutlineFilter.h"
 
 #include "vtkProperty.h"
 #include "vtkSliderRepresentation2D.h"
@@ -498,7 +499,7 @@ void vtkLeapHandWidget::UpdateOutline()
 
 void vtkLeapHandWidget::GeneratActors()
 {
-
+    /////////////////////////////////////////////////////////
     //// THE VTK Interaction Box
     ///
     vtkSmartPointer<vtkCubeSource> centerBox =
@@ -515,9 +516,27 @@ void vtkLeapHandWidget::GeneratActors()
   boxActor->GetProperty()->SetOpacity(0.2);
    boxActor->SetMapper(centerMapper);
 
+
    this->Renderer->AddActor(boxActor);
 
-   SetLeapMarker(boxActor);
+    SetLeapMarker(boxActor);
+
+   /////////////////////////////////////////////////////
+   ///
+   /// OUTLINE ACTOR
+   vtkOutlineFilter *outline = vtkOutlineFilter::New();
+   outline->SetInputConnection(centerBox->GetOutputPort());
+
+   vtkPolyDataMapper *outlineMapper = vtkPolyDataMapper::New();
+   outlineMapper->SetInputConnection(outline->GetOutputPort());
+
+   vtkActor *outlineActor = vtkActor::New();
+   outlineActor->SetMapper(outlineMapper);
+   outlineActor->GetProperty()->SetColor(0.5,0.5,0.5);
+
+  this->Renderer->AddActor(outlineActor);
+
+
 
 
 
@@ -530,7 +549,7 @@ void vtkLeapHandWidget::GeneratActors()
   handRenderer = new HandRenderer();
   handRenderer->setScale(0.1);
   handRenderer->setJoinSize(0.15);
-  handRenderer->setFingerSize(1.5);
+  handRenderer->setFingerSize(4);
 
 
   handRenderer->drawJoints(rightHand,this->Renderer);
@@ -543,9 +562,11 @@ void vtkLeapHandWidget::GeneratActors()
    this->Renderer->GetActiveCamera()->Dolly(0.1);
 
    this->Renderer->GetActiveCamera()->Pitch(20);
-   this->Renderer->GetActiveCamera()->SetPosition(0,4,10);
 
-   //this->Renderer->GetActiveCamera()->Print(std::cout);
+   this->Renderer->GetActiveCamera()->SetPosition(0,4,12);
+   this->Renderer->GetActiveCamera()->SetFocalPoint(0, 3, 0.603074);
+
+   this->Renderer->GetActiveCamera()->Print(std::cout);
    std::cout << endl;
 
 
