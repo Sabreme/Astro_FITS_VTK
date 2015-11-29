@@ -542,7 +542,11 @@ void vtkLeapHandWidget::GeneratActors()
 
    this->Renderer->GetActiveCamera()->Dolly(0.1);
 
-   this->Renderer->GetActiveCamera()->Pitch(10);
+   this->Renderer->GetActiveCamera()->Pitch(20);
+   this->Renderer->GetActiveCamera()->SetPosition(0,4,10);
+
+   //this->Renderer->GetActiveCamera()->Print(std::cout);
+   std::cout << endl;
 
 
 

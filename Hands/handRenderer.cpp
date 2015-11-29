@@ -140,7 +140,7 @@ void HandRenderer::translateHand(visibleHand activeHand, Leap::Hand movingHand, 
         Leap::Vector midpointMETA  = mcp.prevJoint() + mcp.prevJoint() / 2.0;
 
         /// We Get the location of the joint inside the hand
-        double sensitivity = 0.1;
+        double sensitivity = 0.01;
         double jointPosPoint[3] = {midpointMETA.x * sensitivity ,
                                    midpointMETA.y * sensitivity,
                                    midpointMETA.z * sensitivity
@@ -157,7 +157,7 @@ void HandRenderer::translateHand(visibleHand activeHand, Leap::Hand movingHand, 
             Leap::Bone bone = finger.bone(static_cast<Leap::Bone::Type>(b));
             Leap::Vector bonePosition  = bone.nextJoint() + bone.nextJoint() / 2.0;
 
-            double sensitivity = 0.1;
+            double sensitivity = 0.01;
             double jointPosPoint[3] = { bonePosition.x * sensitivity ,
                                         bonePosition.y * sensitivity,
                                         bonePosition.z * sensitivity
