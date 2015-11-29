@@ -5317,6 +5317,19 @@ void MainWindow::LeapMotion()
                 Matrix newRotation = frame.rotationMatrix(controller_->frame(2));
                 //std::cout << newRotation.toString() << endl;
 
+                double * oldPosition = camera->GetPosition();
+                double * oldViewUp = camera->GetViewUp();
+                double * oldFocalPoint = camera->GetFocalPoint();
+                double * oldOrientation = camera->GetOrientation();
+
+
+                double position[3] = {oldPosition[0] , oldPosition[1], oldPosition[2] };
+                double viewUp[3] = {oldViewUp[0] , oldViewUp[1], oldViewUp[2] };
+                double focalPoint[3] = {oldFocalPoint[0] , oldFocalPoint[1], oldFocalPoint[2] };
+                double oriental[3] = {oldOrientation[0] , oldOrientation[1], oldOrientation[2] };
+
+                ///camera->SetFocalPoint(cameraFocalPoint);
+
                 vtkMatrix4x4* cameraMatrix = camera->GetModelTransformMatrix();
 
                 vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
@@ -5335,15 +5348,52 @@ void MainWindow::LeapMotion()
 
                 vtkTransform* transform = vtkTransform::New();
 
-                transform ->Identity();
+                transform ->Identity();                
 
                 transform->SetMatrix(cameraMatrix);
 
-                transform->Concatenate(rotationMatrix);
+                transform->Translate( cameraFocalPoint);
+
+                transform->Concatenate(rotationMatrix);                                                
+
+                transform->Translate(-cameraFocalPoint[0], -cameraFocalPoint[1], -cameraFocalPoint[2]);
 
                 camera->ApplyTransform(transform);
 
-                camera->SetFocalPoint(cameraFocalPoint);
+
+
+
+
+//                double * newFP = transform->TransformDoublePoint(cameraFocalPoint);
+
+//                double newTFP[3] = {newFP[0] , newFP[1], newFP[2] };
+
+//                oldPosition = camera->GetPosition();
+//                oldViewUp = camera->GetViewUp();
+//                oldFocalPoint = camera->GetFocalPoint();
+//                oldOrientation = camera->GetOrientation();
+
+
+
+//                std::cout << std::fixed << std::setprecision(2) ;
+//                std::cout <<
+//                             "P:" << oldPosition[0] << ", " << oldPosition[1] << "," << oldPosition[2] << "\t" <<
+//                             "V:" << oldViewUp[0] << ", " << oldViewUp[1] << "," << oldViewUp[2] << "\t" <<
+//                             "FP:" << oldFocalPoint[0] << ", " << oldFocalPoint[1] << "," << oldFocalPoint[2] << "\t" <<
+
+
+
+//                             endl;
+
+
+
+                ///camera->SetFocalPoint(cameraFocalPoint);
+                ///
+
+                //camera->SetFocalPoint(newFP);
+                //camera->SetPosition(transform->TransformDoublePoint(oldPosition));
+                //camera->SetViewUp(transform->TransformDoublePoint(oldViewUp));
+                //camera->SetViewUp(viewUp);
 
                 /// ADDED INTERACTION CAPTURE
                 double* orientation;
