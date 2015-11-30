@@ -8,6 +8,7 @@
 #include "vtkCamera.h"
 #include "vtkSystemIncludes.h"
 #include <src/mainwindow.h>
+#include "vtkActor2D.h"
 
 
 
@@ -259,6 +260,8 @@ private:
     bool userTestRunning = false;
 
     bool transformsOn = true;
+
+    vtkActor2D *      fingerActor;
 
 signals:
 

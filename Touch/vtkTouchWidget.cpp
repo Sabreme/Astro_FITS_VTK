@@ -17,6 +17,11 @@
 #include "vtkInteractorObserver.h"
 #include "vtkObjectFactory.h"
 #include "qgesturerecognizer.h"
+
+
+#include "vtkVertexGlyphFilter.h"
+#include "vtkPolyDataMapper2D.h"
+#include "vtkProperty2D.h"
 //#include "private/qgesture_p.h"
 
 #include "qgesture.h"
@@ -70,6 +75,8 @@ QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
     scaleSequenceNew = true;
 
 
+
+
 }
 
 void QVTKTouchWidget::enableGestures()
@@ -77,6 +84,46 @@ void QVTKTouchWidget::enableGestures()
     //    std::cout << "gestures enabled" << endl;
     this->gesturesActive = true;
     this->setAttribute(Qt::WA_AcceptTouchEvents);
+    vtkSmartPointer<vtkPoints> points =
+            vtkSmartPointer<vtkPoints>::New();
+    points->InsertNextPoint(10, 10 ,0);
+    //points->InsertNextPoint(100, 100, 0);
+
+    vtkSmartPointer<vtkPolyData> polydata =
+            vtkSmartPointer<vtkPolyData>::New();
+
+    polydata->SetPoints(points);
+
+    vtkSmartPointer<vtkVertexGlyphFilter> glyphfilter =
+            vtkSmartPointer<vtkVertexGlyphFilter>::New();
+
+    glyphfilter->SetInputConnection(polydata->GetProducerPort());
+    glyphfilter->Update();
+
+    vtkSmartPointer<vtkPolyDataMapper2D> mapper =
+            vtkSmartPointer<vtkPolyDataMapper2D>::New();
+
+    mapper->SetInputConnection(glyphfilter->GetOutputPort());
+
+    mapper->Update();
+
+    vtkSmartPointer<vtkActor2D> pointActor =
+            vtkSmartPointer<vtkActor2D>::New();
+    pointActor->SetMapper(mapper);
+
+    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+    renderer->AddActor(pointActor);
+
+    pointActor->GetProperty()->SetColor(0,1,0);
+    pointActor->GetProperty()->SetPointSize(20);
+
+    fingerActor = pointActor;
+
+    fingerActor->SetVisibility(false);
+
+    this->GetRenderWindow()->Print(std::cout);
+    std::cout << endl;
 
     //this->grabGesture(pan2Finger);
     //    this->grabGesture(Qt::TapGesture);
@@ -192,6 +239,34 @@ bool QVTKTouchWidget::event(QEvent *event)
                     rotationPressed();
 
                     QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+
+
+                    ///////////////////////////////////////////////
+                    /// 2D Finger Position Being Drawn
+                    /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+                    ///  We need to Subtract the position from the Total Height of VTK Window
+                    ///
+                    ///
+                    vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+                    int * sizeRW = renWindow->GetSize();
+                    int * screenSize = renWindow->GetScreenSize();
+
+                    int maxY = sizeRW[1];
+
+
+
+                    int xPos = p1.pos().toPoint().x();
+                    int yPos = p1.pos().toPoint().y();
+
+                    std::cout << "[x,y]: {" << xPos << ", " << yPos << "}" << "\t"
+                              << "size [x,y]: {" << sizeRW[0] << ", " << sizeRW[1] <<"}" << "\t"
+                              << "screen [x,y]: {" << screenSize[0] << ", " << screenSize[1] <<"}" << "\t"  <<
+                                 endl;
+
+                    fingerActor->SetPosition(xPos, maxY - yPos);
+
+                    fingerActor->SetVisibility(true);
 
                     QPointF lastPos = p1.lastPos();    /// get the average of the last positions
                     QPointF newPos = (p1.pos());               /// get the aversge of the current positions
@@ -496,6 +571,9 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 rotationReleased();
                 translationReleased();
+
+
+                fingerActor->SetVisibility(false);
 //                switch (lastGesture)
 //                {
 //                case 0: std::cout << "case 0" << endl; break;
