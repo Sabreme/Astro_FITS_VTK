@@ -107,23 +107,34 @@ void QVTKTouchWidget::enableGestures()
 
     mapper->Update();
 
-    vtkSmartPointer<vtkActor2D> pointActor =
-            vtkSmartPointer<vtkActor2D>::New();
-    pointActor->SetMapper(mapper);
-
     vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
 
-    renderer->AddActor(pointActor);
+    /// WE CONSTRUCT THE FINGER POINTS
+    ///
+    fingerActor1 =
+            vtkActor2D::New();
+    fingerActor1->SetMapper(mapper);
+    renderer->AddActor(fingerActor1);
 
-    pointActor->GetProperty()->SetColor(0,1,0);
-    pointActor->GetProperty()->SetPointSize(20);
+    fingerActor1->GetProperty()->SetColor(0.1,0.2,0.3);
+    fingerActor1->GetProperty()->SetPointSize(40);
 
-    fingerActor = pointActor;
+    fingerActor1->SetVisibility(false);
 
-    fingerActor->SetVisibility(false);
 
-    this->GetRenderWindow()->Print(std::cout);
-    std::cout << endl;
+    /////////////////////////////////////
+    fingerActor2 =
+            vtkActor2D::New();
+    fingerActor2->SetMapper(mapper);
+    renderer->AddActor(fingerActor2);
+
+    fingerActor2->GetProperty()->SetColor(0.5,1,0.4);
+    fingerActor2->GetProperty()->SetPointSize(40);
+
+    fingerActor2->SetVisibility(false);
+
+    //this->GetRenderWindow()->Print(std::cout);
+    //std::cout << endl;
 
     //this->grabGesture(pan2Finger);
     //    this->grabGesture(Qt::TapGesture);
@@ -259,14 +270,17 @@ bool QVTKTouchWidget::event(QEvent *event)
                     int xPos = p1.pos().toPoint().x();
                     int yPos = p1.pos().toPoint().y();
 
-                    std::cout << "[x,y]: {" << xPos << ", " << yPos << "}" << "\t"
-                              << "size [x,y]: {" << sizeRW[0] << ", " << sizeRW[1] <<"}" << "\t"
-                              << "screen [x,y]: {" << screenSize[0] << ", " << screenSize[1] <<"}" << "\t"  <<
-                                 endl;
+//                    std::cout << "[x,y]: {" << xPos << ", " << yPos << "}" << "\t"
+//                              << "size [x,y]: {" << sizeRW[0] << ", " << sizeRW[1] <<"}" << "\t"
+//                              << "screen [x,y]: {" << screenSize[0] << ", " << screenSize[1] <<"}" << "\t"  <<
+//                                 endl;
 
-                    fingerActor->SetPosition(xPos, maxY - yPos);
+                    fingerActor1->SetPosition(xPos, maxY - yPos);
+                    fingerActor1->GetProperty()->SetColor(colorRotation);
 
-                    fingerActor->SetVisibility(true);
+                    fingerActor1->SetVisibility(true);
+
+                    ///////////////////////////////////////////////////////////
 
                     QPointF lastPos = p1.lastPos();    /// get the average of the last positions
                     QPointF newPos = (p1.pos());               /// get the aversge of the current positions
@@ -306,6 +320,50 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 QTouchEvent::TouchPoint p1 = touchPoints.at(0);
                 QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+
+                ///////////////////////////////////////////////
+                /// 2D Finger Position Being Drawn
+                /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+                ///  We need to Subtract the position from the Total Height of VTK Window
+                ///
+                ///
+                vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+                int * sizeRW = renWindow->GetSize();
+//                int * screenSize = renWindow->GetScreenSize();
+
+                int maxY = sizeRW[1];
+
+
+
+                int x1Pos = p1.pos().toPoint().x();
+                int y1Pos = p1.pos().toPoint().y();
+
+                int x2Pos = p2.pos().toPoint().x();
+                int y2Pos = p2.pos().toPoint().y();
+
+//                std::cout << "[x,y]: {" << x1Pos << ", " << y1Pos << "}" << "\t"
+//                          << "size [x,y]: {" << sizeRW[0] << ", " << sizeRW[1] <<"}" << "\t"
+//                          << "screen [x,y]: {" << screenSize[0] << ", " << screenSize[1] <<"}" << "\t"  <<
+//                             endl;
+
+                fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+                fingerActor1->SetVisibility(true);
+
+
+                fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+                fingerActor2->SetVisibility(true);
+
+
+
+                ///////////////////////////////////////////////////////////
+
+
+
+
+
 
                 QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
                 QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
@@ -354,6 +412,10 @@ bool QVTKTouchWidget::event(QEvent *event)
                     //                                                   << "length: " << dist << "\t"
 
                     //                                                      ;
+
+
+                    fingerActor1->GetProperty()->SetColor(colorTranslate1);
+                    fingerActor2->GetProperty()->SetColor(colorTranslate2);
 
                     /////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////
@@ -444,6 +506,11 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     std::cout << "Scaling Active" << "\t";
 
+
+
+                    fingerActor1->GetProperty()->SetColor(colorScale1);
+                    fingerActor2->GetProperty()->SetColor(colorScale2);
+
                     vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
 
                     vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
@@ -522,6 +589,174 @@ bool QVTKTouchWidget::event(QEvent *event)
                     renderer->ResetCameraClippingRange();
                 }   /// End Pinch Zoon
             }  /// if (count  == 2 && manual)
+            else
+            if (count  == 5 && manual)
+            {
+
+                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+                QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+                QTouchEvent::TouchPoint p3 = touchPoints.at(2);
+                QTouchEvent::TouchPoint p4 = touchPoints.at(3);
+                QTouchEvent::TouchPoint p5 = touchPoints.at(4);
+
+                ///////////////////////////////////////////////
+                /// 2D Finger Position Being Drawn
+                /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+                ///  We need to Subtract the position from the Total Height of VTK Window
+                ///
+                ///
+                vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+                int * sizeRW = renWindow->GetSize();
+//                int * screenSize = renWindow->GetScreenSize();
+
+                int maxY = sizeRW[1];
+
+
+
+                int x1Pos = p1.pos().toPoint().x();
+                int y1Pos = p1.pos().toPoint().y();
+
+                int x2Pos = p2.pos().toPoint().x();
+                int y2Pos = p2.pos().toPoint().y();
+
+//                std::cout << "[x,y]: {" << x1Pos << ", " << y1Pos << "}" << "\t"
+//                          << "size [x,y]: {" << sizeRW[0] << ", " << sizeRW[1] <<"}" << "\t"
+//                          << "screen [x,y]: {" << screenSize[0] << ", " << screenSize[1] <<"}" << "\t"  <<
+//                             endl;
+
+                fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+                fingerActor1->SetVisibility(true);
+
+
+                fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+                fingerActor2->SetVisibility(true);
+
+
+
+                ///////////////////////////////////////////////////////////
+
+
+
+
+
+
+                QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
+                QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
+
+                ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+                ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+
+
+                QPointF distance =  p1.pos() - p2.pos();
+                int distPos = distance.manhattanLength();
+
+                distance = p1.startPos() - p2.startPos();
+                int distStart = distance.manhattanLength();
+
+
+                //                    std::cout << "Start Difference: " << distStart << "\t"
+                //                              << "Pos Difference: " << distPos << "\t";
+                    ///   We implement the Z Rotation Code Here to Zoom code here SCALING
+                {
+                    ////////////////////////////////
+                    /////
+                    /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
+                    /// then New Gesture Count
+                    if (lastGesture != 3 && userTestRunning)
+                    {
+                        scaleTriggered();
+                    }
+
+                    lastGesture = 5;
+
+                    std::cout << "Z Axis Rotation Active" << "\t";
+
+
+
+                    fingerActor1->GetProperty()->SetColor(colorScale1);
+                    fingerActor2->GetProperty()->SetColor(colorScale2);
+
+                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+                    // Calculate the focal depth since we'll be using it a lot
+
+                    vtkCamera *camera = renderer->GetActiveCamera();
+
+                    ///QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
+                    ///
+                    /// INSERT PINCH CODE HERE FROM GestureRecognizer
+                    ///
+                    string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+                    std::cout << "eventType(): " << name << "\t" ;
+
+
+
+                    //                        QPointF centerPoint = (p1.screenPos() + p2.screenPos()) / 2.0;
+                    //                        if (d->isNewSequence)
+                    //                        {
+                    //                            d->startPosition[0] = p1.screenPos();
+                    //                            d->startPosition[1] = p2.screenPos();
+                    //                            d->lastCenterPoint = centerPoint;
+                    //                        } else {
+                    //                            d->lastCenterPoint = d->centerPoint;
+                    //                        }
+                    //                        d->centerPoint = centerPoint;
+
+                    //                        d->changeFlags |= QPinchGesture::CenterPointChanged;
+
+                    //                        if (this->scaleSequenceNew )
+                    //                        {
+                    //                            this->scaleFactor = 1.0;
+                    //                            this->lastScaleFactor = 1.0;
+                    //                        }
+                    //                        else
+                    //                        {
+                    this->lastScaleFactor = this->scaleFactor;
+                    QLineF line(p1.screenPos(), p2.screenPos());
+                    QLineF lastLine(p1.lastScreenPos(),  p2.lastScreenPos());
+                    this->scaleFactor = line.length() / lastLine.length();
+
+                    std::cout << "scaleFactor:" << scaleFactor << "\t"
+
+
+
+                              <<endl;
+                    //                            scaleSequenceNew = false;
+                    //                        }
+                    //d->totalScaleFactor = d->totalScaleFactor * d->scaleFactor;
+                    //d->changeFlags |= QPinchGesture::ScaleFactorChanged;
+
+
+
+                    //                        qreal angle = QLineF(p1.screenPos(), p2.screenPos()).angle();
+                    //                        if (angle > 180)
+                    //                            angle -= 360;
+                    //                        qreal startAngle = QLineF(p1.startScreenPos(), p2.startScreenPos()).angle();
+                    //                        if (startAngle > 180)
+                    //                            startAngle -= 360;
+                    //                        const qreal rotationAngle = startAngle - angle;
+                    //                        if (d->isNewSequence)
+                    //                            d->lastRotationAngle = 0.0;
+                    //                        else
+                    //                            d->lastRotationAngle = d->rotationAngle;
+                    //                        d->rotationAngle = rotationAngle;
+                    //                        d->totalRotationAngle += d->rotationAngle - d->lastRotationAngle;
+                    //                        d->changeFlags |= QPinchGesture::RotationAngleChanged;
+
+                    //                        d->totalChangeFlags |= d->changeFlags;
+                    //                        d->isNewSequence = false;
+
+
+
+                    camera->Dolly(this->scaleFactor);
+                    renderer->ResetCameraClippingRange();
+                }   /// End Pinch Zoon
+            }  /// if (count  == 5 && manual)
 
 //            if (!userTestRunning)
 //            {
@@ -531,7 +766,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 //                if(!touch1movement)
 //                {
 //                    touchPointBuffer--;
-//                    touchGestureCounter = 0;
+//                    touchGestureCounter = 0;c
 //                }
 //                else
 //                    touchGestureCounter++;
@@ -573,7 +808,8 @@ bool QVTKTouchWidget::event(QEvent *event)
                 translationReleased();
 
 
-                fingerActor->SetVisibility(false);
+                fingerActor1->SetVisibility(false);
+                fingerActor2->SetVisibility(false);
 //                switch (lastGesture)
 //                {
 //                case 0: std::cout << "case 0" << endl; break;

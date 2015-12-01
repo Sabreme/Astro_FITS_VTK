@@ -261,7 +261,16 @@ private:
 
     bool transformsOn = true;
 
-    vtkActor2D *      fingerActor;
+    vtkActor2D *      fingerActor1;
+    vtkActor2D *      fingerActor2;
+
+    double colorRotation[3] = {0.1, 0.4, 0.5};
+
+    double colorTranslate1[3] = {0.5, 0.6, 0.7};
+    double colorTranslate2[3] = {0.5, 1, 0.7};
+
+    double colorScale1[3] = {0.7, 0.6, 0.8};
+    double colorScale2[3] = {0.7, 1, 0.8};
 
 signals:
 
