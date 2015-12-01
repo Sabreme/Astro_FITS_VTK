@@ -437,6 +437,16 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     /////////////////////////////////////////////////////////////////
                     /////////////////////////////////////////////////////////////////
+
+                    ///
+                    vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+                    int * sizeRW = renWindow->GetSize();
+    //                int * screenSize = renWindow->GetScreenSize();
+
+                    int maxY = sizeRW[1];
+
+
                     vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
 
                     vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
@@ -460,7 +470,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     irenObserver->ComputeDisplayToWorld(renderer,
                                                         newPos.x(),
-                                                        newPos.y(),
+                                                        maxY - newPos.y(),
                                                         focalDepth,
                                                         newPickPoint);
 
@@ -469,14 +479,17 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     irenObserver->ComputeDisplayToWorld(renderer,
                                                         lastPos.x(),
-                                                        lastPos.y(),
+                                                        maxY - lastPos.y(),
                                                         focalDepth,
                                                         oldPickPoint);
 
                     // Camera motion is reversed
 
+
+
                     motionVector[0] = oldPickPoint[0] - newPickPoint[0];
-                    motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
+                    //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
+                    motionVector[1] = oldPickPoint[1] - newPickPoint[1];        /// REVERSED FOR SOME reason
                     motionVector[2] = oldPickPoint[2] - newPickPoint[2];
 
                     camera->GetFocalPoint(viewFocus);
