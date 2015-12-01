@@ -263,6 +263,7 @@ private:
 
     vtkActor2D *      fingerActor1;
     vtkActor2D *      fingerActor2;
+    vtkActor2D *      fingerActor3;
 
     double colorRotation[3] = {0.1, 0.4, 0.5};
 
@@ -271,6 +272,10 @@ private:
 
     double colorScale1[3] = {0.7, 0.6, 0.8};
     double colorScale2[3] = {0.7, 1, 0.8};
+
+    double colorSpin1[3] = {0.8, 0.8, 0.8};
+    double colorSpin2[3] = {0.8, 1, 0.8};
+    double colorSpin3[3] = {0.1, 1, 0.8};
 
 signals:
 
