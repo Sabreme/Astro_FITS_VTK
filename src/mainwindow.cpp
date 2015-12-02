@@ -939,7 +939,10 @@ void MainWindow::on_buttonModeLeap_clicked()
     this->leapHandWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
     this->leapHandWidget->GeneratActors();    
     this->leapHandWidget->SetEnabled(true);
-    this->leapHandWidget->InteractiveOff();    
+    this->leapHandWidget->InteractiveOff();
+
+  //  this->leapHandWidget->SetEnabled(false);
+
 
     this->leapMarkerWidget = vtkLeapMarkerWidget::New();
     this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
@@ -5532,7 +5535,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    VTKLEAPHANDMODELLER       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if (this->ui->actionLeapDialogToggle->isChecked())
+            if (this->ui->actionLeapDialogToggle->isChecked() && leapHandWidget->GetEnabled())
             {
                 if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
                 {
@@ -6087,6 +6090,9 @@ void MainWindow::on_actionTestButton_triggered()
        this->defaultRenderer->AddActor(boxActor);
 
        handRenderer = new HandRenderer();
+       handRenderer->setScale(1);
+       handRenderer->setJoinSize(1.5);
+       handRenderer->setFingerSize(15);
 
        handRenderer->drawJoints(rightHand,defaultRenderer);
        handRenderer->drawBones(rightHand, defaultRenderer);
