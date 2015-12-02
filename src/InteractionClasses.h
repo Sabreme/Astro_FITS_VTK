@@ -283,18 +283,20 @@ class TouchInteractorStyle : public vtkInteractorStyleTrackballCamera
    {
 
 
-       vtkInteractorStyleTrackballCamera::Rotate();
+//       vtkInteractorStyleTrackballCamera::Rotate();
 
-       double* orientation;
+//       double* orientation;
 
-       orientation  = camera->GetOrientation();
+//       orientation  = camera->GetOrientation();
 
-       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
-       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
-       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+//       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+//       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+//       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
-       ui->buttonTransfRotation->setEnabled(true);
-       ui->Frame_LEFT->repaint();
+//       ui->buttonTransfRotation->setEnabled(true);
+//       ui->Frame_LEFT->repaint();
+
+//       std::cout << "TouchInteractor" << endl;
 
    }
 

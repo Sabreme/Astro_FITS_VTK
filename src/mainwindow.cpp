@@ -894,6 +894,13 @@ void MainWindow::on_buttonModeMouse_clicked()
         this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
     }
 
+    if(this->leapHandWidget != NULL)
+    {
+        this->leapHandWidget->SetEnabled(false);
+        this->leapHandWidget->Delete();
+        this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+    }
+
 
 
     ///////////////////////////////////////////////////////////////
@@ -968,6 +975,13 @@ void MainWindow::on_buttonModeTouch_clicked()
         this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
     }
 
+    if(this->leapHandWidget != NULL)
+    {
+        this->leapHandWidget->SetEnabled(false);
+        this->leapHandWidget->Delete();
+        this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
+    }
+
     std::cout << "System Mode is: " << this->systemMode << endl;
 
 
@@ -977,6 +991,8 @@ void MainWindow::on_buttonModeTouch_clicked()
     ///////////////////////////////////////////////////////////////
 
     setTouchInteractor();
+
+   // this->ui->qvtkWidgetLeft = new QVTKTouchWidget(centralWidget());
 
     this->ui->qvtkWidgetLeft->enableGestures();
 

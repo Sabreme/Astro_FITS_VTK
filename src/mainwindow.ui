@@ -4634,7 +4634,7 @@ border:none;
    </widget>
    <widget class="QMenu" name="menuSubVol">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="title">
      <string>Actions</string>
@@ -4674,6 +4674,9 @@ border:none;
     <addaction name="actionCubeAxes_Toggle"/>
    </widget>
    <widget class="QMenu" name="menuColourMaps">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>ColourMaps</string>
     </property>
@@ -4683,6 +4686,9 @@ border:none;
     <addaction name="actionBlue_Red"/>
    </widget>
    <widget class="QMenu" name="menuSlicing">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Slicing</string>
     </property>
@@ -4692,6 +4698,9 @@ border:none;
     <addaction name="actionLeap_Slice"/>
    </widget>
    <widget class="QMenu" name="menuDetails">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Details</string>
     </property>
@@ -4699,6 +4708,9 @@ border:none;
     <addaction name="actionWorldCoords"/>
    </widget>
    <widget class="QMenu" name="menuSubVol_2">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Sub Volume</string>
     </property>
@@ -4846,6 +4858,9 @@ border:none;
   <action name="actionStats">
    <property name="text">
     <string>Stats</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionElevateUp">

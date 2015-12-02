@@ -8,7 +8,11 @@
 #include "vtkCamera.h"
 #include "vtkSystemIncludes.h"
 #include <src/mainwindow.h>
+//#include "src/InteractionClasses.h"
 #include "vtkActor2D.h"
+#include "vtkProp.h"
+#include "vtkProp3D.h"
+#include "vtkActor.h"
 
 
 
@@ -260,6 +264,7 @@ private:
     bool userTestRunning = false;
 
     bool transformsOn = true;
+    bool subVolumeOn = false;
 
     vtkActor2D *      fingerActor1;
     vtkActor2D *      fingerActor2;
