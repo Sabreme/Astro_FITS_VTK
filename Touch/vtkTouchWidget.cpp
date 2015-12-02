@@ -18,6 +18,11 @@
 #include "vtkObjectFactory.h"
 #include "qgesturerecognizer.h"
 
+#include "vtkAbstractPicker.h"
+#include "vtkPropCollection.h"
+#include "vtkPropPicker.h"
+#include "vtkAssemblyPath.h"
+
 
 #include "vtkVertexGlyphFilter.h"
 #include "vtkPolyDataMapper2D.h"
@@ -76,7 +81,6 @@ QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
 
 
 
-
 }
 
 void QVTKTouchWidget::enableGestures()
@@ -111,6 +115,9 @@ void QVTKTouchWidget::enableGestures()
     mapper->Update();
 
     vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+    this->GetInteractor()->GetInteractorStyle()->SetCurrentRenderer(renderer);
+    this->GetInteractor()->GetInteractorStyle()->SetDefaultRenderer(renderer);
 
     /// WE CONSTRUCT THE FINGER POINTS
     ///
@@ -307,6 +314,78 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     vtkRenderWindowInteractor *rwi = this->GetInteractor();
 
+
+
+//                    double viewFocus[4], focalDepth, viewPoint[3];
+//                    double newPickPoint[4], oldPickPoint[4], motionVector[3];
+
+//                    vtkInteractorObserver * irenObserver =
+//                            static_cast<vtkInteractorObserver*> (rwi->GetInteractorStyle());
+
+                    vtkCamera *camera = renderer->GetActiveCamera();
+//                    camera->GetFocalPoint(viewFocus);
+//                    irenObserver->ComputeWorldToDisplay(renderer, viewFocus[0], viewFocus[1], viewFocus[2],
+//                            viewFocus);
+//                    focalDepth = viewFocus[2];
+
+//                    irenObserver->ComputeDisplayToWorld(renderer,
+//                                                        newPos.x(),
+//                                                        maxY - newPos.y(),
+//                                                        //newPos.y(),
+//                                                        focalDepth,
+//                                                        newPickPoint);
+
+//                    // Has to recalc old mouse point since the viewport has moved,
+//                    // so can't move it outside the loop
+
+//                    irenObserver->ComputeDisplayToWorld(renderer,
+//                                                        lastPos.x(),
+//                                                        maxY - lastPos.y(),
+//                                                        //lastPos.y(),
+//                                                        focalDepth,
+//                                                        oldPickPoint);
+
+
+
+//                    int* clickPos = rwi->GetEventPosition();
+
+                    //std::cout << "pickPoint [x,y]: " << newPickPoint[0] << ", " << newPickPoint[1] << "\t" ;
+
+//                    std::cout << "touchPos [x,y]: " << p1.pos().x() << ", " << p1.pos().y() << "\t";
+//                    vtkSmartPointer<vtkPropPicker> picker =
+//                            vtkSmartPointer<vtkPropPicker>::New();
+
+//                    //rwi->AddObserver(vtkCommand::StartPickEvent,0.0);
+////                    static_cast<Touch
+////                            rwi->GetInteractorStyle()
+
+//                    picker->Pick(p1.pos().x(), p1.pos().y() ,0, renderer);
+
+//                    //picker->
+
+//                    //rwi->GetInteractorStyle()->Print(std::cout);
+
+//                   // picker->Pick(newPickPoint[0], newPickPoint[1],newPickPoint[2], renderer);
+
+//                    double* pos  = picker->GetPickPosition();
+
+//                    vtkAssemblyPath * selectedPath = renderer->PickProp(p1.pos().x(), p1.pos().y());
+//                    //std::cout << "Actor: " << selectedProp-> << "\t";
+//                    selectedPath->GetFirstNode()->Print(std::cout);
+
+//                    std::cout << "Pick Pos in Wolrd is: " << pos[0] << ", " << pos[1] << ", " << pos[2] << "\t" ;
+//                    std::cout << "vtkPointWidget Loc: " << //
+
+//                    //std::cout << "picker items: " << picker->GetPickList()->GetNumberOfItems() << "\t";
+//                    std::cout << "Picked actor: " << picker->GetActor();
+
+
+
+                    //std::cout << "Props Selected: " << rwi->()->GetNumberOfItems() << "\t";
+                    ////////////////////////////////////////////////////////////////////////////////
+                    /// \brief Camera Movement
+                    ///
+
                     double MotionFactor = 10;
 
                     int dx = newPos.x() - lastPos.x();
@@ -320,7 +399,7 @@ bool QVTKTouchWidget::event(QEvent *event)
                     double rxf = dx * delta_azimuth * MotionFactor;
                     double ryf = dy * delta_elevation * MotionFactor;
 
-                    vtkCamera *camera = renderer->GetActiveCamera();
+                   // vtkCamera *camera = renderer->GetActiveCamera();
                     camera->Azimuth(rxf);
                     camera->Elevation(ryf);
                     camera->OrthogonalizeViewUp();
@@ -328,6 +407,8 @@ bool QVTKTouchWidget::event(QEvent *event)
                     renderer->ResetCameraClippingRange();
 
                     renderer->UpdateLightsGeometryToFollowCamera();
+
+                    ///////////////////////////////////////////////////////////////////////////////////
 
                 } /// if (event->type() == QEvent::TouchUpdate)
 
@@ -486,6 +567,13 @@ bool QVTKTouchWidget::event(QEvent *event)
                     // Camera motion is reversed
 
 
+
+                    //////  NOTE
+                    //////
+                    /// //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
+                    /// For a long time, it was reversed until we realise the Screen Coordinate System Y is the Reverse
+                    /// of the VTK Rendering Window Coordinate System
+                    /// So we COmputer DisplayToWorld of maxY - lastPos.y && maxY - newPos.y
 
                     motionVector[0] = oldPickPoint[0] - newPickPoint[0];
                     //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
@@ -928,7 +1016,495 @@ bool QVTKTouchWidget::event(QEvent *event)
         //                return QVTKWidget::event(event);
     }   // IF (gesturesActive)
     else
+        if ( subVolumeOn)
+        ///if (gesturesActive && transformsOn)
+        {
+            if(
+                    event->type() == QEvent::TouchBegin ||
+                    event->type() == QEvent::TouchEnd ||
+                    event->type() == QEvent::TouchUpdate
+                    )
+            {
+                QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent*>(event)->touchPoints();
 
+                int eventNumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
+                string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+
+                //touchPoints.
+                std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
+                std::cout << "eventType(): " << name << "\t" ;
+                count = touchPoints.count();
+
+                bool manual = true;
+
+//                if (count == 1)
+//                {
+//                    if (event->type() == QEvent::TouchEnd)
+//                    {
+//                        gestureDone = true;
+//                        touchPointBuffer = 0;
+//                    }
+
+//                    else
+//                        gestureDone = false;
+
+//    //                if(!userTestRunning)
+//    //                {
+//    //                    touch1movement = true;
+//    //                    touchPointBuffer ++;
+//    //                    rotateMovement = true;
+//    //                }
+
+//                    /////////////////////////////////////////////////////////
+//                    ///////////////////
+//                    /// 1 Finger Rotation
+//                    ///
+
+//                    if (event->type() == QEvent::TouchUpdate)
+//                    {
+//                        touchPointBuffer++;
+
+//                        if (touchPointBuffer ==(touchEventDelay - 1))
+//                        {
+//                            touchPointBuffer = touchEventDelay;
+//                            //std::cout << "Rotation Triggered" << endl;
+
+//                        }
+
+//                        ////////////////////////////////
+//                        /////
+//                        /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+//                        /// then New Gesture Count
+//                        if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
+//                        {
+//                            rotateTriggered();
+//                            std::cout << "Rotation Triggered" << endl;
+//                        }
+
+//                        lastGesture = 1;
+
+//                        rotationPressed();
+
+//                        QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+
+
+//                        ///////////////////////////////////////////////
+//                        /// 2D Finger Position Being Drawn
+//                        /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+//                        ///  We need to Subtract the position from the Total Height of VTK Window
+//                        ///
+//                        ///
+//                        vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+//                        int * sizeRW = renWindow->GetSize();
+//                        int * screenSize = renWindow->GetScreenSize();
+
+//                        int maxY = sizeRW[1];
+
+
+
+//                        int xPos = p1.pos().toPoint().x();
+//                        int yPos = p1.pos().toPoint().y();
+
+//                        fingerActor1->SetPosition(xPos, maxY - yPos);
+//                        fingerActor1->GetProperty()->SetColor(colorRotation);
+
+//                        fingerActor1->SetVisibility(true);
+
+//                        ///////////////////////////////////////////////////////////
+
+//                        QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+//                        QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+
+//                        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+//                        vtkRenderWindowInteractor *rwi = this->GetInteractor();
+
+
+//                        vtkCamera *camera = renderer->GetActiveCamera();
+
+
+
+
+//                        //std::cout << "Props Selected: " << rwi->()->GetNumberOfItems() << "\t";
+//                        ////////////////////////////////////////////////////////////////////////////////
+//                        /// \brief Camera Movement
+//                        ///
+
+//                        double MotionFactor = 10;
+
+//                        int dx = newPos.x() - lastPos.x();
+//                        int dy = lastPos.y() - newPos.y();     /// THIS IS REVERSED ON TOUCH FOR SOME REASON
+
+//                        int *size = renderer->GetRenderWindow()->GetSize();
+
+//                        double delta_elevation = -20.0 / size[1];
+//                        double delta_azimuth = -20.0 / size[0];
+
+//                        double rxf = dx * delta_azimuth * MotionFactor;
+//                        double ryf = dy * delta_elevation * MotionFactor;
+
+//                       // vtkCamera *camera = renderer->GetActiveCamera();
+//                        camera->Azimuth(rxf);
+//                        camera->Elevation(ryf);
+//                        camera->OrthogonalizeViewUp();
+
+//                        renderer->ResetCameraClippingRange();
+
+//                        renderer->UpdateLightsGeometryToFollowCamera();
+
+//                        ///////////////////////////////////////////////////////////////////////////////////
+
+//                    } /// if (event->type() == QEvent::TouchUpdate)
+
+//                } ///  if (count == 1)
+
+                if (count  == 2 && manual)
+                {
+
+                    QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+                    QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+
+                    ///////////////////////////////////////////////
+                    /// 2D Finger Position Being Drawn
+                    /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+                    ///  We need to Subtract the position from the Total Height of VTK Window
+                    ///
+                    ///
+                    vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+                    int * sizeRW = renWindow->GetSize();
+    //                int * screenSize = renWindow->GetScreenSize();
+
+                    int maxY = sizeRW[1];
+
+
+
+                    int x1Pos = p1.pos().toPoint().x();
+                    int y1Pos = p1.pos().toPoint().y();
+
+                    int x2Pos = p2.pos().toPoint().x();
+                    int y2Pos = p2.pos().toPoint().y();
+
+    //                std::cout << "[x,y]: {" << x1Pos << ", " << y1Pos << "}" << "\t"
+    //                          << "size [x,y]: {" << sizeRW[0] << ", " << sizeRW[1] <<"}" << "\t"
+    //                          << "screen [x,y]: {" << screenSize[0] << ", " << screenSize[1] <<"}" << "\t"  <<
+    //                             endl;
+
+                    fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+                    fingerActor1->SetVisibility(true);
+
+
+                    fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+                    fingerActor2->SetVisibility(true);
+
+
+
+                    ///////////////////////////////////////////////////////////
+
+
+
+
+
+
+                    QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
+                    QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
+
+                    ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+                    ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+
+
+                    QPointF distance =  p1.pos() - p2.pos();
+                    int distPos = distance.manhattanLength();
+
+                    distance = p1.startPos() - p2.startPos();
+                    int distStart = distance.manhattanLength();
+
+
+                    //                    std::cout << "Start Difference: " << distStart << "\t"
+                    //                              << "Pos Difference: " << distPos << "\t";
+
+                    ///if((distStart < 100) && (distPos < 100))
+                    {
+                        ////////////////////////////////
+                        /////
+                        /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+                        /// then New Gesture Count
+//                        if (lastGesture != 2 && userTestRunning)
+//                        {
+//                            translateTriggered();
+//                        }
+
+
+
+
+                        lastGesture = 2;
+
+                        std::cout << "Translation Active" << "\t";
+
+                        if (event->type() == QEvent::TouchUpdate)
+                        {
+                            translationPressed();
+                        }
+
+
+                        //                    }
+
+                        //                    << "distance:" << distance.x() << "," << distance.y() << "\t"
+                        //                                                   << "length: " << dist << "\t"
+
+                        //                                                      ;
+
+
+                        fingerActor1->GetProperty()->SetColor(colorTranslate1);
+                        fingerActor2->GetProperty()->SetColor(colorTranslate2);
+
+                        /////////////////////////////////////////////////////////////////
+                        /////////////////////////////////////////////////////////////////
+
+
+//                        std::cout << "pickPoint [x,y]: " << newPickPoint[0] << ", " << newPickPoint[1] << "\t" ;
+
+//                        std::cout << "touchPos [x,y]: " << p1.pos().x() << ", " << p1.pos().y() << "\t";
+                        vtkSmartPointer<vtkPropPicker> picker =
+                                vtkSmartPointer<vtkPropPicker>::New();
+
+                        //rwi->AddObserver(vtkCommand::StartPickEvent,0.0);
+    //                    static_cast<Touch
+    //                            rwi->GetInteractorStyle()
+
+                         vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+                        picker->Pick(p2.pos().x(), p2.pos().y() ,0, renderer);
+
+                        //picker->
+
+                        //rwi->GetInteractorStyle()->Print(std::cout);
+
+                       // picker->Pick(newPickPoint[0], newPickPoint[1],newPickPoint[2], renderer);
+
+                        double* pos  = picker->GetPickPosition();
+
+                        vtkAssemblyPath * selectedPath = renderer->PickProp(p1.pos().x(), p1.pos().y());
+                        //std::cout << "Actor: " << selectedProp-> << "\t";
+
+                        vtkProp3D * selectedProp = static_cast<vtkProp3D*>(selectedPath->GetFirstNode()->GetViewProp());
+
+//                        std::cout << "Pick Pos in Wolrd is: " << pos[0] << ", " << pos[1] << ", " << pos[2] << "\t" ;
+//                        std::cout << "vtkPointWidget Loc: " << //
+
+//                        //std::cout << "picker items: " << picker->GetPickList()->GetNumberOfItems() << "\t";
+//                        std::cout << "Picked actor: " << picker->GetActor();
+
+
+
+
+
+
+                        ///
+//                        vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+//                        int * sizeRW = renWindow->GetSize();
+//        //                int * screenSize = renWindow->GetScreenSize();
+
+//                        int maxY = sizeRW[1];
+
+
+//                        vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+//                        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+//                        // Calculate the focal depth since we'll be using it a lot
+
+//                        vtkCamera *camera = renderer->GetActiveCamera();
+
+
+//                        double viewFocus[4], focalDepth, viewPoint[3];
+//                        double newPickPoint[4], oldPickPoint[4], motionVector[3];
+
+//                        vtkInteractorObserver * irenObserver =
+//                                static_cast<vtkInteractorObserver*> (this->GetInteractor()->GetInteractorStyle());
+
+
+//                        camera->GetFocalPoint(viewFocus);
+//                        irenObserver->ComputeWorldToDisplay(renderer, viewFocus[0], viewFocus[1], viewFocus[2],
+//                                viewFocus);
+//                        focalDepth = viewFocus[2];
+
+//                        irenObserver->ComputeDisplayToWorld(renderer,
+//                                                            newPos.x(),
+//                                                            maxY - newPos.y(),
+//                                                            focalDepth,
+//                                                            newPickPoint);
+
+//                        // Has to recalc old mouse point since the viewport has moved,
+//                        // so can't move it outside the loop
+
+//                        irenObserver->ComputeDisplayToWorld(renderer,
+//                                                            lastPos.x(),
+//                                                            maxY - lastPos.y(),
+//                                                            focalDepth,
+//                                                            oldPickPoint);
+
+//                        // Camera motion is reversed
+
+
+
+//                        //////  NOTE
+//                        //////
+//                        /// //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
+//                        /// For a long time, it was reversed until we realise the Screen Coordinate System Y is the Reverse
+//                        /// of the VTK Rendering Window Coordinate System
+//                        /// So we COmputer DisplayToWorld of maxY - lastPos.y && maxY - newPos.y
+
+//                        motionVector[0] = oldPickPoint[0] - newPickPoint[0];
+//                        //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
+//                        motionVector[1] = oldPickPoint[1] - newPickPoint[1];        /// REVERSED FOR SOME reason
+//                        motionVector[2] = oldPickPoint[2] - newPickPoint[2];
+
+//                        camera->GetFocalPoint(viewFocus);
+//                        camera->GetPosition(viewPoint);
+//                        camera->SetFocalPoint(motionVector[0] + viewFocus[0],
+//                                motionVector[1] + viewFocus[1],
+//                                motionVector[2] + viewFocus[2]);
+
+//                        camera->SetPosition(motionVector[0] + viewPoint[0],
+//                                motionVector[1] + viewPoint[1],
+//                                motionVector[2] + viewPoint[2]);
+
+//                        translationAction();
+
+                        //static_cast<MainWindow*>(this->parent())->updateCameraPosition();
+
+                        /// ADDED INTERACTION CAPTURE
+                        ///
+                        ///
+                        ///
+                        //                        double* position;
+
+                        //                        position = camera->GetPosition();
+
+                        //                        ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+                        //                        ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+                        //                        ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+
+                        vtkInteractorObserver * irenObserver =
+                                                        static_cast<vtkInteractorObserver*> (this->GetInteractor()->GetInteractorStyle());
+
+
+                        double *obj_center = selectedProp->GetCenter();
+
+                          double disp_obj_center[3], new_pick_point[4];
+                          double old_pick_point[4], motion_vector[3];
+
+                          irenObserver->ComputeWorldToDisplay(renderer,obj_center[0], obj_center[1], obj_center[2],
+                                                      disp_obj_center);
+
+                          irenObserver->ComputeDisplayToWorld(renderer, p2.pos().x(),
+                                                              maxY - p2.pos().y(),
+                                                      disp_obj_center[2],
+                                                      new_pick_point);
+
+                          irenObserver->ComputeDisplayToWorld(renderer, p2.lastPos().x(),
+                                                      maxY - p2.pos().y(),
+                                                      disp_obj_center[2],
+                                                      old_pick_point);
+
+                          motion_vector[0] = new_pick_point[0] - old_pick_point[0];
+                          motion_vector[1] = new_pick_point[1] - old_pick_point[1];
+                          motion_vector[2] = new_pick_point[2] - old_pick_point[2];
+
+                          if (selectedProp->GetUserMatrix() != NULL)
+                            {
+                            vtkTransform *t = vtkTransform::New();
+                            t->PostMultiply();
+                            t->SetMatrix(selectedProp->GetUserMatrix());
+                            t->Translate(motion_vector[0], motion_vector[1], motion_vector[2]);
+                            selectedProp->GetUserMatrix()->DeepCopy(t->GetMatrix());
+                            t->Delete();
+                            }
+                          else
+                            {
+                            selectedProp->AddPosition(motion_vector[0],
+                                                               motion_vector[1],
+                                                               motion_vector[2]);
+                            }
+
+//                          if (this->AutoAdjustCameraClippingRange)
+//                            {
+//                            this->CurrentRenderer->ResetCameraClippingRange();
+//                            }
+
+//                          rwi->Render();
+
+
+                    } ///  if((distStart < 100) && (distPos < 100))
+
+    /// 2 FINGER ROTATION START
+    //                else
+    //                {
+    //                      qreal angle = QLineF(p1.screenPos(), p2.screenPos()).angle();
+
+    //                      if (angle > 180)
+    //                          angle -= 360;
+    //                      qreal startAngle = QLineF(p1.startScreenPos(), p2.startScreenPos()).angle();
+    //                      if (startAngle > 180)
+    //                          startAngle -= 360;
+
+    //                      qreal lastAngle = QLineF(p1.lastScreenPos(), p2.lastScenePos()).angle();
+
+
+    //                      //const qreal rotationAngle = startAngle - angle;
+
+    //                      const qreal rotationAngle = angle - lastAngle;
+
+    //                      vtkCamera *camera = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    //                      camera->Roll( rotationAngle);
+    //                      camera->OrthogonalizeViewUp();
+    //                }
+    /// 2 FINGER ROTATION END
+
+
+                }  /// if (count  == 2 && manual)
+
+
+                /// Reset Movement Flag to False after All Possible Actions are DONE
+                touch1movement = false;
+
+                std::cout << "LastGesture: " << lastGesture <<  endl;
+
+                if (gestureDone)
+                {
+                    std::cout << "Gesture Done" << endl;
+
+                    rotationReleased();
+                    translationReleased();
+
+
+                    fingerActor1->SetVisibility(false);
+                    fingerActor2->SetVisibility(false);
+                    fingerActor3->SetVisibility(false);
+
+                    lastGesture = 0;
+                }
+            }
+
+            if (event->type() == QEvent::Gesture)
+            {
+                //    std::cout << "gesture Event" << endl;
+                return gestureEvent(static_cast<QGestureEvent*> (event));
+            }
+
+
+
+
+            else
+                return QVTKWidget::event(event);
+        }
+        else
         return QVTKWidget::event(event);
 
 }
@@ -968,6 +1544,7 @@ void QVTKTouchWidget::setUserTestMode(bool status)
 void QVTKTouchWidget::setTransformsOn(bool status)
 {
     this->transformsOn = status;
+    this->subVolumeOn = !status;
     std::cout << "Transform:" << status << endl;
 }
 
