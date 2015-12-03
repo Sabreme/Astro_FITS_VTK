@@ -651,6 +651,8 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     std::cout << "Scaling Active" << "\t";
 
+                    rotationReleased();
+
 
 
                     fingerActor1->GetProperty()->SetColor(colorScale1);
