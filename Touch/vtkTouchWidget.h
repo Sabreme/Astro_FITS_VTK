@@ -295,6 +295,8 @@ signals:
     void translationPressed();
     void translationReleased();
 
+    void finger1Pressed();
+
     void userTestTranslateCount();
 
 public slots:

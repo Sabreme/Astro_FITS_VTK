@@ -1883,6 +1883,7 @@ void MainWindow::on_actionReload_triggered()
 
     if (this->systemMode == Leap )
     {
+        ///vtkLeapMarkerWidget
         this->leapMarkerWidget = vtkLeapMarkerWidget::New();
         this->leapMarkerWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
 
@@ -1891,8 +1892,18 @@ void MainWindow::on_actionReload_triggered()
         this->leapMarkerWidget->SetEnabled(true);
         //marker->InteractiveOn();
         this->leapMarkerWidget->InteractiveOff();
-    }
 
+
+
+        ////vtkLeapHandWidget
+        this->leapHandWidget = vtkLeapHandWidget::New();
+        this->leapHandWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
+
+        this->leapHandWidget->GeneratActors();
+
+        this->leapHandWidget->SetEnabled(true);
+        this->leapHandWidget->InteractiveOff();;
+    }
 }
 
 void MainWindow::printBounds(const char* name, double bounds[6])
@@ -3437,6 +3448,15 @@ void MainWindow::touchRotationReleased()
 void MainWindow::touchTransformsOn(bool status)
 {
     this->ui->qvtkWidgetLeft->setTransformsOn(status);
+    if (!status)
+    {
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
+    }
+}
+
+void MainWindow::touchFinger1Pressed()
+{
+    std::cout << "Translate closest Widget" << endl;
 }
 
 

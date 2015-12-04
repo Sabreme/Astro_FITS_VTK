@@ -345,6 +345,8 @@ private slots:
         void touchRotationReleased();
         void touchTransformsOn(bool status);
 
+        void touchFinger1Pressed();
+
 
 
 
