@@ -3456,12 +3456,17 @@ void MainWindow::touchTransformsOn(bool status)
     if (!status)
     {
         connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
+
     }
 }
 
 void MainWindow::touchFinger1Pressed()
 {
     std::cout << "Translate closest Widget" << endl;
+    this->ui->qvtkWidgetLeft->fingerActor1->Print(std::cout);
+    std::cout << endl;
+
+
 }
 
 

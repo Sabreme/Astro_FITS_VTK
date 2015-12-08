@@ -1251,6 +1251,11 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                         ///////////////////////////////////////////////////////////////////////////////////
 
+
+                        finger1Pressed();
+
+
+
                     } /// if (event->type() == QEvent::TouchUpdate)
 
                 } ///  if (count == 1)

@@ -228,6 +228,10 @@ public:
     void setUserTestMode(bool status);
     void setTransformsOn(bool status);
 
+    vtkActor2D *      fingerActor1;
+    vtkActor2D *      fingerActor2;
+    vtkActor2D *      fingerActor3;
+
 
 protected:
     bool event(QEvent *event);
@@ -266,9 +270,7 @@ private:
     bool transformsOn = true;
     bool subVolumeOn = false;
 
-    vtkActor2D *      fingerActor1;
-    vtkActor2D *      fingerActor2;
-    vtkActor2D *      fingerActor3;
+
 
     double colorRotation[3] = {0.1, 0.4, 0.5};
 
