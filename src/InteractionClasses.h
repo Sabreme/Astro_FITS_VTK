@@ -107,7 +107,6 @@ class vtkCameraScaleCallback : public vtkCommand
         double defualtCameraDistance;
 
 
-
 };
 
 class vtkCameraTranslationCallback : public vtkCommand

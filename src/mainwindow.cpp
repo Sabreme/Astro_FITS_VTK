@@ -3119,6 +3119,11 @@ void MainWindow::on_actionStats_triggered()
     this->ui->plainTextEdit_Leap->insertPlainText("--------------------------------------\n\n");
 }
 
+void MainWindow::on_actionLeapHandFullWindow_triggered()
+{
+
+}
+
 void MainWindow::touchInteractionEvent()
 {
 

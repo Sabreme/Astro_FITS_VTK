@@ -4634,7 +4634,7 @@ border:none;
    </widget>
    <widget class="QMenu" name="menuSubVol">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="title">
      <string>Actions</string>
@@ -4659,6 +4659,13 @@ border:none;
     <property name="title">
      <string>Views</string>
     </property>
+    <widget class="QMenu" name="menuLeapWindow">
+     <property name="title">
+      <string>LeapWindow</string>
+     </property>
+     <addaction name="actionLeapDialogToggle"/>
+     <addaction name="actionLeapHandFullWindow"/>
+    </widget>
     <addaction name="actionReset_Camera"/>
     <addaction name="actionLeft_Side_View"/>
     <addaction name="actionRight_Side_View"/>
@@ -4669,9 +4676,9 @@ border:none;
     <addaction name="separator"/>
     <addaction name="actionInfoBarToggle"/>
     <addaction name="actionFPSToggle"/>
-    <addaction name="actionLeapDialogToggle"/>
     <addaction name="actionSpectrum_Toggle"/>
     <addaction name="actionCubeAxes_Toggle"/>
+    <addaction name="menuLeapWindow"/>
    </widget>
    <widget class="QMenu" name="menuColourMaps">
     <property name="enabled">
@@ -4999,6 +5006,14 @@ border:none;
   <action name="actionTestButton2">
    <property name="text">
     <string>TestButton2</string>
+   </property>
+  </action>
+  <action name="actionLeapHandFullWindow">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>LeapHandFullWindow</string>
    </property>
   </action>
  </widget>

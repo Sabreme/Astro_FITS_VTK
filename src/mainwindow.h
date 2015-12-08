@@ -331,6 +331,8 @@ private slots:
         void addThirdPointer();
         void on_actionStats_triggered();
 
+        void on_actionLeapHandFullWindow_triggered();
+
         //////////////////////////////////////////////////////
         //// MULTI-TOUCH SLOTS
         ///
