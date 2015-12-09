@@ -3463,7 +3463,15 @@ void MainWindow::touchTransformsOn(bool status)
 void MainWindow::touchFinger1Pressed()
 {
     std::cout << "Translate closest Widget" << endl;
-    this->ui->qvtkWidgetLeft->fingerActor1->Print(std::cout);
+
+
+    double * point = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+    vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
+    coordinate->Print(std::cout);
+    double * pointW = pointWidget1_->GetPosition();
+    std::cout << "vtkCoord: [x,y,z]" << point[0] << ", " << point[1] << ", " << point[2] << "\t";
+    std::cout << "pointW:   [x,y,z]" << pointW[0] << ", " << pointW[1] << ", " << pointW[2] <<endl;
+
     std::cout << endl;
 
 
