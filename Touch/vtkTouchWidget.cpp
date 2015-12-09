@@ -99,20 +99,20 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
     virtual void OnMiddleButtonUp()
     {
 
-        vtkInteractorStyleUser::OnRightButtonUp();
+       // vtkInteractorStyleUser::OnRightButtonUp();
     }
 
 
     virtual void OnLeftButtonUp()
     {
 //        ui->buttonTransfRotation->setEnabled(false);
-        std::cout << "Left buton up" << endl;
+       // std::cout << "Left buton up" << endl;
        // vtkInteractorStyleUser::OnLeftButtonUp();
     }
 
     virtual void OnLeftButtonDown()
     {
-        std::cout << "left button Down" << endl;
+      //  std::cout << "left button Down" << endl;
         //vtkInteractorStyleUser::OnLeftButtonDown();
 //        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
 //        if (mainWindow->userTestRunning())
@@ -123,7 +123,7 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
    {
 
 
-       vtkInteractorStyleUser::Rotate();
+      // vtkInteractorStyleUser::Rotate();
 
 //       double* orientation;
 
@@ -136,17 +136,17 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
 //       ui->buttonTransfRotation->setEnabled(true);
 //       ui->Frame_LEFT->repaint();
 
-        std::cout << "Rotate" << endl;
+//        std::cout << "Rotate" << endl;
 
    }
 
     virtual void OnMouseMove()
     {
-        if (this->GetEnabled())
+//        if (this->GetEnabled())
 
-            std::cout << "Mouse movement" << endl;
-        else
-            std::cout << "Mouse SHOULD NOT WORK !!!" << endl;
+//            std::cout << "Mouse movement" << endl;
+//        else
+//            std::cout << "Mouse SHOULD NOT WORK !!!" << endl;
 
     }
 
@@ -154,9 +154,9 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
    {
 
 
-       vtkInteractorStyleUser::Spin();
+//       vtkInteractorStyleUser::Spin();
 
-       std::cout << "We Spinning !!!" << endl;
+  //     std::cout << "We Spinning !!!" << endl;
 
    }
 
@@ -165,18 +165,18 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
     {
 
 
-        vtkInteractorStyleUser::Pan();
+    //    vtkInteractorStyleUser::Pan();
 
 
-        std::cout << "We Spanning !!!" << endl;
+      //  std::cout << "We Spanning !!!" << endl;
 
     }
 
     virtual void Dolly()
     {
-        vtkInteractorStyleUser::Dolly();
+    //    vtkInteractorStyleUser::Dolly();
 
-        std::cout << "We are Dollying !!!" << endl;
+//        std::cout << "We are Dollying !!!" << endl;
     }
 
 

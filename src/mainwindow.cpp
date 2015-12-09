@@ -77,6 +77,8 @@
 #include "vtkLineWidget2.h"
 #include "vtkLineRepresentation.h"
 #include <vtkPointWidget.h>
+#include <vtkViewport.h>
+#include <vtkPropPicker.h>
 
 #include <QTimer>
 
@@ -3465,14 +3467,105 @@ void MainWindow::touchFinger1Pressed()
     std::cout << "Translate closest Widget" << endl;
 
 
-    double * point = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+    double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
+    //this->ui
+    double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+    //int * viewportVal =  coordinate->GetComputedViewportValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
     //double * pointer = coordinate->
+    //this->ui->qvtkWidgetLeft->fingerActor1->Print(std::cout);
+
     double * pointW = pointWidget1_->GetPosition();
-    std::cout << "vtkCoord: [x,y,z]" << point[0] << ", " << point[1] << ", " << point[2] << "\t";
-    std::cout << "pointW:   [x,y,z]" << pointW[0] << ", " << pointW[1] << ", " << pointW[2] <<endl;
+
+
+    double pntWP2D[3] = {0,0,0};
+
+    this->pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW[0], pointW[1], pointW[2], pntWP2D);
+
+
+    QPointF finger(actorPos2D[0], actorPos2D[1]);
+
+    QPointF widget(pntWP2D[0], pntWP2D[1]);
+    QPointF distance =  finger - widget;
+    int distPos = distance.manhattanLength();
+
+//    int* clickPos = this->GetInteractor()->GetEventPosition();
+
+    // Pick from this location.
+//    vtkSmartPointer<vtkPropPicker>  picker =
+//            vtkSmartPointer<vtkPropPicker>::New();
+//    picker->Pick(actorPos2D[0], actorPos2D[1], 0, defaultRenderer);
+
+//    double* pos = picker->GetPickPosition();
+//    std::cout << "Pick position (world coordinates) is: "
+//              << pos[0] << " " << pos[1]
+//              << " " << pos[2] << std::endl;
+
+//    std::cout << "Picked actor: " << picker->GetActor() << std::endl;
+
+
+    std::cout << setprecision(2) << fixed;
+
+
+    std::cout << "Distance: " << distPos << "\t" ;
+    std::cout << "finger2D: [x,y,z]: " << actorPos2D[0] << ", " << actorPos2D[1] << ", " << actorPos2D[2] << "\t";
+    //std::cout << "pointW:   [x,y,z]: " << pointW[0] << ", " << pointW[1] << ", " << pointW[2] << "\t";
+    //std::cout << "actorWorld:  [x,y,z]: " << actorPosWorld[0] << ", " << actorPosWorld[1] << ", " << actorPosWorld[2] <<"\t";
+    std::cout << "pointW2D:   [x,y,z]: " << pntWP2D[0] << ", " << pntWP2D[1] << ", " << pntWP2D[2] << "\t";
 
     std::cout << endl;
+
+    if (distPos < 15)
+        std::cout << "--------MOVE Current Point--------" << endl;
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////
+    /// ///////////////////////////
+//    vtkRenderWindowInteractor *rwi = this->Interactor;
+
+//      // Use initial center as the origin from which to pan
+
+//      double *obj_center = this->InteractionProp->GetCenter();
+
+//      double disp_obj_center[3], new_pick_point[4];
+//      double old_pick_point[4], motion_vector[3];
+
+//      this->ComputeWorldToDisplay(obj_center[0], obj_center[1], obj_center[2],
+//                                  disp_obj_center);
+
+//      this->ComputeDisplayToWorld(rwi->GetEventPosition()[0],
+//                                  rwi->GetEventPosition()[1],
+//                                  disp_obj_center[2],
+//                                  new_pick_point);
+
+//      this->ComputeDisplayToWorld(rwi->GetLastEventPosition()[0],
+//                                  rwi->GetLastEventPosition()[1],
+//                                  disp_obj_center[2],
+//                                  old_pick_point);
+
+//      motion_vector[0] = new_pick_point[0] - old_pick_point[0];
+//      motion_vector[1] = new_pick_point[1] - old_pick_point[1];
+//      motion_vector[2] = new_pick_point[2] - old_pick_point[2];
+
+//      if (this->InteractionProp->GetUserMatrix() != NULL)
+//        {
+//        vtkTransform *t = vtkTransform::New();
+//        t->PostMultiply();
+//        t->SetMatrix(this->InteractionProp->GetUserMatrix());
+//        t->Translate(motion_vector[0], motion_vector[1], motion_vector[2]);
+//        this->InteractionProp->GetUserMatrix()->DeepCopy(t->GetMatrix());
+//        t->Delete();
+//        }
+//      else
+//        {
+//        this->InteractionProp->AddPosition(motion_vector[0],
+//                                           motion_vector[1],
+//                                           motion_vector[2]);
+//        }
+
+
+      //////////////////////////
 
 
 }
