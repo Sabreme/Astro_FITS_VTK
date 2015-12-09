@@ -3253,6 +3253,27 @@ void MainWindow::touchBeginSubVol()
         renderer->AddActor2D(textActor);
 
         pointWidget1_->EnabledOn();
+        //pointWidget1_->Off();
+        //pointWidget1_->OutlineOn();
+//        pointWidget1_->RemoveObserver(vtkCommand::MouseMoveEvent);
+//        pointWidget1_->RemoveObserver(vtkCommand::LeftButtonPressEvent);
+//        pointWidget1_->RemoveObserver(vtkCommand::MiddleButtonPressEvent);
+//        pointWidget1_->RemoveObserver(vtkCommand::RightButtonPressEvent);
+        pointWidget1_->GetInteractor()->RemoveAllObservers();
+
+
+//        i->AddObserver(vtkCommand::LeftButtonReleaseEvent,
+//                       this->EventCallbackCommand, this->Priority);
+//        i->AddObserver(vtkCommand::MiddleButtonPressEvent,
+//                       this->EventCallbackCommand, this->Priority);
+//        i->AddObserver(vtkCommand::MiddleButtonReleaseEvent,
+//                       this->EventCallbackCommand, this->Priority);
+//        i->AddObserver(vtkCommand::RightButtonPressEvent,
+//                       this->EventCallbackCommand, this->Priority);
+//        i->AddObserver(vtkCommand::RightButtonReleaseEvent,
+//                       this->EventCallbackCommand, this->Priority);
+
+        //pointWidget1_->InvokeEvent(vtkCommand::DisableEvent);
     }
     pointWidget1_->SetPosition(pt1);
     //pointWidget1_->GetProperty()->SetColor(0.8900, 0.8100, 0.3400);
@@ -3468,12 +3489,8 @@ void MainWindow::touchFinger1Pressed()
 
 
     double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
-    vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
-    //this->ui
+    vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();    
     double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
-    //int * viewportVal =  coordinate->GetComputedViewportValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
-    //double * pointer = coordinate->
-    //this->ui->qvtkWidgetLeft->fingerActor1->Print(std::cout);
 
     double * pointW = pointWidget1_->GetPosition();
 
@@ -3509,14 +3526,72 @@ void MainWindow::touchFinger1Pressed()
 
     std::cout << "Distance: " << distPos << "\t" ;
     std::cout << "finger2D: [x,y,z]: " << actorPos2D[0] << ", " << actorPos2D[1] << ", " << actorPos2D[2] << "\t";
-    //std::cout << "pointW:   [x,y,z]: " << pointW[0] << ", " << pointW[1] << ", " << pointW[2] << "\t";
-    //std::cout << "actorWorld:  [x,y,z]: " << actorPosWorld[0] << ", " << actorPosWorld[1] << ", " << actorPosWorld[2] <<"\t";
+    std::cout << "pointW:   [x,y,z]: " << pointW[0] << ", " << pointW[1] << ", " << pointW[2] << "\t";
+    std::cout << "actorWorld:  [x,y,z]: " << actorPosWorld[0] << ", " << actorPosWorld[1] << ", " << actorPosWorld[2] <<"\t";
     std::cout << "pointW2D:   [x,y,z]: " << pntWP2D[0] << ", " << pntWP2D[1] << ", " << pntWP2D[2] << "\t";
 
     std::cout << endl;
 
-    if (distPos < 15)
+    if (distPos < 50)
+    {
         std::cout << "--------MOVE Current Point--------" << endl;
+
+        double focalPoint[4], pickPoint[4], prevPickPoint[4];
+        double z;
+
+        vtkCamera *camera = defaultRenderer->GetActiveCamera();
+
+          /// Compute the two points defining the motion vector
+          pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW[0], pointW[1], pointW[2], focalPoint);
+          z = focalPoint[2];
+
+
+          pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,prevPickPoint);
+
+
+          pointWidget1_->ComputeDisplayToWorld(defaultRenderer, pointW[0], pointW[1], z, pickPoint);
+
+
+          pointWidget1_->SetPosition(actorPosWorld[0], actorPosWorld[1], z);
+
+          //point
+
+//          // Process the motion
+//          if ( this->State == vtkPointWidget::Moving )
+//            {
+//            if ( !this->WaitingForMotion || this->WaitCount++ > 3 )
+//              {
+//              this->ConstraintAxis =
+//                this->DetermineConstraintAxis(this->ConstraintAxis,pickPoint);
+//              this->MoveFocus(prevPickPoint, pickPoint);
+//              }
+//            else
+//              {
+//              return; //avoid the extra render
+//              }
+//            }
+
+        /// Interact, if desired
+
+        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+        pointWidget1_->GetInteractor()->Render();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////
