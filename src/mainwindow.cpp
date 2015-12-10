@@ -3463,13 +3463,13 @@ void MainWindow::touchTransformsOn(bool status)
     if (!status)
     {
         connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
-
+        connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
     }
 }
 
 void MainWindow::touchFinger1Pressed()
 {
-    std::cout << "Translate closest Widget" << endl;
+    std::cout << "1 Finger Translate closest Widget" << endl;
 
 
     /// FingerActor Position Information
@@ -3560,17 +3560,165 @@ void MainWindow::touchFinger1Pressed()
 
         pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
     }
+}
+
+void MainWindow::touchFinger2Pressed()
+{
+    std::cout << "2 Finger Translate closest Widget" << endl;
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////
-    /// ///////////////////////////
+    /// FingerActor1 Position Information
+    double * actor1Pos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+    vtkCoordinate *coordinate1 = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
+    double * actor1PosWorld =  coordinate1->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+
+    /// FingerActor2 Position Information
+    double * actor2Pos2D = this->ui->qvtkWidgetLeft->fingerActor2->GetPositionCoordinate()->GetValue();
+    vtkCoordinate *coordinate2 = this->ui->qvtkWidgetLeft->fingerActor2->GetActualPositionCoordinate();
+    double * actor2PosWorld =  coordinate2->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+
+    /// Get PointWidget 1 2D Position
+    double * pointW1 = pointWidget1_->GetPosition();
+    double pntW1P2D[3] = {0,0,0};
+    this->pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], pntW1P2D);
+
+    /// Get PointWidget 2 2D Position
+    double * pointW2 = pointWidget2_->GetPosition();
+    double pntW2P2D[3] = {0,0,0};
+    this->pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], pntW2P2D);
+
+    QPointF finger1(actor1Pos2D[0], actor1Pos2D[1]);
+    QPointF widget1(pntW1P2D[0], pntW1P2D[1]);
+
+    QPointF finger2(actor2Pos2D[0], actor2Pos2D[1]);
+    QPointF widget2(pntW2P2D[0], pntW2P2D[1]);
+
+    /// Get Distance of Finger 1 to Widget1 && Widget 2
+    QPointF distF1W1 =  finger1 - widget1;
+    int dist1Pos1 = distF1W1.manhattanLength();
+    QPointF distF1W2 =  finger1 - widget2;
+    int dist1Pos2 = distF1W2.manhattanLength();
 
 
+    QPointF distF2W1 =  finger2 - widget1;
+    int dist2Pos1 = distF2W1.manhattanLength();
+    QPointF distF2W2 =  finger2 - widget2;
+    int dist2Pos2 = distF2W2.manhattanLength();
 
-      //////////////////////////
+    int threshold = 50;
+
+    std::cout << setprecision(2) << fixed;
+    std::cout << "Distance: " << dist1Pos1 << "\t" ;
+    std::cout << "finger2D: [x,y,z]: " << actor1Pos2D[0] << ", " << actor1Pos2D[1] << ", " << actor1Pos2D[2] << "\t";
+    std::cout << "pointW:   [x,y,z]: " << pointW1[0] << ", " << pointW1[1] << ", " << pointW1[2] << "\t";
+    std::cout << "actorWorld:  [x,y,z]: " << actor1PosWorld[0] << ", " << actor1PosWorld[1] << ", " << actor1PosWorld[2] <<"\t";
+    std::cout << "pointW2D:   [x,y,z]: " << pntW1P2D[0] << ", " << pntW1P2D[1] << ", " << pntW1P2D[2] << "\t";
+    std::cout << endl;
+
+    /////
+    ////
+    /// We check if point 1 is close to Any of the widgets...
+
+    //// If pointWidget 1 is closest to Finger 1 Than Point, then we move Point 1
+    if ((dist1Pos1 <= dist1Pos2) && (dist1Pos1 < threshold))
+    {
+        std::cout << "--------MOVE PointWidget 1 with Finger 1--------" << endl;
+
+        double focalPoint[4], pickPoint[4];
+        double z;
 
 
+          /// 1. Compute the new Position by Getting the PointWidget Focal Point
+          /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+          /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
+          /// 4. PointWidget Update
+          pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint);
+          z = focalPoint[2];
+
+          pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actor1Pos2D[0]), actor1Pos2D[1], z,pickPoint);
+
+          pointWidget1_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+
+        /// Interact, if desired
+
+        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+    }
+
+    //// If pointWidget 1 is closest to Finger 2 Than Point, then we move Point 1
+    if ((dist1Pos2 <= dist1Pos1) && (dist1Pos2 < threshold))
+    {
+        std::cout << "--------MOVE PointWidget 1 with Finger 2--------" << endl;
+
+        double focalPoint[4], pickPoint[4];
+        double z;
+
+
+          /// 1. Compute the new Position by Getting the PointWidget Focal Point
+          /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+          /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
+          /// 4. PointWidget Update
+          pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint);
+          z = focalPoint[2];
+
+          pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actor2Pos2D[0]), actor2Pos2D[1], z,pickPoint);
+
+          pointWidget1_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+
+        /// Interact, if desired
+
+        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+    }
+    //// ELSE we move
+
+    //// If pointWidget 2 is closest to Finger 1 Than Point, then we move Point 1
+    if ((dist2Pos1 <= dist2Pos2) && (dist2Pos1 < threshold))
+    {
+        std::cout << "--------MOVE PointWidget 2 with Finger 1--------" << endl;
+
+        double focalPoint[4], pickPoint[4];
+        double z;
+
+
+          /// 1. Compute the new Position by Getting the PointWidget Focal Point
+          /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+          /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
+          /// 4. PointWidget Update
+          pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], focalPoint);
+          z = focalPoint[2];
+
+          pointWidget2_->ComputeDisplayToWorld(defaultRenderer, (actor1Pos2D[0]), actor1Pos2D[1], z,pickPoint);
+
+          pointWidget2_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+
+        /// Interact, if desired
+
+        pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+    }
+
+    //// If pointWidget 2 is closest to Finger 1 Than Point, then we move Point 1
+    if ((dist2Pos2 <= dist2Pos1) && (dist2Pos2 < threshold))
+    {
+        std::cout << "--------MOVE PointWidget 2 with Finger 2--------" << endl;
+
+        double focalPoint[4], pickPoint[4];
+        double z;
+
+
+          /// 1. Compute the new Position by Getting the PointWidget Focal Point
+          /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+          /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
+          /// 4. PointWidget Update
+          pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], focalPoint);
+          z = focalPoint[2];
+
+          pointWidget2_->ComputeDisplayToWorld(defaultRenderer, (actor2Pos2D[0]), actor2Pos2D[1], z,pickPoint);
+
+          pointWidget2_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+
+        /// Interact, if desired
+
+        pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+    }
 }
 
 

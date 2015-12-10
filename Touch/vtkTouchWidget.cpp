@@ -1354,6 +1354,8 @@ bool QVTKTouchWidget::event(QEvent *event)
                         fingerActor1->GetProperty()->SetColor(colorTranslate1);
                         fingerActor2->GetProperty()->SetColor(colorTranslate2);
 
+                        finger2Pressed();
+
 
                 }  /// if (count  == 2 && manual)
 

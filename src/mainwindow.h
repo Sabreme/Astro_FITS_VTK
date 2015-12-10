@@ -185,6 +185,7 @@ public slots:
     void saveScreenShot();
 
 
+
 protected:
         void ModifiedHandler();
         void resizeEvent(QResizeEvent* event);
@@ -348,6 +349,7 @@ private slots:
         void touchTransformsOn(bool status);
 
         void touchFinger1Pressed();
+        void touchFinger2Pressed();
 
 
 

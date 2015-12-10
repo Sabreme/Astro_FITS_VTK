@@ -298,6 +298,7 @@ signals:
     void translationReleased();
 
     void finger1Pressed();
+    void finger2Pressed();
 
     void userTestTranslateCount();
 
