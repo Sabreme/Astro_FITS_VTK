@@ -3552,7 +3552,7 @@ void MainWindow::touchFinger1Pressed()
           pointWidget1_->ComputeDisplayToWorld(defaultRenderer, pointW[0], pointW[1], z, pickPoint);
 
 
-          pointWidget1_->SetPosition(actorPosWorld[0], actorPosWorld[1], z);
+          pointWidget1_->SetPosition(prevPickPoint[0], prevPickPoint[1], prevPickPoint[2]);
 
           //point
 
@@ -3574,22 +3574,7 @@ void MainWindow::touchFinger1Pressed()
         /// Interact, if desired
 
         pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
-        pointWidget1_->GetInteractor()->Render();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        //pointWidget1_->GetInteractor()->Render();
 
     }
 
