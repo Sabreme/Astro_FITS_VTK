@@ -226,11 +226,17 @@ public:
     void printGestureInfo(QGestureEvent *event);
     void setGesturesActive(bool status);
     void setUserTestMode(bool status);
-    void setTransformsOn(bool status);
+    void setTransformsOn(bool status);    
+    bool GetTransformsOn();
+    void SetSubVolumeOn(bool status);
+    bool GetSubVolumeOn();
+
 
     vtkActor2D *      fingerActor1;
     vtkActor2D *      fingerActor2;
     vtkActor2D *      fingerActor3;
+
+
 
 
 protected:
@@ -288,7 +294,7 @@ signals:
 
     void rotateTriggered();
     void translateTriggered();
-    void scaleTriggered();
+    void scaleTriggered();    
 
     void rotationPressed();
     void rotationReleased();
@@ -296,6 +302,8 @@ signals:
     void translationAction();           /// USED FOR TRANSLATION LABEL UPDATES
     void translationPressed();
     void translationReleased();
+
+    void transformationTriggered();
 
     void finger1Pressed();
     void finger2Pressed();

@@ -1006,6 +1006,7 @@ void MainWindow::on_buttonModeTouch_clicked()
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
     connect(this->ui->buttonTransformActive,SIGNAL(toggled(bool)),this, SLOT(touchTransformsOn(bool)));
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(transformationTriggered()),this, SLOT(touchSubVolumeTransform()));
     this->ui->buttonTransformActive->setChecked(true);
 
 
@@ -3458,12 +3459,27 @@ void MainWindow::touchRotationReleased()
 }
 
 void MainWindow::touchTransformsOn(bool status)
-{
+{    
     this->ui->qvtkWidgetLeft->setTransformsOn(status);
+}
+
+void MainWindow::touchSubVolumeTransform()
+{
+    this->ui->buttonTransformActive->toggle();
+
+    bool status  = this->ui->qvtkWidgetLeft->GetTransformsOn();
+
+    this->ui->qvtkWidgetLeft->SetSubVolumeOn(!status);
+
     if (!status)
     {
         connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
         connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
+    }
+    if (status)
+    {
+        disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
+        disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
     }
 }
 
