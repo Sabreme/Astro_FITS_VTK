@@ -333,6 +333,107 @@ bool QVTKTouchWidget::event(QEvent *event)
     bool rotateMovement = false;
     bool touch1movement = false;
 
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    /// 5 FINGER TRANSFORMATION TOGGLE OR SUBVOLUME
+    if(
+            event->type() == QEvent::TouchBegin ||
+            event->type() == QEvent::TouchEnd ||
+            event->type() == QEvent::TouchUpdate
+            )
+    {
+        QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent*>(event)->touchPoints();
+
+        int eventNumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
+        string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+
+        //touchPoints.
+        std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
+        std::cout << "eventType(): " << name << "\t" ;
+        count = touchPoints.count();
+
+        if (count  == 5 )
+        {
+
+            touchTransformBuffer++;
+
+            QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+            QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+            QTouchEvent::TouchPoint p3 = touchPoints.at(2);
+            QTouchEvent::TouchPoint p4 = touchPoints.at(3);
+            QTouchEvent::TouchPoint p5 = touchPoints.at(4);
+
+
+            if (touchTransformBuffer ==(touchEventDelay - 1))
+            {
+                touchTransformBuffer = touchEventDelay;
+                //std::cout << "Rotation Triggered" << endl;
+
+            }
+
+            ////////////////////////////////
+            /////
+            /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+            /// then New Gesture Count
+            if ((touchTransformBuffer == touchEventDelay) )
+            {
+                transformationTriggered();
+                std::cout << "Transformation in Micro Event Triggered" << endl;
+            }
+
+
+            {
+                ////////////////////////////////
+                /////
+                /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
+                /// then New Gesture Count
+//                if (lastGesture != 5 && userTestRunning)
+//                {
+//                    ///tran();
+//                }
+
+//                lastGesture = 5;
+//                gestureDone =  true;
+
+                std::cout << "Transformation Switch" << "\t";
+
+                fingerActor1->GetProperty()->SetColor(colorSpin1);
+                fingerActor2->GetProperty()->SetColor(colorSpin2);
+                fingerActor3->GetProperty()->SetColor(colorSpin3);
+
+                //                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+                //                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+                //                    // Calculate the focal depth since we'll be using it a lot
+
+                //                    vtkCamera *camera = renderer->GetActiveCamera();
+
+                ///QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
+                ///
+                /// INSERT PINCH CODE HERE FROM GestureRecognizer
+                ///
+                string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+                std::cout << "eventType(): " << name << "\t" ;
+
+
+
+            }   /// End Transformation Switch
+        }  /// if (count  == 5 )
+
+        if (event->type() == QEvent::TouchEnd)
+        {
+            touchTransformBuffer = 0;
+
+            fingerActor1->SetVisibility(false);
+            fingerActor2->SetVisibility(false);
+            fingerActor3->SetVisibility(false);
+        }
+    }
+
+
+
     if ( transformsOn)    
     {
         if(
@@ -359,6 +460,7 @@ bool QVTKTouchWidget::event(QEvent *event)
                 {
                     gestureDone = true;
                     touchPointBuffer = 0;
+                    touchTransformBuffer = 0;
                 }
 
                 else
@@ -807,58 +909,111 @@ bool QVTKTouchWidget::event(QEvent *event)
                 }   /// End Pinch Zoon
             }  /// if (count  == 3 )
 
-            if (count  == 5 )
-            {
+//            if (count  == 5 )
+//            {
 
-                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
-                QTouchEvent::TouchPoint p2 = touchPoints.at(1);
-                QTouchEvent::TouchPoint p3 = touchPoints.at(2);
-                QTouchEvent::TouchPoint p4 = touchPoints.at(3);
-                QTouchEvent::TouchPoint p5 = touchPoints.at(4);
+//                touchTransformBuffer++;
 
-                {
-                    ////////////////////////////////
-                    /////
-                    /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
-                    /// then New Gesture Count
-                    if (lastGesture != 5 && userTestRunning)
-                    {
-                        scaleTriggered();
-                    }
+//                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+//                QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+//                QTouchEvent::TouchPoint p3 = touchPoints.at(2);
+//                QTouchEvent::TouchPoint p4 = touchPoints.at(3);
+//                QTouchEvent::TouchPoint p5 = touchPoints.at(4);
 
-                    if (lastGesture != 5)
-                    {
-                        transformationTriggered();
-                    }
 
-                    lastGesture = 5;
-                    gestureDone =  true;
+//                if (touchTransformBuffer ==(touchEventDelay - 1))
+//                {
+//                    touchTransformBuffer = touchEventDelay;
+//                    //std::cout << "Rotation Triggered" << endl;
 
-                    std::cout << "Transformation Switch" << "\t";
+//                }
+
+//                ////////////////////////////////
+//                /////
+//                /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+//                /// then New Gesture Count
+//                if ((touchTransformBuffer == touchEventDelay) )
+//                {
+//                    transformationTriggered();
+//                    std::cout << "Transformation Triggered" << endl;
+//                }
+
+////                ///////////////////////////////////////////////
+////                /// 2D Finger Position Being Drawn
+////                /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+////                ///  We need to Subtract the position from the Total Height of VTK Window
+////                ///
+////                ///
+////                vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+////                int * sizeRW = renWindow->GetSize();
+////                //                int * screenSize = renWindow->GetScreenSize();
+
+////                int maxY = sizeRW[1];
+
+
+
+////                int x1Pos = p1.pos().toPoint().x();
+////                int y1Pos = p1.pos().toPoint().y();
+
+////                int x2Pos = p2.pos().toPoint().x();
+////                int y2Pos = p2.pos().toPoint().y();
+
+////                int x3Pos = p3.pos().toPoint().x();
+////                int y3Pos = p3.pos().toPoint().y();
+
+////                fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+////                fingerActor1->SetVisibility(true);
+
+
+////                fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+////                fingerActor2->SetVisibility(true);
+
+
+////                fingerActor3->SetPosition(x3Pos, maxY - y3Pos);
+
+////                fingerActor3->SetVisibility(true);
+
+//                {
+//                    ////////////////////////////////
+//                    /////
+//                    /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
+//                    /// then New Gesture Count
+//                    if (lastGesture != 5 && userTestRunning)
+//                    {
+//                        ///tran();
+//                    }
+
+//                    lastGesture = 5;
+//                    gestureDone =  true;
+
+//                    std::cout << "Transformation Switch" << "\t";
 
 //                    fingerActor1->GetProperty()->SetColor(colorSpin1);
 //                    fingerActor2->GetProperty()->SetColor(colorSpin2);
 //                    fingerActor3->GetProperty()->SetColor(colorSpin3);
 
-//                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+////                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
 
-//                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+////                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
 
-//                    // Calculate the focal depth since we'll be using it a lot
+////                    // Calculate the focal depth since we'll be using it a lot
 
-//                    vtkCamera *camera = renderer->GetActiveCamera();
+////                    vtkCamera *camera = renderer->GetActiveCamera();
 
-                    ///QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
-                    ///
-                    /// INSERT PINCH CODE HERE FROM GestureRecognizer
-                    ///
-                    string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
-                    std::cout << "eventType(): " << name << "\t" ;
+//                    ///QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
+//                    ///
+//                    /// INSERT PINCH CODE HERE FROM GestureRecognizer
+//                    ///
+//                    string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+//                    std::cout << "eventType(): " << name << "\t" ;
 
 
 
-                }   /// End Transformation Switch
-            }  /// if (count  == 5 )
+//                }   /// End Transformation Switch
+//            }  /// if (count  == 5 )
 
 //            if (!userTestRunning)
 //            {
@@ -1158,58 +1313,58 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 }  /// if (count  == 2 && manual)
 
-                if (count  == 5 )
-                {
+//                if (count  == 5 )
+//                {
 
-                    QTouchEvent::TouchPoint p1 = touchPoints.at(0);
-                    QTouchEvent::TouchPoint p2 = touchPoints.at(1);
-                    QTouchEvent::TouchPoint p3 = touchPoints.at(2);
-                    QTouchEvent::TouchPoint p4 = touchPoints.at(3);
-                    QTouchEvent::TouchPoint p5 = touchPoints.at(4);
+//                    QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+//                    QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+//                    QTouchEvent::TouchPoint p3 = touchPoints.at(2);
+//                    QTouchEvent::TouchPoint p4 = touchPoints.at(3);
+//                    QTouchEvent::TouchPoint p5 = touchPoints.at(4);
 
-                    {
-                        ////////////////////////////////
-                        /////
-                        /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
-                        /// then New Gesture Count
-                        if (lastGesture != 5 && userTestRunning)
-                        {
-                            scaleTriggered();
-                        }
+//                    {
+//                        ////////////////////////////////
+//                        /////
+//                        /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
+//                        /// then New Gesture Count
+//                        if (lastGesture != 5 && userTestRunning)
+//                        {
+//                            scaleTriggered();
+//                        }
 
-                        if (lastGesture != 5)
-                        {
-                            transformationTriggered();
-                        }
+//                        if (lastGesture != 5)
+//                        {
+//                            transformationTriggered();
+//                        }
 
-                        lastGesture = 5;
-                        gestureDone =  true;
+//                        lastGesture = 5;
+//                        gestureDone =  true;
 
-                        std::cout << "Transformation Switch" << "\t";
+//                        std::cout << "Transformation Switch" << "\t";
 
-    //                    fingerActor1->GetProperty()->SetColor(colorSpin1);
-    //                    fingerActor2->GetProperty()->SetColor(colorSpin2);
-    //                    fingerActor3->GetProperty()->SetColor(colorSpin3);
+//    //                    fingerActor1->GetProperty()->SetColor(colorSpin1);
+//    //                    fingerActor2->GetProperty()->SetColor(colorSpin2);
+//    //                    fingerActor3->GetProperty()->SetColor(colorSpin3);
 
-    //                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+//    //                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
 
-    //                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+//    //                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
 
-    //                    // Calculate the focal depth since we'll be using it a lot
+//    //                    // Calculate the focal depth since we'll be using it a lot
 
-    //                    vtkCamera *camera = renderer->GetActiveCamera();
+//    //                    vtkCamera *camera = renderer->GetActiveCamera();
 
-                        ///QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
-                        ///
-                        /// INSERT PINCH CODE HERE FROM GestureRecognizer
-                        ///
-                        string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
-                        std::cout << "eventType(): " << name << "\t" ;
+//                        ///QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
+//                        ///
+//                        /// INSERT PINCH CODE HERE FROM GestureRecognizer
+//                        ///
+//                        string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+//                        std::cout << "eventType(): " << name << "\t" ;
 
 
 
-                    }   /// End Transformation Switch
-                }  /// if (count  == 5 )
+//                    }   /// End Transformation Switch
+//                }  /// if (count  == 5 )
 
 
                 /// Reset Movement Flag to False after All Possible Actions are DONE

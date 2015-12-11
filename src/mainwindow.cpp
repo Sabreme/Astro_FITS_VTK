@@ -1006,7 +1006,7 @@ void MainWindow::on_buttonModeTouch_clicked()
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
     connect(this->ui->buttonTransformActive,SIGNAL(toggled(bool)),this, SLOT(touchTransformsOn(bool)));
-    connect(this->ui->qvtkWidgetLeft, SIGNAL(transformationTriggered()),this, SLOT(touchSubVolumeTransform()));
+    connect(this->ui->qvtkWidgetLeft, SIGNAL(transformationTriggered()),this, SLOT(touchTransformationToggle()));
     this->ui->buttonTransformActive->setChecked(true);
 
 
@@ -3463,23 +3463,30 @@ void MainWindow::touchTransformsOn(bool status)
     this->ui->qvtkWidgetLeft->setTransformsOn(status);
 }
 
-void MainWindow::touchSubVolumeTransform()
+void MainWindow::touchTransformationToggle()
 {
     this->ui->buttonTransformActive->toggle();
 
-    bool status  = this->ui->qvtkWidgetLeft->GetTransformsOn();
+    //std::cout << "\t Signal Recied \t" << endl;
 
-    this->ui->qvtkWidgetLeft->SetSubVolumeOn(!status);
 
-    if (!status)
+
+    if (this->systemTab == SubVolume)
     {
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
-        connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
-    }
-    if (status)
-    {
-        disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
-        disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
+        bool status  = this->ui->qvtkWidgetLeft->GetTransformsOn();
+
+        this->ui->qvtkWidgetLeft->SetSubVolumeOn(!status);
+
+        if (!status)
+        {
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
+        }
+        if (status)
+        {
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
+        }
     }
 }
 

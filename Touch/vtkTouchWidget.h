@@ -259,6 +259,7 @@ private:
     bool scaleSequenceNew;
     int lastGesture = 0;        /// 1 = Rotation, 2 = Translation, 3 = Scaling
     int touchPointBuffer = 0;
+    int touchTransformBuffer = 0;
     int touchGestureCounter = 0;
     int rotationPointBuffer = 0;
     int touchEventDelay = 8;         /// Used as a buffer to simulate delay
