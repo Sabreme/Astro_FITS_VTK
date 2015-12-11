@@ -235,6 +235,8 @@ public:
     vtkActor2D *      fingerActor1;
     vtkActor2D *      fingerActor2;
     vtkActor2D *      fingerActor3;
+    vtkActor2D *      fingerActor4;
+    vtkActor2D *      fingerActor5;
 
 
 
