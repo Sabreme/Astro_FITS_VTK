@@ -18,201 +18,6 @@
 
 using namespace std;
 
-class TranslateRecognizer : public QGestureRecognizer
-{
-    QGesture * create(QObject *target)
-    {
-        if (target && target->isWidgetType()) {
-#if defined(Q_OS_WIN) && !defined(QT_NO_NATIVE_GESTURES)
-            // for scroll areas on Windows we want to use native gestures instead
-            if (!qobject_cast<QAbstractScrollArea *>(target->parent()))
-                static_cast<QWidget *>(target)->setAttribute(Qt::WA_AcceptTouchEvents);
-#else
-            static_cast<QWidget *>(target)->setAttribute(Qt::WA_AcceptTouchEvents);
-#endif
-        }
-        return new QPanGesture;
-    }
-
-    Result recognize(QGesture *state,QObject *,QEvent *event)
-    {
-        QPanGesture *q = static_cast<QPanGesture *>(state);
-
-        bool closeTouch = false;
-
-        const QTouchEvent *ev = static_cast<const QTouchEvent *>(event);
-
-        QGestureRecognizer::Result result;
-        switch (event->type())
-        {
-        case QEvent::TouchBegin: {
-            result = QGestureRecognizer::MayBeGesture;
-            QTouchEvent::TouchPoint p = ev->touchPoints().at(0);
-
-            q->setOffset(p.pos());
-            q->setLastOffset(q->offset());
-
-            //d->lastOffset = d->offset = QPointF();
-            break;
-        }
-        case QEvent::TouchEnd:
-        {
-            if (q->state() != Qt::NoGesture)
-            {
-                if (ev->touchPoints().size() == 2)
-                {
-                    QTouchEvent::TouchPoint p1 = ev->touchPoints().at(0);
-                    QTouchEvent::TouchPoint p2 = ev->touchPoints().at(1);
-
-                    //                    /////////////////////////////////////////////////////
-                    //                    /// WE CHECK TO SEE IF THE TOUCH POINTS ARE WITHIN Close PROXIMITY
-                    //                    ///
-                    //                    ///
-
-
-                    //                    QPointF distance =  p1.pos() - p2.pos();
-                    //                    int distPos = distance.manhattanLength();
-
-                    //                    distance = p1.startPos() - p2.startPos();
-                    //                    int distStart = distance.manhattanLength();
-
-
-                    //                    //                std::cout << "Start Difference: " << distStart << "\t"
-                    //                    //                          << "Pos Difference: " << distPos << "\t";
-
-                    //                    if((distStart < 100) && (distPos < 100))
-                    //                    {
-                    //                        closeTouch = true;
-                    //                    }
-
-
-                    //                    /////////////////////////////////////////////////////
-
-                    //                    if (closeTouch)
-                    //                    {
-
-
-                    QPointF startPos = (p1.startPos() + p2.startPos()) / 2;
-                    QPointF newPos = (p1.pos() + p2.pos())/2;
-
-//                    q->setLastOffset(q->offset());
-//                    q->setOffset(newPos);
-
-
-
-
-                    q->setLastOffset(q->offset());
-                    q->setOffset(newPos);
-                }
-
-                result = QGestureRecognizer::FinishGesture;
-            } /// if (q->state() != Qt::NoGesture)
-            else
-            {
-                result = QGestureRecognizer::CancelGesture;
-                closeTouch = false;
-            }
-            break;
-        }   /// case TouchEnd
-        case QEvent::TouchUpdate:
-        {
-
-            if (ev->touchPoints().size() == 2)
-            {
-
-                QTouchEvent::TouchPoint p1 = ev->touchPoints().at(0);
-                QTouchEvent::TouchPoint p2 = ev->touchPoints().at(1);
-
-                /////////////////////////////////////////////////////
-                /// WE CHECK TO SEE IF THE TOUCH POINTS ARE WITHIN Close PROXIMITY
-                ///
-                ///
-
-
-                QPointF distance =  p1.pos() - p2.pos();
-                int distPos = distance.manhattanLength();
-
-                distance = p1.startPos() - p2.startPos();
-                int distStart = distance.manhattanLength();
-
-
-                //                std::cout << "Start Difference: " << distStart << "\t"
-                //                          << "Pos Difference: " << distPos << "\t";
-
-                if((distStart < 100) && (distPos < 100))
-                {
-                    closeTouch = true;
-                }
-
-
-                /////////////////////////////////////////////////////
-                // If the fingers are close proximity to each other. we take the average between them and set them of as a new offset
-
-                if (closeTouch)
-                {
-
-                   qreal offsetX, offsetY, lastOffsetX, lastOffsetY;
-
-
-                   QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;
-                   QPointF newPos = (p1.pos() + p2.pos())/2;
-
-                    q->setLastOffset(lastPos);
-                    q->setOffset(newPos);
-
-
-//                    offsetX = q->offset().x();
-//                    offsetY = q->offset().y();
-
-//                    lastOffsetX = q->offset().x();
-//                    lastOffsetY = q->offset().y();
-
-
-                    if (
-                            (q->offset().x() > 1  || q->offset().y() > 1 ||
-                             q->offset().x() < -1 || q->offset().y() < -1))
-                    {
-                        q->setHotSpot(newPos);
-                        result = QGestureRecognizer::TriggerGesture;
-                    }
-                    else
-                    {
-                        result = QGestureRecognizer::MayBeGesture;
-                    }
-
-                }   //If(closeTouch)
-                else
-
-                    result = QGestureRecognizer::MayBeGesture;
-
-            } // if (touchPoints.size > 2)
-            break;
-
-        }    // Case::TouchUpdate
-
-        default:
-            result = QGestureRecognizer::Ignore;
-            break;
-
-        }   //switch (event->type())
-
-        return result;
-    } // Result recognise()
-
-
-
-    void reset(QGesture *state)
-    {
-        QPanGesture *pan = static_cast<QPanGesture*>(state);
-
-        //pan->setOffset(QPointF());
-        pan->setAcceleration(0);
-
-        QGestureRecognizer::reset(state);
-    }
-
-};
-
 
 class QVTKTouchWidget : public QVTKWidget
 {
@@ -243,7 +48,7 @@ public:
 
 protected:
     bool event(QEvent *event);
-    void paintEvent(QPaintEvent *event);
+    //void paintEvent(QPaintEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
 
 
@@ -266,9 +71,7 @@ private:
     int rotationPointBuffer = 0;
     int touchEventDelay = 8;         /// Used as a buffer to simulate delay
 
-    Qt::GestureType pan2Finger;
-
-    TranslateRecognizer * translateGesture;
+    Qt::GestureType pan2Finger;    
 
     vtkCamera * camera;
 

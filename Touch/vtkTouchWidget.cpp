@@ -203,9 +203,9 @@ QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
     scaleFactor(1),
     lastScaleFactor(1)
 {
-    translateGesture = new TranslateRecognizer();
-    pan2Finger = QGestureRecognizer::registerRecognizer(translateGesture);
-    scaleSequenceNew = true;
+//    translateGesture = new TranslateRecognizer();
+//    pan2Finger = QGestureRecognizer::registerRecognizer(translateGesture);
+//    scaleSequenceNew = true;
 
 
 
@@ -958,11 +958,11 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     qreal angle = QLineF(p1.screenPos(), fingersPos).angle();
 
-                    if (angle > 180)
-                        angle -= 360;
-                    qreal startAngle = QLineF(p1.startScreenPos(), p2.startScreenPos()).angle();
-                    if (startAngle > 180)
-                        startAngle -= 360;
+//                    if (angle > 180)
+//                        angle -= 360;
+//                    qreal startAngle = QLineF(p1.startScreenPos(), p2.startScreenPos()).angle();
+////                    if (startAngle > 180)
+////                        startAngle -= 360;
 
                     qreal lastAngle = QLineF(p1.lastScreenPos(), fingersLastPos).angle();
 
@@ -983,45 +983,6 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 }   /// End Pinch Zoon
             }  /// if (count  == 3 )
-
-
-////                ///////////////////////////////////////////////
-////                /// 2D Finger Position Being Drawn
-////                /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
-////                ///  We need to Subtract the position from the Total Height of VTK Window
-////                ///
-////                ///
-////                vtkRenderWindow * renWindow = this->GetRenderWindow();
-
-////                int * sizeRW = renWindow->GetSize();
-////                //                int * screenSize = renWindow->GetScreenSize();
-
-////                int maxY = sizeRW[1];
-
-
-
-////                int x1Pos = p1.pos().toPoint().x();
-////                int y1Pos = p1.pos().toPoint().y();
-
-////                int x2Pos = p2.pos().toPoint().x();
-////                int y2Pos = p2.pos().toPoint().y();
-
-////                int x3Pos = p3.pos().toPoint().x();
-////                int y3Pos = p3.pos().toPoint().y();
-
-////                fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
-
-////                fingerActor1->SetVisibility(true);
-
-
-////                fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
-
-////                fingerActor2->SetVisibility(true);
-
-
-////                fingerActor3->SetPosition(x3Pos, maxY - y3Pos);
-
-////                fingerActor3->SetVisibility(true);
 
 //                {
 //                    ////////////////////////////////
@@ -1129,20 +1090,7 @@ bool QVTKTouchWidget::event(QEvent *event)
             }
 
 
-            //  if (touchPoints.count() == 2)
-
-            //                std::cout << "TouchPoints: " << touchPoints.count() << '\t'
-            //                          << "even Type: " << static_cast<QTouchEvent*>(event)->type() << endl;
-            //                count = touchPoints.count();
         }
-
-        if (event->type() == QEvent::Gesture)
-        {
-            //    std::cout << "gesture Event" << endl;
-            return gestureEvent(static_cast<QGestureEvent*> (event));
-        }
-
-        else
             return QVTKWidget::event(event);
 
     }   // IF (transformsOn)
@@ -1382,23 +1330,13 @@ bool QVTKTouchWidget::event(QEvent *event)
                 }
             }
 
-            if (event->type() == QEvent::Gesture)
-            {
-                //    std::cout << "gesture Event" << endl;
-                return gestureEvent(static_cast<QGestureEvent*> (event));
-            }
-            else
-                return QVTKWidget::event(event);
+            return QVTKWidget::event(event);
         }   /// If(SubVolumeOn)
         else
         return QVTKWidget::event(event);
 
 }
 
-void QVTKTouchWidget::paintEvent(QPaintEvent *event)
-{
-
-}
 
 void QVTKTouchWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
@@ -1411,9 +1349,7 @@ void QVTKTouchWidget::mouseDoubleClickEvent(QMouseEvent *event)
     this->lastScaleFactor = 1;
     this->verticalOffset = 0;
     this->horizonatlOffset = 0;
-    this->update();
-
-    //        std::cout << "Position Reset" << endl;
+    this->update();    
 
 }
 
@@ -1448,268 +1384,3 @@ bool QVTKTouchWidget::GetSubVolumeOn()
 {
     return this->subVolumeOn;
 }
-
-
-bool QVTKTouchWidget::gestureEvent(QGestureEvent *event)
-{
-    if (gesturesActive)
-    {
-        //std::cout << "Gesture Type:" << event->gestures()[0]->gestureType() << endl;
-        //            QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent*>(event)->touchPoints();
-
-        //            std::cout << touchPoints.count() << endl;
-
-
-        //            if (QGesture * translate = event->gesture(panGesture5))
-        //            {
-        //                std::cout << "Translate Gesture" ;
-
-        //                QPanGesture * gesture = static_cast<QPanGesture*>(translate);
-        //                std::cout << "offset (x,y): " << gesture->offset().x() << "," << gesture->offset().y() << "\t"
-        //                          << "LastOf (x,y): " << gesture->lastOffset().x() << "," << gesture->lastOffset().y() << "\t"
-        //                          << endl;
-
-        //                panTriggered(static_cast<QPanGesture*> (translate));
-
-        //                return true;
-        //            }
-
-
-        if (QGesture *pinch = event->gesture(Qt::PinchGesture))
-        {
-            pinchTriggered(static_cast<QPinchGesture *>(pinch));
-            std::cout << "Pinch Gesture" << endl;
-            return true;
-        }
-
-        if (QGesture *rotate = event->gesture(Qt::TapGesture))
-        {
-            ///  pinchTriggered(static_cast<QPinchGesture *>(pinch));
-            std::cout << "Rotate Gesture" << endl;
-            return true;
-        }
-
-        if (QGesture *translate = event->gesture(pan2Finger))
-        {
-            QPanGesture * gesture = static_cast<QPanGesture*>(translate);
-            std::cout << "Offset (x,y): " << gesture->offset().x() << "," << gesture->offset().y() << "\t"
-                      << "LastOf (x,y): " << gesture->lastOffset().x() << "," << gesture->lastOffset().y() << "\t"
-                      << endl;
-
-            panTriggered(static_cast<QPanGesture*> (translate));
-
-            std::cout << "2 Finger Pan" << endl;
-            return true;
-        }
-
-    }
-}
-
-void QVTKTouchWidget::pinchTriggered(QPinchGesture *pinch)
-{
-    //std::cout << "SCALING" << "\t" << "Pinch: " << pinch->state() << endl;
-
-    QPinchGesture::ChangeFlags changeFlags = pinch->changeFlags();
-
-
-    /// IF We are starting the Pinch Gesture we EMIT a MiddleMouseButton PRESS Signal
-    if (pinch->state() == Qt::GestureStarted)
-    {
-        ///std::cout << "SCALING Started" << "\t" << endl;
-        //  this->GetInteractor()->MiddleButtonPressEvent();
-        scaleTriggered();
-    }
-
-    /// IF We are ending the Pinch Gesture we EMIT a MiddleMouseButton RELEASE Signal
-    if (pinch->state() == Qt::GestureFinished)
-    {
-        // this->GetInteractor()->MiddleButtonReleaseEvent();
-    }
-
-
-
-    // std::cout << "center: (x,y) - ("  << pinch->centerPoint().x() << pinch->centerPoint().y() << endl;
-
-    if (changeFlags & QPinchGesture::ScaleFactorChanged ) {
-
-        //    std::cout << "SCALING" << endl;
-        //            changeFlags.
-
-        vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-        // Calculate the focal depth since we'll be using it a lot
-
-        vtkCamera *camera = renderer->GetActiveCamera();
-
-        QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
-
-
-
-
-        camera->Dolly(ppinch->scaleFactor());
-        renderer->ResetCameraClippingRange();
-        //            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
-        //                    (iren->GetInteractorStyle());
-        //            style->UpdateScale();
-
-
-
-
-
-    }
-
-    if (changeFlags & !QPinchGesture::CenterPointChanged ) {
-
-        std::cout << "TRANSLATING" << endl;
-        //            changeFlags.
-
-        //            vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-        //            vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-        //            // Calculate the focal depth since we'll be using it a lot
-
-        //            vtkCamera *camera = renderer->GetActiveCamera();
-
-        //            QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
-
-
-        //            camera->Dolly(ppinch->scaleFactor());
-        //            renderer->ResetCameraClippingRange();
-        //            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
-        //                    (iren->GetInteractorStyle());
-        //            style->UpdateScale();
-
-
-
-
-
-    }
-
-    ////
-    //// OPTIONAL ROTATIONAL 2-Finger ROLL
-    ///
-    if (changeFlags & QPinchGesture::RotationAngleChanged) {
-
-        //std::cout << "Z-Axis Rotation" << endl;
-
-        vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-        // Calculate the focal depth since we'll be using it a lot
-
-        vtkCamera *camera = renderer->GetActiveCamera();
-
-        QPinchGesture *ppinch = static_cast<QPinchGesture*> (pinch);
-
-
-        double rotationDelta = ppinch->rotationAngle() - ppinch->lastRotationAngle();
-        camera->Roll(-rotationDelta);
-        renderer->ResetCameraClippingRange();
-        //            TouchInteractorStyleTrackBallCamera * style = static_cast<TouchInteractorStyleTrackBallCamera*>
-        //                    (iren->GetInteractorStyle());
-        //            style->UpdateScale();
-
-
-    }
-
-
-
-    //        if (pinch->state() == Qt::GestureFinished) {
-    //            scaleFactor *= currentStepScaleFactor;
-    //            currentStepScaleFactor = 1;
-    //        }
-
-}
-
-void QVTKTouchWidget::panTriggered(QPanGesture *translate)
-{
-
-    // std::cout <<" INSIDE PAN TRIGGERED CODE" << endl;
-
-
-    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-    // Calculate the focal depth since we'll be using it a lot
-
-    vtkCamera *camera = renderer->GetActiveCamera();
-
-
-    double viewFocus[4], focalDepth, viewPoint[3];
-    double newPickPoint[4], oldPickPoint[4], motionVector[3];
-
-    vtkInteractorObserver * irenObserver =
-            static_cast<vtkInteractorObserver*> (this->GetInteractor()->GetInteractorStyle());
-
-
-    camera->GetFocalPoint(viewFocus);
-    irenObserver->ComputeWorldToDisplay(renderer, viewFocus[0], viewFocus[1], viewFocus[2],
-            viewFocus);
-    focalDepth = viewFocus[2];
-
-    irenObserver->ComputeDisplayToWorld(renderer,
-                                        translate->offset().x(),
-                                        translate->offset().y(),
-                                        focalDepth,
-                                        newPickPoint);
-
-    // Has to recalc old mouse point since the viewport has moved,
-    // so can't move it outside the loop
-
-    irenObserver->ComputeDisplayToWorld(renderer,
-                                        translate->lastOffset().x(),
-                                        translate->lastOffset().y(),
-                                        focalDepth,
-                                        oldPickPoint);
-
-    // Camera motion is reversed
-
-    //                motionVector[0] = oldPickPoint[0] - newPickPoint[0];
-    //                motionVector[1] = oldPickPoint[1] - newPickPoint[1];
-    //                motionVector[2] = oldPickPoint[2] - newPickPoint[2];
-
-    motionVector[0] = oldPickPoint[0] - newPickPoint[0];
-    motionVector[1] = newPickPoint[1] - oldPickPoint[1];
-    motionVector[2] = newPickPoint[2] - oldPickPoint[2];
-
-
-    camera->GetFocalPoint(viewFocus);
-    camera->GetPosition(viewPoint);
-    camera->SetFocalPoint(motionVector[0] + viewFocus[0],
-            motionVector[1] + viewFocus[1],
-            motionVector[2] + viewFocus[2]);
-
-    camera->SetPosition(motionVector[0] + viewPoint[0],
-            motionVector[1] + viewPoint[1],
-            motionVector[2] + viewPoint[2]);
-
-
-
-
-}
-
-
-
-
-//    void QVTKTouchWidget::printGestureInfo(QPanGesture *gesture)
-//    {
-//        std::cout() << "Delta: " << gesture->delta().x() << "," <<  gesture->delta().y() << endl;
-//    //    qDebug() << "Delta: " << gesture->delta().x() << "," <<  gesture->delta().y() << endl;
-//    }
-
-//void TouchWidget::printGestureInfo(QGestureEvent *event)
-//{
-//    if(QGesture *swipe = event->gesture(Qt::SwipeGesture))
-//        swipeTriggered(static_cast<QSwipeGesture*> (swipe));
-//else
-//    if(QGesture *pan = event->gesture(Qt::PanGesture))
-//        panTriggered(static_cast<QPanGesture*> (pan));
-//else
-//   if (QGesture *pinch = event->gesture(Qt::PinchGesture))
-//        pinchTriggered(static_cast<QPinchGesture*> (pinch));
-//}
