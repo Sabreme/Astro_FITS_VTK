@@ -50,6 +50,8 @@ protected:
     bool event(QEvent *event);
     //void paintEvent(QPaintEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
 
 
 
@@ -79,6 +81,7 @@ private:
 
     bool userTestRunning = false;
 
+    bool rightMouseClick = false;
     bool transformsOn = true;
     bool subVolumeOn = false;
 

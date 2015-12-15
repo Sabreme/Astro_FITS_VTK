@@ -49,10 +49,14 @@ public:
 
     /// WE REMOVE UNWANTED FUNCTIONALITY SUCH AS SCALING, PANNING TO PREVENT BUGS
     virtual void OnRightButtonDown()
-    {}
+    {
+        std::cout << "Right Mouse Button Down" << endl;
+    }
 
     virtual void  OnMiddleButtonDown()
-    {}
+    {
+
+    }
 
     virtual void OnMouseWheelBackward()
     {}
@@ -69,94 +73,43 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
 
     virtual void OnRightButtonDown()
     {
-//        vtkInteractorStyleTrackballCamera::OnMiddleButtonDown();
-//        if (mainWindow->userTestRunning())
-//            mainWindow->countInteraction(TranslateCount);                  ////USERTEST
-
-//        std::cout << "Translation triggered" << endl;
     }
 
     virtual void OnRightButtonUp()
     {
-//        ui->buttonTransfTranslation->setEnabled(false);
-//        vtkInteractorStyleTrackballCamera::OnMiddleButtonUp();
-    }
 
-//    virtual void OnMouseMove()
-//    {
-//        vtkInteractorStyleTrackballCamera::OnMouseMove();
-//    }
+    }
 
     virtual void OnMiddleButtonDown()
     {
-       // vtkInteractorStyleTrackballCamera::OnRightButtonDown();
-//        if (mainWindow->userTestRunning())
-//            mainWindow->countInteraction(ScaleCount);                  ////USERTEST
-//        std::cout <<"Scale button pushed" << endl;
 
     }
 
     virtual void OnMiddleButtonUp()
     {
-
-       // vtkInteractorStyleUser::OnRightButtonUp();
     }
 
 
     virtual void OnLeftButtonUp()
     {
-//        ui->buttonTransfRotation->setEnabled(false);
-       // std::cout << "Left buton up" << endl;
-       // vtkInteractorStyleUser::OnLeftButtonUp();
     }
 
     virtual void OnLeftButtonDown()
     {
-      //  std::cout << "left button Down" << endl;
-        //vtkInteractorStyleUser::OnLeftButtonDown();
-//        vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
-//        if (mainWindow->userTestRunning())
-//             mainWindow->countInteraction(RotateCount);                        ////USERTEST
     }
 
     virtual void Rotate()
    {
 
-
-      // vtkInteractorStyleUser::Rotate();
-
-//       double* orientation;
-
-//       orientation  = camera->GetOrientation();
-
-//       ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
-//       ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
-//       ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
-
-//       ui->buttonTransfRotation->setEnabled(true);
-//       ui->Frame_LEFT->repaint();
-
-//        std::cout << "Rotate" << endl;
-
    }
 
     virtual void OnMouseMove()
     {
-//        if (this->GetEnabled())
-
-//            std::cout << "Mouse movement" << endl;
-//        else
-//            std::cout << "Mouse SHOULD NOT WORK !!!" << endl;
 
     }
 
     virtual void Spin()
    {
-
-
-//       vtkInteractorStyleUser::Spin();
-
-  //     std::cout << "We Spinning !!!" << endl;
 
    }
 
@@ -164,19 +117,11 @@ class TouchSubVolInteractorStyle : public vtkInteractorStyleUser
     virtual void Pan()
     {
 
-
-    //    vtkInteractorStyleUser::Pan();
-
-
-      //  std::cout << "We Spanning !!!" << endl;
-
     }
 
     virtual void Dolly()
     {
-    //    vtkInteractorStyleUser::Dolly();
 
-//        std::cout << "We are Dollying !!!" << endl;
     }
 
 
@@ -203,11 +148,6 @@ QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
     scaleFactor(1),
     lastScaleFactor(1)
 {
-//    translateGesture = new TranslateRecognizer();
-//    pan2Finger = QGestureRecognizer::registerRecognizer(translateGesture);
-//    scaleSequenceNew = true;
-
-
 
 }
 
@@ -958,16 +898,8 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     qreal angle = QLineF(p1.screenPos(), fingersPos).angle();
 
-//                    if (angle > 180)
-//                        angle -= 360;
-//                    qreal startAngle = QLineF(p1.startScreenPos(), p2.startScreenPos()).angle();
-////                    if (startAngle > 180)
-////                        startAngle -= 360;
-
                     qreal lastAngle = QLineF(p1.lastScreenPos(), fingersLastPos).angle();
 
-
-                    //const qreal rotationAngle = startAngle - angle;
 
                     const qreal rotationAngle = angle - lastAngle;
 
@@ -1165,7 +1097,10 @@ bool QVTKTouchWidget::event(QEvent *event)
                             std::cout << "1 Point Tracking Triggered" << endl;
                         }
 
-                        std::cout << "1 Point Tracking Triggered" << endl;
+                        if (!rightMouseClick)
+                            std::cout << "1 Point Tracking Triggered" << endl;
+                        else
+                           std::cout << "1 Point RIGHT Mouse Tracking Triggered" << endl;
 
                         lastGesture = 1;
 
@@ -1199,7 +1134,9 @@ bool QVTKTouchWidget::event(QEvent *event)
 
 
                         ///////////////////////////////////////////////////////////////////////////////////
-
+                        /// \brief finger1Pressed
+                        ///
+                        ///
 
                         finger1Pressed();
 
@@ -1351,6 +1288,28 @@ void QVTKTouchWidget::mouseDoubleClickEvent(QMouseEvent *event)
     this->horizonatlOffset = 0;
     this->update();    
 
+}
+
+///
+/// We keep this flag for captring Right Mouse Button Actions
+///
+void QVTKTouchWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button()==Qt::RightButton)
+    {
+        std::cout << "right button is pressed " << endl;
+        rightMouseClick = true;
+    //pressed=true; //<-----
+    }
+}
+
+void QVTKTouchWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button()== Qt::RightButton)
+    {
+        std::cout << "right button is Released " << endl;
+        rightMouseClick = false;
+    }
 }
 
 void QVTKTouchWidget::setGesturesActive(bool status)
