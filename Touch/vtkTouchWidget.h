@@ -117,6 +117,8 @@ signals:
     void finger1Pressed();
     void finger2Pressed();
 
+    void rightClkSubVol();
+
     void userTestTranslateCount();
 
 public slots:

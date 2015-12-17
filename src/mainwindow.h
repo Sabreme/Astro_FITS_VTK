@@ -352,6 +352,8 @@ private slots:
         void touchFinger1Pressed();
         void touchFinger2Pressed();
 
+        void touchSubVolTranslate();
+
 
 
 
@@ -449,6 +451,7 @@ private:
          SubVolumeDialog *subVolDialog;              // Global pointer for the SubVolume
          vtkCubeSource *global_subVolume;            // Global Pointer for the Sub-Volume
          vtkCustomBoxWidget* boxWidget_;                   // Global Pointer for the BoxWidget;
+         int touchWidgetRange_ = 50;
 
 
         //////////////////////////////////////////////////

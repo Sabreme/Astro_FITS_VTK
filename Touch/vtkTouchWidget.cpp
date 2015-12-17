@@ -1097,10 +1097,8 @@ bool QVTKTouchWidget::event(QEvent *event)
                             std::cout << "1 Point Tracking Triggered" << endl;
                         }
 
-                        if (!rightMouseClick)
-                            std::cout << "1 Point Tracking Triggered" << endl;
-                        else
-                           std::cout << "1 Point RIGHT Mouse Tracking Triggered" << endl;
+
+
 
                         lastGesture = 1;
 
@@ -1133,14 +1131,27 @@ bool QVTKTouchWidget::event(QEvent *event)
                         fingerActor1->SetVisibility(true);
 
 
-                        ///////////////////////////////////////////////////////////////////////////////////
-                        /// \brief finger1Pressed
-                        ///
-                        ///
+                        ////////////////////////////////
+                        /////
+                        /// RIGHT MOUSE BUTTON TOGGLE
+                        /// then New Gesture Count
+                        if (rightMouseClick)
 
-                        finger1Pressed();
+                        {
+                            std::cout << "1 Point RIGHT Mouse Tracking Triggered" << endl;
+                            rightClkSubVol();
+                        }
+                        else
+                        {
+                            std::cout << "Single PointWidget Tracking" << endl;
 
+                            ///////////////////////////////////////////////////////////////////////////////////
+                            /// \brief finger1Pressed
+                            ///
+                            ///
 
+                            finger1Pressed();
+                        }
 
                     } /// if (event->type() == QEvent::TouchUpdate)
 
