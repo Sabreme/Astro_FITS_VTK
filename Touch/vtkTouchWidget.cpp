@@ -1139,6 +1139,13 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                         {
                             std::cout << "1 Point RIGHT Mouse Tracking Triggered" << endl;
+
+                            //int xPos2 = p1.pos().toPoint().x();
+                            int xPos2 = p1.lastPos().toPoint().x();
+                            int yPos2 = p1.lastPos().toPoint().y();
+
+                            fingerActor1->SetPosition2(xPos2, maxY - yPos2);
+
                             rightClkSubVol();
                         }
                         else

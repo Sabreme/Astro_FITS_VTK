@@ -3696,6 +3696,8 @@ void MainWindow::touchSubVolTranslate()
 
     /// FingerActor Position Information
     double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+    double * actorPos2D2 = this->ui->qvtkWidgetLeft->fingerActor1->GetPosition2Coordinate()->GetValue();
+
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
     double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
 
@@ -3737,34 +3739,40 @@ void MainWindow::touchSubVolTranslate()
     if (validXmax && validXmin && validYmin && validYmax &&
             (distPos1 >touchWidgetRange_) && (distPos2 > touchWidgetRange_))
     {
-        std::cout << "VALID TRANSLATE LOCATION \t[x,y]: " << finger.x() << ", " << finger.y() << endl;
-    }
+        ///std::cout << "VALID TRANSLATE LOCATION \t[x,y]: " << finger.x() << ", " << finger.y() << endl;
 
-//    int threshold = 50;
 
-//    /// 1. Compute the new Position by Getting the PointWidget Focal Point
-//    /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
-//    /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
-//    /// 4. PointWidget Update
+        //    int threshold = 50;
 
-//    //// --------MOVE PointWidget 1 with Finger 1--------"
-//    if ((distPos1 <= distPos2) && (distPos1 < threshold))
-//    {
+        /// 1. Compute the new Position by Getting the PointWidget Focal Point
+        /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+        /// 3. Create the Translation transformation from finger by lookint at last position
+        /// 3. Apply the translation to the widget position
+        /// 4. PointWidget Update
 
-//        double focalPoint[4], pickPoint[4];
-//        double z;
+        //// --------MOVE PointWidget 1 with Finger 1 TRANSFORMATION--------"
 
-//          pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint);
-//          z = focalPoint[2];
+        {
 
-//          pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,pickPoint);
+             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
 
-//          pointWidget1_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
 
-//        /// Interact, if desired
+//            double focalPoint[4], pickPoint[4];
+//            double z;
 
-//        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
-//    }
+//            pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint);
+//            z = focalPoint[2];
+
+//            pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,pickPoint);
+
+//            pointWidget1_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+
+//            /// Interact, if desired
+
+//            pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+        }
+    } ///(validXmax && validXmin && validYmin && validYmax &&
 
 //    //// --------MOVE PointWidget 2 with Finger 1--------"
 //    if ((distPos2 <= distPos1) && (distPos2 < threshold))
