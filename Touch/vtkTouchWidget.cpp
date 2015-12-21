@@ -1313,21 +1313,23 @@ void QVTKTouchWidget::mouseDoubleClickEvent(QMouseEvent *event)
 ///
 void QVTKTouchWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button()==Qt::RightButton)
+    if (subVolumeOn && event->button()==Qt::RightButton)
     {
-        std::cout << "right button is pressed " << endl;
         rightMouseClick = true;
-    //pressed=true; //<-----
     }
+    else
+        QVTKWidget::mousePressEvent(event);
 }
 
 void QVTKTouchWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button()== Qt::RightButton)
+    if (subVolumeOn && event->button()== Qt::RightButton)
     {
-        std::cout << "right button is Released " << endl;
         rightMouseClick = false;
     }
+    else
+        QVTKWidget::mouseReleaseEvent(event);
+
 }
 
 void QVTKTouchWidget::setGesturesActive(bool status)
