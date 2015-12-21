@@ -3727,6 +3727,7 @@ void MainWindow::touchSubVolTranslate()
     bool validYmin = (finger.y() > min(widget1.y(),widget2.y()));
     bool validYmax = (finger.y() < max(widget1.y(),widget2.y()));
 
+
 //    std::cout << "XMin: " << validXmin << "\t XMax: " << validXmax
 //              << "YMin: " << validYmin << "\t YMax: " << validYmax
 //              << endl;
@@ -3735,6 +3736,11 @@ void MainWindow::touchSubVolTranslate()
 //    {
 //        std::cout << "VALID TRANSLATE LOCATION \t[x,y]: " << finger.x() << ", " << finger.y() << endl;
 //    }
+
+    bool widget1Valid = false;
+    bool widget2Valid = false;
+
+    double pickPoint1[4], pickPoint2[4];
 
     if (validXmax && validXmin && validYmin && validYmax &&
             (distPos1 >touchWidgetRange_) && (distPos2 > touchWidgetRange_))
@@ -3754,15 +3760,15 @@ void MainWindow::touchSubVolTranslate()
 
         {
 
-             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
-                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
+//             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+//                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
 
-             double focalPoint1[4], pickPoint1[4];
+
+             double focalPoint1[4];
              double z1;
 
              pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint1);
              z1 = focalPoint1[2];
-
 
              /// Get the Motion Vector of the Finger
 
@@ -3779,11 +3785,28 @@ void MainWindow::touchSubVolTranslate()
              /// Send New 2D Point to World
 
              pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (point2DW1New[0]), point2DW1New[1], z1, pickPoint1);
-             pointWidget1_->SetPosition(pickPoint1);
 
-             /// Interact, if desired
 
-             pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+            /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+            ///
+
+            bool xRangeValid = (pickPoint1[0] >= global_Volume->GetBounds()[0]) && (pickPoint1[0] <= global_Volume->GetBounds()[1]);
+            bool yRangeValid = (pickPoint1[1] >= global_Volume->GetBounds()[2]) && (pickPoint1[1] <= global_Volume->GetBounds()[3]);
+            bool zRangeValid = (pickPoint1[2] >= global_Volume->GetBounds()[4]) && (pickPoint1[2] <= global_Volume->GetBounds()[5]);
+
+            if (xRangeValid && yRangeValid && zRangeValid)
+                  widget1Valid = true;
+
+//            if (!xRangeValid || !yRangeValid || !zRangeValid)
+//                  std::cout << "INVALID POSITION" << endl;
+            // if (pickPoint1[0])
+
+
+             std::cout << std::fixed << std::setprecision(2) ;
+
+
+//             std::cout << "Finger 1: New[x,y,z]: " << pickPoint1[0] << ", " << pickPoint1[1] << ", " << pickPoint1[2]
+//                       << "\t Old[x,y,z]: " << pointW1[0] << ", " << pointW1[1]  << ", " << pointW1[2] << endl;
 
         }
 
@@ -3795,7 +3818,7 @@ void MainWindow::touchSubVolTranslate()
 //                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
 
 
-             double focalPoint2[4], pickPoint2[4];
+             double focalPoint2[4];
              double z2;
 
              pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], focalPoint2);
@@ -3817,33 +3840,39 @@ void MainWindow::touchSubVolTranslate()
              /// Send New 2D Point to World
 
              pointWidget2_->ComputeDisplayToWorld(defaultRenderer, (point2DW2New[0]), point2DW2New[1], z2, pickPoint2);
-             pointWidget2_->SetPosition(pickPoint2);
 
-             /// Interact, if desired
+             /// If the NEW pointWidget 2 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+             ///
 
-             pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+             bool xRangeValid = (pickPoint2[0] >= global_Volume->GetBounds()[0]) && (pickPoint2[0] <= global_Volume->GetBounds()[1]);
+             bool yRangeValid = (pickPoint2[1] >= global_Volume->GetBounds()[2]) && (pickPoint2[1] <= global_Volume->GetBounds()[3]);
+             bool zRangeValid = (pickPoint2[2] >= global_Volume->GetBounds()[4]) && (pickPoint2[2] <= global_Volume->GetBounds()[5]);
+
+             if (xRangeValid && yRangeValid && zRangeValid)
+                   widget2Valid = true;
+
+
 
         }
+
+        /// If the widgets are Both Valid Translations, apply the New Point Positions
+        if (widget1Valid && widget2Valid)
+        {
+            pointWidget1_->SetPosition(pickPoint1);
+
+            /// Interact, if desired
+
+            pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+
+
+
+            pointWidget2_->SetPosition(pickPoint2);
+
+            /// Interact, if desired
+
+            pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+        } /// if (widget1Valid && widget2Valid)
     } ///(validXmax && validXmin && validYmin && validYmax &&
-
-//    //// --------MOVE PointWidget 2 with Finger 1--------"
-//    if ((distPos2 <= distPos1) && (distPos2 < threshold))
-//    {
-
-//        double focalPoint[4], pickPoint[4];
-//        double z;
-
-//          pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], focalPoint);
-//          z = focalPoint[2];
-
-//          pointWidget2_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,pickPoint);
-
-//          pointWidget2_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
-
-//        /// Interact, if desired
-
-//        pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
-//    }
 }
 
 
