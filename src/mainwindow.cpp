@@ -3699,7 +3699,7 @@ void MainWindow::touchSubVolTranslate()
     double * actorPos2D2 = this->ui->qvtkWidgetLeft->fingerActor1->GetPosition2Coordinate()->GetValue();
 
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
-    double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+    double *  actor1PosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
 
     /// Get PointWidget 1 2D Position
     double * pointW1 = pointWidget1_->GetPosition();
@@ -3757,26 +3757,6 @@ void MainWindow::touchSubVolTranslate()
              std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
                                         << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
 
-
-
-//             //Get the motion vector
-//             double v[3];
-//             v[0] = p2[0] - p1[0];
-//             v[1] = p2[1] - p1[1];
-//             v[2] = p2[2] - p1[2];
-
-//             //Translate the plane
-//             double oNew[3];
-//             double *origin = this->Plane->GetOrigin();
-//             oNew[0] = origin[0] + v[0];
-//             oNew[1] = origin[1] + v[1];
-//             oNew[2] = origin[2] + v[2];
-//             this->Plane->SetOrigin(oNew);
-
-
-             /// Get PointWidget 1 2D Position
-             double * pointW1 = pointWidget1_->GetPosition();
-
              double focalPoint1[4], pickPoint1[4];
              double z1;
 
@@ -3799,53 +3779,50 @@ void MainWindow::touchSubVolTranslate()
              /// Send New 2D Point to World
 
              pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (point2DW1New[0]), point2DW1New[1], z1, pickPoint1);
-
-
-
-
-//             /// Translate the pointWidget;
-//             double pointW1New[3];
-//             pointW1New[0] = pointW1[0] + fingerVector2D[0];
-//             pointW1New[1] = pointW1[1] + fingerVector2D[1];
-//             pointW1New[2] = z1;
-
              pointWidget1_->SetPosition(pickPoint1);
 
              /// Interact, if desired
 
              pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
 
+        }
 
-             /// pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,pickPoint);
+        //// --------MOVE PointWidget 2 with Finger 1 TRANSFORMATION--------"
 
+        {
 
-
-
-
-
-//               pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], focalPoint);
-//               z = focalPoint[2];|
-
-//               pointWidget2_->ComputeDisplayToWorld(defaultRenderer, (actor1Pos2D[0]), actor1Pos2D[1], z,pickPoint);
+//             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+//                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
 
 
+             double focalPoint2[4], pickPoint2[4];
+             double z2;
+
+             pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], focalPoint2);
+             z2 = focalPoint2[2];
 
 
+             /// Get the Motion Vector of the Finger
 
+             double fingerVector2D[2] ;
+             fingerVector2D[0] =  actorPos2D[0] - actorPos2D2[0];
+             fingerVector2D[1] =  actorPos2D[1] - actorPos2D2[1];
 
-//            double focalPoint[4], pickPoint[4];
-//            double z;
+             /// Translate the 2D PointWidget
 
-//            pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint);
-//            z = focalPoint[2];
+             double point2DW2New[2];
+             point2DW2New[0] = focalPoint2[0] + fingerVector2D[0];
+             point2DW2New[1] = focalPoint2[1] + fingerVector2D[1];
 
-//            pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,pickPoint);
+             /// Send New 2D Point to World
 
-//            pointWidget1_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+             pointWidget2_->ComputeDisplayToWorld(defaultRenderer, (point2DW2New[0]), point2DW2New[1], z2, pickPoint2);
+             pointWidget2_->SetPosition(pickPoint2);
 
-//            /// Interact, if desired
+             /// Interact, if desired
 
-//            pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+             pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+
         }
     } ///(validXmax && validXmin && validYmin && validYmax &&
 
