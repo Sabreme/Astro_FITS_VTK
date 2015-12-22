@@ -349,10 +349,14 @@ private slots:
         void touchTransformsOn(bool status);
         void touchTransformationToggle();
 
-        void touchFinger1Pressed();
-        void touchFinger2Pressed();
+        void touchFinger1SubVol();
+        void touchFinger2SubVol();
 
         void touchSubVolTranslate();
+
+        void touchFinger1ArbSlice();
+
+
 
 
 

@@ -3479,20 +3479,64 @@ void MainWindow::touchTransformationToggle()
 
         if (!status)
         {
-            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
-            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
         }
         if (status)
         {
-            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1Pressed()));
-            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2Pressed()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
             disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+        }
+    }
+
+    if (this->systemTab == SliceArb)
+    {
+        bool status  = this->ui->qvtkWidgetLeft->GetTransformsOn();
+
+        this->ui->qvtkWidgetLeft->SetArbSliceOn(!status);
+
+
+
+        //customArbPlaneWidget->Print(std::cout);
+        customArbPlaneWidget->GetInteractor()->Print(std::cout);
+
+        if (!status)
+        {
+           // customArbPlaneWidget->GetInteractor()->rem();
+
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlice()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
+//            connect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+        }
+        if (status)
+        {
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlice()));
+//            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
+//            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+
+
+//            vtkRenderWindowInteractor *i = customArbPlaneWidget->GetInteractor();
+//                i->AddObserver(vtkCommand::MouseMoveEvent, customArbPlaneWidget->,
+//                               0.5);
+//                i->AddObserver(vtkCommand::LeftButtonPressEvent,
+//                               this->EventCallbackCommand, this->Priority);
+//                i->AddObserver(vtkCommand::LeftButtonReleaseEvent,
+//                               this->EventCallbackCommand, this->Priority);
+//                i->AddObserver(vtkCommand::MiddleButtonPressEvent,
+//                               this->EventCallbackCommand, this->Priority);
+//                i->AddObserver(vtkCommand::MiddleButtonReleaseEvent,
+//                               this->EventCallbackCommand, this->Priority);
+//                i->AddObserver(vtkCommand::RightButtonPressEvent,
+//                               this->EventCallbackCommand, this->Priority);
+//                i->AddObserver(vtkCommand::RightButtonReleaseEvent,
+//                               this->EventCallbackCommand, this->Priority);
         }
     }
 }
 
-void MainWindow::touchFinger1Pressed()
+void MainWindow::touchFinger1SubVol()
 {
 
     /// FingerActor Position Information
@@ -3567,7 +3611,7 @@ void MainWindow::touchFinger1Pressed()
     }
 }
 
-void MainWindow::touchFinger2Pressed()
+void MainWindow::touchFinger2SubVol()
 {    
 
     /// FingerActor1 Position Information
@@ -3875,6 +3919,61 @@ void MainWindow::touchSubVolTranslate()
     } ///(validXmax && validXmin && validYmin && validYmax &&
 }
 
+void MainWindow::touchFinger1ArbSlice()
+{
+
+    /// FingerActor Position Information
+    double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+    vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
+    double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+
+//    /// Get PointWidget 1 2D Position
+//    double * pointW1 = pointWidget1_->GetPosition();
+//    double pntW1P2D[3] = {0,0,0};
+//    this->pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], pntW1P2D);
+
+//    /// Get PointWidget 2 2D Position
+//    double * pointW2 = pointWidget2_->GetPosition();
+//    double pntW2P2D[3] = {0,0,0};
+//    this->pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], pntW2P2D);
+
+//    QPointF finger(actorPos2D[0], actorPos2D[1]);
+
+//    QPointF widget1(pntW1P2D[0], pntW1P2D[1]);
+//    QPointF distance1 =  finger - widget1;
+
+//    QPointF widget2(pntW2P2D[0], pntW2P2D[1]);
+//    QPointF distance2 =  finger - widget2;
+
+//    int distPos1 = distance1.manhattanLength();
+//    int distPos2 = distance2.manhattanLength();
+
+//    int threshold = touchWidgetRange_;
+
+//    /// 1. Compute the new Position by Getting the PointWidget Focal Point
+//    /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+//    /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
+//    /// 4. PointWidget Update
+
+//    //// --------MOVE PointWidget 1 with Finger 1--------"
+//    if ((distPos1 <= distPos2) && (distPos1 < threshold))
+//    {
+
+//        double focalPoint[4], pickPoint[4];
+//        double z;
+
+//          pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], focalPoint);
+//          z = focalPoint[2];
+
+//          pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (actorPos2D[0]), actorPos2D[1], z,pickPoint);
+
+//          pointWidget1_->SetPosition(pickPoint[0], pickPoint[1], pickPoint[2]);
+
+//        /// Interact, if desired
+
+//        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+//    }
+}
 
 
 void MainWindow::on_actionTracking_triggered()

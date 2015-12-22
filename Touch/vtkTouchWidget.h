@@ -35,6 +35,9 @@ public:
     bool GetTransformsOn();
     void SetSubVolumeOn(bool status);
     bool GetSubVolumeOn();
+    void SetArbSliceOn(bool status);
+    bool GetArbSliceOn();
+
 
 
     vtkActor2D *      fingerActor1;
@@ -56,7 +59,7 @@ protected:
 
 
 private:
-    bool gestureEvent(QGestureEvent *event);    
+   // bool gestureEvent(QGestureEvent *event);
     void pinchTriggered(QPinchGesture *);
     void panTriggered(QPanGesture *);
 
@@ -84,6 +87,7 @@ private:
     bool rightMouseClick = false;
     bool transformsOn = true;
     bool subVolumeOn = false;
+    bool arbSliceOn = false;
 
 
 
