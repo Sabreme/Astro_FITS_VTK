@@ -354,7 +354,9 @@ private slots:
 
         void touchSubVolTranslate();
 
-        void touchFinger1ArbSlice();
+        void touchFinger1ArbSlicePressed();
+        void touchFinger1ArbSliceMoving();
+        void touchFinger1ArbSliceReleased();
 
 
 

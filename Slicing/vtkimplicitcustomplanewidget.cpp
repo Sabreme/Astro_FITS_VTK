@@ -1383,19 +1383,19 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         this->Interactor->Render();
     }
 
-    bool vtkImplicitCustomPlaneWidget::isValidRotationAction(int X, int Y)
+    void vtkImplicitCustomPlaneWidget::finger1Pressed(int X, int Y)
     {
 
         // Okay, we can process this. See if we've picked anything.
         // Make sure it's in the activated renderer
         if (!this->CurrentRenderer || !this->CurrentRenderer->IsInViewport(X, Y))
           {
-            return false;
+            return;
           }
 
         vtkAssemblyPath *path;
         //this->Picker->SetTolerance(0.05);
-        this->Picker->SetTolerance(0.05);
+        this->Picker->SetTolerance(0.005);
         this->Picker->Pick(X,Y,0.0,this->CurrentRenderer);
         path = this->Picker->GetPath();
 
@@ -1404,8 +1404,8 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
           this->HighlightPlane(0);
           this->HighlightNormal(0);
           this->HighlightOutline(0);
-          //this->State = vtkImplicitCustomPlaneWidget::Outside;
-          return false;
+          this->State = vtkImplicitCustomPlaneWidget::Outside;
+          return;
           }
 
         vtkProp *prop = path->GetFirstNode()->GetViewProp();
@@ -1415,19 +1415,18 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
              //|| prop == this->LineActor ||
              //prop == this->ConeActor2 || prop == this->LineActor2 )
           {
-          this->HighlightPlane(1);
-          this->HighlightNormal(1);
-          //this->State = vtkImplicitCustomPlaneWidget::Rotating;
-            return true;
+            this->HighlightPlane(1);
+            this->HighlightNormal(1);
+          this->State = vtkImplicitCustomPlaneWidget::Rotating;
+            return;
           }
-        this->HighlightPlane(0);
-        this->HighlightNormal(0);
-        this->HighlightOutline(0);
-
-        return false;
+        this->EventCallbackCommand->SetAbortFlag(1);
+        this->StartInteraction();
+        this->InvokeEvent(vtkCommand::StartInteractionEvent,NULL);
+        this->Interactor->Render();
     }
 
-    void vtkImplicitCustomPlaneWidget::customFingerRotation(int X,  int Y, int X_last, int Y_last)
+    void vtkImplicitCustomPlaneWidget::finger1Moving(int X,  int Y, int X_last, int Y_last)
     {
 
         // Do different things depending on state
@@ -1497,18 +1496,34 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
             this->UpdateRepresentation();
         }
 
-
-
-
-
-
-
-
-
         // Interact, if desired
-        //this->EventCallbackCommand->SetAbortFlag(1);
+        this->EventCallbackCommand->SetAbortFlag(1);
         this->InvokeEvent(vtkCommand::InteractionEvent,NULL);
 
         this->Interactor->Render();
 
+    }
+
+    void vtkImplicitCustomPlaneWidget::finger1Released()
+    {
+        if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
+          {
+          return;
+          }
+
+        this->State = vtkImplicitCustomPlaneWidget::Start;
+        this->HighlightPlane(0);
+        this->HighlightOutline(0);
+        this->HighlightNormal(0);
+        this->SizeHandles();
+
+        this->EventCallbackCommand->SetAbortFlag(1);
+        this->EndInteraction();
+        this->InvokeEvent(vtkCommand::EndInteractionEvent,NULL);
+        this->Interactor->Render();
+    }
+
+    double *vtkImplicitCustomPlaneWidget::getConeActorPosition()
+    {
+        return this->ConeActor->GetPosition();
     }

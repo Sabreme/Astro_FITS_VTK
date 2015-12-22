@@ -3506,14 +3506,16 @@ void MainWindow::touchTransformationToggle()
         {
             customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
 
-            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlice()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlicePressed()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Moving()), this, SLOT(touchFinger1ArbSliceMoving()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFinger1ArbSliceReleased()));
 //            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
 //            connect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
         }
         if (status)
         {
             //customArbPlaneWidget->GetInteractor()->R
-            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlice()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSliceMoving()));
 //            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
 //            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
 
@@ -3920,7 +3922,24 @@ void MainWindow::touchSubVolTranslate()
     } ///(validXmax && validXmin && validYmin && validYmax &&
 }
 
-void MainWindow::touchFinger1ArbSlice()
+void MainWindow::touchFinger1ArbSlicePressed()
+{
+
+    /// FingerActor Position Information
+    double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+
+    vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
+    double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+
+//    if (customArbPlaneWidget->finger1Pressed(actorPos2D[0], actorPos2D[1]))
+//    {
+//        std::cout << "--------TRACKING FINGER ON CONE ----------------" << endl;
+
+//    }
+}
+
+
+void MainWindow::touchFinger1ArbSliceMoving()
 {
 
     /// FingerActor Position Information
@@ -3931,32 +3950,25 @@ void MainWindow::touchFinger1ArbSlice()
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
     double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
 
-    if (customArbPlaneWidget->isValidRotationAction(actorPos2D[0], actorPos2D[1]))
-    {
-        customArbPlaneWidget->customFingerRotation(actorPos2D[0], actorPos2D[1], actorPos2D2[0], actorPos2D2[1]);
-    }
+//    if (customArbPlaneWidget->finger1Pressed(actorPos2D[0], actorPos2D[1]))
+//    {
+        std::cout << "--------MOVING NORMAL ----------------" << endl;
+        customArbPlaneWidget->finger1Moving(actorPos2D[0], actorPos2D[1], actorPos2D2[0], actorPos2D2[1]);
+//    }
 
 
-//    /// Get PointWidget 1 2D Position
-//    double * pointW1 = pointWidget1_->GetPosition();
-//    double pntW1P2D[3] = {0,0,0};
-//    this->pointWidget1_->ComputeWorldToDisplay(defaultRenderer, pointW1[0], pointW1[1], pointW1[2], pntW1P2D);
 
-//    /// Get PointWidget 2 2D Position
-//    double * pointW2 = pointWidget2_->GetPosition();
-//    double pntW2P2D[3] = {0,0,0};
-//    this->pointWidget2_->ComputeWorldToDisplay(defaultRenderer, pointW2[0], pointW2[1], pointW2[2], pntW2P2D);
+//    /// Get CustomPlane Cone Actor 2D Position
+//    double * arrow = customArbPlaneWidget->getConeActorPosition();
+//    double arrow2D[3] = {0,0,0};
+//    customArbPlaneWidget->ComputeWorldToDisplay(defaultRenderer, arrow[0], arrow[1], arrow[2], arrow2D);
 
 //    QPointF finger(actorPos2D[0], actorPos2D[1]);
 
-//    QPointF widget1(pntW1P2D[0], pntW1P2D[1]);
+//    QPointF widget1(arrow2D[0], arrow2D[1]);
 //    QPointF distance1 =  finger - widget1;
 
-//    QPointF widget2(pntW2P2D[0], pntW2P2D[1]);
-//    QPointF distance2 =  finger - widget2;
-
-//    int distPos1 = distance1.manhattanLength();
-//    int distPos2 = distance2.manhattanLength();
+//    int distance = distance1.manhattanLength();
 
 //    int threshold = touchWidgetRange_;
 
@@ -3964,9 +3976,22 @@ void MainWindow::touchFinger1ArbSlice()
 //    /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
 //    /// 3. Set the Position of the PointWidget to the Finger Actor 3D World Point Position
 //    /// 4. PointWidget Update
+//    ///
 
-//    //// --------MOVE PointWidget 1 with Finger 1--------"
-//    if ((distPos1 <= distPos2) && (distPos1 < threshold))
+//    std::cout << "Finger2D: " << actorPos2D[0] << ", " << actorPos2D[1] << "\t";
+//    std::cout << "arrow: " << arrow[0] << ", " << arrow[1] << ", " << arrow[2] << "\t";
+
+
+
+//    //// --------Rotate customArbWidget with Finger 1--------"
+//    if (distance < threshold)
+//    {
+//        std::cout << "\t Arrow Actor Found";
+//    }
+//    else
+//    {
+//        std::cout << "\t MISSING" << endl;
+//    }
 //    {
 
 //        double focalPoint[4], pickPoint[4];
@@ -3983,6 +4008,15 @@ void MainWindow::touchFinger1ArbSlice()
 
 //        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
 //    }
+}
+
+void MainWindow::touchFinger1ArbSliceReleased()
+{
+
+//    /// FingerActor Position Information
+//    double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+
+//    double * actorPos2D2 = this->ui->qvtkWidgetLeft->fingerActor1->GetPosition2Coordinate()->GetValue();
 }
 
 

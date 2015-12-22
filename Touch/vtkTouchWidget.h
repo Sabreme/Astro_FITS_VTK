@@ -121,6 +121,11 @@ signals:
     void finger1Pressed();
     void finger2Pressed();
 
+
+    void finger1Moving();
+    void finger1Released();
+
+
     void rightClkSubVol();
 
     void userTestTranslateCount();

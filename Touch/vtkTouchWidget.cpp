@@ -495,6 +495,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 if (event->type() == QEvent::TouchUpdate)
                 {
+                    std::cout << "Buffer " << touchPointBuffer << '\t' ;
                     touchPointBuffer++;
 
                     if (touchPointBuffer ==(touchEventDelay - 1))
@@ -513,6 +514,12 @@ bool QVTKTouchWidget::event(QEvent *event)
                         rotateTriggered();
                         std::cout << "Rotation Triggered" << endl;
                     }
+
+//                    if ((touchPointBuffer == touchEventDelay) )
+//                    {
+//                        rotateTriggered();
+//                        std::cout << "Rotation Triggered" << endl;
+//                    }
 
                     lastGesture = 1;
 
@@ -1064,12 +1071,12 @@ bool QVTKTouchWidget::event(QEvent *event)
                 else
                     gestureDone = false;
 
-                if(!userTestRunning)
-                {
-                    touch1movement = true;
-                    touchPointBuffer ++;
-                    rotateMovement = true;
-                }
+//                if(!userTestRunning)
+//                {
+//                    touch1movement = true;
+//                    touchPointBuffer ++;
+//                    rotateMovement = true;
+//                }
 
                 ///////////////////////////////////////////////////////
                 /////////////////
@@ -1316,21 +1323,27 @@ bool QVTKTouchWidget::event(QEvent *event)
 
             if (count == 1)
             {
+                if (event->type() == QEvent::TouchBegin)
+                {
+                    touchPointBuffer = 0;
+                    finger1Pressed();
+                }
                 if (event->type() == QEvent::TouchEnd)
                 {
                     gestureDone = true;
                     touchPointBuffer = 0;
+                    finger1Released();
                 }
 
                 else
                     gestureDone = false;
 
-                if(!userTestRunning)
-                {
-                    touch1movement = true;
-                    touchPointBuffer ++;
-                    rotateMovement = true;
-                }
+//                if(!userTestRunning)
+//                {
+//                    touch1movement = true;
+//                    touchPointBuffer ++;
+//                    rotateMovement = true;
+//                }
 
                 ///////////////////////////////////////////////////////
                 /////////////////
@@ -1340,11 +1353,12 @@ bool QVTKTouchWidget::event(QEvent *event)
                 if (event->type() == QEvent::TouchUpdate)
                 {
                     touchPointBuffer++;
+                    std::cout << "Buffer " << touchPointBuffer << '\t' ;
 
                     if (touchPointBuffer ==(touchEventDelay - 1))
                     {
                         touchPointBuffer = touchEventDelay;
-                        //std::cout << "Rotation Triggered" << endl;
+                        std::cout << "Rotation Triggered" << endl;
 
                     }
 
@@ -1352,14 +1366,18 @@ bool QVTKTouchWidget::event(QEvent *event)
                     /////
                     /// USER TESTING is RUNNING && If LastGesture was Not Translate,
                     /// then New Gesture Count
-                    if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
+//                    if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
+//                    {
+//                        rotateTriggered();
+//                        std::cout << "1 Point Arb Slice - Tracking Triggered" << endl;
+//                    }
+
+                    if ((touchPointBuffer == touchEventDelay) )
                     {
                         rotateTriggered();
                         std::cout << "1 Point Arb Slice - Tracking Triggered" << endl;
+
                     }
-
-
-
 
                     lastGesture = 1;
 
@@ -1427,7 +1445,7 @@ bool QVTKTouchWidget::event(QEvent *event)
                         ///
                         ///
 
-                        finger1Pressed();
+                        finger1Moving();
                     }
 
                 } /// if (event->type() == QEvent::TouchUpdate)
