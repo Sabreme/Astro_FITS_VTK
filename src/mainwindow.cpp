@@ -3925,10 +3925,17 @@ void MainWindow::touchFinger1ArbSlice()
 
     /// FingerActor Position Information
     double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
+
+    double * actorPos2D2 = this->ui->qvtkWidgetLeft->fingerActor1->GetPosition2Coordinate()->GetValue();
+
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
     double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
 
-    std::cout << "Valid Rotate: " << customArbPlaneWidget->RotationAction(actorPos2D[0], actorPos2D[1]);
+    if (customArbPlaneWidget->isValidRotationAction(actorPos2D[0], actorPos2D[1]))
+    {
+        customArbPlaneWidget->customFingerRotation(actorPos2D[0], actorPos2D[1], actorPos2D2[0], actorPos2D2[1]);
+    }
+
 
 //    /// Get PointWidget 1 2D Position
 //    double * pointW1 = pointWidget1_->GetPosition();

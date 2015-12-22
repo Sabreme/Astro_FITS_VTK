@@ -1383,7 +1383,7 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         this->Interactor->Render();
     }
 
-    bool vtkImplicitCustomPlaneWidget::RotationAction(int X, int Y)
+    bool vtkImplicitCustomPlaneWidget::isValidRotationAction(int X, int Y)
     {
 
         // Okay, we can process this. See if we've picked anything.
@@ -1394,6 +1394,8 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
           }
 
         vtkAssemblyPath *path;
+        //this->Picker->SetTolerance(0.05);
+        this->Picker->SetTolerance(0.05);
         this->Picker->Pick(X,Y,0.0,this->CurrentRenderer);
         path = this->Picker->GetPath();
 
@@ -1409,8 +1411,9 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         vtkProp *prop = path->GetFirstNode()->GetViewProp();
         this->ValidPick = 1;
         this->Picker->GetPickPosition(this->LastPickPosition);
-        if ( prop == this->ConeActor || prop == this->LineActor ||
-             prop == this->ConeActor2 || prop == this->LineActor2 )
+        if ( prop == this->ConeActor )
+             //|| prop == this->LineActor ||
+             //prop == this->ConeActor2 || prop == this->LineActor2 )
           {
           this->HighlightPlane(1);
           this->HighlightNormal(1);
@@ -1422,4 +1425,90 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         this->HighlightOutline(0);
 
         return false;
+    }
+
+    void vtkImplicitCustomPlaneWidget::customFingerRotation(int X,  int Y, int X_last, int Y_last)
+    {
+
+        // Do different things depending on state
+        // Calculations everybody does
+        double focalPoint[4], pickPoint[4], prevPickPoint[4];
+        double z, vpn[3];
+
+        // Compute the two points defining the motion vector
+        this->ComputeWorldToDisplay(this->LastPickPosition[0], this->LastPickPosition[1],
+                                    this->LastPickPosition[2], focalPoint);
+        z = focalPoint[2];
+
+        this->ComputeDisplayToWorld(double(X_last),
+                                    double(Y_last),
+                                    z, prevPickPoint);
+
+        this->ComputeDisplayToWorld(double(X), double(Y), z, pickPoint);
+
+
+        // Process the motion
+
+        vtkCamera *camera = this->CurrentRenderer->GetActiveCamera();
+
+        camera->GetViewPlaneNormal(vpn);
+
+        ///this->Rotate(X, Y, prevPickPoint, pickPoint, vpn);   -- OLD MouseMove
+
+        ///Rotate(int X, int Y, double *p1, double *p2, double *vpn)    -- OLD ROTATION
+        {
+            double v[3]; //vector of motion
+            double axis[3]; //axis of rotation
+            double theta; //rotation angle
+
+            // mouse motion vector in world space
+            v[0] = pickPoint[0] - prevPickPoint[0];
+            v[1] = pickPoint[1] - prevPickPoint[1];
+            v[2] = pickPoint[2] - prevPickPoint[2];
+
+            double *origin = this->Plane->GetOrigin();
+            double *normal = this->Plane->GetNormal();
+
+            // Create axis of rotation and angle of rotation
+            vtkMath::Cross(vpn,v,axis);
+            if ( vtkMath::Normalize(axis) == 0.0 )
+            {
+                return;
+            }
+            int *size = this->CurrentRenderer->GetSize();
+            double l2 = (X - X_last)
+                    *(X - X_last)
+                    +(Y - Y_last)
+                    *(Y - Y_last);
+
+            theta = 360.0 * sqrt(l2/(size[0]*size[0]+size[1]*size[1]));
+
+            //Manipulate the transform to reflect the rotation
+            this->Transform->Identity();
+            this->Transform->Translate(origin[0],origin[1],origin[2]);
+            this->Transform->RotateWXYZ(theta,axis);
+            this->Transform->Translate(-origin[0],-origin[1],-origin[2]);
+
+            //Set the new normal
+            double nNew[3];
+            this->Transform->TransformNormal(normal,nNew);
+            this->Plane->SetNormal(nNew);
+
+            this->UpdateRepresentation();
+        }
+
+
+
+
+
+
+
+
+
+        // Interact, if desired
+        //this->EventCallbackCommand->SetAbortFlag(1);
+        this->InvokeEvent(vtkCommand::InteractionEvent,NULL);
+
+        this->Interactor->Render();
+
     }

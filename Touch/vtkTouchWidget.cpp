@@ -1387,6 +1387,15 @@ bool QVTKTouchWidget::event(QEvent *event)
                     int yPos = p1.pos().toPoint().y();
 
                     fingerActor1->SetPosition(xPos, maxY - yPos);
+
+                    /// FingerActor1 - SetPosition2 = LastPos of Finger Gestures used in SubVolume
+
+                    int xPos2 = p1.lastPos().toPoint().x();
+                    int yPos2 = p1.lastPos().toPoint().y();
+
+                    fingerActor1->SetPosition2(xPos2, maxY - yPos2);
+
+
                     fingerActor1->GetProperty()->SetColor(colorRotation);
 
                     fingerActor1->SetVisibility(true);

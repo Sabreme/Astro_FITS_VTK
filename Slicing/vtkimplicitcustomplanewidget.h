@@ -192,7 +192,11 @@ public:
 
       // Description
       // Check if the current Position is a Cone Selection for Rotation
-      bool RotationAction(int X, int Y);
+      bool isValidRotationAction(int X, int Y);
+
+      // Description
+      // Custom Rotation using Single Finger after ValidRotation Action
+      void customFingerRotation(int X, int Y, int X_last, int Y_last);
 
     protected:
       vtkImplicitCustomPlaneWidget();
