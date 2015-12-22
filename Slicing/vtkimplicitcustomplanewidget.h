@@ -182,6 +182,18 @@ public:
       // applies to the edges when tubed.)
       vtkGetObjectMacro(EdgesProperty,vtkProperty);
 
+      // Description:
+      // Restablish Default Observers to the Current Widget
+      void RestoreObservers();
+
+      // Description:
+      // Simulate Mouse Click with Single Finger Press for Rotation
+      void TouchRotation(int X, int Y);
+
+      // Description
+      // Check if the current Position is a Cone Selection for Rotation
+      bool RotationAction(int X, int Y);
+
     protected:
       vtkImplicitCustomPlaneWidget();
       ~vtkImplicitCustomPlaneWidget();

@@ -3500,11 +3500,11 @@ void MainWindow::touchTransformationToggle()
 
 
         //customArbPlaneWidget->Print(std::cout);
-        customArbPlaneWidget->GetInteractor()->Print(std::cout);
+        ///customArbPlaneWidget->GetInteractor()->Print(std::cout);
 
         if (!status)
         {
-           // customArbPlaneWidget->GetInteractor()->rem();
+            customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
 
             connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlice()));
 //            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
@@ -3512,6 +3512,7 @@ void MainWindow::touchTransformationToggle()
         }
         if (status)
         {
+            //customArbPlaneWidget->GetInteractor()->R
             disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlice()));
 //            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
 //            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
@@ -3926,6 +3927,8 @@ void MainWindow::touchFinger1ArbSlice()
     double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
     double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
+
+    std::cout << "Valid Rotate: " << customArbPlaneWidget->RotationAction(actorPos2D[0], actorPos2D[1]);
 
 //    /// Get PointWidget 1 2D Position
 //    double * pointW1 = pointWidget1_->GetPosition();

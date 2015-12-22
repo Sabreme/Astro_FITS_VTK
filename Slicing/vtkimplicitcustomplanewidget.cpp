@@ -1292,3 +1292,134 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
 
       this->EdgesTuber->SetRadius(0.25*radius);
     }
+
+    void vtkImplicitCustomPlaneWidget::RestoreObservers()
+    {
+        // listen for the following events
+        vtkRenderWindowInteractor *i = this->Interactor;
+        i->AddObserver(vtkCommand::MouseMoveEvent, this->EventCallbackCommand,
+                       this->Priority);
+        i->AddObserver(vtkCommand::LeftButtonPressEvent,
+                       this->EventCallbackCommand, this->Priority);
+        i->AddObserver(vtkCommand::LeftButtonReleaseEvent,
+                       this->EventCallbackCommand, this->Priority);
+        i->AddObserver(vtkCommand::MiddleButtonPressEvent,
+                       this->EventCallbackCommand, this->Priority);
+        i->AddObserver(vtkCommand::MiddleButtonReleaseEvent,
+                       this->EventCallbackCommand, this->Priority);
+        i->AddObserver(vtkCommand::RightButtonPressEvent,
+                       this->EventCallbackCommand, this->Priority);
+        i->AddObserver(vtkCommand::RightButtonReleaseEvent,
+                       this->EventCallbackCommand, this->Priority);
+    }
+
+    void vtkImplicitCustomPlaneWidget::TouchRotation(int X, int Y)
+    {
+
+        // Okay, we can process this. See if we've picked anything.
+        // Make sure it's in the activated renderer
+        if (!this->CurrentRenderer || !this->CurrentRenderer->IsInViewport(X, Y))
+          {
+          this->State = vtkImplicitCustomPlaneWidget::Outside;
+          return;
+          }
+
+        vtkAssemblyPath *path;
+        this->Picker->Pick(X,Y,0.0,this->CurrentRenderer);
+        path = this->Picker->GetPath();
+
+        if ( path == NULL ) //not picking this widget
+          {
+          this->HighlightPlane(0);
+          this->HighlightNormal(0);
+          this->HighlightOutline(0);
+          this->State = vtkImplicitCustomPlaneWidget::Outside;
+          return;
+          }
+
+        vtkProp *prop = path->GetFirstNode()->GetViewProp();
+        this->ValidPick = 1;
+        this->Picker->GetPickPosition(this->LastPickPosition);
+        if ( prop == this->ConeActor || prop == this->LineActor ||
+             prop == this->ConeActor2 || prop == this->LineActor2 )
+          {
+          this->HighlightPlane(1);
+          this->HighlightNormal(1);
+          this->State = vtkImplicitCustomPlaneWidget::Rotating;
+          }
+        else if ( prop == this->CutActor )
+          {
+          this->HighlightPlane(1);
+          this->State = vtkImplicitCustomPlaneWidget::Pushing;
+          }
+        else if ( prop == this->SphereActor )
+          {
+          if ( this->OriginTranslation )
+            {
+            this->HighlightNormal(1);
+            this->State = vtkImplicitCustomPlaneWidget::MovingOrigin;
+            }
+          else
+            {
+            return;
+            }
+          }
+        else
+          {
+          if ( this->OutlineTranslation )
+            {
+            this->HighlightOutline(1);
+            this->State = vtkImplicitCustomPlaneWidget::MovingOutline;
+            }
+          else
+            {
+            return;
+            }
+          }
+
+        this->EventCallbackCommand->SetAbortFlag(1);
+        this->StartInteraction();
+        this->InvokeEvent(vtkCommand::StartInteractionEvent,NULL);
+        this->Interactor->Render();
+    }
+
+    bool vtkImplicitCustomPlaneWidget::RotationAction(int X, int Y)
+    {
+
+        // Okay, we can process this. See if we've picked anything.
+        // Make sure it's in the activated renderer
+        if (!this->CurrentRenderer || !this->CurrentRenderer->IsInViewport(X, Y))
+          {
+            return false;
+          }
+
+        vtkAssemblyPath *path;
+        this->Picker->Pick(X,Y,0.0,this->CurrentRenderer);
+        path = this->Picker->GetPath();
+
+        if ( path == NULL ) //not picking this widget
+          {
+          this->HighlightPlane(0);
+          this->HighlightNormal(0);
+          this->HighlightOutline(0);
+          //this->State = vtkImplicitCustomPlaneWidget::Outside;
+          return false;
+          }
+
+        vtkProp *prop = path->GetFirstNode()->GetViewProp();
+        this->ValidPick = 1;
+        this->Picker->GetPickPosition(this->LastPickPosition);
+        if ( prop == this->ConeActor || prop == this->LineActor ||
+             prop == this->ConeActor2 || prop == this->LineActor2 )
+          {
+          this->HighlightPlane(1);
+          this->HighlightNormal(1);
+          //this->State = vtkImplicitCustomPlaneWidget::Rotating;
+            return true;
+          }
+        this->HighlightPlane(0);
+        this->HighlightNormal(0);
+        this->HighlightOutline(0);
+
+        return false;
+    }
