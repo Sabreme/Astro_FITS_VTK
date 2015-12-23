@@ -517,13 +517,14 @@ bool QVTKTouchWidget::event(QEvent *event)
                         std::cout << "Rotation Triggered" << endl;
                     }
 
-//                    if ((touchPointBuffer == touchEventDelay) )
-//                    {
-//                        rotateTriggered();
-//                        std::cout << "Rotation Triggered" << endl;
-//                    }
+                    if ((touchPointBuffer == touchEventDelay) )
+                    {
+                        rotateTriggered();
+                        std::cout << "Rotation Triggered" << endl;
+                        lastGesture = 1;
+                    }
 
-                    lastGesture = 1;
+                    //lastGesture = 1;
 
                     rotationPressed();
 
@@ -752,7 +753,10 @@ bool QVTKTouchWidget::event(QEvent *event)
                         scaleTriggered();
                     }
 
-                    lastGesture = 3;
+                    if (lastGesture != 3 )
+                    {
+                        lastGesture = 3;
+                    }
 
                     std::cout << "Scaling Active" << "\t";
 
@@ -878,7 +882,10 @@ bool QVTKTouchWidget::event(QEvent *event)
                         rotateTriggered();
                     }
 
-                    lastGesture = 4;
+                    if (lastGesture != 4)
+                    {
+                        lastGesture = 4;
+                    }
 
                     std::cout << "Z Axis Rotation Active" << "\t";
 
@@ -1488,10 +1495,25 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
 
+                //////////////////////////////////////////
+                /// \brief xPos2
+                ///
+                int xPos2 = p1.lastPos().toPoint().x();
+                int yPos2 = p1.lastPos().toPoint().y();
+
+                fingerActor1->SetPosition2(xPos2, maxY - yPos2);
+
                 fingerActor1->SetVisibility(true);
 
 
+
+
                 fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+                xPos2 = p2.lastPos().toPoint().x();
+                yPos2 = p2.lastPos().toPoint().y();
+
+                fingerActor2->SetPosition2(xPos2, maxY - yPos2);
 
                 fingerActor2->SetVisibility(true);
 
@@ -1499,56 +1521,57 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 ///////////////////////////////////////////////////////////
 
+                QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
+                QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
+
+                ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+                ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
 
 
+                QPointF distance =  p1.pos() - p2.pos();
+                int distPos = distance.manhattanLength();
+
+                distance = p1.startPos() - p2.startPos();
+                int distStart = distance.manhattanLength();
 
 
+                //                std::cout << "Start Difference: " << distStart << "\t"
+                //                          << "Pos Difference: " << distPos << "\t";
 
-                //                    QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
-                //                    QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
+                if((distStart < 100) && (distPos < 100))
+                {
+                    ////////////////////////////////
+                    /////
+                    /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+                    /// then New Gesture Count
+                    //                        if (lastGesture != 2 && userTestRunning)
+                    //                        {
+                    //                            translateTriggered();
+                    //                        }
 
-                //                    ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
-                //                    ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+                    if (lastGesture != 2)
+                    {
 
+                        lastGesture = 2;
+                        finger2Pressed();
+                    }
+                    else
+                    {
 
-                //                    QPointF distance =  p1.pos() - p2.pos();
-                //                    int distPos = distance.manhattanLength();
+                        std::cout << "Arb Slice - TRanslation Active" << "\t";
 
-                //                    distance = p1.startPos() - p2.startPos();
-                //                    int distStart = distance.manhattanLength();
+                        ///                        if (event->type() == QEvent::TouchUpdate)
+                        ///                        {
+                        ///                            translationPressed();
+                        ///                        }
+                        ;
 
+                        fingerActor1->GetProperty()->SetColor(colorTranslate1);
+                        fingerActor2->GetProperty()->SetColor(colorTranslate2);
 
-                //                    std::cout << "Start Difference: " << distStart << "\t"
-                //                              << "Pos Difference: " << distPos << "\t";
-
-                ///if((distStart < 100) && (distPos < 100))
-                //                    {
-                ////////////////////////////////
-                /////
-                /// USER TESTING is RUNNING && If LastGesture was Not Translate,
-                /// then New Gesture Count
-                //                        if (lastGesture != 2 && userTestRunning)
-                //                        {
-                //                            translateTriggered();
-                //                        }
-
-
-
-
-                lastGesture = 2;
-
-                std::cout << "Arb Slice - TRanslation Active" << "\t";
-
-                ///                        if (event->type() == QEvent::TouchUpdate)
-                ///                        {
-                ///                            translationPressed();
-                ///                        }
-                ;
-
-                fingerActor1->GetProperty()->SetColor(colorTranslate1);
-                fingerActor2->GetProperty()->SetColor(colorTranslate2);
-
-                finger2Pressed();
+                        finger2Moving();
+                    }
+                }
 
 
             }  /// if (count  == 2 && manual)

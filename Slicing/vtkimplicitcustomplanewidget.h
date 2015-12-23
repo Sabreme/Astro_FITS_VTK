@@ -184,11 +184,7 @@ public:
 
       // Description:
       // Restablish Default Observers to the Current Widget
-      void RestoreObservers();
-
-      // Description:
-      // Simulate Mouse Click with Single Finger Press for Rotation
-      void TouchRotation(int X, int Y);
+      void RestoreObservers();   
 
       // Description
       // Check if the current Position is a Cone Selection for Rotation
@@ -199,6 +195,18 @@ public:
       void finger1Moving(int X, int Y, int X_last, int Y_last);
 
       void finger1Released();
+
+      // Description
+      // Check if the current Position is a Cone Selection for Rotation
+      void finger2Pressed(int X, int Y);
+
+      // Description
+      // Custom Rotation using Single Finger after ValidRotation Action
+      void finger2Moving(int X, int Y, int X_last, int Y_last);
+
+      void finger2Released();
+
+
 
 
 protected:

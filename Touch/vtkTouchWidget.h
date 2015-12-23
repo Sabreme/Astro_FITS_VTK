@@ -125,6 +125,9 @@ signals:
     void finger1Moving();
     void finger1Released();
 
+    void finger2Moving();
+    void finger2Released();
+
 
     void rightClkSubVol();
 

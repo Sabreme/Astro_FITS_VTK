@@ -358,6 +358,10 @@ private slots:
         void touchFinger1ArbSliceMoving();
         void touchFinger1ArbSliceReleased();
 
+        void touchFinger2ArbSlicePressed();
+        void touchFinger2ArbSliceMoving();
+        void touchFInger2ArbSliceReleased();
+
 
 
 
