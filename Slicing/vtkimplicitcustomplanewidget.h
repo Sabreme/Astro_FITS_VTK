@@ -200,10 +200,6 @@ public:
 
       void finger1Released();
 
-      // Description
-      // Return the Cone Actors Current World Position
-      double* getConeActorPosition();
-
 
 protected:
       vtkImplicitCustomPlaneWidget();

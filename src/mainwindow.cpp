@@ -1006,6 +1006,8 @@ void MainWindow::on_buttonModeTouch_clicked()
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationPressed()), this, SLOT(touchRotationPressed()));
     connect(this->ui->qvtkWidgetLeft, SIGNAL(rotationReleased()), this, SLOT(touchRotationReleased()));
     connect(this->ui->buttonTransformActive,SIGNAL(toggled(bool)),this, SLOT(touchTransformsOn(bool)));
+    //connect(this->ui->buttonTransformActive, SIGNAL(pressed()), this, SLOT(touchTransformationToggle()));
+
     connect(this->ui->qvtkWidgetLeft, SIGNAL(transformationTriggered()),this, SLOT(touchTransformationToggle()));
     this->ui->buttonTransformActive->setChecked(true);
 
@@ -1184,6 +1186,8 @@ void MainWindow::on_buttonTabSliceArb_pressed()
 
 
                 this->ui->qvtkWidgetLeft->enableGestures();
+
+                this->customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
             }
                 break;
             }
@@ -1235,6 +1239,7 @@ void MainWindow::setTouchInteractor()
     style->defualtDistance = this->defaultCameraDistance;
     style->camera = this->ui->qvtkWidgetLeft->GetInteractor()->
             GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+
 }
 
 void MainWindow::setLeapInteractor()
@@ -3504,7 +3509,7 @@ void MainWindow::touchTransformationToggle()
 
         if (!status)
         {
-            customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
+          //  customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
 
             connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlicePressed()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Moving()), this, SLOT(touchFinger1ArbSliceMoving()));
@@ -4012,11 +4017,7 @@ void MainWindow::touchFinger1ArbSliceMoving()
 
 void MainWindow::touchFinger1ArbSliceReleased()
 {
-
-//    /// FingerActor Position Information
-//    double * actorPos2D = this->ui->qvtkWidgetLeft->fingerActor1->GetPositionCoordinate()->GetValue();
-
-//    double * actorPos2D2 = this->ui->qvtkWidgetLeft->fingerActor1->GetPosition2Coordinate()->GetValue();
+    customArbPlaneWidget->finger1Released();
 }
 
 

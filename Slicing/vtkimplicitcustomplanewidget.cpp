@@ -1429,6 +1429,9 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
     void vtkImplicitCustomPlaneWidget::finger1Moving(int X,  int Y, int X_last, int Y_last)
     {
 
+        this->HighlightPlane(1);
+        this->HighlightNormal(1);
+
         // Do different things depending on state
         // Calculations everybody does
         double focalPoint[4], pickPoint[4], prevPickPoint[4];
@@ -1521,9 +1524,4 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         this->EndInteraction();
         this->InvokeEvent(vtkCommand::EndInteractionEvent,NULL);
         this->Interactor->Render();
-    }
-
-    double *vtkImplicitCustomPlaneWidget::getConeActorPosition()
-    {
-        return this->ConeActor->GetPosition();
     }
