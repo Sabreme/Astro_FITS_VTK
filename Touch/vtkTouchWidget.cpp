@@ -469,6 +469,11 @@ bool QVTKTouchWidget::event(QEvent *event)
 
             //bool manual = true;
 
+            TouchSubVolInteractorStyle * style = TouchSubVolInteractorStyle::New();
+            this->GetInteractor()->SetInteractorStyle(style);
+
+            style->SetEnabled(0);
+
             if (count == 1)
             {
                 if (event->type() == QEvent::TouchEnd)
