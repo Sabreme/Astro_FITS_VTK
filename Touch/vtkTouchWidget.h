@@ -56,6 +56,10 @@ protected:
     void mousePressEvent(QMouseEvent * event);
     void mouseReleaseEvent(QMouseEvent * event);
 
+    void transformEventRotate(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints, bool gestureDone);
+    void transformEventScale();
+    void transformEventTranslate();
+
 
 
 private:
