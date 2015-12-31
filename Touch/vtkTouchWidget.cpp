@@ -459,334 +459,22 @@ bool QVTKTouchWidget::event(QEvent *event)
 
             if (count == 1)
             {
-                transformEventRotate(event, touchPoints, gestureDone);
+               gestureDone = transformEventRotate(event, touchPoints, gestureDone);
 
             } ///  if (count == 1)
 
             if (count  == 2)
-            {
+            {                                 
+                transformEventTranslate(event, touchPoints);
 
-                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
-                QTouchEvent::TouchPoint p2 = touchPoints.at(1);
-
-                ///////////////////////////////////////////////
-                /// 2D Finger Position Being Drawn
-                /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
-                ///  We need to Subtract the position from the Total Height of VTK Window
-                ///
-                ///
-                vtkRenderWindow * renWindow = this->GetRenderWindow();
-
-                int * sizeRW = renWindow->GetSize();
-
-                int maxY = sizeRW[1];
-
-
-
-                int x1Pos = p1.pos().toPoint().x();
-                int y1Pos = p1.pos().toPoint().y();
-
-                int x2Pos = p2.pos().toPoint().x();
-                int y2Pos = p2.pos().toPoint().y();
-
-                fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
-
-                fingerActor1->SetVisibility(true);
-
-
-                fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
-
-                fingerActor2->SetVisibility(true);
-
-                ///////////////////////////////////////////////////////////
-
-                QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
-                QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
-
-                ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
-                ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
-
-
-                QPointF distance =  p1.pos() - p2.pos();
-                int distPos = distance.manhattanLength();
-
-                distance = p1.startPos() - p2.startPos();
-                int distStart = distance.manhattanLength();
-
-                if((distStart < 100) && (distPos < 100))
-                {
-                    ////////////////////////////////
-                    /////
-                    /// USER TESTING is RUNNING && If LastGesture was Not Translate,
-                    /// then New Gesture Count
-                    if (lastGesture != 2 && userTestRunning)
-                    {
-                        translateTriggered();
-                    }
-
-                    lastGesture = 2;
-
-                    std::cout << "Translation Active" << "\t";
-
-                    if (event->type() == QEvent::TouchUpdate)
-                    {
-                        translationPressed();
-                    }
-
-                    fingerActor1->GetProperty()->SetColor(colorTranslate1);
-                    fingerActor2->GetProperty()->SetColor(colorTranslate2);
-
-                    /////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////
-
-                    ///
-                    vtkRenderWindow * renWindow = this->GetRenderWindow();
-
-                    int * sizeRW = renWindow->GetSize();                    
-
-                    int maxY = sizeRW[1];
-
-
-                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-                    /// Calculate the focal depth since we'll be using it a lot
-
-                    vtkCamera *camera = renderer->GetActiveCamera();
-
-
-                    double viewFocus[4], focalDepth, viewPoint[3];
-                    double newPickPoint[4], oldPickPoint[4], motionVector[3];
-
-                    vtkInteractorObserver * irenObserver =
-                            static_cast<vtkInteractorObserver*> (this->GetInteractor()->GetInteractorStyle());
-
-
-                    camera->GetFocalPoint(viewFocus);
-                    irenObserver->ComputeWorldToDisplay(renderer, viewFocus[0], viewFocus[1], viewFocus[2],
-                            viewFocus);
-                    focalDepth = viewFocus[2];
-
-                    irenObserver->ComputeDisplayToWorld(renderer,
-                                                        newPos.x(),
-                                                        maxY - newPos.y(),
-                                                        focalDepth,
-                                                        newPickPoint);
-
-                    irenObserver->ComputeDisplayToWorld(renderer,
-                                                        lastPos.x(),
-                                                        maxY - lastPos.y(),
-                                                        focalDepth,
-                                                        oldPickPoint);
-
-                    //////  NOTE
-                    //////
-                    /// //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
-                    /// For a long time, it was reversed until we realise the Screen Coordinate System Y is the Reverse
-                    /// of the VTK Rendering Window Coordinate System
-                    /// So we Compute DisplayToWorld of maxY - lastPos.y && maxY - newPos.y
-
-                    motionVector[0] = oldPickPoint[0] - newPickPoint[0];
-                    motionVector[1] = oldPickPoint[1] - newPickPoint[1];        /// REVERSED FOR SOME reason
-                    motionVector[2] = oldPickPoint[2] - newPickPoint[2];
-
-                    camera->GetFocalPoint(viewFocus);
-                    camera->GetPosition(viewPoint);
-                    camera->SetFocalPoint(motionVector[0] + viewFocus[0],
-                            motionVector[1] + viewFocus[1],
-                            motionVector[2] + viewFocus[2]);
-
-                    camera->SetPosition(motionVector[0] + viewPoint[0],
-                            motionVector[1] + viewPoint[1],
-                            motionVector[2] + viewPoint[2]);
-
-                    translationAction();
-
-                } ///  if((distStart < 100) && (distPos < 100))
-
-                /// 2 FINGER SCALE START
-                else
-                    ///   We implement the pinch to Zoom code here SCALING
-                {
-                    ////////////////////////////////
-                    /////
-                    /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
-                    /// then New Gesture Count
-                    if (lastGesture != 3 && userTestRunning)
-                    {
-                        scaleTriggered();
-                    }
-
-                    if (lastGesture != 3 )
-                    {
-                        lastGesture = 3;
-                    }
-
-                    std::cout << "Scaling Active" << "\t";
-
-                    rotationReleased();
-
-
-
-                    fingerActor1->GetProperty()->SetColor(colorScale1);
-                    fingerActor2->GetProperty()->SetColor(colorScale2);
-
-                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-                    /// Calculate the focal depth since we'll be using it a lot
-
-                    vtkCamera *camera = renderer->GetActiveCamera();
-
-
-                    string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
-                    std::cout << "eventType(): " << name << "\t" ;
-
-                    this->lastScaleFactor = this->scaleFactor;
-                    QLineF line(p1.screenPos(), p2.screenPos());
-                    QLineF lastLine(p1.lastScreenPos(),  p2.lastScreenPos());
-                    this->scaleFactor = line.length() / lastLine.length();
-
-                    std::cout << "scaleFactor:" << scaleFactor << "\t"
-
-                              <<endl;
-
-                    camera->Dolly(this->scaleFactor);
-                    renderer->ResetCameraClippingRange();
-                }   /// End Pinch Zoon
-
-                /// 2 FINGER SCALE END
-                ////////////////////////////////////////////////////
-                /// //////////////////////////////////////////////////
-                ///
-
+                transformEventScale(event, touchPoints);
 
             }  /// if (count  == 2 && manual)
 
             if (count  == 3 )
             {
+                transformEventZRotate(event, touchPoints);
 
-                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
-                QTouchEvent::TouchPoint p2 = touchPoints.at(1);
-                QTouchEvent::TouchPoint p3 = touchPoints.at(2);
-
-
-                ///////////////////////////////////////////////
-                /// 2D Finger Position Being Drawn
-                /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
-                ///  We need to Subtract the position from the Total Height of VTK Window
-                ///
-                ///
-                vtkRenderWindow * renWindow = this->GetRenderWindow();
-
-                int * sizeRW = renWindow->GetSize();
-                //                int * screenSize = renWindow->GetScreenSize();
-
-                int maxY = sizeRW[1];
-
-
-
-                int x1Pos = p1.pos().toPoint().x();
-                int y1Pos = p1.pos().toPoint().y();
-
-                int x2Pos = p2.pos().toPoint().x();
-                int y2Pos = p2.pos().toPoint().y();
-
-                int x3Pos = p3.pos().toPoint().x();
-                int y3Pos = p3.pos().toPoint().y();
-
-                fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
-
-                fingerActor1->SetVisibility(true);
-
-
-                fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
-
-                fingerActor2->SetVisibility(true);
-
-
-                fingerActor3->SetPosition(x3Pos, maxY - y3Pos);
-
-                fingerActor3->SetVisibility(true);
-
-                ///////////////////////////////////////////////////////////
-
-
-                QPointF lastPos = (p2.lastPos() + p3.lastPos()) / 2;    /// get the average of the last positions
-                QPointF newPos = (p2.pos() + p3.pos())/2;               /// get the aversge of the current positions
-
-                ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
-                ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
-
-
-                QPointF distance =  p2.pos() - p3.pos();
-                int distPos = distance.manhattanLength();
-
-                distance = p2.startPos() - p3.startPos();
-                int distStart = distance.manhattanLength();
-
-
-                //                    std::cout << "Start Difference: " << distStart << "\t"
-                //                              << "Pos Difference: " << distPos << "\t";
-                ///   We implement the Z Rotation Code Here to Zoom code here SCALING
-                if((distStart < 110) && (distPos < 110))
-                {
-                    ////////////////////////////////
-                    /////
-                    /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
-                    /// then New Gesture Count
-                    if (lastGesture != 4 && userTestRunning)
-                    {
-                        rotateTriggered();
-                    }
-
-                    if (lastGesture != 4)
-                    {
-                        lastGesture = 4;
-                    }
-
-                    std::cout << "Z Axis Rotation Active" << "\t";
-
-                    fingerActor1->GetProperty()->SetColor(colorSpin1);
-                    fingerActor2->GetProperty()->SetColor(colorSpin2);
-                    fingerActor3->GetProperty()->SetColor(colorSpin3);
-
-                    vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
-
-                    vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-
-                    // Calculate the focal depth since we'll be using it a lot
-
-                    vtkCamera *camera = renderer->GetActiveCamera();
-
-
-                    string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
-                    std::cout << "eventType(): " << name << "\t" ;
-
-
-                    QPointF fingersPos = ((p2.screenPos() + p3.screenPos()) / 2);
-                    QPointF fingersLastPos = ((p2.lastScreenPos() + p3.lastScreenPos()) / 2);
-
-                    qreal angle = QLineF(p1.screenPos(), fingersPos).angle();
-
-                    qreal lastAngle = QLineF(p1.lastScreenPos(), fingersLastPos).angle();
-
-
-                    const qreal rotationAngle = angle - lastAngle;
-
-
-                    camera->Roll( rotationAngle);
-                    camera->OrthogonalizeViewUp();
-
-                    std::cout << "Rotation Angle:" << rotationAngle << "\t"
-
-
-
-                              <<endl;
-
-                }   /// End Pinch Zoon
             }  /// if (count  == 3 )
 
 
@@ -1419,7 +1107,7 @@ void QVTKTouchWidget::mouseReleaseEvent(QMouseEvent *event)
 
 }
 
-void QVTKTouchWidget::transformEventRotate(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints, bool gestureDone )
+bool QVTKTouchWidget::transformEventRotate(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints, bool gestureDone )
 {
     if (event->type() == QEvent::TouchEnd)
     {
@@ -1541,16 +1229,370 @@ void QVTKTouchWidget::transformEventRotate(QEvent *event, QList<QTouchEvent::Tou
         ///////////////////////////////////////////////////////////////////////////////////
 
     } /// if (event->type() == QEvent::TouchUpdate)
+
+    return gestureDone;
 }
 
-void QVTKTouchWidget::transformEventScale()
+void QVTKTouchWidget::transformEventZRotate(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints)
 {
+    QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+    QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+    QTouchEvent::TouchPoint p3 = touchPoints.at(2);
 
+
+    ///////////////////////////////////////////////
+    /// 2D Finger Position Being Drawn
+    /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+    ///  We need to Subtract the position from the Total Height of VTK Window
+    ///
+    ///
+    vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+    int * sizeRW = renWindow->GetSize();
+    //                int * screenSize = renWindow->GetScreenSize();
+
+    int maxY = sizeRW[1];
+
+
+
+    int x1Pos = p1.pos().toPoint().x();
+    int y1Pos = p1.pos().toPoint().y();
+
+    int x2Pos = p2.pos().toPoint().x();
+    int y2Pos = p2.pos().toPoint().y();
+
+    int x3Pos = p3.pos().toPoint().x();
+    int y3Pos = p3.pos().toPoint().y();
+
+    fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+    fingerActor1->SetVisibility(true);
+
+
+    fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+    fingerActor2->SetVisibility(true);
+
+
+    fingerActor3->SetPosition(x3Pos, maxY - y3Pos);
+
+    fingerActor3->SetVisibility(true);
+
+    ///////////////////////////////////////////////////////////
+
+
+    QPointF lastPos = (p2.lastPos() + p3.lastPos()) / 2;    /// get the average of the last positions
+    QPointF newPos = (p2.pos() + p3.pos())/2;               /// get the aversge of the current positions
+
+    ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+    ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+
+
+    QPointF distance =  p2.pos() - p3.pos();
+    int distPos = distance.manhattanLength();
+
+    distance = p2.startPos() - p3.startPos();
+    int distStart = distance.manhattanLength();
+
+
+    //                    std::cout << "Start Difference: " << distStart << "\t"
+    //                              << "Pos Difference: " << distPos << "\t";
+    ///   We implement the Z Rotation Code Here to Zoom code here SCALING
+    if((distStart < 110) && (distPos < 110))
+    {
+        ////////////////////////////////
+        /////
+        /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
+        /// then New Gesture Count
+        if (lastGesture != 4 && userTestRunning)
+        {
+            rotateTriggered();
+        }
+
+        rotationPressed();
+
+        if (lastGesture != 4)
+        {
+            lastGesture = 4;
+        }
+
+        std::cout << "Z Axis Rotation Active" << "\t";
+
+        fingerActor1->GetProperty()->SetColor(colorSpin1);
+        fingerActor2->GetProperty()->SetColor(colorSpin2);
+        fingerActor3->GetProperty()->SetColor(colorSpin3);
+
+        vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+        // Calculate the focal depth since we'll be using it a lot
+
+        vtkCamera *camera = renderer->GetActiveCamera();
+
+
+        QPointF fingersPos = ((p2.screenPos() + p3.screenPos()) / 2);
+        QPointF fingersLastPos = ((p2.lastScreenPos() + p3.lastScreenPos()) / 2);
+
+        qreal angle = QLineF(p1.screenPos(), fingersPos).angle();
+
+        qreal lastAngle = QLineF(p1.lastScreenPos(), fingersLastPos).angle();
+
+
+        const qreal rotationAngle = angle - lastAngle;
+
+
+        camera->Roll( rotationAngle);
+        camera->OrthogonalizeViewUp();
+
+        std::cout << "Rotation Angle:" << rotationAngle << "\t"
+
+
+
+                  <<endl;
+
+    }   /// End Pinch Zoon
 }
 
-void QVTKTouchWidget::transformEventTranslate()
+void QVTKTouchWidget::transformEventScale(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints)
 {
+    QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+    QTouchEvent::TouchPoint p2 = touchPoints.at(1);
 
+    ///////////////////////////////////////////////
+    /// 2D Finger Position Being Drawn
+    /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+    ///  We need to Subtract the position from the Total Height of VTK Window
+    ///
+    ///
+    vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+    int * sizeRW = renWindow->GetSize();
+
+    int maxY = sizeRW[1];
+
+
+
+    int x1Pos = p1.pos().toPoint().x();
+    int y1Pos = p1.pos().toPoint().y();
+
+    int x2Pos = p2.pos().toPoint().x();
+    int y2Pos = p2.pos().toPoint().y();
+
+    fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+    fingerActor1->SetVisibility(true);
+
+
+    fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+    fingerActor2->SetVisibility(true);
+
+    ///////////////////////////////////////////////////////////
+
+    QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
+    QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
+
+    ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+    ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+
+
+    QPointF distance =  p1.pos() - p2.pos();
+    int distPos = distance.manhattanLength();
+
+    distance = p1.startPos() - p2.startPos();
+    int distStart = distance.manhattanLength();
+
+    if((distStart > 100) || (distPos > 100))
+    {
+        ////////////////////////////////
+        /////
+        /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
+        /// then New Gesture Count
+        if (lastGesture != 3 && userTestRunning)
+        {
+            scaleTriggered();
+        }
+
+        if (lastGesture != 3 )
+        {
+            lastGesture = 3;
+        }
+
+        std::cout << "Scaling Active" << "\t";
+
+        rotationReleased();
+
+
+
+        fingerActor1->GetProperty()->SetColor(colorScale1);
+        fingerActor2->GetProperty()->SetColor(colorScale2);
+
+        vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+        /// Calculate the focal depth since we'll be using it a lot
+
+        vtkCamera *camera = renderer->GetActiveCamera();
+
+
+//        string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+//        std::cout << "eventType(): " << name << "\t" ;
+
+        this->lastScaleFactor = this->scaleFactor;
+        QLineF line(p1.screenPos(), p2.screenPos());
+        QLineF lastLine(p1.lastScreenPos(),  p2.lastScreenPos());
+        this->scaleFactor = line.length() / lastLine.length();
+
+        std::cout << "scaleFactor:" << scaleFactor << "\t"
+
+                  <<endl;
+
+        camera->Dolly(this->scaleFactor);
+        renderer->ResetCameraClippingRange();
+    }
+}
+
+void QVTKTouchWidget::transformEventTranslate(QEvent * event, QList<QTouchEvent::TouchPoint> touchPoints)
+{
+    QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+    QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+
+    ///////////////////////////////////////////////
+    /// 2D Finger Position Being Drawn
+    /// It Seems Y Coordinate system of Touch Window is Reversed VTK WIndow
+    ///  We need to Subtract the position from the Total Height of VTK Window
+    ///
+    ///
+    vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+    int * sizeRW = renWindow->GetSize();
+
+    int maxY = sizeRW[1];
+
+
+
+    int x1Pos = p1.pos().toPoint().x();
+    int y1Pos = p1.pos().toPoint().y();
+
+    int x2Pos = p2.pos().toPoint().x();
+    int y2Pos = p2.pos().toPoint().y();
+
+    fingerActor1->SetPosition(x1Pos, maxY - y1Pos);
+
+    fingerActor1->SetVisibility(true);
+
+
+    fingerActor2->SetPosition(x2Pos, maxY - y2Pos);
+
+    fingerActor2->SetVisibility(true);
+
+    ///////////////////////////////////////////////////////////
+
+    QPointF lastPos = (p1.lastPos() + p2.lastPos()) / 2;    /// get the average of the last positions
+    QPointF newPos = (p1.pos() + p2.pos())/2;               /// get the aversge of the current positions
+
+    ///                    QPointF lastPos = p1.lastPos();    /// get the average of the last positions
+    ///                    QPointF newPos = (p1.pos());               /// get the aversge of the current positions
+
+
+    QPointF distance =  p1.pos() - p2.pos();
+    int distPos = distance.manhattanLength();
+
+    distance = p1.startPos() - p2.startPos();
+    int distStart = distance.manhattanLength();
+
+    if((distStart < 100) && (distPos < 100))
+    {
+        ////////////////////////////////
+        /////
+        /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+        /// then New Gesture Count
+        if (lastGesture != 2 && userTestRunning)
+        {
+            translateTriggered();
+        }
+
+        lastGesture = 2;
+
+        std::cout << "Translation Active" << "\t";
+
+        if (event->type() == QEvent::TouchUpdate)
+        {
+            translationPressed();
+        }
+
+        fingerActor1->GetProperty()->SetColor(colorTranslate1);
+        fingerActor2->GetProperty()->SetColor(colorTranslate2);
+
+        /////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////
+
+        ///
+        vtkRenderWindow * renWindow = this->GetRenderWindow();
+
+        int * sizeRW = renWindow->GetSize();
+
+        int maxY = sizeRW[1];
+
+
+        vtkRenderWindowInteractor *iren = this->mRenWin->GetInteractor();
+
+        vtkRenderer * renderer = this->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+
+        /// Calculate the focal depth since we'll be using it a lot
+
+        vtkCamera *camera = renderer->GetActiveCamera();
+
+
+        double viewFocus[4], focalDepth, viewPoint[3];
+        double newPickPoint[4], oldPickPoint[4], motionVector[3];
+
+        vtkInteractorObserver * irenObserver =
+                static_cast<vtkInteractorObserver*> (this->GetInteractor()->GetInteractorStyle());
+
+
+        camera->GetFocalPoint(viewFocus);
+        irenObserver->ComputeWorldToDisplay(renderer, viewFocus[0], viewFocus[1], viewFocus[2],
+                viewFocus);
+        focalDepth = viewFocus[2];
+
+        irenObserver->ComputeDisplayToWorld(renderer,
+                                            newPos.x(),
+                                            maxY - newPos.y(),
+                                            focalDepth,
+                                            newPickPoint);
+
+        irenObserver->ComputeDisplayToWorld(renderer,
+                                            lastPos.x(),
+                                            maxY - lastPos.y(),
+                                            focalDepth,
+                                            oldPickPoint);
+
+        //////  NOTE
+        //////
+        /// //motionVector[1] = newPickPoint[1] - oldPickPoint[1];        /// REVERSED FOR SOME reason
+        /// For a long time, it was reversed until we realise the Screen Coordinate System Y is the Reverse
+        /// of the VTK Rendering Window Coordinate System
+        /// So we Compute DisplayToWorld of maxY - lastPos.y && maxY - newPos.y
+
+        motionVector[0] = oldPickPoint[0] - newPickPoint[0];
+        motionVector[1] = oldPickPoint[1] - newPickPoint[1];        /// REVERSED FOR SOME reason
+        motionVector[2] = oldPickPoint[2] - newPickPoint[2];
+
+        camera->GetFocalPoint(viewFocus);
+        camera->GetPosition(viewPoint);
+        camera->SetFocalPoint(motionVector[0] + viewFocus[0],
+                motionVector[1] + viewFocus[1],
+                motionVector[2] + viewFocus[2]);
+
+        camera->SetPosition(motionVector[0] + viewPoint[0],
+                motionVector[1] + viewPoint[1],
+                motionVector[2] + viewPoint[2]);
+
+        translationAction();
+    }
 }
 
 void QVTKTouchWidget::setGesturesActive(bool status)
