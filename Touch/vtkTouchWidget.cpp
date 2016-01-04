@@ -313,8 +313,8 @@ bool QVTKTouchWidget::event(QEvent *event)
         string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
 
         //touchPoints.
-        std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
-        std::cout << "eventType(): " << name << "\t" ;
+///        std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
+///        std::cout << "eventType(): " << name << "\t" ;
         count = touchPoints.count();
 
         if (count  == 5 )
@@ -417,7 +417,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
 
                 string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
-                std::cout << "eventType(): " << name << "\t" ;
+///                std::cout << "eventType(): " << name << "\t" ;
 
 
 
@@ -451,24 +451,38 @@ bool QVTKTouchWidget::event(QEvent *event)
             int eventNumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
             string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
 
-            std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
-            std::cout << "eventType(): " << name << "\t" ;
+///            std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
+///            std::cout << "eventType(): " << name << "\t" ;
             count = touchPoints.count();            
 
             this->GetInteractor()->GetInteractorStyle()->SetEnabled(0);
 
             if (count == 1)
             {
-               gestureDone = transformEventRotate(event, touchPoints, gestureDone);
+                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+                QPointF change = p1.pos() - p1.lastPos();
+
+                if (!change.isNull() || lastGesture == Rotate)
+                    gestureDone = transformEventRotate(event, touchPoints, gestureDone);
+                else
+                    gestureDone = true;
 
             } ///  if (count == 1)
 
             if (count  == 2)
-            {                                 
-                transformEventTranslate(event, touchPoints);
+            {
+                QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+                QPointF change1 = p1.pos() - p1.lastPos();
 
-                transformEventScale(event, touchPoints);
+                QTouchEvent::TouchPoint p2 = touchPoints.at(1);
+                QPointF change2 = p2.pos() - p2.lastPos();
 
+                if (!change1.isNull() || !change2.isNull() || lastGesture == Translate || lastGesture == Scale)
+                {
+                    transformEventTranslate(event, touchPoints);
+
+                    transformEventScale(event, touchPoints);
+                }
             }  /// if (count  == 2 && manual)
 
             if (count  == 3 )
@@ -518,11 +532,11 @@ bool QVTKTouchWidget::event(QEvent *event)
             /// Reset Movement Flag to False after All Possible Actions are DONE
             touch1movement = false;
 
-            std::cout << "LastGesture: " << lastGesture <<  endl;
+///            std::cout << "LastGesture: " << lastGesture <<  endl;
 
             if (gestureDone)
             {
-                std::cout << "Gesture Done" << endl;
+              ///  std::cout << "Gesture Done" << endl;
 
                 rotationReleased();
                 translationReleased();
@@ -768,7 +782,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
             if (gestureDone)
             {
-                std::cout << "Gesture Done" << endl;
+             ///   std::cout << "Gesture Done" << endl;
 
                 /// rotationReleased();
                 /// translationReleased();
@@ -1047,7 +1061,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
             if (gestureDone)
             {
-                std::cout << "Gesture Done" << endl;
+                ///std::cout << "Gesture Done" << endl;
 
                 /// rotationReleased();
                 /// translationReleased();
@@ -1133,8 +1147,11 @@ bool QVTKTouchWidget::transformEventRotate(QEvent *event, QList<QTouchEvent::Tou
 
     if (event->type() == QEvent::TouchUpdate)
     {
-        std::cout << "Buffer " << touchPointBuffer << '\t' ;
+///        std::cout << "Buffer " << touchPointBuffer << '\t' ;
         touchPointBuffer++;
+
+        QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+
 
         if (touchPointBuffer ==(touchEventDelay - 1))
         {
@@ -1153,18 +1170,18 @@ bool QVTKTouchWidget::transformEventRotate(QEvent *event, QList<QTouchEvent::Tou
             std::cout << "Rotation Triggered" << endl;
         }
 
-        if ((touchPointBuffer == touchEventDelay) )
+        if (lastGesture != Rotate )
         {
             rotateTriggered();
             std::cout << "Rotation Triggered" << endl;
-            lastGesture = 1;
+            lastGesture = Rotate;
         }
 
         //lastGesture = 1;
 
         rotationPressed();
 
-        QTouchEvent::TouchPoint p1 = touchPoints.at(0);
+
 
 
         ///////////////////////////////////////////////
@@ -1304,19 +1321,20 @@ void QVTKTouchWidget::transformEventZRotate(QEvent *event, QList<QTouchEvent::To
         /////
         /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
         /// then New Gesture Count
-        if (lastGesture != 4 && userTestRunning)
+        if (lastGesture != ZRotate && userTestRunning)
         {
             rotateTriggered();
         }
 
         rotationPressed();
 
-        if (lastGesture != 4)
+        if (lastGesture != ZRotate)
         {
-            lastGesture = 4;
+            std::cout << "ZRotation Triggered" << endl;
+            lastGesture = ZRotate;
         }
 
-        std::cout << "Z Axis Rotation Active" << "\t";
+///        std::cout << "Z Axis Rotation Active" << "\t";
 
         fingerActor1->GetProperty()->SetColor(colorSpin1);
         fingerActor2->GetProperty()->SetColor(colorSpin2);
@@ -1345,11 +1363,8 @@ void QVTKTouchWidget::transformEventZRotate(QEvent *event, QList<QTouchEvent::To
         camera->Roll( rotationAngle);
         camera->OrthogonalizeViewUp();
 
-        std::cout << "Rotation Angle:" << rotationAngle << "\t"
-
-
-
-                  <<endl;
+///        std::cout << "Rotation Angle:" << rotationAngle << "\t"
+///                  <<endl;
 
     }   /// End Pinch Zoon
 }
@@ -1409,17 +1424,18 @@ void QVTKTouchWidget::transformEventScale(QEvent *event, QList<QTouchEvent::Touc
         /////
         /// USER TESTING is RUNNING && If LastGesture was Not SCALING,
         /// then New Gesture Count
-        if (lastGesture != 3 && userTestRunning)
+        if (lastGesture != Scale && userTestRunning)
         {
             scaleTriggered();
         }
 
-        if (lastGesture != 3 )
+        if (lastGesture != Scale )
         {
-            lastGesture = 3;
+            lastGesture = Scale;
+            std::cout << "Scaling TRIGGERED" << endl;
         }
 
-        std::cout << "Scaling Active" << "\t";
+///        std::cout << "Scaling Active" << "\t";
 
         rotationReleased();
 
@@ -1445,9 +1461,8 @@ void QVTKTouchWidget::transformEventScale(QEvent *event, QList<QTouchEvent::Touc
         QLineF lastLine(p1.lastScreenPos(),  p2.lastScreenPos());
         this->scaleFactor = line.length() / lastLine.length();
 
-        std::cout << "scaleFactor:" << scaleFactor << "\t"
-
-                  <<endl;
+///        std::cout << "scaleFactor:" << scaleFactor << "\t"
+///                  <<endl;
 
         camera->Dolly(this->scaleFactor);
         renderer->ResetCameraClippingRange();
@@ -1509,14 +1524,18 @@ void QVTKTouchWidget::transformEventTranslate(QEvent * event, QList<QTouchEvent:
         /////
         /// USER TESTING is RUNNING && If LastGesture was Not Translate,
         /// then New Gesture Count
-        if (lastGesture != 2 && userTestRunning)
+        if (lastGesture != Translate && userTestRunning)
         {
             translateTriggered();
         }
 
-        lastGesture = 2;
+        if (lastGesture != Translate)
+        {
+            std::cout << "Translate TRIGGERED" << endl;
+            lastGesture = Translate;
+        }
 
-        std::cout << "Translation Active" << "\t";
+///     std::cout << "Translation Active" << "\t";
 
         if (event->type() == QEvent::TouchUpdate)
         {

@@ -61,6 +61,8 @@ protected:
     void transformEventScale(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints);
     void transformEventTranslate(QEvent *event, QList<QTouchEvent::TouchPoint> touchPoints);
 
+    enum activeGesture  {None, Rotate, Translate, Scale, ZRotate};
+
 
 
 private:
@@ -74,7 +76,7 @@ private:
     float scaleFactor;
     float lastScaleFactor;
     bool scaleSequenceNew;
-    int lastGesture = 0;        /// 1 = Rotation, 2 = Translation, 3 = Scaling
+    int lastGesture = None;        /// 1 = Rotation, 2 = Translation, 3 = Scaling, 4 = ZRotate
     int touchPointBuffer = 0;
     int touchTransformBuffer = 0;
     int touchGestureCounter = 0;
