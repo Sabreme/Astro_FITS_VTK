@@ -47,6 +47,11 @@ void UserTestDialog::setCurrentJob(int job)
     this->currentJob = job;
 }
 
+void UserTestDialog::setCurrentPrototype(int protoType)
+{
+    this->currentPrototype = protoType;
+}
+
 void UserTestDialog::collectResults()
 {
     std::cout     << "Rotations: " << countRotate << ", "
@@ -140,20 +145,50 @@ QString UserTestDialog::getUserResults()
     switch(currentJob)
     {
     case 0 : result = QString("rotation=%1 ,translation=%2 ,scale=%3, Zrotation=%4, resets=%5")
-                                    .arg(countRotate).arg(countTranslate).arg(countScale).arg(countZRotate).arg(countResets); break;
-    case 1 : result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, subVolResize=%6, subVolReset%7")
-                                    .arg(countRotate).arg(countTranslate).arg(countScale).arg(countZRotate).arg(countResets).arg(countSubVolResize).arg(countSubVolReset); break;
-    case 2 : result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, sliceResize=%6 ,sliceReset=%7")
+                                .arg(countRotate)
+                                .arg(countTranslate)
+                                .arg(countScale)
+                                .arg(countZRotate)
+                                .arg(countResets); break;
+    case 1 :
+        {
+            if (currentPrototype == 1)
+            {
+                result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, subVolResize=%6, subVolReset%7")
+                                    .arg(countRotate)
+                                    .arg(countTranslate)
+                                    .arg(countScale)
+                                    .arg(countZRotate)
+                                    .arg(countResets)
+                                    .arg(countSubVolResize)
+                                    .arg(countSubVolReset);
+            }
+            else
+            {
+                result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, subVolPnt1=%6, subVolPnt2=%7, subVolReset%8")
+                                .arg(countRotate)
+                                .arg(countTranslate)
+                                .arg(countScale)
+                                .arg(countZRotate)
+                                .arg(countResets)
+                                .arg(countSubVolPnt1)
+                                .arg(countSubVolPnt2)
+                                .arg(countSubVolReset);
+            }
+            break;
+        }
+    case 2 :
+        {
+        result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, sliceResize=%6 ,sliceReset=%7")
                                     .arg(countRotate).arg(countTranslate).arg(countScale).arg(countZRotate).arg(countResets).arg(countSliceResize).arg(countSliceReset); break;
-//    case 6 : result = "orientation=" + orientation  + ", position="+ position + ", zoom=" = zoom +
-//                            "slicePos=" + slicePos + ", sliceAngle=" + sliceAngle; break;
+        }
     }
 
-    if (countSubVolPnt1 > 0)
-        result += QString(" ,subVolPoint1=%1").arg(countSubVolPnt1);
+//    if (countSubVolPnt1 > 0)
+//        result += QString(" ,subVolPoint1=%1").arg(countSubVolPnt1);
 
-    if (countSubVolPnt2 > 0)
-        result += QString(" ,subVolPoint2=%1").arg(countSubVolPnt2);
+//    if (countSubVolPnt2 > 0)
+//        result += QString(" ,subVolPoint2=%1").arg(countSubVolPnt2);
 
 
 

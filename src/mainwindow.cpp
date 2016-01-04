@@ -366,7 +366,11 @@ void MainWindow::startUserTest()
     userTestDlg->setWindowTitle(jobTitle);
     userTestDlg->setTaskLabel(taskTitle);
 
+
     userTestDlg->setCurrentJob(currentJob);
+
+    int currentPrototype = userTest->getCurrentPrototype();
+    userTestDlg->setCurrentPrototype(currentPrototype);
 
 
     QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().topRight();
@@ -819,6 +823,7 @@ void MainWindow::countInteraction(int testType)
     case RotateCount : userTestDlg->incRotation(); break;
     case TranslateCount : userTestDlg->incTranslation(); break;
     case ScaleCount : userTestDlg->incScaling();    break;
+    case ZRotateCount : userTestDlg->incZRotation(); break;
     case ResetCount : userTestDlg->incReset(); break;
     case SubVolResetCount : userTestDlg->incSubVolReset(); break;
     case SliceResetCount : userTestDlg->incSliceReset(); break;

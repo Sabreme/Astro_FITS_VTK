@@ -25,6 +25,7 @@ public slots:
     void updateClock();
     void updateRotation();
     void setCurrentJob(int job);
+    void setCurrentPrototype(int protoType);
 
 
     void collectResults();    
@@ -57,6 +58,7 @@ private:
     QTimer *timer ;
 
     int currentJob = -1;
+    int currentPrototype = -1;
 
     int countRotate = 0;
     int countTranslate = 0;

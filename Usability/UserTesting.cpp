@@ -264,6 +264,11 @@ int UserTesting::getCurrentTask()
     return this->currentTask;
 }
 
+int UserTesting::getCurrentPrototype()
+{
+    return this->currentPrototype;
+}
+
 void UserTesting::PrintConfig()
 {
     QString output, word ;

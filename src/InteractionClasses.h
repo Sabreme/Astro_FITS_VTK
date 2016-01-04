@@ -30,7 +30,7 @@
 
 #include <vtkCallbackCommand.h>
 
-enum userTest_t {RotateCount, TranslateCount, ScaleCount};
+enum userTest_t {RotateCount, TranslateCount, ScaleCount, ZRotateCount};
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -373,10 +373,19 @@ public:
     virtual void OnLeftButtonDown()
     {
 
-      vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
+      vtkInteractorStyleTrackballCamera::OnLeftButtonDown();                      
 
       if (mainWindow->userTestRunning())
-            mainWindow->countInteraction(RotateCount);                        ////USERTEST
+      {
+          if (this->GetInteractor()->GetControlKey())
+          {
+              mainWindow->countInteraction(ZRotateCount);                        ////USERTEST
+          }
+          else
+          {
+              mainWindow->countInteraction(RotateCount);                        ////USERTEST
+          }
+      }
     }
 
     virtual void OnLeftButtonUp()

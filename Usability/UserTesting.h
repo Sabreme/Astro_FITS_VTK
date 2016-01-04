@@ -52,6 +52,8 @@ public:
 
     int getCurrentTask();
 
+    int getCurrentPrototype();
+
 
 
     enum Job  {Transformation, SubVolume, Slicing};

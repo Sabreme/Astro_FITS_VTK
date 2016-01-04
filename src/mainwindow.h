@@ -127,7 +127,7 @@ public:
     enum app_Mode_t {Mouse, Leap, Touch};
     enum app_Tab_t {Information, SubVolume, SliceAxis, SliceArb};
     enum app_TransForm_t {Rotation, Translation, Scaling, None};
-    enum userTest_t {RotateCount, TranslateCount, ScaleCount, ResetCount, SubVolResetCount, SliceResetCount};
+    enum userTest_t {RotateCount, TranslateCount, ScaleCount, ZRotateCount, ResetCount, SubVolResetCount, SliceResetCount};
 
     QVTKWidget* vtkWidget;      // Used for Main loop for FrameRate Calculation
     QTimer resizeTimer;
