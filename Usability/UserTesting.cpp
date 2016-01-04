@@ -7,6 +7,7 @@
 #include "QFile"
 #include "QTextStream"
 #include "QMessageBox"
+#include <iostream>
 
 UserTesting::UserTesting(QWidget *parent) :
     QDialog(parent),
@@ -71,7 +72,7 @@ void UserTesting::on_btnStop_clicked()
 
 
 
-    printResult(" and Task Open");
+    //printResult(" and Task Open");
     printResult(" and Task Stopped");
 
 }
@@ -348,7 +349,17 @@ void UserTesting::saveResult(QString result)
 
     int userID = this->ui->spinBoxUSERID->value();
 
-     QString output = QString("TESTS/UserID_%1_Task_%2.txt").arg(userID).arg(taskNo);
+    QString outputDir = QDir::currentPath();
+    QString fileName = QString("TESTS/UserID_%1_Task_%2.txt").arg(userID).arg(taskNo);
+
+    QString output = outputDir + "/" + fileName;
+
+//    QString fileName = QString("TESTS/UserID_%1_Task_%2.txt").arg(userID).arg(taskNo);
+
+//    QString output = fileName;
+
+
+    std::cout << output.toStdString() << endl;
 
     QFile file(output);
     file.open(QIODevice::WriteOnly | QIODevice::Text);

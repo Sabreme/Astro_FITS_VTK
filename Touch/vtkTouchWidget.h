@@ -114,7 +114,8 @@ signals:
 
     void rotateTriggered();
     void translateTriggered();
-    void scaleTriggered();    
+    void scaleTriggered();
+    void zRotateTriggered();
 
     void rotationPressed();
     void rotationReleased();

@@ -424,6 +424,7 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
         }
             break;
         case Leap:
@@ -474,6 +475,7 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
         }
             break;
         }
@@ -514,11 +516,14 @@ void MainWindow::startUserTest()
 
             setTouchInteractor();
 
-            this->ui->qvtkWidgetLeft->enableGestures();
+            this->ui->qvtkWidgetLeft->enableGestures();                        
+
+            this->customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
 
             connect(this->ui->qvtkWidgetLeft, SIGNAL(scaleTriggered()), userTestDlg,SLOT(incScaling()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
         }
             break;
         }

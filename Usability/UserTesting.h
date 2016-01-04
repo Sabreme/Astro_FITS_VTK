@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QTimer>
+#include <QtCore/QDir>
 
 namespace Ui {
 class UserTesting;

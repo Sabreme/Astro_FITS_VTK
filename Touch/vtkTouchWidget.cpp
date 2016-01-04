@@ -294,9 +294,6 @@ bool QVTKTouchWidget::event(QEvent *event)
     int count = 0;
     ///   lastGesture  ===== 1 = Rotate, 2 = translate, 3 = Scale
     bool gestureDone = false;
-    bool rotateMovement = false;
-    bool touch1movement = false;
-
 
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
@@ -448,8 +445,8 @@ bool QVTKTouchWidget::event(QEvent *event)
         {
             QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent*>(event)->touchPoints();
 
-            int eventNumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
-            string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
+///            int eventNumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
+///            string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
 
 ///            std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
 ///            std::cout << "eventType(): " << name << "\t" ;
@@ -529,8 +526,6 @@ bool QVTKTouchWidget::event(QEvent *event)
             //                }
             //            }
 
-            /// Reset Movement Flag to False after All Possible Actions are DONE
-            touch1movement = false;
 
 ///            std::cout << "LastGesture: " << lastGesture <<  endl;
 
@@ -775,8 +770,6 @@ bool QVTKTouchWidget::event(QEvent *event)
             }  /// if (count  == 2 && manual)
 
 
-            /// Reset Movement Flag to False after All Possible Actions are DONE
-            touch1movement = false;
 
             std::cout << "LastGesture: " << lastGesture <<  endl;
 
@@ -1054,8 +1047,6 @@ bool QVTKTouchWidget::event(QEvent *event)
             }  /// if (count  == 2 && manual)
 
 
-            /// Reset Movement Flag to False after All Possible Actions are DONE
-            touch1movement = false;
 
             std::cout << "LastGesture: " << lastGesture <<  endl;
 
@@ -1164,15 +1155,20 @@ bool QVTKTouchWidget::transformEventRotate(QEvent *event, QList<QTouchEvent::Tou
         /////
         /// USER TESTING is RUNNING && If LastGesture was Not Translate,
         /// then New Gesture Count
-        if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
+//        if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
+//        {
+//            rotateTriggered();
+//            std::cout << "Rotation Triggered" << endl;
+//        }
+
+        if (lastGesture != Rotate && userTestRunning)
         {
             rotateTriggered();
-            std::cout << "Rotation Triggered" << endl;
         }
 
         if (lastGesture != Rotate )
         {
-            rotateTriggered();
+            //rotateTriggered();
             std::cout << "Rotation Triggered" << endl;
             lastGesture = Rotate;
         }
@@ -1323,7 +1319,7 @@ void QVTKTouchWidget::transformEventZRotate(QEvent *event, QList<QTouchEvent::To
         /// then New Gesture Count
         if (lastGesture != ZRotate && userTestRunning)
         {
-            rotateTriggered();
+            zRotateTriggered();
         }
 
         rotationPressed();

@@ -30,6 +30,7 @@ public slots:
     void collectResults();    
 
     void incRotation();
+    void incZRotation();
     void incTranslation();
     void incScaling();
     void incReset();
@@ -60,6 +61,7 @@ private:
     int countRotate = 0;
     int countTranslate = 0;
     int countScale = 0;
+    int countZRotate = 0;
 
     int countLeapStarts;
     int countResets;
