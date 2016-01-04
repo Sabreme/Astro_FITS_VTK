@@ -340,7 +340,7 @@ bool QVTKTouchWidget::event(QEvent *event)
             if ((touchTransformBuffer == touchEventDelay) )
             {
                 transformationTriggered();
-                std::cout << "Transformation in Micro Event Triggered" << endl;
+            ///    std::cout << "Transformation in Micro Event Triggered" << endl;
             }
 
 
@@ -404,7 +404,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 ////////////////////////////////////////////////////
 
-                std::cout << "Transformation Switch" << "\t";
+             ///   std::cout << "Transformation Switch" << "\t";
 
                 fingerActor1->GetProperty()->SetColor(colorSpin1);
                 fingerActor2->GetProperty()->SetColor(colorSpin2);
@@ -573,9 +573,9 @@ bool QVTKTouchWidget::event(QEvent *event)
             int eventNumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
             string name = QEvent::staticMetaObject.enumerator(eventNumIndex).valueToKey(event->type());
 
-            //touchPoints.
-            std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
-            std::cout << "eventType(): " << name << "\t" ;
+///            //touchPoints.
+///            std::cout << "TouchPoints: " << touchPoints.count()<< "\t " ; // << endl;
+///            std::cout << "eventType(): " << name << "\t" ;
             count = touchPoints.count();
 
             bool manual = true;
@@ -619,15 +619,15 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                     }
 
-                    ////////////////////////////////
-                    /////
-                    /// USER TESTING is RUNNING && If LastGesture was Not Translate,
-                    /// then New Gesture Count
-                    if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
-                    {
-                        rotateTriggered();
-                        std::cout << "1 Point Tracking Triggered" << endl;
-                    }
+//                    ////////////////////////////////
+//                    /////
+//                    /// USER TESTING is RUNNING && If LastGesture was Not Translate,
+//                    /// then New Gesture Count
+//                    if ((touchPointBuffer == touchEventDelay) && (userTestRunning))
+//                    {
+//                        rotateTriggered();
+//                        std::cout << "1 Point Tracking Triggered" << endl;
+//                    }
 
 
 
@@ -670,7 +670,7 @@ bool QVTKTouchWidget::event(QEvent *event)
                     if (rightMouseClick)
 
                     {
-                        std::cout << "1 Point RIGHT Mouse Tracking Triggered" << endl;
+                        ///std::cout << "1 Point RIGHT Mouse Tracking Triggered" << endl;
 
                         //int xPos2 = p1.pos().toPoint().x();
                         int xPos2 = p1.lastPos().toPoint().x();
@@ -682,14 +682,15 @@ bool QVTKTouchWidget::event(QEvent *event)
                     }
                     else
                     {
-                        std::cout << "Single PointWidget Tracking" << endl;
+                        ///std::cout << "Single PointWidget Tracking" << endl;
 
                         ///////////////////////////////////////////////////////////////////////////////////
                         /// \brief finger1Pressed
                         ///
-                        ///
-
+                        ///                        
                         finger1Pressed();
+
+
                     }
 
                 } /// if (event->type() == QEvent::TouchUpdate)
@@ -753,7 +754,7 @@ bool QVTKTouchWidget::event(QEvent *event)
 
                 lastGesture = 2;
 
-                std::cout << "SubVolume - TRanslation Active" << "\t";
+              ///  std::cout << "SubVolume - TRanslation Active" << "\t";
 
                 ///                        if (event->type() == QEvent::TouchUpdate)
                 ///                        {
@@ -771,14 +772,16 @@ bool QVTKTouchWidget::event(QEvent *event)
 
 
 
-            std::cout << "LastGesture: " << lastGesture <<  endl;
+           /// std::cout << "LastGesture: " << lastGesture <<  endl;
 
             if (gestureDone)
             {
              ///   std::cout << "Gesture Done" << endl;
 
-                /// rotationReleased();
+                finger1Released();
                 /// translationReleased();
+                ///
+
 
 
                 fingerActor1->SetVisibility(false);

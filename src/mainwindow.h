@@ -351,6 +351,7 @@ private slots:
 
         void touchFinger1SubVol();
         void touchFinger2SubVol();
+        void touchFingerReleased();
 
         void touchSubVolTranslate();
 
@@ -414,6 +415,9 @@ private:
         bool userTestActive  = false;
 
         int userTestCountRotation = 0;
+
+        bool pointWidget1Active = false;
+        bool pointWidget2Active = false;
 
 
 

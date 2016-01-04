@@ -73,7 +73,7 @@ void UserTesting::on_btnStop_clicked()
 
 
     //printResult(" and Task Open");
-    printResult(" and Task Stopped");
+    //printResult(" and Task Stopped");
 
 }
 
@@ -172,7 +172,7 @@ void UserTesting::importUserResults(QString results)
         /// SAVE RESULT FOR SYSTEM RESULTS
         ///
 
-         QString output = QString("TESTS/UserID_%1_Task_%2_USER.txt").arg(userID).arg(taskNo);
+         QString output = QString("TESTS/UserID_%1_Task_%2_%3_USER.txt").arg(userID).arg(taskNo).arg(medium);
 
         QFile file(output);
         file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -350,7 +350,7 @@ void UserTesting::saveResult(QString result)
     int userID = this->ui->spinBoxUSERID->value();
 
     QString outputDir = QDir::currentPath();
-    QString fileName = QString("TESTS/UserID_%1_Task_%2.txt").arg(userID).arg(taskNo);
+    QString fileName = QString("TESTS/UserID_%1_Task_%2_.txt").arg(userID).arg(taskNo);
 
     QString output = outputDir + "/" + fileName;
 

@@ -58,8 +58,8 @@ void UserTestDialog::collectResults()
                   << "SubVolReset: " << countSubVolReset << ","
                   << "SliceResize:" << countSliceResize << ","
                   << "SliceReset:" << countSliceReset << ",'"
-                  << "SubVolPntLeft:" << countSubVolPntLeft << ","
-                  << "SubVolPntRight:" << countSubVolPntRight << ","
+                  << "SubVolPntLeft:" << countSubVolPnt1 << ","
+                  << "SubVolPntRight:" << countSubVolPnt2 << ","
                  << std::endl;
 }
 
@@ -101,14 +101,14 @@ void UserTestDialog::incSubVolReset()
     this->countSubVolReset++;
 }
 
-void UserTestDialog::incSubVolPointLeft()
+void UserTestDialog::incSubVolPoint1()
 {
-    this->countSubVolPntLeft++;
+    this->countSubVolPnt1++;
 }
 
-void UserTestDialog::incSubVolPointRight()
+void UserTestDialog::incSubVolPoint2()
 {
-    this->countSubVolPntRight++;
+    this->countSubVolPnt2++;
 }
 
 void UserTestDialog::incSliceReSize()
@@ -149,8 +149,13 @@ QString UserTestDialog::getUserResults()
 //                            "slicePos=" + slicePos + ", sliceAngle=" + sliceAngle; break;
     }
 
-    if (countSubVolPntLeft > 0)
-        result += QString(" ,subVolLeftCount=%1").arg(countSubVolPntLeft);
+    if (countSubVolPnt1 > 0)
+        result += QString(" ,subVolPoint1=%1").arg(countSubVolPnt1);
+
+    if (countSubVolPnt2 > 0)
+        result += QString(" ,subVolPoint2=%1").arg(countSubVolPnt2);
+
+
 
     return result;
 }

@@ -130,7 +130,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->ui->centralWidget = ui->qvtkWidgetLeft;
-    this->vtkWidget = ui->qvtkWidgetLeft;               // Used for FrameRate Calculation
+    this->vtkWidget = ui->qvtkWidgetLeft;               // Used for FrameRate Calculation    
 
     ///MAIN WINDOW GUI LAYOUT CONFIGURATION
     ///                     |                        |
@@ -476,6 +476,7 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
+
         }
             break;
         }
@@ -532,6 +533,7 @@ void MainWindow::startUserTest()
         this->ui->qvtkWidgetLeft->setFocus();
     }
     this->ui->qvtkWidgetLeft->setFocus();
+    //this->userTestDlg->res
 }
 
 void MainWindow::startUserPractice()
@@ -3492,12 +3494,14 @@ void MainWindow::touchTransformationToggle()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
         }
         if (status)
         {
             disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
             disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
             disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
         }
     }
 
@@ -3596,7 +3600,20 @@ void MainWindow::touchFinger1SubVol()
 
     //// --------MOVE PointWidget 1 with Finger 1--------"
     if ((distPos1 <= distPos2) && (distPos1 < threshold))
-    {        
+    {
+
+        if (userTestRunning() && !pointWidget1Active && !pointWidget2Active)
+        {
+            userTestDlg->incSubVolPoint1();
+        }
+
+        if (!pointWidget1Active && !pointWidget2Active )
+        {
+            std::cout << "SubVolume TRIGGERED" << endl;
+            pointWidget1Active = true;
+
+        }
+
 
         double focalPoint[4], pickPoint[4];
         double z;
@@ -3616,6 +3633,18 @@ void MainWindow::touchFinger1SubVol()
     //// --------MOVE PointWidget 2 with Finger 1--------"
     if ((distPos2 <= distPos1) && (distPos2 < threshold))
     {     
+
+        if (userTestRunning() && !pointWidget1Active && !pointWidget2Active)
+        {
+            userTestDlg->incSubVolPoint2();
+        }
+
+
+        if (!pointWidget2Active && !pointWidget1Active)
+        {
+            std::cout << "SubVolume TRIGGERED" << endl ;
+            pointWidget2Active = true;
+        }
 
         double focalPoint[4], pickPoint[4];
         double z;
@@ -3755,6 +3784,12 @@ void MainWindow::touchFinger2SubVol()
 
         pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent,NULL);
     }
+}
+
+void MainWindow::touchFingerReleased()
+{
+    this->pointWidget1Active = false;
+    this->pointWidget2Active = false;
 }
 
 void MainWindow::touchSubVolTranslate()
@@ -3924,6 +3959,19 @@ void MainWindow::touchSubVolTranslate()
         /// If the widgets are Both Valid Translations, apply the New Point Positions
         if (widget1Valid && widget2Valid)
         {
+            if (userTestRunning() && !pointWidget1Active && !pointWidget2Active)
+            {
+                userTestDlg->incSubVolPoint1();
+                userTestDlg->incSubVolPoint2();
+            }
+
+            if (!pointWidget2Active && !pointWidget1Active)
+            {
+                std::cout << "SubVolume TRIGGERED" << endl ;
+                pointWidget1Active = true;
+                pointWidget2Active = true;
+            }
+
             pointWidget1_->SetPosition(pickPoint1);
 
             /// Interact, if desired
@@ -3962,8 +4010,7 @@ void MainWindow::touchFinger1ArbSliceMoving()
     vtkCoordinate *coordinate = this->ui->qvtkWidgetLeft->fingerActor1->GetActualPositionCoordinate();
     double * actorPosWorld =  coordinate->GetComputedWorldValue(this->ui->qvtkWidgetLeft->GetRenderWindow()->GetRenderers()->GetFirstRenderer());
 
-        std::cout << "--------MOVING NORMAL ----------------" << endl;
-        customArbPlaneWidget->finger1Moving(actorPos2D[0], actorPos2D[1], actorPos2D2[0], actorPos2D2[1]);
+    customArbPlaneWidget->finger1Moving(actorPos2D[0], actorPos2D[1], actorPos2D2[0], actorPos2D2[1]);
 }
 
 void MainWindow::touchFinger1ArbSliceReleased()
@@ -3995,7 +4042,7 @@ void MainWindow::touchFinger2ArbSliceMoving()
 
     double * actor2BPos2D = this->ui->qvtkWidgetLeft->fingerActor2->GetPosition2Coordinate()->GetValue();
 
-    std::cout << "--------MOVING PLANE ----------------" << endl;
+  //  std::cout << "--------MOVING PLANE ----------------" << endl;
 
     //std::cout << "start [x,y]: " << actor
 
@@ -6424,7 +6471,7 @@ void MainWindow::LeapMotion()
                         userTestDlg->incScaling();
                     if(subVolLefHand)
                         //std::cout << "\t SubVolLeft" ;
-                        userTestDlg->incSubVolPointLeft();
+                        userTestDlg->incSubVolPoint1();
                 }
                 //std::cout << endl;
             }
@@ -6482,7 +6529,7 @@ void MainWindow::LeapMotion()
                         userTestDlg->incScaling();
                     if(subVolRightHand)
                         //std::cout << "\t SubVolRight" ;
-                        userTestDlg->incSubVolPointRight();
+                        userTestDlg->incSubVolPoint2();
                     if(sliceMovement)
                         //std::cout << "\t SliceMovement";
                         userTestDlg->incSliceReSize();
