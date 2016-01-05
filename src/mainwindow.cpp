@@ -6148,7 +6148,7 @@ void MainWindow::LeapMotion()
                                 ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
 
 
-                        handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds);
+                        handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds, 0.1);
                     }/// if(hand.isLeft())
 
                     if (leftHandActive)
@@ -6165,7 +6165,7 @@ void MainWindow::LeapMotion()
                                 ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
 
 
-                        handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds);
+                        handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds, 0.1);
                     }   /// if(hand.isLeft())
                 }   ///    if (!frame.hands().isEmpty()
             }
@@ -6217,7 +6217,7 @@ void MainWindow::LeapMotion()
                                 ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
 
 
-                        leapHandWidget->translateHand(rightHand,rightHandMoving,outsideBounds);
+                        leapHandWidget->translateHand(rightHand,rightHandMoving,outsideBounds, 0.01);
                     }/// if(hand.isLeft())
 
                     if (leftHandActive)
@@ -6234,7 +6234,7 @@ void MainWindow::LeapMotion()
                                 ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
 
 
-                        leapHandWidget->translateHand(leftHand,leftHandMoving,outsideBounds);
+                        leapHandWidget->translateHand(leftHand,leftHandMoving,outsideBounds, 0.01);
                     }   /// if(hand.isLeft())
                 }   ///    if (!frame.hands().isEmpty()
             }
