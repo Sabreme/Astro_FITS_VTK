@@ -325,6 +325,12 @@ private slots:
         void leapBeginSliceAxis();
         void leapBeginSliceArb();
 
+        void leapArbSliceUpdate(Frame frame, Hand hand, bool sliceMovement);
+        void leapSubVolumeUpdate(Frame frame, Hand hand, bool subVolRightHand, bool subVolLeftHand);
+        void leapTranslateUpdate(Frame frame, bool translateMovement);
+        void leapRotateUpdate(Frame frame, bool rotateMovement);
+        void leapScaleUpdate(Frame frame, bool scaleMovement);
+
         void on_actionLeapBasic_triggered();
 
         void on_actionTracking_triggered();
