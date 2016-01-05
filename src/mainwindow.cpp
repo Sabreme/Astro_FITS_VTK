@@ -3002,7 +3002,7 @@ void MainWindow::leapBeginSliceArb()
     this->ui->tabLogWidget->setCurrentIndex(0);
 }
 
-void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool sliceMovement)
+void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool &sliceMovement)
 {
     const FingerList rightFingers = frame.hands().rightmost().fingers();
     const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
@@ -3078,7 +3078,7 @@ void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool sliceMovement)
     }
 }
 
-void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool subVolRightHand, bool subVolLeftHand)
+void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHand, bool &subVolLeftHand)
 {
     /// Assume the first hand is the Right Hand. If it is the right hand then 2nd Hand is left.
 
@@ -3317,7 +3317,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool subVolRightHan
     trackSubVolume(finalPos1, finalPos2);
 }
 
-void MainWindow::leapTranslateUpdate(Frame frame, bool translateMovement )
+void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement )
 {
     leapHand1Move = true;
     leapHand1FrameBuffer ++;
@@ -3379,7 +3379,7 @@ void MainWindow::leapTranslateUpdate(Frame frame, bool translateMovement )
     updateCameraPosition();
 }
 
-void MainWindow::leapRotateUpdate(Frame frame, bool rotateMovement)
+void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement)
 {
     Matrix newRotation = frame.rotationMatrix(controller_->frame(2));
     //std::cout << newRotation.toString() << endl;\
@@ -3485,7 +3485,7 @@ void MainWindow::leapRotateUpdate(Frame frame, bool rotateMovement)
     }
 }
 
-void MainWindow::leapScaleUpdate(Frame frame, bool scaleMovement)
+void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement)
 {
 
     vtkRenderer * renderer = this->defaultRenderer;
@@ -3520,6 +3520,290 @@ void MainWindow::leapScaleUpdate(Frame frame, bool scaleMovement)
         leapHand1FrameBuffer ++;
         scaleMovement = true;
     }
+}
+
+void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
+{
+    if (frame.translationProbability(controller_->frame(1)) > 0.6)
+    {
+        Vector handPos = hand.palmPosition();
+        //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
+
+        double sensitivity = 0.01;
+        double offSetX = 0;
+        double offSetY = 2.5;
+        double offSetZ = 1;
+
+        double handPosPoint[3] = {handPos.x * sensitivity - offSetX,
+                                  handPos.y * sensitivity - offSetY,
+                                  handPos.z * sensitivity - offSetZ
+                                 };
+
+        this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
+
+        this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 0.0);
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////
+    /// \brief newNormal
+    ///
+
+    if (frame.rotationProbability(controller_->frame(1)) > 0.6)
+    {
+
+        Vector newNormal = hand.palmNormal();
+
+        double oldNormal[3] ;
+        this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
+        double newNormalD [3];
+        double theta, rotVector[3];
+
+        double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
+        double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
+        //double *center = leapDbgPlaneWidget->GetCenter();
+
+
+        newNormalD[0] = newNormal.x;
+        newNormalD[1] = newNormal.y;
+        newNormalD[2] = newNormal.z;
+
+        this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
+        this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
+
+
+        ///Compute the rotation vector using a transformation matrix
+        ///Note that is fnromals are aparelle then te rotation is either 0 or 180 Degrees
+
+        double dp = vtkMath::Dot(oldNormal, newNormalD);
+        if (dp >= 1.0)
+        {
+            return;    ///zero rotation
+        }
+
+        else if (dp <= -1.0)
+        {
+            theta = 180.0;
+            rotVector[0] = point1[0] - origin[0];
+            rotVector[1] = point1[1] - origin[1];
+            rotVector[2] = point1[2] - origin[2];
+        }
+        else
+        {
+            vtkMath::Cross(oldNormal, newNormalD,rotVector);
+            theta = vtkMath::DegreesFromRadians(acos(dp));
+        }
+
+        this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+        this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+        this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    /// \brief Pinch Scaling
+    //////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    ///
+    ///
+    /// Compute the Scale Factor using the leap motion factor
+
+    /// The following code checks to see if the sensor has regained focus.
+    /// if so, we set the global_CameraPosition to the default value
+    /// Effectively functioning as a reset value.
+    /// We also have a skip value to true to not invert the slider.
+
+    if (frame.scaleProbability(controller_->frame(1)) > 0.6)
+    {
+        if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
+        {
+            this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
+            //                    std::cout << "Return focus" << endl;
+        }
+
+        this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
+
+        float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
+
+        double oldPosition = this->leapMarkerWidget->global_CameraPosition;
+
+        this->leapMarkerWidget->global_CameraPosition = oldPosition * (scaleFactor) ;
+
+        double newPosition = this->leapMarkerWidget->global_CameraPosition;
+
+
+        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+
+        //                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+
+        //                    if (colourRange < 0) colourRange = 0;
+        //                    else
+        //                        if(colourRange > 1) colourRange = 1;
+
+        //                    std::cout << "Scale Factor: " << scaleFactor
+        //                              << "\tPosition: " << newPosition
+        //                              << "\tColourRange: " << colourRange << endl;
+
+        if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting BIGGER - Blue Adjustment
+        {
+            /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+            ///
+            double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+            if(colourRange > 1) colourRange = 1;
+
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
+                    //GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                    GetTubeProperty()->SetColor(1.2-colourRange,1.2-colourRange,1);
+        }
+        else                                           /// SCHINKING.... ColourRange Getting SMALLER -- Red Adjustment
+        {
+            /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+            ///
+            double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Start) ;
+            if(colourRange < 0) colourRange = 0;
+
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
+                    //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                    GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
+
+            //                                std::cout << "Scale Factor: " << scaleFactor
+            //                                          << "\tPosition: " << newPosition
+            //                                          << "\tRGB(1,: " << colourRange * 0.8
+            //                                          << "," << colourRange * 0.8 << endl;
+        }
+    }
+}
+
+void MainWindow::leapHandWidgetUpdate(Frame frame, Hand hand)
+{
+    if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+    {
+        //                    Get the first hand
+        const Hand rightHandMoving = frame.hands().rightmost();
+        //                    Get the 2nd hand
+        const Hand leftHandMoving = frame.hands().leftmost();
+
+        bool leftHandActive = true;
+        bool rightHandActive = true;
+
+        /// If we have a single hand, we must determine which 1 it is
+        /// If not the Right hand, then reverse outcome
+        /// Otherwise we swap hands accordingly
+        if(frame.hands().count() == 1)
+        {
+            if (frame.hands().frontmost().isRight())
+                leftHandActive = false;
+            else
+                rightHandActive = false;
+        }
+
+        /// The Leap MOTION Interaction Box
+        InteractionBox leapBox = frame.interactionBox();
+
+
+        if (rightHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            leapHandWidget->translateHand(rightHand,rightHandMoving,outsideBounds, 0.01);
+        }/// if(hand.isLeft())
+
+        if (leftHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            leapHandWidget->translateHand(leftHand,leftHandMoving,outsideBounds, 0.01);
+        }   /// if(hand.isLeft())
+    }   ///    if (!frame.hands().isEmpty()
+}
+
+void MainWindow::leapHandModelUpdate(Frame frame)
+{
+    if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+    {
+        //                    Get the first hand
+        const Hand rightHandMoving = frame.hands().rightmost();
+        //                    Get the 2nd hand
+        const Hand leftHandMoving = frame.hands().leftmost();
+
+        bool leftHandActive = true;
+        bool rightHandActive = true;
+
+        /// If we have a single hand, we must determine which 1 it is
+        /// If not the Right hand, then reverse outcome
+        /// Otherwise we swap hands accordingly
+        if(frame.hands().count() == 1)
+        {
+            if (frame.hands().frontmost().isRight())
+                leftHandActive = false;
+            else
+                rightHandActive = false;
+        }
+
+        /// The Leap MOTION Interaction Box
+        InteractionBox leapBox = frame.interactionBox();
+
+
+        if (rightHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds, 0.1);
+        }/// if(hand.isLeft())
+
+        if (leftHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds, 0.1);
+        }   /// if(hand.isLeft())
+    }   ///    if (!frame.hands().isEmpty()
 }
 
 
@@ -6135,65 +6419,7 @@ void MainWindow::LeapMotion()
 
             if (this->handModelActive)
             {
-                if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
-                {
-                    //                    Get the first hand
-                    const Hand rightHandMoving = frame.hands().rightmost();
-                    //                    Get the 2nd hand
-                    const Hand leftHandMoving = frame.hands().leftmost();
-
-                    bool leftHandActive = true;
-                    bool rightHandActive = true;
-
-                    /// If we have a single hand, we must determine which 1 it is
-                    /// If not the Right hand, then reverse outcome
-                    /// Otherwise we swap hands accordingly
-                    if(frame.hands().count() == 1)
-                    {
-                        if (frame.hands().frontmost().isRight())
-                            leftHandActive = false;
-                        else
-                            rightHandActive = false;
-                    }
-
-                    /// The Leap MOTION Interaction Box
-                    InteractionBox leapBox = frame.interactionBox();
-
-
-                    if (rightHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds, 0.1);
-                    }/// if(hand.isLeft())
-
-                    if (leftHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds, 0.1);
-                    }   /// if(hand.isLeft())
-                }   ///    if (!frame.hands().isEmpty()
+                leapHandModelUpdate(frame);
             }
 
 
@@ -6204,246 +6430,20 @@ void MainWindow::LeapMotion()
 
             if (this->ui->actionLeapDialogToggle->isChecked() && leapHandWidget->GetEnabled())
             {
-                if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
-                {
-                    //                    Get the first hand
-                    const Hand rightHandMoving = frame.hands().rightmost();
-                    //                    Get the 2nd hand
-                    const Hand leftHandMoving = frame.hands().leftmost();
-
-                    bool leftHandActive = true;
-                    bool rightHandActive = true;
-
-                    /// If we have a single hand, we must determine which 1 it is
-                    /// If not the Right hand, then reverse outcome
-                    /// Otherwise we swap hands accordingly
-                    if(frame.hands().count() == 1)
-                    {
-                        if (frame.hands().frontmost().isRight())
-                            leftHandActive = false;
-                        else
-                            rightHandActive = false;
-                    }
-
-                    /// The Leap MOTION Interaction Box
-                    InteractionBox leapBox = frame.interactionBox();
-
-
-                    if (rightHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        leapHandWidget->translateHand(rightHand,rightHandMoving,outsideBounds, 0.01);
-                    }/// if(hand.isLeft())
-
-                    if (leftHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        leapHandWidget->translateHand(leftHand,leftHandMoving,outsideBounds, 0.01);
-                    }   /// if(hand.isLeft())
-                }   ///    if (!frame.hands().isEmpty()
+                leapHandWidgetUpdate(frame, hand);
             }
-
-
-
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    DIAGNOSTIC TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
             ///
-            //qDebug() << "Hand Tracking " << endl ;
 
-            ///if (this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
             if (this->ui->actionLeapDialogToggle->isChecked())
             {
 
-                //                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
-                //////////////////////////////////////////////////////////////////////////
-                /// \brief handPos
-                //////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////////////////////////////////
-
-                if (frame.translationProbability(controller_->frame(1)) > 0.6)
-                {
-                    Vector handPos = hand.palmPosition();
-                    //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
-
-                    double sensitivity = 0.01;
-                    double offSetX = 0;
-                    double offSetY = 2.5;
-                    double offSetZ = 1;
-
-                    double handPosPoint[3] = {handPos.x * sensitivity - offSetX,
-                                              handPos.y * sensitivity - offSetY,
-                                              handPos.z * sensitivity - offSetZ
-                                             };
-
-                    this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
-
-                    this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 0.0);
-                }
-
-
-                /////////////////////////////////////////////////////////////////////////////
-                /// \brief newNormal
-                ///
-
-                if (frame.rotationProbability(controller_->frame(1)) > 0.6)
-                {
-
-                    Vector newNormal = hand.palmNormal();
-
-                    double oldNormal[3] ;
-                    this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
-                    double newNormalD [3];
-                    double theta, rotVector[3];
-
-                    double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
-                    double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
-                    //double *center = leapDbgPlaneWidget->GetCenter();
-
-
-                    newNormalD[0] = newNormal.x;
-                    newNormalD[1] = newNormal.y;
-                    newNormalD[2] = newNormal.z;
-
-                    this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
-                    this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
-
-
-                    ///Compute the rotation vector using a transformation matrix
-                    ///Note that is fnromals are aparelle then te rotation is either 0 or 180 Degrees
-
-                    double dp = vtkMath::Dot(oldNormal, newNormalD);
-                    if (dp >= 1.0)
-                    {
-                        return;    ///zero rotation
-                    }
-
-                    else if (dp <= -1.0)
-                    {
-                        theta = 180.0;
-                        rotVector[0] = point1[0] - origin[0];
-                        rotVector[1] = point1[1] - origin[1];
-                        rotVector[2] = point1[2] - origin[2];
-                    }
-                    else
-                    {
-                        vtkMath::Cross(oldNormal, newNormalD,rotVector);
-                        theta = vtkMath::DegreesFromRadians(acos(dp));
-                    }
-
-                    this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-                    this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-                    this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
-                }
-
-                //////////////////////////////////////////////////////////////////////////
-                /// \brief Pinch Scaling
-                //////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////////////////////////////////
-                ///
-                ///
-                /// Compute the Scale Factor using the leap motion factor
-
-                /// The following code checks to see if the sensor has regained focus.
-                /// if so, we set the global_CameraPosition to the default value
-                /// Effectively functioning as a reset value.
-                /// We also have a skip value to true to not invert the slider.
-
-                if (frame.scaleProbability(controller_->frame(1)) > 0.6)
-                {
-                    if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
-                    {
-                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
-                        //                    std::cout << "Return focus" << endl;
-                    }
-
-                    this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
-
-                    float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
-
-                    double oldPosition = this->leapMarkerWidget->global_CameraPosition;
-
-                    this->leapMarkerWidget->global_CameraPosition = oldPosition * (scaleFactor) ;
-
-                    double newPosition = this->leapMarkerWidget->global_CameraPosition;
-
-
-                    /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-
-                    //                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
-
-                    //                    if (colourRange < 0) colourRange = 0;
-                    //                    else
-                    //                        if(colourRange > 1) colourRange = 1;
-
-                    //                    std::cout << "Scale Factor: " << scaleFactor
-                    //                              << "\tPosition: " << newPosition
-                    //                              << "\tColourRange: " << colourRange << endl;
-
-                    if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting BIGGER - Blue Adjustment
-                    {
-                        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-                        ///
-                        double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
-                        if(colourRange > 1) colourRange = 1;
-
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
-                                //GetTubeProperty()->SetColor(colourRange,colourRange,1);
-                                GetTubeProperty()->SetColor(1.2-colourRange,1.2-colourRange,1);
-                    }
-                    else                                           /// SCHINKING.... ColourRange Getting SMALLER -- Red Adjustment
-                    {
-                        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-                        ///
-                        double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Start) ;
-                        if(colourRange < 0) colourRange = 0;
-
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
-                                //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
-                                GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
-
-                        //                                std::cout << "Scale Factor: " << scaleFactor
-                        //                                          << "\tPosition: " << newPosition
-                        //                                          << "\tRGB(1,: " << colourRange * 0.8
-                        //                                          << "," << colourRange * 0.8 << endl;
-                    }
-                }
+                leapDiagnosticUpdate(frame, hand);
             }
-            ////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////
-            ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
-            this->ui->qvtkWidgetLeft->setFocus();
         } // (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
 
         //////////////////////////////////////////////////

@@ -148,7 +148,7 @@ public:
     vtkLookupTable *BuildHueIntensityBaseMap(double min, double max);
 
     //// LEAP MOTION
-    void LeapMotion();
+
 
     bool event(QEvent *event);
 
@@ -320,16 +320,20 @@ private slots:
         //////////////////////////////////////////////////////
         //// LEAP-MOTION SLOTS
 
+        void LeapMotion();
         void leapTrackingOn(bool arg1);
         void leapBeginSubVol();
         void leapBeginSliceAxis();
         void leapBeginSliceArb();
 
-        void leapArbSliceUpdate(Frame frame, Hand hand, bool sliceMovement);
-        void leapSubVolumeUpdate(Frame frame, Hand hand, bool subVolRightHand, bool subVolLeftHand);
-        void leapTranslateUpdate(Frame frame, bool translateMovement);
-        void leapRotateUpdate(Frame frame, bool rotateMovement);
-        void leapScaleUpdate(Frame frame, bool scaleMovement);
+        void leapArbSliceUpdate(Frame frame, Hand hand, bool &sliceMovement);
+        void leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHand, bool &subVolLeftHand);
+        void leapTranslateUpdate(Frame frame, bool &translateMovement);
+        void leapRotateUpdate(Frame frame, bool &rotateMovement);
+        void leapScaleUpdate(Frame frame, bool &scaleMovement);
+        void leapDiagnosticUpdate(Frame frame, Hand hand);
+        void leapHandWidgetUpdate(Frame frame, Hand hand);
+        void leapHandModelUpdate(Frame frame);
 
         void on_actionLeapBasic_triggered();
 
