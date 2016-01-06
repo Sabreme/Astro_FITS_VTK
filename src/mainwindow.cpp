@@ -1604,12 +1604,14 @@ void MainWindow::loadFitsFile(QString filename)
     /// Leapmotion TRACKING Message
     ///
     ///
+    ///
+    int * screenSize = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetScreenSize();
 
     this->leapTrackingActor = vtkTextActor::New();
-    this->leapTrackingActor->GetTextProperty()->SetFontSize(20);
+    this->leapTrackingActor->GetTextProperty()->SetFontSize(30);
     this->leapTrackingActor->GetTextProperty()->SetBold(true);
 
-    this->leapTrackingActor->SetPosition(20,550);
+
     this->leapTrackingActor->SetInput("TRACKING..");
     this->leapTrackingActor->GetTextProperty()->SetColor(1,1,1);
 
@@ -3381,8 +3383,11 @@ void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand
 
 void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
 {
-    Matrix newRotation = hand.rotationMatrix(controller_->frame(2));
-    //std::cout << newRotation.toString() << endl;\
+    Matrix newRotation = hand.rotationMatrix(controller_->frame(3));
+
+
+
+    //std::cout << newRotation.toString() << endl;
 
     vtkRenderer * renderer = this->defaultRenderer;
     vtkCamera *camera = renderer->GetActiveCamera();
@@ -3402,6 +3407,8 @@ void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
     ///
 
 
+    ///vtkMatrix4x4* cameraMatrix = camera->GetModelTransformMatrix();
+
     vtkMatrix4x4* cameraMatrix = camera->GetModelTransformMatrix();
 
     vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
@@ -3413,10 +3420,24 @@ void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
     {
         for (int j = 0; j < 4; j++)
         {
-            rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index]);
+            rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index] );
             index++;
         }
     }
+
+//    std::cout << "----------------------------------" << endl;
+//    for (int i = 0; i < 4; i++)
+//    {
+//        std::cout << "[ " ;
+//        for (int j = 0; j < 4; j++)
+//        {
+//            rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index]);
+//            std::cout << newRotation.toArray4x4().m_array[index] << ", " ;
+//            index++;
+//        }
+//        std::cout << "]" << endl;
+//    }
+
 
     vtkTransform* transform = vtkTransform::New();
 
@@ -3553,6 +3574,7 @@ void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
     {
 
         Vector newNormal = hand.palmNormal();
+        double scale = 1.1;
 
         double oldNormal[3] ;
         this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
@@ -3592,6 +3614,8 @@ void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
         {
             vtkMath::Cross(oldNormal, newNormalD,rotVector);
             theta = vtkMath::DegreesFromRadians(acos(dp));
+
+
         }
 
         this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
@@ -6121,7 +6145,15 @@ void MainWindow::on_buttonArbSliceContourBackground_clicked()
 void MainWindow::leapTrackingOn(bool arg1)
 {
     if (this->systemMode == Leap)
+    {
+        int * screenSize = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetSize();
+
+        std::cout << "screen size [x,y]: " << screenSize[0] << ", " << screenSize[1] << endl;
+
+        this->leapTrackingActor->SetPosition(screenSize[0] / 2 - 100, screenSize[1] - 50);
+
         this->leapTrackingActor->SetVisibility(arg1);
+    }
 }
 
 void MainWindow::on_actionLeapBasic_triggered()
