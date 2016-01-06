@@ -3524,7 +3524,7 @@ void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
 
 void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
 {
-    if (frame.translationProbability(controller_->frame(1)) > 0.6)
+    if (hand.translationProbability(controller_->frame(1)) > 0.6)
     {
         Vector handPos = hand.palmPosition();
         //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
@@ -3549,7 +3549,7 @@ void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
     /// \brief newNormal
     ///
 
-    if (frame.rotationProbability(controller_->frame(1)) > 0.6)
+    if (hand.rotationProbability(controller_->frame(1)) > 0.6)
     {
 
         Vector newNormal = hand.palmNormal();
@@ -3612,7 +3612,7 @@ void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
     /// Effectively functioning as a reset value.
     /// We also have a skip value to true to not invert the slider.
 
-    if (frame.scaleProbability(controller_->frame(1)) > 0.6)
+    if (hand.scaleProbability(controller_->frame(1)) > 0.6)
     {
         if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
         {
@@ -6188,19 +6188,21 @@ void MainWindow::LeapMotion()
         bool sliceMovement = false;
 
 
-
-        //bool chkTranslate = this->ui->checkBox_Translation->isChecked();
-        //bool chkRotate = this->ui->checkBox_Rotation->isChecked();
-        //bool chkScale = this->ui->checkBox_Scaling->isChecked();
+        //// --  MOVED THE CODE TO INSDE HAND LOOP TO SELECT PROBABILITIES BASED ON HAND MOVEMENT
+        ///bool chkTranslate = this->ui->checkBox_Translation->isChecked();
+        ///bool chkRotate = this->ui->checkBox_Rotation->isChecked();
+        ///bool chkScale = this->ui->checkBox_Scaling->isChecked();
+        ///
+        bool chkTranslate =false;
+        bool chkRotate =false;
+        bool chkScale = false;
 
         //        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
         //        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
         //        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
 
 
-        bool chkRotate = (frame.rotationProbability(controller_->frame(1)) > 0.6);
-        bool chkTranslate = (frame.translationProbability(controller_->frame(1)) > 0.6);
-        bool chkScale = (frame.scaleProbability(controller_->frame(1)) > 0.6);
+
 
         this->leapTrackingActor->SetVisibility(this->ui->checkBoxLeapTracking->isChecked());
 
@@ -6216,10 +6218,10 @@ void MainWindow::LeapMotion()
         /// IF Rotation Gesture is detected, we set the leapMovement Flag to True
         /// If the LeapMovement is already True, then  NO new gesture was detected
         ///
-        if(chkRotate)
-        {
+//        if(chkRotate)
+//        {
 
-        }
+//        }
 
         if (shouldSubVol)
         {
@@ -6302,9 +6304,41 @@ void MainWindow::LeapMotion()
                                <<  endl;
                 std::cout << endl;
 
+            bool grabLeft = false;
+
+
+//            ///   USE GRABSTRENGTH TOGGLE
+//            if (leftHand.grabStrength() == 1)
+//                 grabLeft = true;
+
+//             /// USE PINCHSTRENGTH TOGGLE
+//            if (leftHand.pinchStrength() == 1)
+//                 grabLeft = true;
+
+            /// USE FINGERS TOGGLE
+           if (leftHand.fingers().extended().count() == 0 && leftHand.isLeft())
+           {
+               this->ui->checkBoxLeapTracking->setChecked(true);
+                grabLeft = true;
+           }
+           else
+           {
+               this->ui->checkBoxLeapTracking->setChecked(false);
+
+           }
 
 
 
+
+            ///bool useLeftHand = true  ;
+            bool useLeftHand = grabLeft;
+
+            if (rightHand.isValid())
+            {
+                chkRotate = (rightHand.rotationProbability(controller_->frame(1)) > 0.6);
+                chkTranslate = (rightHand.translationProbability(controller_->frame(1)) > 0.6);
+                chkScale = (rightHand.scaleProbability(controller_->frame(1)) > 0.6);
+            }
 
 
 
@@ -6448,7 +6482,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    TRANSLATION   //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid() && leftHand.pinchStrength() == 1)
+            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid() && useLeftHand)
             {                
                 leapTranslateUpdate(frame, translateMovement, rightHand);
             }
@@ -6457,7 +6491,7 @@ void MainWindow::LeapMotion()
             //////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    ROTATION   /////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
-            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && leftHand.pinchStrength() == 1)
+            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && useLeftHand)
             {
                 leapRotateUpdate(frame, rotateMovement,rightHand);
 
@@ -6467,7 +6501,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    SCALING       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkScale && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && leftHand.pinchStrength() == 1)
+            if(chkScale && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && useLeftHand)
             {
                 leapScaleUpdate(frame, scaleMovement, rightHand);
             }
@@ -6499,10 +6533,10 @@ void MainWindow::LeapMotion()
             //////////////////////////////////////////////////////////////////////////////////
             ///
 
-            if (this->ui->actionLeapDialogToggle->isChecked())
+            if (this->ui->actionLeapDialogToggle->isChecked() && rightHand.isValid())
             {
 
-                leapDiagnosticUpdate(frame, hand);
+                leapDiagnosticUpdate(frame, rightHand);
             }
         } // (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
 
