@@ -3317,7 +3317,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     trackSubVolume(finalPos1, finalPos2);
 }
 
-void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement )
+void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand hand)
 {
     leapHand1Move = true;
     leapHand1FrameBuffer ++;
@@ -3333,8 +3333,8 @@ void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement )
     vtkRenderer * renderer = this->defaultRenderer;
     vtkCamera *camera = renderer->GetActiveCamera();
 
-    Vector newPosition = frame.translation(controller_->frame(1));
-    Vector newTranslation = frame.translation(controller_->frame(1));
+    Vector newPosition = hand.translation(controller_->frame(1));
+    Vector newTranslation =hand.translation(controller_->frame(1));
 
 
     vtkMatrix4x4 * cameraMatrix = camera->GetViewTransformMatrix();
@@ -3379,9 +3379,9 @@ void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement )
     updateCameraPosition();
 }
 
-void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement)
+void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
 {
-    Matrix newRotation = frame.rotationMatrix(controller_->frame(2));
+    Matrix newRotation = hand.rotationMatrix(controller_->frame(2));
     //std::cout << newRotation.toString() << endl;\
 
     vtkRenderer * renderer = this->defaultRenderer;
@@ -3485,7 +3485,7 @@ void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement)
     }
 }
 
-void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement)
+void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
 {
 
     vtkRenderer * renderer = this->defaultRenderer;
@@ -3493,7 +3493,7 @@ void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement)
 
     //float adjustmentFactor = 0.5;
     //float scaleFactor = frame.scaleFactor(controller_->frame(1));
-    float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
+    float scaleFactor = hand.scaleFactor(controller_->frame(2));
 
 
     if (camera->GetParallelProjection())
@@ -6248,8 +6248,68 @@ void MainWindow::LeapMotion()
 
         if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
         {
+            Hand rightHand, leftHand;
 
-            Hand hand = frame.hands().rightmost();
+            if (frame.hands().count() ==2)
+            {
+                if (frame.hands()[0].isRight())
+                {
+                    rightHand = frame.hands()[0];
+                    leftHand = frame.hands()[1];
+                }
+                else
+                {
+                    leftHand = frame.hands()[0];
+                    rightHand = frame.hands()[1];
+                }
+            }
+            else
+            {
+                if (frame.hands()[0].isRight())
+                    rightHand = frame.hands()[0];
+                 else
+                    leftHand = frame.hands()[0];
+            }
+
+
+
+            std::cout << std::fixed << std::setprecision(2) ;
+            std::cout << "Hands.Count(): " << frame.hands().count()
+                                //<< "\tRight hand Valid: " << rightHand.isValid()
+                                 << "\tRight hand isRight: " << rightHand.isRight()
+                                  << "\t";
+
+//            if (frame.gestures().count() > 0)
+//            {
+//                if (frame.gestures()[0].type() == Gesture::TYPE_SCREEN_TAP)
+//                    std::cout << "Pressed: " << frame.gestures()[0].id() << endl ;
+//            }
+
+            if (leftHand.grabStrength() == 1 )
+            {
+                leapHandTriggerBuffer++;
+                if (leapHandTriggerBuffer == 50)
+                {
+                    std::cout << "Toggled" << endl;
+                    leapHandTriggerBuffer = 0;
+                    //this->ui->checkBoxLeapTracking->toggle();
+
+                }
+            }
+
+            std::cout << "Grab Strength:" << leftHand.grabStrength()
+                               << "\t Pinch Strength: " << leftHand.pinchStrength()
+                               <<  endl;
+                std::cout << endl;
+
+
+
+
+
+
+
+
+            Hand hand = frame.hands().rightmost();                
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////  AXIS  SLICE TRACKING  /// //////////////////////////////////////
@@ -6388,18 +6448,18 @@ void MainWindow::LeapMotion()
             //////////////////////////    TRANSLATION   //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked())
+            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid() && leftHand.pinchStrength() == 1)
             {                
-                leapTranslateUpdate(frame, translateMovement);
+                leapTranslateUpdate(frame, translateMovement, rightHand);
             }
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    ROTATION   /////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
-            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked())
+            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && leftHand.pinchStrength() == 1)
             {
-                leapRotateUpdate(frame, rotateMovement);
+                leapRotateUpdate(frame, rotateMovement,rightHand);
 
             }
 
@@ -6407,9 +6467,9 @@ void MainWindow::LeapMotion()
             //////////////////////////    SCALING       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkScale && this->ui->checkBoxLeapTracking->isChecked())
+            if(chkScale && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && leftHand.pinchStrength() == 1)
             {
-                leapScaleUpdate(frame, scaleMovement);
+                leapScaleUpdate(frame, scaleMovement, rightHand);
             }
 
 
