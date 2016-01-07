@@ -3165,10 +3165,11 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         if (frame.hands().leftmost().isLeft())
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
 
-        if (leftHand.fingers().frontmost().id() == leftIndex.id())
+///       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
+       if (extendedLeft.count() == 0)
             this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
 
-        if(leftThumb.isExtended())
+        if(leftHand.grabStrength() == 1)
             this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
     }
 
@@ -3177,18 +3178,23 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         if (frame.hands().rightmost().isRight())
             this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
 
-        if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id())
+        if(rightHand.pinchStrength() == 1)
             this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
 
-        if(rightThumb.isExtended())
+        if(rightHand.grabStrength() == 1)
             this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
     }
 
 
     //// WE TRACK THE LEFT HAND
 
-    if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()
-            &&   leftThumb.isExtended()  && leftHandActive)
+    if(
+            (frame.hands().leftmost().isLeft())
+            //&& (leftHand.grabStrength() == 1)
+            && (extendedLeft.count() == 0)
+            && (leftHandActive  )
+            )
+//          &&   leftHand.translationProbability(controller_->frame(1)) > 0.7)
     {
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -3199,10 +3205,14 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
 
         /// Get the Leap Motion Vector
-        Vector hand1OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-        Vector hand1NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
+        Vector hand1OldPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+        Vector hand1NewPos = controller_->frame().hands().leftmost().stabilizedPalmPosition();
+
+        //controller_->frame().hands().leftmost().
 
         Vector leapLeftMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+        ///
+        ///Vector leapLeftMove = leftHand.translation(controller_->frame(1));
 
         /// Get the Camera Orientation and angle
         double * camOrientation = camera->GetOrientationWXYZ();
@@ -3248,8 +3258,12 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     }
 
     //// WE TRACK THE RIGHT HAND
-    if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id()
-            && rightThumb.isExtended() && rightHandActive)
+    if(
+            (frame.hands().rightmost().isRight())
+            //&& (leftHand.grabStrength() == 1)
+            && (extendedRight.count() == 0)
+            && (rightHandActive  )
+            )
     {
         ////////////////////////////////////////////////////////
         /// \brief Second Hand capture
@@ -3264,8 +3278,8 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         //                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
         //                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
         /// Get the Leap Motion Vector
-        Vector hand2OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-        Vector hand2NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
+        Vector hand2OldPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+        Vector hand2NewPos = controller_->frame().hands().rightmost().stabilizedPalmPosition();
 
         Vector leapRightMove = hand2NewPos-hand2OldPos;  /// Vector of the Finger Movement in Leap SPACE
 
@@ -6148,7 +6162,7 @@ void MainWindow::leapTrackingOn(bool arg1)
     {
         int * screenSize = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetSize();
 
-        std::cout << "screen size [x,y]: " << screenSize[0] << ", " << screenSize[1] << endl;
+//        std::cout << "screen size [x,y]: " << screenSize[0] << ", " << screenSize[1] << endl;
 
         this->leapTrackingActor->SetPosition(screenSize[0] / 2 - 100, screenSize[1] - 50);
 
@@ -6202,7 +6216,18 @@ void MainWindow::LeapMotion()
         const Frame frame = controller_->frame();
         //const FingerList fingers = controller_->frame().fingers();
 
-        controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
+        //controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
+        controller_->enableGesture(Gesture::TYPE_KEY_TAP, true);
+        controller_->enableGesture(Gesture::TYPE_CIRCLE, true);
+
+        controller_->config().setFloat("Gesture.Circle.MinRadius", 15.0);
+        controller_->config().setFloat("Gesture.Circle.MinArc", .5);
+        controller_->config().save();
+
+        controller_->config().setFloat("Gesture.KeyTap.MinDownVelocity", 40.0);
+        controller_->config().setFloat("Gesture.KeyTap.HistorySeconds", .2);
+        controller_->config().setFloat("Gesture.KeyTap.MinDistance", 10.0);
+        controller_->config().save();
 
         bool shouldSubVol = this->leapSubVolMode;
         bool shouldAxisSlice =  this->leapAxisSliceMode;
@@ -6307,34 +6332,144 @@ void MainWindow::LeapMotion()
 
 
 
-            std::cout << std::fixed << std::setprecision(2) ;
-            std::cout << "Hands.Count(): " << frame.hands().count()
-                                //<< "\tRight hand Valid: " << rightHand.isValid()
-                                 << "\tRight hand isRight: " << rightHand.isRight()
-                                  << "\t";
+///            std::cout << std::fixed << std::setprecision(2) ;
+///            std::cout << "Hands.Count(): " << frame.hands().count()
+///                                //<< "\tRight hand Valid: " << rightHand.isValid()
+///                                 << "\tRight hand isRight: " << rightHand.isRight()
+///                                  << "\t";
 
 //            if (frame.gestures().count() > 0)
 //            {
 //                if (frame.gestures()[0].type() == Gesture::TYPE_SCREEN_TAP)
-//                    std::cout << "Pressed: " << frame.gestures()[0].id() << endl ;
+//                    std::cout << "SCREEN TAP: " << frame.gestures()[0].id() << endl ;
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_KEY_TAP)
+//                {
+//                    std::cout << "KEY TAP: " << frame.gestures()[0].id() << endl ;
+//                     (this->ui->buttonTransformActive->setChecked
+//                            (!this->ui->buttonTransformActive->isChecked()));
+//                }
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_CIRCLE)
+//                {
+//                    std::cout << "CIRCLE: " << frame.gestures()[0].id() << endl ;
+
+//                }
+
 //            }
+//            if (frame.gestures().count() > 0)
+//                std::cout << "Gestures Found: " << frame.gestures().count()            << endl;
+
+          GestureList gestures = leftHand.frame().gestures();
+            //GestureList gestures = rightHand.frame().gestures();
+
+            for (GestureList::const_iterator gesture = gestures.begin(); gesture != leftHand.frame().gestures().end(); gesture++)
+            {
+                    switch ((*gesture).type())
+                    {
+                        case Gesture::TYPE_CIRCLE:
+                    {
+                        CircleGesture circle = CircleGesture(*gesture);
+                        std::cout << "radius: " << circle.radius() << endl;
+
+                        if (circle.radius() > 40)
+                        {
+
+                            if((*gesture).state() == Gesture::STATE_STOP)
+                            {
+                                std::cout << "CIRCLE : STOP " << (*gesture).id() << endl ;
+
+                            }
+                            if((*gesture).state() == Gesture::STATE_START)
+                            {
+                                if (systemTab == SubVolume)
+                                    this->on_buttonSubVolReset_clicked();
+
+                                if(systemTab == SliceArb)
+                                    this->on_buttonArbReset_clicked();
+
+                                if (systemTab == Information)
+                                    this->on_buttonCameraReset_clicked();
+
+                                std::cout << "CIRCLE : BEGIN" << (*gesture).id() << endl ;
+
+                            }   /// if(*gesture).state)
+                        }
+                            else
+                            {
+                                    //std::cout << "CIRCLE : SOMETHING " << (*gesture).id() << endl ;
+                            }
+                           break;
+                        }
+                    case Gesture::TYPE_KEY_TAP:
+                        {
+                            std::cout << "KEY TAP: " << (*gesture).id() << endl ;
+                                (this->ui->buttonTransformActive->setChecked
+                                (!this->ui->buttonTransformActive->isChecked()));
+                            break;
+                        }
+                    case Gesture::TYPE_SCREEN_TAP:
+                    {
+                        std::cout << "SCREEN TAP: " << (*gesture).id() << endl ;
+                        (this->ui->buttonTransformActive->setChecked
+                        (!this->ui->buttonTransformActive->isChecked()));
+                        break;
+                    }
+                    default:
+                        std::cout << "INVALID GESTURE" << endl;
+                            break;
+                    }
+            }
+
+
+//            if (frame.gestures(controller_->frame(1)).count() > 0)
+//            {
+//                if (frame.gestures()[0].type() == Gesture::TYPE_SCREEN_TAP)
+//                    std::cout << "SCREEN TAP: " << frame.gestures()[0].id() << endl ;
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_KEY_TAP)
+//                {
+//                     Gesture keyTap = frame.gestures()[0];
+
+//                    // if (keyTap.state() == Gesture::STATE_START)
+//                  //   {
+//                        std::cout << "KEY TAP: " << frame.gestures()[0].id() << endl ;
+//                        (this->ui->buttonTransformActive->setChecked
+//                            (!this->ui->buttonTransformActive->isChecked()));
+//                  //   }
+//                }
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_CIRCLE)
+//                {
+//                    Gesture circle = frame.gestures()[0];
+
+//                    if (circle.state() == Gesture::STATE_START)
+//                        std::cout << "CIRCLE: " << frame.gestures()[0].id() << endl ;
+
+//                }
+
+//            }
+
+
+
+
 
             if (leftHand.grabStrength() == 1 )
             {
                 leapHandTriggerBuffer++;
                 if (leapHandTriggerBuffer == 50)
                 {
-                    std::cout << "Toggled" << endl;
+                    std::cout << "leapHandTrigger" << endl;
                     leapHandTriggerBuffer = 0;
                     //this->ui->checkBoxLeapTracking->toggle();
 
                 }
             }
 
-            std::cout << "Grab Strength:" << leftHand.grabStrength()
-                               << "\t Pinch Strength: " << leftHand.pinchStrength()
-                               <<  endl;
-                std::cout << endl;
+///            std::cout << "Grab Strength:" << leftHand.grabStrength()
+///                               << "\t Pinch Strength: " << leftHand.pinchStrength()
+///                               <<  endl;
+///                std::cout << endl;
 
             bool grabLeft = false;
 
@@ -6373,6 +6508,16 @@ void MainWindow::LeapMotion()
             }
 
 
+//                std::cout  << "Pitch: " <<  vtkMath::DegreesFromRadians(rightHand.direction().pitch()) << "\t"
+//                                    << "Yaw: " <<    vtkMath::DegreesFromRadians(rightHand.direction().yaw()) << "\t"
+//                                     << "Roll: " <<    vtkMath::DegreesFromRadians(rightHand.direction().roll()) << "\t"
+//                                      << endl;
+ //           if (vtkMath::DegreesFromRadians(rightHand.direction().roll())  > 150 )
+//                    &&
+//                    vtkMath::DegreesFromRadians(rightHand.direction().picht())  > -150
+//            {
+//                std::cout << "calculating " << endl;
+//            }
 
 
             Hand hand = frame.hands().rightmost();                
@@ -6505,7 +6650,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    SUB-VOL TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if((shouldSubVol) &&  frame.hands().count() >= 1)
+            if((shouldSubVol) &&  frame.hands().count() >= 1 && !this->ui->buttonTransformActive->isChecked())
             {
                leapSubVolumeUpdate(frame, hand, subVolRightHand, subVolLeftHand);
             }
@@ -6514,7 +6659,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    TRANSLATION   //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkTranslate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid())
+            if(chkTranslate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() && this->ui->buttonTransformActive->isChecked())
             {                
                 leapTranslateUpdate(frame, translateMovement, rightHand);
             }
@@ -6523,7 +6668,7 @@ void MainWindow::LeapMotion()
             //////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    ROTATION   /////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
-            if(chkRotate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() )
+            if(chkRotate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() && this->ui->buttonTransformActive->isChecked() )
             {
                 leapRotateUpdate(frame, rotateMovement,rightHand);
 
@@ -6533,7 +6678,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    SCALING       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkScale && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() )
+            if(chkScale && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid()  && this->ui->buttonTransformActive->isChecked())
             {
                 leapScaleUpdate(frame, scaleMovement, rightHand);
             }
