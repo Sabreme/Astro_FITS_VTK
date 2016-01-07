@@ -3006,11 +3006,11 @@ void MainWindow::leapBeginSliceArb()
 
 void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool &sliceMovement)
 {
-    const FingerList rightFingers = frame.hands().rightmost().fingers();
-    const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
+    const FingerList rightFingers = hand.fingers();
+    const FingerList extendedRight = hand.fingers().extended();
 
-    Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-    Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+    //Finger rightThumb = hand.fingers().fingerType(Finger::TYPE_THUMB))[0];
+    //Finger rightIndex = hand.fingers().fingerType(Finger::TYPE_INDEX))[0];
 
     //leapMovement = false;
 
@@ -6370,7 +6370,7 @@ void MainWindow::LeapMotion()
                         case Gesture::TYPE_CIRCLE:
                     {
                         CircleGesture circle = CircleGesture(*gesture);
-                        std::cout << "radius: " << circle.radius() << endl;
+                        ///std::cout << "radius: " << circle.radius() << endl;
 
                         if (circle.radius() > 40)
                         {
@@ -6410,7 +6410,8 @@ void MainWindow::LeapMotion()
                         }
                     case Gesture::TYPE_SCREEN_TAP:
                     {
-                        std::cout << "SCREEN TAP: " << (*gesture).id() << endl ;
+                        std::cout  << "SCREEN TAP: " << (*gesture).id()
+                                            << "\t State: " << (*gesture).state() << endl ;
                         (this->ui->buttonTransformActive->setChecked
                         (!this->ui->buttonTransformActive->isChecked()));
                         break;
@@ -6641,9 +6642,9 @@ void MainWindow::LeapMotion()
             //////////////////////////  ARB  SLICE TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if((shouldArbSlice) && (frame.hands().count() ==1) && !this->ui->checkBoxLeapTracking->isChecked())
+            if((shouldArbSlice) && (rightHand.isValid()) && !this->ui->checkBoxLeapTracking->isChecked())
             {
-                leapArbSliceUpdate( frame, hand, sliceMovement);
+                leapArbSliceUpdate( frame, rightHand, sliceMovement);
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
