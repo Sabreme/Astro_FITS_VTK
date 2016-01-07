@@ -6350,13 +6350,13 @@ void MainWindow::LeapMotion()
             /// USE FINGERS TOGGLE
            if (leftHand.fingers().extended().count() == 0 && leftHand.isLeft())
            {
-               this->ui->checkBoxLeapTracking->setChecked(true);
+               this->leapTrackingOn(true);
                 grabLeft = true;
            }
            else
            {
-               this->ui->checkBoxLeapTracking->setChecked(false);
-
+                 if (!this->ui->checkBoxLeapTracking->isChecked())
+                     this->leapTrackingOn(false);
            }
 
 
@@ -6514,7 +6514,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    TRANSLATION   //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid() && useLeftHand)
+            if(chkTranslate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid())
             {                
                 leapTranslateUpdate(frame, translateMovement, rightHand);
             }
@@ -6523,7 +6523,7 @@ void MainWindow::LeapMotion()
             //////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    ROTATION   /////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
-            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && useLeftHand)
+            if(chkRotate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() )
             {
                 leapRotateUpdate(frame, rotateMovement,rightHand);
 
@@ -6533,7 +6533,7 @@ void MainWindow::LeapMotion()
             //////////////////////////    SCALING       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkScale && this->ui->checkBoxLeapTracking->isChecked() && rightHand.isValid()  && useLeftHand)
+            if(chkScale && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() )
             {
                 leapScaleUpdate(frame, scaleMovement, rightHand);
             }
