@@ -837,6 +837,10 @@ void MainWindow::stopUserTest()
 
 void MainWindow::saveSurvey()
 {
+    /// We first grab the Results before we close the Dialogbox
+    userTest->importSurveyResults(surveyDlg->getUserResults());
+
+    std::cout << "Results Saved" << endl;
 
     surveyDlg->close();
     //// UserTest Window Returns after Survey

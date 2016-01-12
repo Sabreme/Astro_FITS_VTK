@@ -72,6 +72,7 @@ public slots:
 
     void importSystemResults(QString results);
     void importUserResults(QString results);
+    void importSurveyResults(QString results);
 
 
 

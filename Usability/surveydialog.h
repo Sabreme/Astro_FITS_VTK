@@ -20,6 +20,8 @@ public:
     explicit SurveyDialog(QWidget *parent = 0);
     ~SurveyDialog();
 
+    QString getUserResults();
+
 
 private slots:
     void on_buttonSubmit_clicked();
@@ -55,6 +57,8 @@ private:
     QButtonGroup * group6, * group7, *group8, *group9, *groupD;
 
     int userAnswers[10];
+
+    int userScore =0;
 };
 
 #endif // SURVEYDIALOG_H

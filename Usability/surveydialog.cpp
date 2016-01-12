@@ -15,13 +15,39 @@ SurveyDialog::~SurveyDialog()
     delete ui;
 }
 
+QString SurveyDialog::getUserResults()
+{
+//    QString results = "";
+
+//    for (int i = 0; i < 10; i++ )
+//    {
+//         results += QString ("[%1:%2], ").arg(i +1).arg(userAnswers[i]);
+//    }
+
+    QString results = "[";
+
+    for (int i = 0; i < 10; i++ )
+    {
+        if (i == 9)
+         results += QString (" %1 ").arg(userAnswers[i]);
+        else
+         results += QString (" %1 ,").arg(userAnswers[i]);
+    }
+
+    results += QString("], [SUS] %1").arg(userScore) ;
+
+    return results;
+}
+
 void SurveyDialog::on_buttonSubmit_clicked()
 {
 //    for (int i = 0; i < 10; i++ )
 //    {
 //        std::cout << "Question: " << i << "\t Answer: " << userAnswers[i] << std::endl;
 //    }
-    std::cout << "SUS Score = " << calculateScore() << std::endl;
+    //std::cout << "SUS Score = " << calculateScore() << std::endl;
+
+    userScore = calculateScore();
 
     saveSurvey();
 
@@ -33,7 +59,7 @@ void SurveyDialog::on_buttonSubmit_clicked()
 void SurveyDialog::selectionMade(QAbstractButton *radioButton)
 {
     QString name = radioButton->objectName();
-    std::cout << radioButton->objectName().toStdString() << std::endl;
+    ///std::cout << radioButton->objectName().toStdString() << std::endl;
 
     char question = name.at(5).toAscii();
     char answer = name.at(9).toAscii();

@@ -182,6 +182,54 @@ void UserTesting::importUserResults(QString results)
     }
 }
 
+void UserTesting::importSurveyResults(QString results)
+{
+    QString task;
+    QString medium;
+    QString taskNo;
+
+    ///////    METHOD RADIO BUTTONS   /////////////
+    if (this->ui->radioLeap->isChecked() )
+        medium = "Leap";
+    if (this->ui->radioMouse->isChecked() )
+        medium = "Mouse";
+    if (this->ui->radioTouch->isChecked() )
+        medium = "Touch";
+
+    ///////    TASK RADIO BUTTONS   /////////////
+    if (this->ui->radioTask1->isChecked() )
+        taskNo = "1";
+    if (this->ui->radioTask2->isChecked() )
+        taskNo = "2";
+    if (this->ui->radioTask3->isChecked() )
+        taskNo = "3";
+
+//    int seconds = this->ui->timeEdit->time().second();
+//    int minutes = this->ui->timeEdit->time().minute();
+
+    task = GetCurrentTask(this->ui->spinBoxUSERID->value() - 1);
+
+    int userID = this->ui->spinBoxUSERID->value();
+    int sessionID = userID / 3 ;
+    if (userID % 3 != 0)
+        sessionID++;
+    QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3 ,Prototype: %4 ," + results % "\n")
+                                .arg(userID).arg(taskNo).arg(task).arg(medium);
+
+    /////////////////////////////////////////////////////
+    ///////////////////////
+    /// SAVE RESULT FOR SYSTEM RESULTS
+    ///
+
+    QString output = QString("TESTS/UserID_%1_Task_%2_%3_Survey.txt").arg(userID).arg(taskNo).arg(medium);
+
+    QFile file(output);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    out << result;
+    file.close();
+}
+
 void UserTesting::loadCounterBalance(QString filename)
 {
     QFile file(filename);
