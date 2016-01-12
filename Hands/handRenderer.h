@@ -33,7 +33,7 @@ public:
     void drawJoints(visibleHand activeHand, vtkRenderer *renderer);
     void drawBones(visibleHand activeHand, vtkRenderer *renderer);
 
-     void translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds );
+     void translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds , double size);
 
      void setStartLocation(visibleHand startHand, double *cubeCenter);
 

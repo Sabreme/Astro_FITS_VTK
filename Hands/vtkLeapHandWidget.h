@@ -149,7 +149,7 @@ public:
 
   double boxBounds[6] = {-2, 2, 1, 5, -2,3};
   void GeneratActors();
-  void  translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds);
+  void  translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds, double size);
 
   /////////////////////////////////////////////////////////////////////////////////
 

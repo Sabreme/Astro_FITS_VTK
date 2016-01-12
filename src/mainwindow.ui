@@ -1436,6 +1436,9 @@ border:none;
       <property name="text">
        <string>ACTIVE</string>
       </property>
+      <property name="shortcut">
+       <string>T</string>
+      </property>
       <property name="checkable">
        <bool>true</bool>
       </property>
@@ -4618,7 +4621,7 @@ border:none;
      <x>0</x>
      <y>0</y>
      <width>1341</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

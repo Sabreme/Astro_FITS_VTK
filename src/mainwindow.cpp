@@ -1636,12 +1636,14 @@ void MainWindow::loadFitsFile(QString filename)
     /// Leapmotion TRACKING Message
     ///
     ///
+    ///
+    int * screenSize = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetScreenSize();
 
     this->leapTrackingActor = vtkTextActor::New();
-    this->leapTrackingActor->GetTextProperty()->SetFontSize(20);
+    this->leapTrackingActor->GetTextProperty()->SetFontSize(30);
     this->leapTrackingActor->GetTextProperty()->SetBold(true);
 
-    this->leapTrackingActor->SetPosition(20,550);
+
     this->leapTrackingActor->SetInput("TRACKING..");
     this->leapTrackingActor->GetTextProperty()->SetColor(1,1,1);
 
@@ -3032,6 +3034,846 @@ void MainWindow::leapBeginSliceArb()
 
     this->ui->tabLogWidget->insertTab(0, this->ui->SliceVolTab2,"Arbitrary Slice");
     this->ui->tabLogWidget->setCurrentIndex(0);
+}
+
+void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool &sliceMovement)
+{
+    const FingerList rightFingers = hand.fingers();
+    const FingerList extendedRight = hand.fingers().extended();
+
+    //Finger rightThumb = hand.fingers().fingerType(Finger::TYPE_THUMB))[0];
+    //Finger rightIndex = hand.fingers().fingerType(Finger::TYPE_INDEX))[0];
+
+    //leapMovement = false;
+
+    //  std::cout << " 1. Movement = " << leapMovement << "\t";
+
+    //std::cout << "Extended Count: " << extendedRight.count() << endl;
+    if(extendedRight.count() ==5)
+    {
+
+        //////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////
+        /// \brief ROTATE STATE
+        ///
+        Vector newNormal = hand.palmNormal();
+        double newNormalD[3] = {newNormal.x, newNormal.y, newNormal.z};
+
+
+        //                    vtkPlane * plane = vtkPlane::New();
+        //                    this->customArbPlaneWidget->GetPlane(plane);
+        //                    vtkMath::Normalize(newNormalD);
+
+        // plane->SetNormal(newNormalD);
+        this->customArbPlaneWidget->SetNormal(newNormalD);
+        this->customArbPlaneWidget->UpdatePlacement();
+
+        //this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
+        //this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
+        this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
+
+        if(this->userTestRunning())
+        {
+            leapHand1Move = true;
+            leapHand1FrameBuffer ++;
+            sliceMovement = true;
+        }
+    }
+
+    if(extendedRight.count() == 0)
+    {
+        //////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////
+        /// \brief PUSH STATE
+        ///
+        Vector newMotion = frame.translation(controller_->frame(1));
+        double newMotionD[3] = {newMotion.x, newMotion.y, newMotion.z};
+
+        vtkPlane * plane = vtkPlane::New();
+        this->customArbPlaneWidget->GetPlane(plane);
+
+        plane->Push(vtkMath::Dot(newMotionD, plane->GetNormal()));
+        this->customArbPlaneWidget->SetOrigin(plane->GetOrigin());
+
+        this->customArbPlaneWidget->UpdatePlacement();
+
+        ///////////////////////////////////////////////////////////
+
+        //   this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
+        //  this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
+        this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
+
+        if(this->userTestRunning())
+        {
+            leapHand1Move = true;
+            leapHand1FrameBuffer ++;
+            sliceMovement = true;
+        }
+    }
+}
+
+void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHand, bool &subVolLeftHand)
+{
+    /// Assume the first hand is the Right Hand. If it is the right hand then 2nd Hand is left.
+
+    Hand rightHand = frame.hands().rightmost();
+    Hand leftHand = frame.hands().leftmost();
+    bool leftHandActive = true;
+    bool rightHandActive = true;
+
+    /// If Not the Right Hand then reverse outcome
+    /// If RightHand is Active then
+    if (frame.hands().count() == 1)
+    {
+        if (frame.hands().frontmost().isRight())
+            leftHandActive = false;
+        else
+            rightHandActive = false;
+    }
+
+    vtkRenderer * renderer = this->defaultRenderer;
+    vtkCamera *camera = renderer->GetActiveCamera();
+
+    //                if (leftHand.isLeft() && frame.hands.count() == 2)
+    //                {
+    //                    firstHand
+    //                }
+
+
+    //                if (firstHand.isRight())
+    //                    Hand rightHand = firstHand;
+    //                else
+    //                    Hand leftHand = firstHand;
+
+    //                if (frame.hands().count() > 1)
+    //                    if
+
+
+
+    //                const FingerList leftFingers = frame.hands().leftmost().fingers();
+    //                const FingerList rightFingers = frame.hands().rightmost().fingers();
+    const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
+    const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
+
+    Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
+    Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
+
+    Finger leftIndex = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+    Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+
+    /// PRINTOUT OF STATUSSES
+    //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
+    //                std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
+
+    //                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
+    //                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
+
+    //                std::cout << "left: #" << extendedLeft.count() << "\t";
+    //                std::cout << "Right #: " << extendedRight.count() << "\t";
+
+    //                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
+    //                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
+
+    /////////////////////////////////////////////////////////////
+    //                std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
+
+    //                std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
+
+    //
+
+    //                float leftPinch = frame.hands().leftmost().pinchStrength();
+
+    //               float rightPinch = frame.hands().rightmost().pinchStrength();
+
+
+    //Finger leftFinger =
+
+
+    //                if( leftPinch > 0.5 && rightPinch > 0.5)
+    //                {
+
+    if(leftHandActive)
+    {
+        if (frame.hands().leftmost().isLeft())
+            this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
+
+///       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
+       if (extendedLeft.count() == 0)
+            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+
+        if(leftHand.grabStrength() == 1)
+            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+    }
+
+    if (rightHandActive)
+    {
+        if (frame.hands().rightmost().isRight())
+            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
+
+        if(rightHand.pinchStrength() == 1)
+            this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+
+        if(rightHand.grabStrength() == 1)
+            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+    }
+
+
+    //// WE TRACK THE LEFT HAND
+
+    if(
+            (frame.hands().leftmost().isLeft())
+            //&& (leftHand.grabStrength() == 1)
+            && (extendedLeft.count() == 0)
+            && (leftHandActive  )
+            )
+//          &&   leftHand.translationProbability(controller_->frame(1)) > 0.7)
+    {
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////    FINGER ACCURACY BUT POOR DEPTH CAPTURE    ///////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// Vector newPosition = hand.translation(controller_->frame(1));
+        ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
+
+        /// Get the Leap Motion Vector
+        Vector hand1OldPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+        Vector hand1NewPos = controller_->frame().hands().leftmost().stabilizedPalmPosition();
+
+        //controller_->frame().hands().leftmost().
+
+        Vector leapLeftMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+        ///
+        ///Vector leapLeftMove = leftHand.translation(controller_->frame(1));
+
+        /// Get the Camera Orientation and angle
+        double * camOrientation = camera->GetOrientationWXYZ();
+        double angle = camOrientation[0];
+        Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
+
+        const double PI = 3.141592653589793;
+        /// Generate the Matrix and Transforms
+        Matrix transformMatrix = Matrix();
+        transformMatrix.identity();
+        transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
+        Vector rotatedLeftVector = transformMatrix.transformDirection(leapLeftMove);
+
+        /// Get the pointWidget Position
+        double * newPosition;
+        double oldPosition[3];
+
+        pointWidget1_->GetPosition(oldPosition);
+
+        /// Generate the Transform and Apply it
+        vtkTransform * AggregateTransform =  vtkTransform::New();
+        AggregateTransform->Identity();
+        AggregateTransform->Translate(rotatedLeftVector.x, rotatedLeftVector.y, rotatedLeftVector.z);
+        newPosition = AggregateTransform->TransformPoint(oldPosition);
+
+        /// Apply the New Position to the widget
+        pointWidget1_->SetPosition(newPosition[0],newPosition[1],newPosition[2]);
+
+        pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
+
+        vtkProperty * pointerProperty = pointWidget1_->GetProperty();
+
+
+        pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
+        pointWidget1_->InvokeEvent(vtkCommand::StartInteractionEvent);
+
+        if(this->userTestRunning())
+        {
+            leapHand2Move = true;
+            leapHand2FrameBuffer ++;
+            subVolLeftHand = true;
+        }
+    }
+
+    //// WE TRACK THE RIGHT HAND
+    if(
+            (frame.hands().rightmost().isRight())
+            //&& (leftHand.grabStrength() == 1)
+            && (extendedRight.count() == 0)
+            && (rightHandActive  )
+            )
+    {
+        ////////////////////////////////////////////////////////
+        /// \brief Second Hand capture
+        ///
+
+
+        ///Vector newPosition2 = hand2.translation(controller_->frame(1));
+        ///Vector newPosition2 = hand2.translation(controller_->frame(1).fingers().frontmost().tipPosition());
+        ///
+
+
+        //                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
+        //                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
+        /// Get the Leap Motion Vector
+        Vector hand2OldPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+        Vector hand2NewPos = controller_->frame().hands().rightmost().stabilizedPalmPosition();
+
+        Vector leapRightMove = hand2NewPos-hand2OldPos;  /// Vector of the Finger Movement in Leap SPACE
+
+        /// Get the Camera Orientation and angle
+        double * camOrientation = camera->GetOrientationWXYZ();
+        double angle = camOrientation[0];
+        Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
+
+        const double PI = 3.141592653589793;
+        /// Generate the Matrix and Transforms
+        Matrix transformMatrix = Matrix();
+        transformMatrix.identity();
+        transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
+        Vector rotatedRightVector = transformMatrix.transformDirection(leapRightMove);
+
+        /// Get the pointWidget Position
+        /// USE the Same Position Indicators
+        double * newPosition;
+        double oldPosition[3];
+
+        pointWidget2_->GetPosition(oldPosition);
+
+        /// Generate the Transform and Apply it
+        vtkTransform * AggregateTransform =  vtkTransform::New();
+        AggregateTransform->Identity();
+        AggregateTransform->Translate(rotatedRightVector.x, rotatedRightVector.y, rotatedRightVector.z);
+        newPosition = AggregateTransform->TransformPoint(oldPosition);
+
+        /// Apply the New Position to the widget
+        pointWidget2_->SetPosition(newPosition[0],newPosition[1],newPosition[2]);
+
+        pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
+
+        vtkProperty * pointerProperty =
+                pointWidget2_->GetProperty();
+
+        pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
+        //pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
+
+        if(this->userTestRunning())
+        {
+            leapHand1Move = true;
+            leapHand1FrameBuffer ++;
+            subVolRightHand = true;
+        }
+
+    }
+    double* finalPos1 = pointWidget1_->GetPosition();
+    double* finalPos2 = pointWidget2_->GetPosition();
+
+    trackSubVolume(finalPos1, finalPos2);
+}
+
+void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand hand)
+{
+    leapHand1Move = true;
+    leapHand1FrameBuffer ++;
+    translateMovement = true;
+
+//    this->ui->labelTranslation->setFont(boldFont);
+//    this->ui->buttonTransfTranslation->setEnabled(true);
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    /// \brief newPosition - CURRENT REPRESENTATION
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    vtkRenderer * renderer = this->defaultRenderer;
+    vtkCamera *camera = renderer->GetActiveCamera();
+
+    Vector newPosition = hand.translation(controller_->frame(1));
+    Vector newTranslation =hand.translation(controller_->frame(1));
+
+
+    vtkMatrix4x4 * cameraMatrix = camera->GetViewTransformMatrix();
+
+
+    //// FOR BEGINNERES
+    /// Now since we are grabbing the CameraMatrix.. we have to cater for the fact that the Camera may have been
+    /// rotated. So we have to Multply the Leap Translation Vector by the rotated camera to get the New Translaiton Vector
+    /// to apply to the CameraMatrix. By ysing the old fashioned Xt, Yt, Zt * Matrix COLUMNS
+
+    newTranslation.x =   (cameraMatrix->GetElement(0,0) * newPosition.x) +
+            (cameraMatrix->GetElement(1,0) * newPosition.y) +
+            (cameraMatrix->GetElement(2,0) * newPosition.z)  ;
+
+    newTranslation.y =   (cameraMatrix->GetElement(0,1) * newPosition.x) +
+            (cameraMatrix->GetElement(1,1) * newPosition.y) +
+            (cameraMatrix->GetElement(2,1) * newPosition.z)    ;
+
+    newTranslation.z =   (cameraMatrix->GetElement(0,2) * newPosition.x) +
+            (cameraMatrix->GetElement(1,2) * newPosition.y) +
+            (cameraMatrix->GetElement(2,2) * newPosition.z)    ;
+
+
+    vtkTransform* handMove = vtkTransform::New();
+
+    handMove->Identity();
+
+    handMove->Translate(-newTranslation.x, - newTranslation.y, -newTranslation.z);
+
+    camera->ApplyTransform(handMove);
+
+    /// ADDED INTERACTION CAPTURE
+    ///
+//                double* position;
+
+//                position = camera->GetPosition();
+
+//                ui->line_PosX->setText(QString::number(position[0], 'f', 0));
+//                ui->line_PosY->setText(QString::number(position[1], 'f', 0));
+//                ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
+
+    updateCameraPosition();
+}
+
+void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
+{
+    Matrix newRotation = hand.rotationMatrix(controller_->frame(3));
+
+
+
+    //std::cout << newRotation.toString() << endl;
+
+    vtkRenderer * renderer = this->defaultRenderer;
+    vtkCamera *camera = renderer->GetActiveCamera();
+
+    double * oldPosition = camera->GetPosition();
+    double * oldViewUp = camera->GetViewUp();
+    double * oldFocalPoint = camera->GetFocalPoint();
+    double * oldOrientation = camera->GetOrientation();
+
+
+    double position[3] = {oldPosition[0] , oldPosition[1], oldPosition[2] };
+    double viewUp[3] = {oldViewUp[0] , oldViewUp[1], oldViewUp[2] };
+    double focalPoint[3] = {oldFocalPoint[0] , oldFocalPoint[1], oldFocalPoint[2] };
+    double oriental[3] = {oldOrientation[0] , oldOrientation[1], oldOrientation[2] };
+
+    ///camera->SetFocalPoint(cameraFocalPoint);
+    ///
+
+
+    ///vtkMatrix4x4* cameraMatrix = camera->GetModelTransformMatrix();
+
+    vtkMatrix4x4* cameraMatrix = camera->GetModelTransformMatrix();
+
+    vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
+
+    rotationMatrix->Identity();
+    int index = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index] );
+            index++;
+        }
+    }
+
+//    std::cout << "----------------------------------" << endl;
+//    for (int i = 0; i < 4; i++)
+//    {
+//        std::cout << "[ " ;
+//        for (int j = 0; j < 4; j++)
+//        {
+//            rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index]);
+//            std::cout << newRotation.toArray4x4().m_array[index] << ", " ;
+//            index++;
+//        }
+//        std::cout << "]" << endl;
+//    }
+
+
+    vtkTransform* transform = vtkTransform::New();
+
+    transform ->Identity();
+
+    transform->SetMatrix(cameraMatrix);
+
+    transform->Translate( cameraFocalPoint);
+
+    transform->Concatenate(rotationMatrix);
+
+    transform->Translate(-cameraFocalPoint[0], -cameraFocalPoint[1], -cameraFocalPoint[2]);
+
+    camera->ApplyTransform(transform);
+
+
+
+
+
+//                double * newFP = transform->TransformDoublePoint(cameraFocalPoint);
+
+//                double newTFP[3] = {newFP[0] , newFP[1], newFP[2] };
+
+//                oldPosition = camera->GetPosition();
+//                oldViewUp = camera->GetViewUp();
+//                oldFocalPoint = camera->GetFocalPoint();
+//                oldOrientation = camera->GetOrientation();
+
+
+
+//                std::cout << std::fixed << std::setprecision(2) ;
+//                std::cout <<
+//                             "P:" << oldPosition[0] << ", " << oldPosition[1] << "," << oldPosition[2] << "\t" <<
+//                             "V:" << oldViewUp[0] << ", " << oldViewUp[1] << "," << oldViewUp[2] << "\t" <<
+//                             "FP:" << oldFocalPoint[0] << ", " << oldFocalPoint[1] << "," << oldFocalPoint[2] << "\t" <<
+
+
+
+//                             endl;
+
+
+
+    ///camera->SetFocalPoint(cameraFocalPoint);
+    ///
+
+    //camera->SetFocalPoint(newFP);
+    //camera->SetPosition(transform->TransformDoublePoint(oldPosition));
+    //camera->SetViewUp(transform->TransformDoublePoint(oldViewUp));
+    //camera->SetViewUp(viewUp);
+
+    /// ADDED INTERACTION CAPTURE
+    double* orientation;
+
+    orientation  = camera->GetOrientation();
+
+    ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
+    ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
+    ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
+
+    //renderer->ResetCameraClippingRange();
+    if(this->userTestRunning())
+    {
+        leapHand1Move = true;
+        leapHand1FrameBuffer ++;
+        rotateMovement = true;
+    }
+}
+
+void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
+{
+
+    vtkRenderer * renderer = this->defaultRenderer;
+    vtkCamera *camera = renderer->GetActiveCamera();
+
+    //float adjustmentFactor = 0.5;
+    //float scaleFactor = frame.scaleFactor(controller_->frame(1));
+    float scaleFactor = hand.scaleFactor(controller_->frame(2));
+
+
+    if (camera->GetParallelProjection())
+    {
+        camera->SetParallelProjection(camera->GetParallelScale() / scaleFactor);
+        //     qDebug() << "ScaleFactor Parallel = " << scaleFactor << endl;
+    }
+    else
+    {
+        camera->Dolly(scaleFactor);
+        renderer->ResetCameraClippingRange();
+        //     qDebug() << "ScaleFactor Normal = " << scaleFactor << endl;
+    }
+
+    double value ;
+
+    value = this->defaultCameraDistance /  camera->GetDistance();
+
+    ui->line_Scale->setText(QString::number(value, 'f', 2));
+
+    if(this->userTestRunning())
+    {
+        leapHand1Move = true;
+        leapHand1FrameBuffer ++;
+        scaleMovement = true;
+    }
+}
+
+void MainWindow::leapDiagnosticUpdate(Frame frame, Hand hand)
+{
+    if (hand.translationProbability(controller_->frame(1)) > 0.6)
+    {
+        Vector handPos = hand.palmPosition();
+        //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
+
+        double sensitivity = 0.01;
+        double offSetX = 0;
+        double offSetY = 2.5;
+        double offSetZ = 1;
+
+        double handPosPoint[3] = {handPos.x * sensitivity - offSetX,
+                                  handPos.y * sensitivity - offSetY,
+                                  handPos.z * sensitivity - offSetZ
+                                 };
+
+        this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
+
+        this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 0.0);
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////
+    /// \brief newNormal
+    ///
+
+    if (hand.rotationProbability(controller_->frame(1)) > 0.6)
+    {
+
+        Vector newNormal = hand.palmNormal();
+        double scale = 1.1;
+
+        double oldNormal[3] ;
+        this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
+        double newNormalD [3];
+        double theta, rotVector[3];
+
+        double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
+        double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
+        //double *center = leapDbgPlaneWidget->GetCenter();
+
+
+        newNormalD[0] = newNormal.x;
+        newNormalD[1] = newNormal.y;
+        newNormalD[2] = newNormal.z;
+
+        this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
+        this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
+
+
+        ///Compute the rotation vector using a transformation matrix
+        ///Note that is fnromals are aparelle then te rotation is either 0 or 180 Degrees
+
+        double dp = vtkMath::Dot(oldNormal, newNormalD);
+        if (dp >= 1.0)
+        {
+            return;    ///zero rotation
+        }
+
+        else if (dp <= -1.0)
+        {
+            theta = 180.0;
+            rotVector[0] = point1[0] - origin[0];
+            rotVector[1] = point1[1] - origin[1];
+            rotVector[2] = point1[2] - origin[2];
+        }
+        else
+        {
+            vtkMath::Cross(oldNormal, newNormalD,rotVector);
+            theta = vtkMath::DegreesFromRadians(acos(dp));
+
+
+        }
+
+        this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+        this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
+        this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    /// \brief Pinch Scaling
+    //////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    ///
+    ///
+    /// Compute the Scale Factor using the leap motion factor
+
+    /// The following code checks to see if the sensor has regained focus.
+    /// if so, we set the global_CameraPosition to the default value
+    /// Effectively functioning as a reset value.
+    /// We also have a skip value to true to not invert the slider.
+
+    if (hand.scaleProbability(controller_->frame(1)) > 0.6)
+    {
+        if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
+        {
+            this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
+            //                    std::cout << "Return focus" << endl;
+        }
+
+        this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
+
+        float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
+
+        double oldPosition = this->leapMarkerWidget->global_CameraPosition;
+
+        this->leapMarkerWidget->global_CameraPosition = oldPosition * (scaleFactor) ;
+
+        double newPosition = this->leapMarkerWidget->global_CameraPosition;
+
+
+        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+
+        //                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+
+        //                    if (colourRange < 0) colourRange = 0;
+        //                    else
+        //                        if(colourRange > 1) colourRange = 1;
+
+        //                    std::cout << "Scale Factor: " << scaleFactor
+        //                              << "\tPosition: " << newPosition
+        //                              << "\tColourRange: " << colourRange << endl;
+
+        if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting BIGGER - Blue Adjustment
+        {
+            /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+            ///
+            double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
+            if(colourRange > 1) colourRange = 1;
+
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
+                    //GetTubeProperty()->SetColor(colourRange,colourRange,1);
+                    GetTubeProperty()->SetColor(1.2-colourRange,1.2-colourRange,1);
+        }
+        else                                           /// SCHINKING.... ColourRange Getting SMALLER -- Red Adjustment
+        {
+            /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
+            ///
+            double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Start) ;
+            if(colourRange < 0) colourRange = 0;
+
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
+            static_cast<vtkSliderRepresentation3D*>
+                    (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
+                    //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
+                    GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
+
+            //                                std::cout << "Scale Factor: " << scaleFactor
+            //                                          << "\tPosition: " << newPosition
+            //                                          << "\tRGB(1,: " << colourRange * 0.8
+            //                                          << "," << colourRange * 0.8 << endl;
+        }
+    }
+}
+
+void MainWindow::leapHandWidgetUpdate(Frame frame, Hand hand)
+{
+    if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+    {
+        //                    Get the first hand
+        const Hand rightHandMoving = frame.hands().rightmost();
+        //                    Get the 2nd hand
+        const Hand leftHandMoving = frame.hands().leftmost();
+
+        bool leftHandActive = true;
+        bool rightHandActive = true;
+
+        /// If we have a single hand, we must determine which 1 it is
+        /// If not the Right hand, then reverse outcome
+        /// Otherwise we swap hands accordingly
+        if(frame.hands().count() == 1)
+        {
+            if (frame.hands().frontmost().isRight())
+                leftHandActive = false;
+            else
+                rightHandActive = false;
+        }
+
+        /// The Leap MOTION Interaction Box
+        InteractionBox leapBox = frame.interactionBox();
+
+
+        if (rightHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            leapHandWidget->translateHand(rightHand,rightHandMoving,outsideBounds, 0.01);
+        }/// if(hand.isLeft())
+
+        if (leftHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            leapHandWidget->translateHand(leftHand,leftHandMoving,outsideBounds, 0.01);
+        }   /// if(hand.isLeft())
+    }   ///    if (!frame.hands().isEmpty()
+}
+
+void MainWindow::leapHandModelUpdate(Frame frame)
+{
+    if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+    {
+        //                    Get the first hand
+        const Hand rightHandMoving = frame.hands().rightmost();
+        //                    Get the 2nd hand
+        const Hand leftHandMoving = frame.hands().leftmost();
+
+        bool leftHandActive = true;
+        bool rightHandActive = true;
+
+        /// If we have a single hand, we must determine which 1 it is
+        /// If not the Right hand, then reverse outcome
+        /// Otherwise we swap hands accordingly
+        if(frame.hands().count() == 1)
+        {
+            if (frame.hands().frontmost().isRight())
+                leftHandActive = false;
+            else
+                rightHandActive = false;
+        }
+
+        /// The Leap MOTION Interaction Box
+        InteractionBox leapBox = frame.interactionBox();
+
+
+        if (rightHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds, 0.1);
+        }/// if(hand.isLeft())
+
+        if (leftHandActive)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
+
+            Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
+
+
+            bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
+                    ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
+                    ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
+
+
+            handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds, 0.1);
+        }   /// if(hand.isLeft())
+    }   ///    if (!frame.hands().isEmpty()
 }
 
 
@@ -5349,7 +6191,15 @@ void MainWindow::on_buttonArbSliceContourBackground_clicked()
 void MainWindow::leapTrackingOn(bool arg1)
 {
     if (this->systemMode == Leap)
+    {
+        int * screenSize = this->ui->qvtkWidgetLeft->GetRenderWindow()->GetSize();
+
+//        std::cout << "screen size [x,y]: " << screenSize[0] << ", " << screenSize[1] << endl;
+
+        this->leapTrackingActor->SetPosition(screenSize[0] / 2 - 100, screenSize[1] - 50);
+
         this->leapTrackingActor->SetVisibility(arg1);
+    }
 }
 
 void MainWindow::on_actionLeapBasic_triggered()
@@ -5398,7 +6248,18 @@ void MainWindow::LeapMotion()
         const Frame frame = controller_->frame();
         //const FingerList fingers = controller_->frame().fingers();
 
-        controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
+        //controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
+        controller_->enableGesture(Gesture::TYPE_KEY_TAP, true);
+        controller_->enableGesture(Gesture::TYPE_CIRCLE, true);
+
+        controller_->config().setFloat("Gesture.Circle.MinRadius", 15.0);
+        controller_->config().setFloat("Gesture.Circle.MinArc", .5);
+        controller_->config().save();
+
+        controller_->config().setFloat("Gesture.KeyTap.MinDownVelocity", 40.0);
+        controller_->config().setFloat("Gesture.KeyTap.HistorySeconds", .2);
+        controller_->config().setFloat("Gesture.KeyTap.MinDistance", 10.0);
+        controller_->config().save();
 
         bool shouldSubVol = this->leapSubVolMode;
         bool shouldAxisSlice =  this->leapAxisSliceMode;
@@ -5410,25 +6271,27 @@ void MainWindow::LeapMotion()
 
         bool rotateMovement = false;
         bool translateMovement = false;
-        bool scaleMovememnt = false;
-        bool subVolLefHand = false;
+        bool scaleMovement = false;
+        bool subVolLeftHand = false;
         bool subVolRightHand = false;
         bool sliceMovement = false;
 
 
-
-        //bool chkTranslate = this->ui->checkBox_Translation->isChecked();
-        //bool chkRotate = this->ui->checkBox_Rotation->isChecked();
-        //bool chkScale = this->ui->checkBox_Scaling->isChecked();
+        //// --  MOVED THE CODE TO INSDE HAND LOOP TO SELECT PROBABILITIES BASED ON HAND MOVEMENT
+        ///bool chkTranslate = this->ui->checkBox_Translation->isChecked();
+        ///bool chkRotate = this->ui->checkBox_Rotation->isChecked();
+        ///bool chkScale = this->ui->checkBox_Scaling->isChecked();
+        ///
+        bool chkTranslate =false;
+        bool chkRotate =false;
+        bool chkScale = false;
 
         //        bool chkTranslate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Translation_2->isChecked();
         //        bool chkRotate = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Rotation_2->isChecked();
         //        bool chkScale = this->ui->checkBoxLeapTracking->isChecked() && this->ui->checkBox_Scaling_2->isChecked();
 
 
-        bool chkRotate = (frame.rotationProbability(controller_->frame(1)) > 0.6);
-        bool chkTranslate = (frame.translationProbability(controller_->frame(1)) > 0.6);
-        bool chkScale = (frame.scaleProbability(controller_->frame(1)) > 0.6);
+
 
         this->leapTrackingActor->SetVisibility(this->ui->checkBoxLeapTracking->isChecked());
 
@@ -5444,10 +6307,10 @@ void MainWindow::LeapMotion()
         /// IF Rotation Gesture is detected, we set the leapMovement Flag to True
         /// If the LeapMovement is already True, then  NO new gesture was detected
         ///
-        if(chkRotate)
-        {
+//        if(chkRotate)
+//        {
 
-        }
+//        }
 
         if (shouldSubVol)
         {
@@ -5476,8 +6339,221 @@ void MainWindow::LeapMotion()
 
         if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
         {
+            Hand rightHand, leftHand;
 
-            Hand hand = frame.hands().rightmost();
+            if (frame.hands().count() ==2)
+            {
+                if (frame.hands()[0].isRight())
+                {
+                    rightHand = frame.hands()[0];
+                    leftHand = frame.hands()[1];
+                }
+                else
+                {
+                    leftHand = frame.hands()[0];
+                    rightHand = frame.hands()[1];
+                }
+            }
+            else
+            {
+                if (frame.hands()[0].isRight())
+                    rightHand = frame.hands()[0];
+                 else
+                    leftHand = frame.hands()[0];
+            }
+
+
+
+///            std::cout << std::fixed << std::setprecision(2) ;
+///            std::cout << "Hands.Count(): " << frame.hands().count()
+///                                //<< "\tRight hand Valid: " << rightHand.isValid()
+///                                 << "\tRight hand isRight: " << rightHand.isRight()
+///                                  << "\t";
+
+//            if (frame.gestures().count() > 0)
+//            {
+//                if (frame.gestures()[0].type() == Gesture::TYPE_SCREEN_TAP)
+//                    std::cout << "SCREEN TAP: " << frame.gestures()[0].id() << endl ;
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_KEY_TAP)
+//                {
+//                    std::cout << "KEY TAP: " << frame.gestures()[0].id() << endl ;
+//                     (this->ui->buttonTransformActive->setChecked
+//                            (!this->ui->buttonTransformActive->isChecked()));
+//                }
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_CIRCLE)
+//                {
+//                    std::cout << "CIRCLE: " << frame.gestures()[0].id() << endl ;
+
+//                }
+
+//            }
+//            if (frame.gestures().count() > 0)
+//                std::cout << "Gestures Found: " << frame.gestures().count()            << endl;
+
+          GestureList gestures = leftHand.frame().gestures();
+            //GestureList gestures = rightHand.frame().gestures();
+
+            for (GestureList::const_iterator gesture = gestures.begin(); gesture != leftHand.frame().gestures().end(); gesture++)
+            {
+                    switch ((*gesture).type())
+                    {
+                        case Gesture::TYPE_CIRCLE:
+                    {
+                        CircleGesture circle = CircleGesture(*gesture);
+                        ///std::cout << "radius: " << circle.radius() << endl;
+
+                        if (circle.radius() > 40)
+                        {
+
+                            if((*gesture).state() == Gesture::STATE_STOP)
+                            {
+                                std::cout << "CIRCLE : STOP " << (*gesture).id() << endl ;
+
+                            }
+                            if((*gesture).state() == Gesture::STATE_START)
+                            {
+                                if (systemTab == SubVolume)
+                                    this->on_buttonSubVolReset_clicked();
+
+                                if(systemTab == SliceArb)
+                                    this->on_buttonArbReset_clicked();
+
+                                if (systemTab == Information)
+                                    this->on_buttonCameraReset_clicked();
+
+                                std::cout << "CIRCLE : BEGIN" << (*gesture).id() << endl ;
+
+                            }   /// if(*gesture).state)
+                        }
+                            else
+                            {
+                                    //std::cout << "CIRCLE : SOMETHING " << (*gesture).id() << endl ;
+                            }
+                           break;
+                        }
+                    case Gesture::TYPE_KEY_TAP:
+                        {
+                            std::cout << "KEY TAP: " << (*gesture).id() << endl ;
+                                (this->ui->buttonTransformActive->setChecked
+                                (!this->ui->buttonTransformActive->isChecked()));
+                            break;
+                        }
+                    case Gesture::TYPE_SCREEN_TAP:
+                    {
+                        std::cout  << "SCREEN TAP: " << (*gesture).id()
+                                            << "\t State: " << (*gesture).state() << endl ;
+                        (this->ui->buttonTransformActive->setChecked
+                        (!this->ui->buttonTransformActive->isChecked()));
+                        break;
+                    }
+                    default:
+                        std::cout << "INVALID GESTURE" << endl;
+                            break;
+                    }
+            }
+
+
+//            if (frame.gestures(controller_->frame(1)).count() > 0)
+//            {
+//                if (frame.gestures()[0].type() == Gesture::TYPE_SCREEN_TAP)
+//                    std::cout << "SCREEN TAP: " << frame.gestures()[0].id() << endl ;
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_KEY_TAP)
+//                {
+//                     Gesture keyTap = frame.gestures()[0];
+
+//                    // if (keyTap.state() == Gesture::STATE_START)
+//                  //   {
+//                        std::cout << "KEY TAP: " << frame.gestures()[0].id() << endl ;
+//                        (this->ui->buttonTransformActive->setChecked
+//                            (!this->ui->buttonTransformActive->isChecked()));
+//                  //   }
+//                }
+
+//                if (frame.gestures()[0].type() == Gesture::TYPE_CIRCLE)
+//                {
+//                    Gesture circle = frame.gestures()[0];
+
+//                    if (circle.state() == Gesture::STATE_START)
+//                        std::cout << "CIRCLE: " << frame.gestures()[0].id() << endl ;
+
+//                }
+
+//            }
+
+
+
+
+
+            if (leftHand.grabStrength() == 1 )
+            {
+                leapHandTriggerBuffer++;
+                if (leapHandTriggerBuffer == 50)
+                {
+                    std::cout << "leapHandTrigger" << endl;
+                    leapHandTriggerBuffer = 0;
+                    //this->ui->checkBoxLeapTracking->toggle();
+
+                }
+            }
+
+///            std::cout << "Grab Strength:" << leftHand.grabStrength()
+///                               << "\t Pinch Strength: " << leftHand.pinchStrength()
+///                               <<  endl;
+///                std::cout << endl;
+
+            bool grabLeft = false;
+
+
+//            ///   USE GRABSTRENGTH TOGGLE
+//            if (leftHand.grabStrength() == 1)
+//                 grabLeft = true;
+
+//             /// USE PINCHSTRENGTH TOGGLE
+//            if (leftHand.pinchStrength() == 1)
+//                 grabLeft = true;
+
+            /// USE FINGERS TOGGLE
+           if (leftHand.fingers().extended().count() == 0 && leftHand.isLeft())
+           {
+               this->leapTrackingOn(true);
+                grabLeft = true;
+           }
+           else
+           {
+                 if (!this->ui->checkBoxLeapTracking->isChecked())
+                     this->leapTrackingOn(false);
+           }
+
+
+
+
+            ///bool useLeftHand = true  ;
+            bool useLeftHand = grabLeft;
+
+            if (rightHand.isValid())
+            {
+                chkRotate = (rightHand.rotationProbability(controller_->frame(1)) > 0.6);
+                chkTranslate = (rightHand.translationProbability(controller_->frame(1)) > 0.6);
+                chkScale = (rightHand.scaleProbability(controller_->frame(1)) > 0.6);
+            }
+
+
+//                std::cout  << "Pitch: " <<  vtkMath::DegreesFromRadians(rightHand.direction().pitch()) << "\t"
+//                                    << "Yaw: " <<    vtkMath::DegreesFromRadians(rightHand.direction().yaw()) << "\t"
+//                                     << "Roll: " <<    vtkMath::DegreesFromRadians(rightHand.direction().roll()) << "\t"
+//                                      << endl;
+ //           if (vtkMath::DegreesFromRadians(rightHand.direction().roll())  > 150 )
+//                    &&
+//                    vtkMath::DegreesFromRadians(rightHand.direction().picht())  > -150
+//            {
+//                std::cout << "calculating " << endl;
+//            }
+
+
+            Hand hand = frame.hands().rightmost();                
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////  AXIS  SLICE TRACKING  /// //////////////////////////////////////
@@ -5598,495 +6674,36 @@ void MainWindow::LeapMotion()
             //////////////////////////  ARB  SLICE TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if((shouldArbSlice) && (frame.hands().count() ==1) && !this->ui->checkBoxLeapTracking->isChecked())
+            if((shouldArbSlice) && (rightHand.isValid()) && !this->ui->checkBoxLeapTracking->isChecked())
             {
-                const FingerList rightFingers = frame.hands().rightmost().fingers();
-                const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
-
-                Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-                Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-
-                //leapMovement = false;
-
-                //  std::cout << " 1. Movement = " << leapMovement << "\t";
-
-                //std::cout << "Extended Count: " << extendedRight.count() << endl;
-                if(extendedRight.count() ==5)
-                {
-
-                    //////////////////////////////////////////////////////////
-                    //////////////////////////////////////////////////////////
-                    /// \brief ROTATE STATE
-                    ///
-                    Vector newNormal = hand.palmNormal();
-                    double newNormalD[3] = {newNormal.x, newNormal.y, newNormal.z};
-
-
-                    //                    vtkPlane * plane = vtkPlane::New();
-                    //                    this->customArbPlaneWidget->GetPlane(plane);
-                    //                    vtkMath::Normalize(newNormalD);
-
-                    // plane->SetNormal(newNormalD);
-                    this->customArbPlaneWidget->SetNormal(newNormalD);
-                    this->customArbPlaneWidget->UpdatePlacement();
-
-                    //this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
-                    //this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
-                    this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
-
-                    if(this->userTestRunning())
-                    {
-                        leapHand1Move = true;
-                        leapHand1FrameBuffer ++;
-                        sliceMovement = true;
-                    }
-                }
-
-                if(extendedRight.count() == 0)
-                {
-                    //////////////////////////////////////////////////////////////
-                    //////////////////////////////////////////////////////////////
-                    /// \brief PUSH STATE
-                    ///
-                    Vector newMotion = frame.translation(controller_->frame(1));
-                    double newMotionD[3] = {newMotion.x, newMotion.y, newMotion.z};
-
-                    vtkPlane * plane = vtkPlane::New();
-                    this->customArbPlaneWidget->GetPlane(plane);
-
-                    plane->Push(vtkMath::Dot(newMotionD, plane->GetNormal()));
-                    this->customArbPlaneWidget->SetOrigin(plane->GetOrigin());
-
-                    this->customArbPlaneWidget->UpdatePlacement();
-
-                    ///////////////////////////////////////////////////////////
-
-                    //   this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
-                    //  this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
-                    this->customArbPlaneWidget->InvokeEvent(vtkCommand::InteractionEvent);
-
-                    if(this->userTestRunning())
-                    {
-                        leapHand1Move = true;
-                        leapHand1FrameBuffer ++;
-                        sliceMovement = true;
-                    }
-                }
+                leapArbSliceUpdate( frame, rightHand, sliceMovement);
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    SUB-VOL TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if((shouldSubVol) &&  frame.hands().count() >= 1)
+            if((shouldSubVol) &&  frame.hands().count() >= 1 && !this->ui->buttonTransformActive->isChecked())
             {
-                /// Assume the first hand is the Right Hand. If it is the right hand then 2nd Hand is left.
-
-                Hand rightHand = frame.hands().rightmost();
-                Hand leftHand = frame.hands().leftmost();
-                bool leftHandActive = true;
-                bool rightHandActive = true;
-
-                /// If Not the Right Hand then reverse outcome
-                /// If RightHand is Active then
-                if (frame.hands().count() == 1)
-                {
-                    if (frame.hands().frontmost().isRight())
-                        leftHandActive = false;
-                    else
-                        rightHandActive = false;
-                }
-
-
-                //                if (leftHand.isLeft() && frame.hands.count() == 2)
-                //                {
-                //                    firstHand
-                //                }
-
-
-                //                if (firstHand.isRight())
-                //                    Hand rightHand = firstHand;
-                //                else
-                //                    Hand leftHand = firstHand;
-
-                //                if (frame.hands().count() > 1)
-                //                    if
-
-
-
-                //                const FingerList leftFingers = frame.hands().leftmost().fingers();
-                //                const FingerList rightFingers = frame.hands().rightmost().fingers();
-                const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
-                const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
-
-                Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-                Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-
-                Finger leftIndex = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-                Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-
-                /// PRINTOUT OF STATUSSES
-                //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
-                //                std::cout << "Left  Thumb out: " << leftThumb.isExtended() << " \t" ;
-
-                //                std::cout << "Right Index out: " << rightIndex.isExtended() << " \t" ;
-                //                std::cout << "Left  Index out: " << leftIndex.isExtended() << " \t" ;
-
-                //                std::cout << "left: #" << extendedLeft.count() << "\t";
-                //                std::cout << "Right #: " << extendedRight.count() << "\t";
-
-                //                std::cout << "front Left Finger: " << extendedLeft.frontmost() << "\t";
-                //                std::cout << "front Right Finger: " << extendedRight.frontmost() << "\t";
-
-                /////////////////////////////////////////////////////////////
-                //                std::cout << "left Pinch: " << frame.hands().leftmost().pinchStrength() << "\t";
-
-                //                std::cout << "hand Pinch: " << frame.hands().rightmost().pinchStrength() << "\t";
-
-                //
-
-                //                float leftPinch = frame.hands().leftmost().pinchStrength();
-
-                //               float rightPinch = frame.hands().rightmost().pinchStrength();
-
-
-                //Finger leftFinger =
-
-
-                //                if( leftPinch > 0.5 && rightPinch > 0.5)
-                //                {
-
-                if(leftHandActive)
-                {
-                    if (frame.hands().leftmost().isLeft())
-                        this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
-
-                    if (leftHand.fingers().frontmost().id() == leftIndex.id())
-                        this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
-
-                    if(leftThumb.isExtended())
-                        this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
-                }
-
-                if (rightHandActive)
-                {
-                    if (frame.hands().rightmost().isRight())
-                        this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
-
-                    if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id())
-                        this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
-
-                    if(rightThumb.isExtended())
-                        this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
-                }
-
-
-                //// WE TRACK THE LEFT HAND
-
-                if(frame.hands().leftmost().fingers().frontmost().id() == leftIndex.id()
-                        &&   leftThumb.isExtended()  && leftHandActive)
-                {
-
-                    ////////////////////////////////////////////////////////////////////////////////////////////
-                    ///////////////    FINGER ACCURACY BUT POOR DEPTH CAPTURE    ///////////////////////////////
-                    ////////////////////////////////////////////////////////////////////////////////////////////
-
-                    /// Vector newPosition = hand.translation(controller_->frame(1));
-                    ///Vector newPosition = hand.translation(controller_->frame(1))..fingers().frontmost().);
-
-                    /// Get the Leap Motion Vector
-                    Vector hand1OldPos = controller_->frame(2).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-                    Vector hand1NewPos = controller_->frame(1).hands().leftmost().fingers().frontmost().stabilizedTipPosition();
-
-                    Vector leapLeftMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
-
-                    /// Get the Camera Orientation and angle
-                    double * camOrientation = camera->GetOrientationWXYZ();
-                    double angle = camOrientation[0];
-                    Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
-
-                    const double PI = 3.141592653589793;
-                    /// Generate the Matrix and Transforms
-                    Matrix transformMatrix = Matrix();
-                    transformMatrix.identity();
-                    transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
-                    Vector rotatedLeftVector = transformMatrix.transformDirection(leapLeftMove);
-
-                    /// Get the pointWidget Position
-                    double * newPosition;
-                    double oldPosition[3];
-
-                    pointWidget1_->GetPosition(oldPosition);
-
-                    /// Generate the Transform and Apply it
-                    vtkTransform * AggregateTransform =  vtkTransform::New();
-                    AggregateTransform->Identity();
-                    AggregateTransform->Translate(rotatedLeftVector.x, rotatedLeftVector.y, rotatedLeftVector.z);
-                    newPosition = AggregateTransform->TransformPoint(oldPosition);
-
-                    /// Apply the New Position to the widget
-                    pointWidget1_->SetPosition(newPosition[0],newPosition[1],newPosition[2]);
-
-                    pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent);
-
-                    vtkProperty * pointerProperty = pointWidget1_->GetProperty();
-
-
-                    pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
-                    pointWidget1_->InvokeEvent(vtkCommand::StartInteractionEvent);
-
-                    if(this->userTestRunning())
-                    {
-                        leapHand2Move = true;
-                        leapHand2FrameBuffer ++;
-                        subVolLefHand = true;
-                    }
-                }
-
-                //// WE TRACK THE RIGHT HAND
-                if(frame.hands().rightmost().fingers().frontmost().id() == rightIndex.id()
-                        && rightThumb.isExtended() && rightHandActive)
-                {
-                    ////////////////////////////////////////////////////////
-                    /// \brief Second Hand capture
-                    ///
-
-
-                    ///Vector newPosition2 = hand2.translation(controller_->frame(1));
-                    ///Vector newPosition2 = hand2.translation(controller_->frame(1).fingers().frontmost().tipPosition());
-                    ///
-
-
-                    //                    Vector hand2OldPos = controller_->frame(2).hands().leftmost().stabilizedPalmPosition();
-                    //                    Vector hand2NewPos = controller_->frame(1).hands().leftmost().stabilizedPalmPosition();
-                    /// Get the Leap Motion Vector
-                    Vector hand2OldPos = controller_->frame(2).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-                    Vector hand2NewPos = controller_->frame(1).hands().rightmost().fingers().frontmost().stabilizedTipPosition();
-
-                    Vector leapRightMove = hand2NewPos-hand2OldPos;  /// Vector of the Finger Movement in Leap SPACE
-
-                    /// Get the Camera Orientation and angle
-                    double * camOrientation = camera->GetOrientationWXYZ();
-                    double angle = camOrientation[0];
-                    Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
-
-                    const double PI = 3.141592653589793;
-                    /// Generate the Matrix and Transforms
-                    Matrix transformMatrix = Matrix();
-                    transformMatrix.identity();
-                    transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
-                    Vector rotatedRightVector = transformMatrix.transformDirection(leapRightMove);
-
-                    /// Get the pointWidget Position
-                    /// USE the Same Position Indicators
-                    double * newPosition;
-                    double oldPosition[3];
-
-                    pointWidget2_->GetPosition(oldPosition);
-
-                    /// Generate the Transform and Apply it
-                    vtkTransform * AggregateTransform =  vtkTransform::New();
-                    AggregateTransform->Identity();
-                    AggregateTransform->Translate(rotatedRightVector.x, rotatedRightVector.y, rotatedRightVector.z);
-                    newPosition = AggregateTransform->TransformPoint(oldPosition);
-
-                    /// Apply the New Position to the widget
-                    pointWidget2_->SetPosition(newPosition[0],newPosition[1],newPosition[2]);
-
-                    pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent);
-
-                    vtkProperty * pointerProperty =
-                            pointWidget2_->GetProperty();
-
-                    pointerProperty->SetColor(0.3400, 0.8100, 0.8900);
-                    //pointerProperty->SetColor(0.8900, 0.8100, 0.3400);
-
-                    if(this->userTestRunning())
-                    {
-                        leapHand1Move = true;
-                        leapHand1FrameBuffer ++;
-                        subVolRightHand = true;
-                    }
-
-                }
-                double* finalPos1 = pointWidget1_->GetPosition();
-                double* finalPos2 = pointWidget2_->GetPosition();
-
-                trackSubVolume(finalPos1, finalPos2);
+               leapSubVolumeUpdate(frame, hand, subVolRightHand, subVolLeftHand);
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    TRANSLATION   //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkTranslate && this->ui->checkBoxLeapTracking->isChecked())
-            {
-                leapHand1Move = true;
-                leapHand1FrameBuffer ++;
-                translateMovement = true;
-
-                this->ui->labelTranslation->setFont(boldFont);
-                this->ui->buttonTransfTranslation->setEnabled(true);
-
-                //////////////////////////////////////////////////////////////////////////////////////
-                /// \brief newPosition - CURRENT REPRESENTATION
-                /////////////////////////////////////////////////////////////////////////////////////
-
-                Vector newPosition = frame.translation(controller_->frame(1));
-                Vector newTranslation = frame.translation(controller_->frame(1));
-
-
-                vtkMatrix4x4 * cameraMatrix = camera->GetViewTransformMatrix();
-
-
-                //// FOR BEGINNERES
-                /// Now since we are grabbing the CameraMatrix.. we have to cater for the fact that the Camera may have been
-                /// rotated. So we have to Multply the Leap Translation Vector by the rotated camera to get the New Translaiton Vector
-                /// to apply to the CameraMatrix. By ysing the old fashioned Xt, Yt, Zt * Matrix COLUMNS
-
-                newTranslation.x =   (cameraMatrix->GetElement(0,0) * newPosition.x) +
-                        (cameraMatrix->GetElement(1,0) * newPosition.y) +
-                        (cameraMatrix->GetElement(2,0) * newPosition.z)  ;
-
-                newTranslation.y =   (cameraMatrix->GetElement(0,1) * newPosition.x) +
-                        (cameraMatrix->GetElement(1,1) * newPosition.y) +
-                        (cameraMatrix->GetElement(2,1) * newPosition.z)    ;
-
-                newTranslation.z =   (cameraMatrix->GetElement(0,2) * newPosition.x) +
-                        (cameraMatrix->GetElement(1,2) * newPosition.y) +
-                        (cameraMatrix->GetElement(2,2) * newPosition.z)    ;
-
-
-                vtkTransform* handMove = vtkTransform::New();
-
-                handMove->Identity();
-
-                handMove->Translate(-newTranslation.x, - newTranslation.y, -newTranslation.z);
-
-                camera->ApplyTransform(handMove);
-
-                /// ADDED INTERACTION CAPTURE
-                ///
-//                double* position;
-
-//                position = camera->GetPosition();
-
-//                ui->line_PosX->setText(QString::number(position[0], 'f', 0));
-//                ui->line_PosY->setText(QString::number(position[1], 'f', 0));
-//                ui->line_PosZ->setText(QString::number(position[2], 'f', 0));
-
-                updateCameraPosition();
-
+            if(chkTranslate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() && this->ui->buttonTransformActive->isChecked())
+            {                
+                leapTranslateUpdate(frame, translateMovement, rightHand);
             }
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    ROTATION   /////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
-            if(chkRotate && this->ui->checkBoxLeapTracking->isChecked())
+            if(chkRotate && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid() && this->ui->buttonTransformActive->isChecked() )
             {
-
-
-                this->ui->labelRotation->setFont(boldFont);
-                this->ui->buttonTransfRotation->setEnabled(true);
-
-                Matrix newRotation = frame.rotationMatrix(controller_->frame(2));
-                //std::cout << newRotation.toString() << endl;
-
-                double * oldPosition = camera->GetPosition();
-                double * oldViewUp = camera->GetViewUp();
-                double * oldFocalPoint = camera->GetFocalPoint();
-                double * oldOrientation = camera->GetOrientation();
-
-
-                double position[3] = {oldPosition[0] , oldPosition[1], oldPosition[2] };
-                double viewUp[3] = {oldViewUp[0] , oldViewUp[1], oldViewUp[2] };
-                double focalPoint[3] = {oldFocalPoint[0] , oldFocalPoint[1], oldFocalPoint[2] };
-                double oriental[3] = {oldOrientation[0] , oldOrientation[1], oldOrientation[2] };
-
-                ///camera->SetFocalPoint(cameraFocalPoint);
-
-                vtkMatrix4x4* cameraMatrix = camera->GetModelTransformMatrix();
-
-                vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
-
-                rotationMatrix->Identity();
-                int index = 0;
-
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        rotationMatrix->SetElement(i,j,newRotation.toArray4x4().m_array[index]);
-                        index++;
-                    }
-                }
-
-                vtkTransform* transform = vtkTransform::New();
-
-                transform ->Identity();                
-
-                transform->SetMatrix(cameraMatrix);
-
-                transform->Translate( cameraFocalPoint);
-
-                transform->Concatenate(rotationMatrix);                                                
-
-                transform->Translate(-cameraFocalPoint[0], -cameraFocalPoint[1], -cameraFocalPoint[2]);
-
-                camera->ApplyTransform(transform);
-
-
-
-
-
-//                double * newFP = transform->TransformDoublePoint(cameraFocalPoint);
-
-//                double newTFP[3] = {newFP[0] , newFP[1], newFP[2] };
-
-//                oldPosition = camera->GetPosition();
-//                oldViewUp = camera->GetViewUp();
-//                oldFocalPoint = camera->GetFocalPoint();
-//                oldOrientation = camera->GetOrientation();
-
-
-
-//                std::cout << std::fixed << std::setprecision(2) ;
-//                std::cout <<
-//                             "P:" << oldPosition[0] << ", " << oldPosition[1] << "," << oldPosition[2] << "\t" <<
-//                             "V:" << oldViewUp[0] << ", " << oldViewUp[1] << "," << oldViewUp[2] << "\t" <<
-//                             "FP:" << oldFocalPoint[0] << ", " << oldFocalPoint[1] << "," << oldFocalPoint[2] << "\t" <<
-
-
-
-//                             endl;
-
-
-
-                ///camera->SetFocalPoint(cameraFocalPoint);
-                ///
-
-                //camera->SetFocalPoint(newFP);
-                //camera->SetPosition(transform->TransformDoublePoint(oldPosition));
-                //camera->SetViewUp(transform->TransformDoublePoint(oldViewUp));
-                //camera->SetViewUp(viewUp);
-
-                /// ADDED INTERACTION CAPTURE
-                double* orientation;
-
-                orientation  = camera->GetOrientation();
-
-                ui->line_OrientX->setText(QString::number(orientation[0], 'f', 0));
-                ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
-                ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
-
-                //renderer->ResetCameraClippingRange();
-                if(this->userTestRunning())
-                {
-                    leapHand1Move = true;
-                    leapHand1FrameBuffer ++;
-                    rotateMovement = true;
-                }
+                leapRotateUpdate(frame, rotateMovement,rightHand);
 
             }
 
@@ -6094,44 +6711,9 @@ void MainWindow::LeapMotion()
             //////////////////////////    SCALING       //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if(chkScale && this->ui->checkBoxLeapTracking->isChecked())
+            if(chkScale && (this->ui->checkBoxLeapTracking->isChecked()  || useLeftHand ) && rightHand.isValid()  && this->ui->buttonTransformActive->isChecked())
             {
-
-
-
-
-                this->ui->labelScaling->setFont(boldFont);
-                this->ui->buttonTransfScaling->setEnabled(true);
-
-                //float adjustmentFactor = 0.5;
-                //float scaleFactor = frame.scaleFactor(controller_->frame(1));
-                float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
-
-
-                if (camera->GetParallelProjection())
-                {
-                    camera->SetParallelProjection(camera->GetParallelScale() / scaleFactor);
-                    //     qDebug() << "ScaleFactor Parallel = " << scaleFactor << endl;
-                }
-                else
-                {
-                    camera->Dolly(scaleFactor);
-                    renderer->ResetCameraClippingRange();
-                    //     qDebug() << "ScaleFactor Normal = " << scaleFactor << endl;
-                }
-
-                double value ;
-
-                value = this->defaultCameraDistance /  camera->GetDistance();
-
-                ui->line_Scale->setText(QString::number(value, 'f', 2));
-
-                if(this->userTestRunning())
-                {
-                    leapHand1Move = true;
-                    leapHand1FrameBuffer ++;
-                    scaleMovememnt = true;
-                }
+                leapScaleUpdate(frame, scaleMovement, rightHand);
             }
 
 
@@ -6141,65 +6723,7 @@ void MainWindow::LeapMotion()
 
             if (this->handModelActive)
             {
-                if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
-                {
-                    //                    Get the first hand
-                    const Hand rightHandMoving = frame.hands().rightmost();
-                    //                    Get the 2nd hand
-                    const Hand leftHandMoving = frame.hands().leftmost();
-
-                    bool leftHandActive = true;
-                    bool rightHandActive = true;
-
-                    /// If we have a single hand, we must determine which 1 it is
-                    /// If not the Right hand, then reverse outcome
-                    /// Otherwise we swap hands accordingly
-                    if(frame.hands().count() == 1)
-                    {
-                        if (frame.hands().frontmost().isRight())
-                            leftHandActive = false;
-                        else
-                            rightHandActive = false;
-                    }
-
-                    /// The Leap MOTION Interaction Box
-                    InteractionBox leapBox = frame.interactionBox();
-
-
-                    if (rightHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        handRenderer->translateHand(rightHand,rightHandMoving,outsideBounds);
-                    }/// if(hand.isLeft())
-
-                    if (leftHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        handRenderer->translateHand(leftHand,leftHandMoving,outsideBounds);
-                    }   /// if(hand.isLeft())
-                }   ///    if (!frame.hands().isEmpty()
+                leapHandModelUpdate(frame);
             }
 
 
@@ -6210,246 +6734,20 @@ void MainWindow::LeapMotion()
 
             if (this->ui->actionLeapDialogToggle->isChecked() && leapHandWidget->GetEnabled())
             {
-                if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
-                {
-                    //                    Get the first hand
-                    const Hand rightHandMoving = frame.hands().rightmost();
-                    //                    Get the 2nd hand
-                    const Hand leftHandMoving = frame.hands().leftmost();
-
-                    bool leftHandActive = true;
-                    bool rightHandActive = true;
-
-                    /// If we have a single hand, we must determine which 1 it is
-                    /// If not the Right hand, then reverse outcome
-                    /// Otherwise we swap hands accordingly
-                    if(frame.hands().count() == 1)
-                    {
-                        if (frame.hands().frontmost().isRight())
-                            leftHandActive = false;
-                        else
-                            rightHandActive = false;
-                    }
-
-                    /// The Leap MOTION Interaction Box
-                    InteractionBox leapBox = frame.interactionBox();
-
-
-                    if (rightHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(rightHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        leapHandWidget->translateHand(rightHand,rightHandMoving,outsideBounds);
-                    }/// if(hand.isLeft())
-
-                    if (leftHandActive)
-                    {
-                        ////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //////////////////////////    Right Finger Joints  TRACKING  /////////////////////////////////////
-                        //////////////////////////////////////////////////////////////////////////////////
-
-                        Vector normalPos = leapBox.normalizePoint(leftHandMoving.palmPosition(),true);
-
-
-                        bool outsideBounds = ( (normalPos.x  == 0) || (normalPos.x == 1)) ||
-                                ( (normalPos.y  == 0)  || (normalPos.y == 1)) ||
-                                ( (normalPos.z  == 0)  || (normalPos.z == 1)) ;
-
-
-                        leapHandWidget->translateHand(leftHand,leftHandMoving,outsideBounds);
-                    }   /// if(hand.isLeft())
-                }   ///    if (!frame.hands().isEmpty()
+                leapHandWidgetUpdate(frame, hand);
             }
-
-
-
 
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////    DIAGNOSTIC TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
             ///
-            //qDebug() << "Hand Tracking " << endl ;
 
-            ///if (this->ui->checkBox_Diagnostic->isChecked() && leapFrameFreqCount == currentFreq)
-            if (this->ui->actionLeapDialogToggle->isChecked())
+            if (this->ui->actionLeapDialogToggle->isChecked() && rightHand.isValid())
             {
 
-                //                std::cout << "Frame ID:" << frame.id() << "\t FPS:" << frame.currentFramesPerSecond() << endl;
-                //////////////////////////////////////////////////////////////////////////
-                /// \brief handPos
-                //////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////////////////////////////////
-
-                if (frame.translationProbability(controller_->frame(1)) > 0.6)
-                {
-                    Vector handPos = hand.palmPosition();
-                    //Pointable frontFinger = controller_->frame(1).fingers().frontmost();
-
-                    double sensitivity = 0.01;
-                    double offSetX = 0;
-                    double offSetY = 2.5;
-                    double offSetZ = 1;
-
-                    double handPosPoint[3] = {handPos.x * sensitivity - offSetX,
-                                              handPos.y * sensitivity - offSetY,
-                                              handPos.z * sensitivity - offSetZ
-                                             };
-
-                    this->leapMarkerWidget->leapDbgPointWidget->SetPosition(handPosPoint);//handPos.
-
-                    this->leapMarkerWidget->leapDbgPointWidget->GetProperty()->SetColor(1.0, 1.0, 0.0);
-                }
-
-
-                /////////////////////////////////////////////////////////////////////////////
-                /// \brief newNormal
-                ///
-
-                if (frame.rotationProbability(controller_->frame(1)) > 0.6)
-                {
-
-                    Vector newNormal = hand.palmNormal();
-
-                    double oldNormal[3] ;
-                    this->leapMarkerWidget->leapDbgPlaneWidget->GetNormal(oldNormal);
-                    double newNormalD [3];
-                    double theta, rotVector[3];
-
-                    double *point1 = this->leapMarkerWidget->leapDbgPlaneWidget->GetPoint1();
-                    double *origin = this->leapMarkerWidget->leapDbgPlaneWidget->GetOrigin();
-                    //double *center = leapDbgPlaneWidget->GetCenter();
-
-
-                    newNormalD[0] = newNormal.x;
-                    newNormalD[1] = newNormal.y;
-                    newNormalD[2] = newNormal.z;
-
-                    this->leapMarkerWidget->leapDbgPlaneWidget->SetNormal(newNormal.x, newNormal.y, newNormal.z);
-                    this->leapMarkerWidget->leapDbgPlaneWidget->UpdatePlacement();
-
-
-                    ///Compute the rotation vector using a transformation matrix
-                    ///Note that is fnromals are aparelle then te rotation is either 0 or 180 Degrees
-
-                    double dp = vtkMath::Dot(oldNormal, newNormalD);
-                    if (dp >= 1.0)
-                    {
-                        return;    ///zero rotation
-                    }
-
-                    else if (dp <= -1.0)
-                    {
-                        theta = 180.0;
-                        rotVector[0] = point1[0] - origin[0];
-                        rotVector[1] = point1[1] - origin[1];
-                        rotVector[2] = point1[2] - origin[2];
-                    }
-                    else
-                    {
-                        vtkMath::Cross(oldNormal, newNormalD,rotVector);
-                        theta = vtkMath::DegreesFromRadians(acos(dp));
-                    }
-
-                    this->leapMarkerWidget->leapDbgArrowActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-                    this->leapMarkerWidget->leapDbgSphereActor->RotateWXYZ(theta, rotVector[0], rotVector[1], rotVector[2]);
-                    this->leapMarkerWidget->leapDbgSphereActor->GetProperty()->SetColor(0.0, 1.0, 0.0 );
-                }
-
-                //////////////////////////////////////////////////////////////////////////
-                /// \brief Pinch Scaling
-                //////////////////////////////////////////////////////////////////////////
-                ////////////////////////////////////////////////////////////////////////
-                ///
-                ///
-                /// Compute the Scale Factor using the leap motion factor
-
-                /// The following code checks to see if the sensor has regained focus.
-                /// if so, we set the global_CameraPosition to the default value
-                /// Effectively functioning as a reset value.
-                /// We also have a skip value to true to not invert the slider.
-
-                if (frame.scaleProbability(controller_->frame(1)) > 0.6)
-                {
-                    if (abs(controller_->frame(1).id() - this->leapMarkerWidget->global_ScaleFactorID) > 15 )
-                    {
-                        this->leapMarkerWidget->global_CameraPosition = static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->GetValue();
-                        //                    std::cout << "Return focus" << endl;
-                    }
-
-                    this->leapMarkerWidget->global_ScaleFactorID = frame.id();       //Current Frame
-
-                    float scaleFactor = frame.hands()[0].scaleFactor(controller_->frame(2));
-
-                    double oldPosition = this->leapMarkerWidget->global_CameraPosition;
-
-                    this->leapMarkerWidget->global_CameraPosition = oldPosition * (scaleFactor) ;
-
-                    double newPosition = this->leapMarkerWidget->global_CameraPosition;
-
-
-                    /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-
-                    //                    double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
-
-                    //                    if (colourRange < 0) colourRange = 0;
-                    //                    else
-                    //                        if(colourRange > 1) colourRange = 1;
-
-                    //                    std::cout << "Scale Factor: " << scaleFactor
-                    //                              << "\tPosition: " << newPosition
-                    //                              << "\tColourRange: " << colourRange << endl;
-
-                    if (scaleFactor > 1.0000001)            /// EXPANDING .... ColourRange Getting BIGGER - Blue Adjustment
-                    {
-                        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-                        ///
-                        double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Max) ;
-                        if(colourRange > 1) colourRange = 1;
-
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
-                                //GetTubeProperty()->SetColor(colourRange,colourRange,1);
-                                GetTubeProperty()->SetColor(1.2-colourRange,1.2-colourRange,1);
-                    }
-                    else                                           /// SCHINKING.... ColourRange Getting SMALLER -- Red Adjustment
-                    {
-                        /// We add color chromatic scale to the Slider Widget Propoert to highligh strength
-                        ///
-                        double colourRange = (newPosition /  this->leapMarkerWidget->scaling_Start) ;
-                        if(colourRange < 0) colourRange = 0;
-
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->SetValue(newPosition );
-                        static_cast<vtkSliderRepresentation3D*>
-                                (this->leapMarkerWidget->leapDbgSliderWidget->GetRepresentation())->
-                                //GetTubeProperty()->SetColor(1,1-colourRange,1-colourRange);
-                                GetTubeProperty()->SetColor(1, colourRange * 0.9, colourRange * 0.9);
-
-                        //                                std::cout << "Scale Factor: " << scaleFactor
-                        //                                          << "\tPosition: " << newPosition
-                        //                                          << "\tRGB(1,: " << colourRange * 0.8
-                        //                                          << "," << colourRange * 0.8 << endl;
-                    }
-                }
+                leapDiagnosticUpdate(frame, rightHand);
             }
-            ////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////
-            ///KEYBOARD FOCUS SET TO WIDGET TO MAINTAIN KEYBOARD INTERACTION
-            this->ui->qvtkWidgetLeft->setFocus();
         } // (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
 
         //////////////////////////////////////////////////
@@ -6503,10 +6801,10 @@ void MainWindow::LeapMotion()
                     if(translateMovement)
                         //std::cout << "\t Translated" ;
                         userTestDlg->incTranslation();
-                    if(scaleMovememnt)
+                    if(scaleMovement)
                         //std::cout << "\t Scaled" ;
                         userTestDlg->incScaling();
-                    if(subVolLefHand)
+                    if(subVolLeftHand)
                         //std::cout << "\t SubVolLeft" ;
                         userTestDlg->incSubVolPoint1();
                 }
@@ -6561,7 +6859,7 @@ void MainWindow::LeapMotion()
                     if(translateMovement)
                         //std::cout << "\t Translated" ;
                         userTestDlg->incTranslation();
-                    if(scaleMovememnt)
+                    if(scaleMovement)
                         //std::cout << "\t Scaled" ;
                         userTestDlg->incScaling();
                     if(subVolRightHand)

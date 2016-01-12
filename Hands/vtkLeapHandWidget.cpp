@@ -576,9 +576,9 @@ void vtkLeapHandWidget::GeneratActors()
 
 }
 
-void vtkLeapHandWidget::translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds)
+void vtkLeapHandWidget::translateHand(visibleHand activeHand, Leap::Hand movingHand, bool outsideBounds, double  size)
 {
-    handRenderer->translateHand(activeHand, movingHand, outsideBounds);
+    handRenderer->translateHand(activeHand, movingHand, outsideBounds, size);
 }
 
 //-------------------------------------------------------------------------
