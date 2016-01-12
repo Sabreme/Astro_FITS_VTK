@@ -801,14 +801,46 @@ void MainWindow::stopUserTest()
 
     userTestActive = false;
     userTestDlg->close();
-    userTest->show();
-    userTest->importSystemResults(getUserTestResults(currentJob));
 
     userTest->on_btnStop_clicked();
 
-    /// FOR TOUCH WIDGET Test Flag
 
+
+    userTest->importSystemResults(getUserTestResults(currentJob));
+
+    /// FOR TOUCH WIDGET Test Flag
     this->ui->qvtkWidgetLeft->setUserTestMode(false);
+
+    //// SUS Dialog Window pops up
+    surveyDlg = new SurveyDialog(this);
+    surveyDlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    QRect rect = surveyDlg->geometry();
+    QPoint ptRenderer = this->ui->qvtkWidgetLeft->geometry().center();
+    /// userTest MOve to Center of RenderWidget;
+    //userTest->move(ptRenderer.x(), ptRenderer.y());
+    QPoint ptMainWindow = this->geometry().topLeft();
+
+    ptRenderer += ptMainWindow;
+
+    rect.moveCenter(ptRenderer);
+    surveyDlg->setGeometry(rect);
+    surveyDlg->show();
+
+    ///QObject::connect(userTest,SIGNAL(startTest()),this,SLOT(startUserTest()));
+    QObject::connect(surveyDlg, SIGNAL(saveSurvey()), this,SLOT(saveSurvey()));
+
+
+
+
+}
+
+void MainWindow::saveSurvey()
+{
+
+    surveyDlg->close();
+    //// UserTest Window Returns after Survey
+    userTest->show();
 }
 
 bool MainWindow::userTestRunning()

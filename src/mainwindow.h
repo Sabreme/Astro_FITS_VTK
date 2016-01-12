@@ -61,6 +61,7 @@
 #include "Usability/UserTesting.h"
 #include "Usability/usertestdialog.h"
 #include "Usability/countDialog.h"
+#include "Usability/surveydialog.h"
 
 #include <QFutureWatcher>
 #include <QtGui>
@@ -178,6 +179,8 @@ public slots:
 
 
     void stopUserTest();
+
+    void saveSurvey();
 
     bool userTestRunning();
 
@@ -409,8 +412,9 @@ private:
 
         //////////////////////////// USER TESTING /////////////////////////
         UserTesting         * userTest;
-        UserTestDialog* userTestDlg;
-        countDialog* userPractice;
+        UserTestDialog      * userTestDlg;
+        countDialog         * userPractice;
+        SurveyDialog        * surveyDlg;
 
         bool userTestActive  = false;
 
