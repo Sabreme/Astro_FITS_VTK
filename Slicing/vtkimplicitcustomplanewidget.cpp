@@ -259,7 +259,6 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
 
         // add the edges
         this->CurrentRenderer->AddActor(this->EdgesActor);
-        this->EdgesActor->SetProperty(this->EdgesProperty);
 
         // add the normal vector
         this->CurrentRenderer->AddActor(this->LineActor);
@@ -472,11 +471,14 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
     {
       if ( highlight )
         {
-        this->CutActor->SetProperty(this->SelectedPlaneProperty);
+        this->CutActor->SetProperty(this->SelectedPlaneProperty);                   
+          this->EdgesActor->GetProperty()->SetColor(0,1,0);
         }
       else
         {
         this->CutActor->SetProperty(this->PlaneProperty);
+          this->EdgesActor->GetProperty()->SetAmbient(1);
+          this->EdgesActor->GetProperty()->SetAmbientColor(1,0,0);
         }
     }
 
@@ -487,6 +489,8 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
       if ( highlight )
         {
         this->OutlineActor->SetProperty(this->SelectedOutlineProperty);
+          this->EdgesActor->GetProperty()->SetAmbient(0.5);
+          this->EdgesActor->GetProperty()->SetAmbientColor(0,0,1);
         }
       else
         {
@@ -528,40 +532,15 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
       this->Picker->GetPickPosition(this->LastPickPosition);
       if ( prop == this->ConeActor || prop == this->LineActor ||
            prop == this->ConeActor2 || prop == this->LineActor2 )
-        {
-        this->HighlightPlane(1);
-        this->HighlightNormal(1);
-        this->State = vtkImplicitCustomPlaneWidget::Rotating;
-        }
-      else if ( prop == this->CutActor )
-        {
-        this->HighlightPlane(1);
-        this->State = vtkImplicitCustomPlaneWidget::Pushing;
-        }
-      else if ( prop == this->SphereActor )
-        {
-        if ( this->OriginTranslation )
-          {
+      {
           this->HighlightNormal(1);
-          this->State = vtkImplicitCustomPlaneWidget::MovingOrigin;
-          }
-        else
-          {
-          return;
-          }
-        }
+          this->State = vtkImplicitCustomPlaneWidget::Rotating;
+      }
       else
-        {
-        if ( this->OutlineTranslation )
-          {
-          this->HighlightOutline(1);
-          this->State = vtkImplicitCustomPlaneWidget::MovingOutline;
-          }
-        else
-          {
+      {
           return;
-          }
-        }
+      }
+
 
       this->EventCallbackCommand->SetAbortFlag(1);
       this->StartInteraction();
@@ -590,8 +569,9 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
     }
 
     //----------------------------------------------------------------------------
-    void vtkImplicitCustomPlaneWidget::OnMiddleButtonDown()
+    void vtkImplicitCustomPlaneWidget::OnRightButtonDown()
     {
+
       int X = this->Interactor->GetEventPosition()[0];
       int Y = this->Interactor->GetEventPosition()[1];
 
@@ -608,26 +588,38 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
       this->Picker->Pick(X,Y,0.0,this->CurrentRenderer);
       path = this->Picker->GetPath();
 
-      if ( path == NULL ) //nothing picked
+      if ( path == NULL ) //not picking this widget
         {
+        this->HighlightPlane(0);
+        this->HighlightNormal(0);
+        this->HighlightOutline(0);
         this->State = vtkImplicitCustomPlaneWidget::Outside;
         return;
         }
 
+      vtkProp *prop = path->GetFirstNode()->GetViewProp();
       this->ValidPick = 1;
       this->Picker->GetPickPosition(this->LastPickPosition);
-      this->State = vtkImplicitCustomPlaneWidget::MovingPlane;
-      this->HighlightNormal(1);
-      this->HighlightPlane(1);
+      if ( prop == this->CutActor )
+      {
+          this->HighlightPlane(1);
+          this->State = vtkImplicitCustomPlaneWidget::Pushing;
+      }
+      else
+      {
+          return;
+      }
+
 
       this->EventCallbackCommand->SetAbortFlag(1);
       this->StartInteraction();
       this->InvokeEvent(vtkCommand::StartInteractionEvent,NULL);
       this->Interactor->Render();
+
     }
 
     //----------------------------------------------------------------------------
-    void vtkImplicitCustomPlaneWidget::OnMiddleButtonUp()
+    void vtkImplicitCustomPlaneWidget::OnRightButtonUp()
     {
       if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
         {
@@ -647,7 +639,7 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
     }
 
     //----------------------------------------------------------------------------
-    void vtkImplicitCustomPlaneWidget::OnRightButtonDown()
+    void vtkImplicitCustomPlaneWidget::OnMiddleButtonDown()
     {
       if ( this->ScaleEnabled )
         {
@@ -689,7 +681,7 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
     }
 
     //----------------------------------------------------------------------------
-    void vtkImplicitCustomPlaneWidget::OnRightButtonUp()
+    void vtkImplicitCustomPlaneWidget::OnMiddleButtonUp()
     {
       if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
         {
@@ -959,7 +951,7 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
       this->NormalProperty->SetLineWidth(2);
 
       this->SelectedNormalProperty = vtkProperty::New();
-      this->SelectedNormalProperty->SetColor(1,0,0);
+      this->SelectedNormalProperty->SetColor(0,1,0);
       this->NormalProperty->SetLineWidth(2);
 
       // Plane properties
@@ -968,8 +960,8 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
       this->PlaneProperty->SetAmbientColor(1.0,1.0,1.0);
 
       this->SelectedPlaneProperty = vtkProperty::New();
-      this->SelectedPlaneProperty->SetAmbient(1.0);
-      this->SelectedPlaneProperty->SetAmbientColor(0.0,1.0,0.0);
+      this->SelectedPlaneProperty->SetAmbient(0.5);
+      this->SelectedPlaneProperty->SetAmbientColor(0.0,0.0,1.0);
       this->SelectedPlaneProperty->SetOpacity(0.25);
 
       // Outline properties
@@ -979,10 +971,12 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
 
       this->SelectedOutlineProperty = vtkProperty::New();
       this->SelectedOutlineProperty->SetAmbient(1.0);
-      this->SelectedOutlineProperty->SetAmbientColor(0.0,1.0,0.0);
+      this->SelectedOutlineProperty->SetAmbientColor(1.0,1.0,1.0);
 
       // Edge property
       this->EdgesProperty = vtkProperty::New();
+        this->EdgesProperty->SetAmbient(0.5);
+        this->EdgesProperty->SetAmbientColor(0.0,0.0,1.0);
     }
 
     //----------------------------------------------------------------------------
@@ -1347,7 +1341,7 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
              //|| prop == this->LineActor ||
              //prop == this->ConeActor2 || prop == this->LineActor2 )
           {
-            this->HighlightPlane(1);
+            ///this->HighlightPlane(1);
             this->HighlightNormal(1);
           this->State = vtkImplicitCustomPlaneWidget::Rotating;
             return;
@@ -1361,7 +1355,7 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
     void vtkImplicitCustomPlaneWidget::finger1Moving(int X,  int Y, int X_last, int Y_last)
     {
 
-        this->HighlightPlane(1);
+        ///this->HighlightPlane(1);
         this->HighlightNormal(1);
 
         // Do different things depending on state
@@ -1486,8 +1480,6 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         this->ValidPick = 1;
         this->Picker->GetPickPosition(this->LastPickPosition);
         if ( prop == this->CutActor )
-             //|| prop == this->LineActor ||
-             //prop == this->ConeActor2 || prop == this->LineActor2 )
           {
             this->HighlightPlane(1);
           this->State = vtkImplicitCustomPlaneWidget::Pushing;

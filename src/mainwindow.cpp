@@ -5907,6 +5907,12 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->DrawPlaneOff();
     customArbPlaneWidget->SetScaleEnabled(false);
     customArbPlaneWidget->SetOriginTranslation(false);
+
+//    customArbPlaneWidget->GetSelectedNormalProperty()->SetColor(0,1,0);
+//    customArbPlaneWidget->GetEdgesProperty()->SetAmbient(0);
+//    customArbPlaneWidget->GetPlaneProperty()->SetAmbient(0);
+
+    //customArbPlaneWidget->
     //customArbPlaneWidget->
 
     customArbPlaneWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
