@@ -6684,7 +6684,7 @@ void MainWindow::LeapMotion()
             //////////////////////////  ARB  SLICE TRACKING  /// //////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////
 
-            if((shouldArbSlice) && (rightHand.isValid()) && !this->ui->checkBoxLeapTracking->isChecked())
+            if((shouldArbSlice) && (rightHand.isValid()) && !this->ui->buttonTransformActive->isChecked())
             {
                 leapArbSliceUpdate( frame, rightHand, sliceMovement);
             }
