@@ -886,7 +886,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>140</y>
+        <y>210</y>
         <width>52</width>
         <height>53</height>
        </rect>
@@ -922,7 +922,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>290</y>
+        <y>360</y>
         <width>52</width>
         <height>53</height>
        </rect>
@@ -955,7 +955,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>440</y>
+        <y>510</y>
         <width>52</width>
         <height>53</height>
        </rect>
@@ -985,7 +985,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>110</y>
+        <y>180</y>
         <width>71</width>
         <height>21</height>
        </rect>
@@ -1004,7 +1004,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>260</y>
+        <y>330</y>
         <width>81</width>
         <height>21</height>
        </rect>
@@ -1023,7 +1023,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>410</y>
+        <y>480</y>
         <width>61</width>
         <height>21</height>
        </rect>
@@ -1042,7 +1042,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>200</y>
+        <y>270</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1061,7 +1061,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>220</y>
+        <y>290</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1074,7 +1074,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>220</y>
+        <y>290</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1087,7 +1087,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>220</y>
+        <y>290</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1100,7 +1100,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>370</y>
+        <y>440</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1113,7 +1113,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>370</y>
+        <y>440</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1126,7 +1126,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>370</y>
+        <y>440</y>
         <width>31</width>
         <height>22</height>
        </rect>
@@ -1139,7 +1139,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>500</y>
+        <y>570</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -1152,7 +1152,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>200</y>
+        <y>270</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1171,7 +1171,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>200</y>
+        <y>270</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1190,7 +1190,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>350</y>
+        <y>420</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1209,7 +1209,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>350</y>
+        <y>420</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1228,7 +1228,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>350</y>
+        <y>420</y>
         <width>16</width>
         <height>16</height>
        </rect>
@@ -1247,7 +1247,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>100</y>
+        <y>170</y>
         <width>118</width>
         <height>3</height>
        </rect>
@@ -1264,7 +1264,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>400</y>
+        <y>470</y>
         <width>118</width>
         <height>3</height>
        </rect>
@@ -1281,7 +1281,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>180</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1294,7 +1294,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>260</y>
+        <y>330</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1307,7 +1307,7 @@ border:none;
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>410</y>
+        <y>480</y>
         <width>21</width>
         <height>22</height>
        </rect>
@@ -1374,52 +1374,28 @@ border:none;
        <string>Reset Camera</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxLeapTracking">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
+     <widget class="Line" name="line_8">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>570</y>
-        <width>21</width>
-        <height>22</height>
+        <x>10</x>
+        <y>320</y>
+        <width>118</width>
+        <height>3</height>
        </rect>
       </property>
-      <property name="text">
-       <string/>
+      <property name="styleSheet">
+       <string notr="true">border: 2px solid rgb(27, 27, 27);
+</string>
       </property>
-      <property name="shortcut">
-       <string>Space</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_47">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>570</y>
-        <width>61</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>11</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Tracking</string>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
      <widget class="QPushButton" name="buttonTransformActive">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>530</y>
+        <y>100</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -1434,7 +1410,7 @@ border:none;
 }</string>
       </property>
       <property name="text">
-       <string>ACTIVE</string>
+       <string>CAMERA</string>
       </property>
       <property name="shortcut">
        <string>T</string>
@@ -1446,21 +1422,45 @@ border:none;
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="Line" name="line_8">
+     <widget class="QLabel" name="label_47">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>250</y>
-        <width>118</width>
-        <height>3</height>
+        <x>30</x>
+        <y>140</y>
+        <width>61</width>
+        <height>21</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true">border: 2px solid rgb(27, 27, 27);
-</string>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>11</pointsize>
+       </font>
       </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+      <property name="text">
+       <string>Tracking</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBoxLeapTracking">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>140</y>
+        <width>21</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="shortcut">
+       <string>Space</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
@@ -4598,7 +4598,7 @@ border:none;
       <x>170</x>
       <y>10</y>
       <width>781</width>
-      <height>781</height>
+      <height>771</height>
      </rect>
     </property>
     <property name="sizePolicy">

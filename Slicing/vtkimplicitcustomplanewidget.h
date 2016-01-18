@@ -206,6 +206,10 @@ public:
 
       void finger2Released();
 
+      void leapMovingNormal(int normalMoving);
+
+      void leapMovingPlane(int planeMoving);
+
 
 
 

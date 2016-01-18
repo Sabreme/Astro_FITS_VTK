@@ -1543,3 +1543,13 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
         this->InvokeEvent(vtkCommand::EndInteractionEvent,NULL);
         this->Interactor->Render();
     }
+
+    void vtkImplicitCustomPlaneWidget::leapMovingNormal(int normalMoving)
+    {
+        this->HighlightNormal(normalMoving);
+    }
+
+    void vtkImplicitCustomPlaneWidget::leapMovingPlane(int planeMoving)
+    {
+        this->HighlightPlane(planeMoving);
+    }

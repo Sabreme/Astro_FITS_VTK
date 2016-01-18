@@ -3071,6 +3071,7 @@ void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool &sliceMovement)
         // plane->SetNormal(newNormalD);
         this->customArbPlaneWidget->SetNormal(newNormalD);
         this->customArbPlaneWidget->UpdatePlacement();
+        this->customArbPlaneWidget->leapMovingNormal(true);
 
         //this->customArbPlaneWidget->InvokeEvent(vtkCommand::EnableEvent);
         //this->customArbPlaneWidget->InvokeEvent(vtkCommand::StartInteractionEvent);
@@ -3100,6 +3101,7 @@ void MainWindow::leapArbSliceUpdate(Frame frame, Hand hand, bool &sliceMovement)
         this->customArbPlaneWidget->SetOrigin(plane->GetOrigin());
 
         this->customArbPlaneWidget->UpdatePlacement();
+        this->customArbPlaneWidget->leapMovingPlane(true);
 
         ///////////////////////////////////////////////////////////
 
@@ -6259,7 +6261,7 @@ void MainWindow::LeapMotion()
         //const FingerList fingers = controller_->frame().fingers();
 
         //controller_->enableGesture(Gesture::TYPE_SCREEN_TAP, true);
-        controller_->enableGesture(Gesture::TYPE_KEY_TAP, true);
+        //controller_->enableGesture(Gesture::TYPE_KEY_TAP, true);
         controller_->enableGesture(Gesture::TYPE_CIRCLE, true);
 
         controller_->config().setFloat("Gesture.Circle.MinRadius", 15.0);
@@ -6322,6 +6324,12 @@ void MainWindow::LeapMotion()
 
 //        }
 
+        if (shouldArbSlice)
+        {
+            this->customArbPlaneWidget->leapMovingNormal(false);
+            this->customArbPlaneWidget->leapMovingPlane(false);
+        }
+
         if (shouldSubVol)
         {
             vtkProperty * pointerProperty =
@@ -6347,7 +6355,8 @@ void MainWindow::LeapMotion()
         }
 
 
-        if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+//        if (!frame.hands().isEmpty() && !frame.hands()[0].fingers().isEmpty())
+         if (!frame.hands().isEmpty())
         {
             Hand rightHand, leftHand;
 
@@ -6402,6 +6411,8 @@ void MainWindow::LeapMotion()
 //            if (frame.gestures().count() > 0)
 //                std::cout << "Gestures Found: " << frame.gestures().count()            << endl;
 
+            std::cout << "leftID: " << leftHand.id() << "\trightID: " << rightHand.id() << endl;
+
           GestureList gestures = leftHand.frame().gestures();
             //GestureList gestures = rightHand.frame().gestures();
 
@@ -6412,7 +6423,7 @@ void MainWindow::LeapMotion()
                         case Gesture::TYPE_CIRCLE:
                     {
                         CircleGesture circle = CircleGesture(*gesture);
-                        ///std::cout << "radius: " << circle.radius() << endl;
+                        std::cout << "radius: " << circle.radius() << "\t HandIDL: " << leftHand.id() << endl;
 
                         if (circle.radius() > 40)
                         {
@@ -6493,7 +6504,80 @@ void MainWindow::LeapMotion()
 
 //            }
 
+            bool checkForBigTap = true;
 
+
+
+            if(checkForBigTap)
+            {
+                //Vector motionSinceLastFrame = frame.translation(controller_->frame(1));
+
+                Vector motionSinceLastFrame = leftHand.translation(controller_->frame(1));
+
+//                if(motionSinceLastFrame.x > gestureRange)
+//                {
+//                    framesRightMoving++;
+//                }
+//                else
+//                {
+//                    framesRightMoving = 0;
+//                }
+
+
+//                 if(motionSinceLastFrame.x  < - gestureRange)
+//                 {
+//                     framesLeftMoving++;
+//                 }
+//                 else
+//                 {
+//                     framesLeftMoving = 0;
+//                 }
+
+//                 if(motionSinceLastFrame.y  > gestureRange)
+//                 {
+//                     framesUpMoving++;
+//                 }
+//                 else
+//                 {
+//                     framesUpMoving = 0;
+//                 }
+
+                 if(motionSinceLastFrame.y < - gestureRange)
+                 {
+                     framesDownMoving++;
+                 }
+                 else
+                 {
+                     framesDownMoving = 0;
+                 }
+
+//                 std::cout << "right: " << framesRightMoving << "\t left:" << framesLeftMoving << endl;
+
+//                 if (framesRightMoving >= frameActionCount)
+//                 {
+//                     std::cout << "Right hand Swipe Detected" << endl;
+//                 }
+
+//                 if(framesLeftMoving >= frameActionCount)
+//                 {
+//                     std::cout << "Left hand Swipe Detected" << endl;
+//                 }
+
+//                 if (framesUpMoving >= frameActionCount)
+//                 {
+//                     std::cout << "Up hand Swipe Detected" << endl;
+//                 }
+
+                 if(framesDownMoving >= frameActionCount)
+                 {
+                     std::cout << "Tap Detected" << endl;
+                     this->ui->buttonTransformActive->setChecked
+                                                 (!this->ui->buttonTransformActive->isChecked());
+                     framesDownMoving=0;
+
+                 }
+
+            }
 
 
 

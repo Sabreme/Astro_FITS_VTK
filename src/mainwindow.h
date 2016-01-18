@@ -567,6 +567,10 @@ private:
         vtkLeapMarkerWidget * leapMarkerWidget   = NULL;
         vtkLeapHandWidget * leapHandWidget = NULL;
 
+        float gestureRange = 6.0f;
+        int frameActionCount = 4;
+        int framesRightMoving, framesLeftMoving, framesUpMoving, framesDownMoving = 0;
+
 
 };
 
