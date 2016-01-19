@@ -1314,7 +1314,7 @@ void QVTKTouchWidget::transformEventZRotate(QEvent *event, QList<QTouchEvent::To
     //                    std::cout << "Start Difference: " << distStart << "\t"
     //                              << "Pos Difference: " << distPos << "\t";
     ///   We implement the Z Rotation Code Here to Zoom code here SCALING
-    if((distStart < 110) && (distPos < 110))
+    if((distStart < 150) && (distPos < 150))
     {
         ////////////////////////////////
         /////
@@ -1417,7 +1417,7 @@ void QVTKTouchWidget::transformEventScale(QEvent *event, QList<QTouchEvent::Touc
     distance = p1.startPos() - p2.startPos();
     int distStart = distance.manhattanLength();
 
-    if((distStart > 100) || (distPos > 100))
+    if((distStart > 150) || (distPos > 150))
     {
         ////////////////////////////////
         /////
@@ -1517,7 +1517,7 @@ void QVTKTouchWidget::transformEventTranslate(QEvent * event, QList<QTouchEvent:
     distance = p1.startPos() - p2.startPos();
     int distStart = distance.manhattanLength();
 
-    if((distStart < 100) && (distPos < 100))
+    if((distStart < 150) && (distPos < 150))
     {
         ////////////////////////////////
         /////
