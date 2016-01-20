@@ -49,9 +49,9 @@ public:
     vtkLineSource        *global_Bones[2][5][4];            /// 2 Hands, 5 FINGERS / 4 Bones
     vtkActor                    *global_Bone_Actor[2][5][4];            /// 5 Fingers / 4 Bones
 
-double scale_ = 0.01;
-double jointSize = 0.15;
- double fingerSize = 20;
+   double scale_;
+   double jointSize ;
+   double fingerSize;
 //    double fingerColourNormal [3] =  {2, 2, 2};
 //    double fingerColourWarning [3] =  {255, 0, 0};
 

@@ -14,7 +14,10 @@
 
 
 
-HandRenderer::HandRenderer()
+HandRenderer::HandRenderer() :
+    scale_(0.01),
+    jointSize(0.15),
+    fingerSize(20)
 {
     this->handModel = new HandModeller();
 }

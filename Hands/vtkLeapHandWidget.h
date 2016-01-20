@@ -158,9 +158,9 @@ public:
   double global_CameraPosition;
 
   int64_t global_ScaleFactorID ;  // Last  Frames Counted.
-  double scaling_Max = 40;
-  double scaling_Start = 20;
-  double scaling_Min = 5;
+  double scaling_Max;
+  double scaling_Start;
+  double scaling_Min;
 
 protected:
   vtkLeapHandWidget();

@@ -76,39 +76,39 @@ private:
     float scaleFactor;
     float lastScaleFactor;
     bool scaleSequenceNew;
-    int lastGesture = None;        /// 1 = Rotation, 2 = Translation, 3 = Scaling, 4 = ZRotate
-    int touchPointBuffer = 0;
-    int touchTransformBuffer = 0;
-    int touchGestureCounter = 0;
-    int rotationPointBuffer = 0;
-    int touchEventDelay = 8;         /// Used as a buffer to simulate delay
+    int lastGesture ;        /// 1 = Rotation, 2 = Translation, 3 = Scaling, 4 = ZRotate
+    int touchPointBuffer ;
+    int touchTransformBuffer ;
+    int touchGestureCounter ;
+    int rotationPointBuffer;
+    int touchEventDelay ;         /// Used as a buffer to simulate delay
 
     Qt::GestureType pan2Finger;    
 
     vtkCamera * camera;
 
-    bool gesturesActive = false;
+    bool gesturesActive ;
 
-    bool userTestRunning = false;
+    bool userTestRunning;
 
-    bool rightMouseClick = false;
-    bool transformsOn = true;
-    bool subVolumeOn = false;
-    bool arbSliceOn = false;
+    bool rightMouseClick;
+    bool transformsOn ;
+    bool subVolumeOn ;
+    bool arbSliceOn ;
 
 
 
-    double colorRotation[3] = {0.1, 0.4, 0.5};
+    double * colorRotation;
 
-    double colorTranslate1[3] = {0.5, 0.6, 0.7};
-    double colorTranslate2[3] = {0.5, 1, 0.7};
+    double * colorTranslate1;
+    double * colorTranslate2;
 
-    double colorScale1[3] = {0.7, 0.6, 0.8};
-    double colorScale2[3] = {0.7, 1, 0.8};
+    double * colorScale1;
+    double * colorScale2;
 
-    double colorSpin1[3] = {0.8, 0.8, 0.8};
-    double colorSpin2[3] = {0.8, 1, 0.8};
-    double colorSpin3[3] = {0.1, 1, 0.8};
+    double * colorSpin1 ;
+    double * colorSpin2 ;
+    double * colorSpin3 ;
 
 signals:
 

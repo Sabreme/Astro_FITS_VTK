@@ -146,9 +146,49 @@ QVTKTouchWidget::QVTKTouchWidget(QWidget *parent) :
     verticalOffset(0),
     rotationAngle(0),
     scaleFactor(1),
-    lastScaleFactor(1)
-{
+    lastScaleFactor(1),
+    lastGesture (None),        /// 1 = Rotation, 2 = Translation, 3 = Scaling, 4 = ZRotate
+    touchPointBuffer (0),
+    touchTransformBuffer (0),
+    touchGestureCounter (0),
+    rotationPointBuffer (0),
+    touchEventDelay (8),         /// Used as a buffer to simulate delay
 
+
+    gesturesActive (false),
+    userTestRunning (false),
+    rightMouseClick (false),
+    transformsOn (true),
+    subVolumeOn (false),
+    arbSliceOn (false)
+
+
+
+
+{
+    double colorRotation_Value [] = {0.1, 0.4, 0.5};
+    colorRotation = colorRotation_Value;
+
+    double colorTranslate1_Value [] = {0.5, 1, 0.7};
+     colorTranslate1 = colorTranslate1_Value;
+
+    double colorTranslate2_Value [] = {0.5, 1, 0.7};
+    colorTranslate2 = colorTranslate2_Value;
+
+   double colorScale1_Value [] = {0.7, 0.6, 0.8};
+   colorScale1 = colorScale1_Value;
+
+   double colorScale2_Value [] = {0.7, 1, 0.8};
+    colorScale2 = colorScale2_Value;
+
+   double colorSpin1_Value [] = {0.8, 0.8, 0.8};
+    colorSpin1 = colorSpin1_Value;
+
+    double colorSpin2_Value [] = {0.8, 1, 0.8};
+   colorSpin2 = colorSpin2_Value;
+
+    double colorSpin3_Value [] = {0.1, 1, 0.8};
+   colorSpin3 = colorSpin3_Value;
 }
 
 void QVTKTouchWidget::enableGestures()

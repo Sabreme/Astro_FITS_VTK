@@ -23,6 +23,8 @@ include(Leap/Leap.pri)
 include(Touch/Touch.pri)
 include(Usability/Usability.pri)
 include(Hands/Hands.pri)
+include(Usability/Usability.pri)
+include(Hands/Hands.pri)
 
 unix {
 LIBS += -L/home/pmulumba/VTK5.10.1/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
@@ -31,19 +33,19 @@ LIBS += -L/home/pmulumba/VTK5.10.1/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -
         -lcfitsio -lLeap
 
 INCLUDEPATH += /usr/local/include/vtk-5.10
-}
-
-win32 {LIBS += -LC:/VTK5.10.1-bin/bin -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
-        -lvtkInfovis -lvtkGeovis -lvtkViews -lvtkCharts -lvtkFiltering -lvtkImaging \
-        -lvtkGraphics -lvtkGenericFiltering -lvtkIO -lvtkRendering -lvtkCommon  \
-        -lcfitsio -lLeap
-
-INCLUDEPATH += C:/VTK5.10.1-src/include/vtk-5.10
-}
 
 QMAKE_CXXFLAGS_DEBUG += -std=c++11
 
 QMAKE_CXXFLAGS_RELEASE += -std=c++11 -fno-stack-protector
+}
+
+win32 {LIBS += -LC:/VTK5.10.1-VS/lib/vtk-5.10 -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
+        -lvtkInfovis -lvtkGeovis -lvtkViews -lvtkCharts -lvtkFiltering -lvtkImaging \
+        -lvtkGraphics -lvtkGenericFiltering -lvtkIO -lvtkRendering -lvtkCommon  \
+        -lcfitsio
+
+INCLUDEPATH += C:/VTK5.10.1-src/include/vtk-5.10
+}
 
 RESOURCES += \
     Icons/Icons.qrc
@@ -57,5 +59,4 @@ RESOURCES += \
 #DEPENDPATH += $$PWD/Resources/LINUX
 
 OTHER_FILES += \
-    Usability/Usability.pri \
-    Hands/Hands.pri
+

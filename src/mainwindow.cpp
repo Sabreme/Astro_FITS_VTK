@@ -6264,14 +6264,14 @@ void MainWindow::LeapMotion()
         //controller_->enableGesture(Gesture::TYPE_KEY_TAP, true);
         controller_->enableGesture(Gesture::TYPE_CIRCLE, true);
 
-        controller_->config().setFloat("Gesture.Circle.MinRadius", 15.0);
-        controller_->config().setFloat("Gesture.Circle.MinArc", .5);
-        controller_->config().save();
+//        controller_->config().setFloat("Gesture.Circle.MinRadius", 15.0);
+//        controller_->config().setFloat("Gesture.Circle.MinArc", .5);
+//        controller_->config().save();
 
-        controller_->config().setFloat("Gesture.KeyTap.MinDownVelocity", 40.0);
-        controller_->config().setFloat("Gesture.KeyTap.HistorySeconds", .2);
-        controller_->config().setFloat("Gesture.KeyTap.MinDistance", 10.0);
-        controller_->config().save();
+//        controller_->config().setFloat("Gesture.KeyTap.MinDownVelocity", 40.0);
+//        controller_->config().setFloat("Gesture.KeyTap.HistorySeconds", .2);
+//        controller_->config().setFloat("Gesture.KeyTap.MinDistance", 10.0);
+//        controller_->config().save();
 
         bool shouldSubVol = this->leapSubVolMode;
         bool shouldAxisSlice =  this->leapAxisSliceMode;

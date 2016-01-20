@@ -67,7 +67,10 @@ public:
 };
 
 //-------------------------------------------------------------------------
-vtkLeapHandWidget::vtkLeapHandWidget()
+vtkLeapHandWidget::vtkLeapHandWidget() :
+    scaling_Max(40),
+    scaling_Start(20),
+    scaling_Min(5)
 {
   this->StartEventObserverId = 0;
   this->EventCallbackCommand->SetCallback( vtkLeapHandWidget::ProcessEvents );
