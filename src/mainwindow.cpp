@@ -3126,6 +3126,8 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     Hand leftHand = frame.hands().leftmost();
     bool leftHandActive = true;
     bool rightHandActive = true;
+    int translateLeft = 0;          // We increment for each case until ALL SUM to 3
+    int translateRight = 0 ;    // We increment for each case until ALL SUM to 3
 
     /// If Not the Right Hand then reverse outcome
     /// If RightHand is Active then
@@ -3158,14 +3160,15 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
 
     //                const FingerList leftFingers = frame.hands().leftmost().fingers();
     //                const FingerList rightFingers = frame.hands().rightmost().fingers();
-    const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
-    const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
 
-    Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-    Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
+    const FingerList extendedLeft = leftHand.fingers().extended();
+    const FingerList extendedRight = rightHand.fingers().extended();
 
-    Finger leftIndex = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-    Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+    Finger leftThumb = (leftHand.fingers().fingerType(Finger::TYPE_THUMB))[0];
+    Finger rightThumb = (rightHand.fingers().fingerType(Finger::TYPE_THUMB))[0];
+
+    Finger leftIndex = (leftHand.fingers().fingerType(Finger::TYPE_INDEX))[0];
+    Finger rightIndex = (rightHand.fingers().fingerType(Finger::TYPE_INDEX))[0];
 
     /// PRINTOUT OF STATUSSES
     //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
@@ -3200,31 +3203,49 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
 
     if(leftHandActive)
     {
-        if (frame.hands().leftmost().isLeft())
+        if (leftHand.isLeft())
+        {
+            translateLeft++;
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
+        }
 
 ///       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
-       if (extendedLeft.count() == 0)
+       if (leftIndex.isExtended())
+       {
+           translateLeft++;
             this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+       }
 
-        if(leftHand.grabStrength() == 1)
+        if(leftThumb.isExtended())
+        {
+            translateLeft++;
             this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+        }
     }
 
     if (rightHandActive)
     {
-        if (frame.hands().rightmost().isRight())
-            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
+        if (rightHand.isRight())
+        {
+            translateRight++;
+            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);            
+        }
 
-        if(rightHand.pinchStrength() == 1)
+        if(rightIndex.isExtended())
+        {
+            translateRight++;
             this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+        }
 
-        if(rightHand.grabStrength() == 1)
+        if(rightThumb.isExtended())
+        {
+            translateRight ++ ;
             this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+        }
     }
 
 
-    //// WE TRACK THE LEFT HAND
+    //// WE TRACK THE LEFT HAND for SCALE
 
     if(
             (frame.hands().leftmost().isLeft())
@@ -3295,7 +3316,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         }
     }
 
-    //// WE TRACK THE RIGHT HAND
+    //// WE TRACK THE RIGHT HAND for Scale
     if(
             (frame.hands().rightmost().isRight())
             //&& (leftHand.grabStrength() == 1)
@@ -3365,10 +3386,47 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         }
 
     }
+
+    //////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    ///         BOX TRANSLATION     ///
+    /// ///////////////////////////////////////////////////////////
+    ///
+    std::cout << "Left Pinch: " << leftHand.pinchStrength();
+    std::cout << "Left Fingers: \t" ;
+    for(Leap::FingerList::const_iterator finger = extendedLeft.begin(); finger != extendedLeft.end(); finger++)
+    {
+        std::cout << (*finger).toString() << "\t" ;
+    }
+
+    std::cout << "\t\t";
+
+    std::cout << "Right Pinch: " << rightHand.pinchStrength();
+    std::cout << "Right Fingers: \t" ;
+    for(Leap::FingerList::const_iterator finger = extendedRight.begin(); finger != extendedRight.end(); finger++)
+    {
+        std::cout << (*finger).toString() << "\t" ;
+    }
+
+    std::cout << endl;
+
+//    if (translateLeft ==3 && translateRight == 3)
+//    {
+//        std::cout << "TRANSLATION REQUIRED" << endl;
+//    }
+//    else
+//    {
+//        translateLeft = 0;
+//        translateRight = 0;
+
+//    }
+
+
     double* finalPos1 = pointWidget1_->GetPosition();
     double* finalPos2 = pointWidget2_->GetPosition();
 
-    trackSubVolume(finalPos1, finalPos2);
+    trackSubVolume(finalPos1, finalPos2);       
+
 }
 
 void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand hand)
@@ -3378,7 +3436,7 @@ void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand
     translateMovement = true;
 
 //    this->ui->labelTranslation->setFont(boldFont);
-//    this->ui->buttonTransfTranslation->setEnabled(true);
+    this->ui->buttonTransfTranslation->setEnabled(true);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief newPosition - CURRENT REPRESENTATION
@@ -3549,6 +3607,8 @@ void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
     ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
     ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
+    this->ui->buttonTransfRotation->setEnabled(true);
+
     //renderer->ResetCameraClippingRange();
     if(this->userTestRunning())
     {
@@ -3569,6 +3629,7 @@ void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
     float scaleFactor = hand.scaleFactor(controller_->frame(2));
 
 
+
     if (camera->GetParallelProjection())
     {
         camera->SetParallelProjection(camera->GetParallelScale() / scaleFactor);
@@ -3586,6 +3647,7 @@ void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
     value = this->defaultCameraDistance /  camera->GetDistance();
 
     ui->line_Scale->setText(QString::number(value, 'f', 2));
+    ui->buttonTransfScaling->setEnabled(true);
 
     if(this->userTestRunning())
     {
