@@ -3480,11 +3480,195 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
 
     }
 
+
+
     //////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////
     ///         BOX TRANSLATION     ///
     /// ///////////////////////////////////////////////////////////
     ///
+    ///
+    ///
+    if (leftGrab && rightGrab)
+    {
+
+
+        bool widget1Valid = false;
+        bool widget2Valid = false;
+
+        double pickPoint1[4], pickPoint2[4];
+
+        {
+            ///std::cout << "VALID TRANSLATE LOCATION \t[x,y]: " << finger.x() << ", " << finger.y() << endl;
+
+
+            //    int threshold = 50;
+
+            /// 1. Compute the new Position by Getting the PointWidget Focal Point
+            /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+            /// 3. Create the Translation transformation from finger by lookint at last position
+            /// 3. Apply the translation to the widget position
+            /// 4. PointWidget Update
+
+            //// --------MOVE PointWidget 1 with HAND Left TRANSFORMATION--------"
+
+            {
+
+    //             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+    //                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
+
+                /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+                ///
+
+
+
+                 /// Get the Motion Vector of the Hand
+                 ///
+                Vector hand1OldPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+                Vector hand1NewPos = controller_->frame().hands().rightmost().stabilizedPalmPosition();
+
+                Vector leapRightMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+
+                /// Get the Camera Orientation and angle
+                double * camOrientation = camera->GetOrientationWXYZ();
+                double angle = camOrientation[0];
+                Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
+
+                const double PI = 3.141592653589793;
+                /// Generate the Matrix and Transforms
+                Matrix transformMatrix = Matrix();
+                transformMatrix.identity();
+                transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
+                Vector rotatedRightVector = transformMatrix.transformDirection(leapRightMove);
+
+                /// Get the pointWidget Position
+                double * newPosition;
+                double oldPosition[3];
+
+                pointWidget1_->GetPosition(oldPosition);
+
+                /// Generate the Transform and Apply it
+                vtkTransform * AggregateTransform =  vtkTransform::New();
+                AggregateTransform->Identity();
+                AggregateTransform->Translate(rotatedRightVector.x, rotatedRightVector.y, rotatedRightVector.z);
+                newPosition = AggregateTransform->TransformPoint(oldPosition);
+
+                /// Send New 3D Point to World
+
+                ///pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (newPosition[0]), newPosition[1], newPosition, pickPoint1);
+
+
+                /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+                ///
+
+                bool xRangeValid = (newPosition[0] >= global_Volume->GetBounds()[0]) && (newPosition[0] <= global_Volume->GetBounds()[1]);
+                bool yRangeValid = (newPosition[1] >= global_Volume->GetBounds()[2]) && (newPosition[1] <= global_Volume->GetBounds()[3]);
+                bool zRangeValid = (newPosition[2] >= global_Volume->GetBounds()[4]) && (newPosition[2] <= global_Volume->GetBounds()[5]);
+
+                if (xRangeValid && yRangeValid && zRangeValid)
+                {
+                      widget1Valid = true;
+                      pickPoint1[0] = newPosition[0];
+                      pickPoint1[1] = newPosition[1];
+                      pickPoint1[2] = newPosition[2];
+                }
+
+
+
+
+            }
+
+            //// --------MOVE PointWidget 2 with HAND 1 TRANSFORMATION--------"
+
+            {
+
+    //             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+    //                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
+
+
+                Vector hand1OldPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+                Vector hand1NewPos = controller_->frame().hands().rightmost().stabilizedPalmPosition();
+
+                Vector rightLeftMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+
+                /// Get the Camera Orientation and angle
+                double * camOrientation = camera->GetOrientationWXYZ();
+                double angle = camOrientation[0];
+                Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
+
+                const double PI = 3.141592653589793;
+                /// Generate the Matrix and Transforms
+                Matrix transformMatrix = Matrix();
+                transformMatrix.identity();
+                transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
+                Vector rotatedLeftVector = transformMatrix.transformDirection(rightLeftMove);
+
+                /// Get the pointWidget Position
+                double * newPosition;
+                double oldPosition[3];
+
+                pointWidget2_->GetPosition(oldPosition);
+
+                /// Generate the Transform and Apply it
+                vtkTransform * AggregateTransform =  vtkTransform::New();
+                AggregateTransform->Identity();
+                AggregateTransform->Translate(rotatedLeftVector.x, rotatedLeftVector.y, rotatedLeftVector.z);
+                newPosition = AggregateTransform->TransformPoint(oldPosition);
+
+                /// Send New 3D Point to World
+
+                ///pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (newPosition[0]), newPosition[1], newPosition, pickPoint1);
+
+
+                /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+                ///
+
+                bool xRangeValid = (newPosition[0] >= global_Volume->GetBounds()[0]) && (newPosition[0] <= global_Volume->GetBounds()[1]);
+                bool yRangeValid = (newPosition[1] >= global_Volume->GetBounds()[2]) && (newPosition[1] <= global_Volume->GetBounds()[3]);
+                bool zRangeValid = (newPosition[2] >= global_Volume->GetBounds()[4]) && (newPosition[2] <= global_Volume->GetBounds()[5]);
+
+                 if (xRangeValid && yRangeValid && zRangeValid)
+                 {
+                       widget2Valid = true;
+                       pickPoint2[0] = newPosition[0];
+                       pickPoint2[1] = newPosition[1];
+                       pickPoint2[2] = newPosition[2];
+                 }
+            }
+
+            /// If the widgets are Both Valid Translations, apply the New Point Positions
+            if (widget1Valid && widget2Valid)
+            {
+                if (userTestRunning() && !pointWidget1Active && !pointWidget2Active)
+                {
+                    userTestDlg->incSubVolPoint1();
+                    userTestDlg->incSubVolPoint2();
+                }
+
+                if (!pointWidget2Active && !pointWidget1Active)
+                {
+                    std::cout << "SubVolume TRIGGERED" << endl ;
+                    pointWidget1Active = true;
+                    pointWidget2Active = true;
+                }
+
+                pointWidget1_->SetPosition(pickPoint1);
+
+                /// Interact, if desired
+
+                pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+
+
+
+                pointWidget2_->SetPosition(pickPoint2);
+
+                /// Interact, if desired
+
+                pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+            } /// if (widget1Valid && widget2Valid)
+        } ///(validXmax && validXmin && validYmin && validYmax &&
+    }
+
 //    std::cout << "Left Pinch: " << leftHand.pinchStrength();
 //    std::cout << "Left Fingers: \t" ;
 //    for(Leap::FingerList::const_iterator finger = extendedLeft.begin(); finger != extendedLeft.end(); finger++)
