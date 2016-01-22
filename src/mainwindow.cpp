@@ -3201,6 +3201,11 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     //                if( leftPinch > 0.5 && rightPinch > 0.5)
     //                {
 
+    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////
+    /// Code for UI Checkboxes
+    ///
+
     if(leftHandActive)
     {
         if (leftHand.isLeft())
@@ -3209,18 +3214,69 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
         }
 
-///       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
-       if (leftIndex.isExtended())
-       {
-           translateLeft++;
-            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
-       }
+/////       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
+//       if (leftIndex.isExtended())
+//       {
+//           translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+//       }
 
         if(leftThumb.isExtended())
         {
             translateLeft++;
             this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
         }
+
+        /// SOURCE CODE TAKE FROM
+        /// http://blog.leapmotion.com/grabbing-and-throwing-small-objects-ragdoll-style/
+        ///
+        bool trigger_Pinch = false;
+        int NUM_FINGERS = 5;
+        int NUM_BONES = 4;
+
+
+        /// Thumb TIp is the pinch Position
+        Vector thumb_tip = leftHand.fingers()[0].tipPosition();
+
+        /// CHeck thumb tip distance to joints on all other fingers
+        /// If its close enough, start pinching
+        ///
+        std::cout << std::fixed << std::setprecision(2) ;
+//        for (int i = 1; i <  NUM_FINGERS ; i++)
+//        {
+//            Finger finger = leftHand.fingers()[i];
+//            std:: cout << "Finger: " << i  << " ";
+
+//            Bone bone;
+//            Bone::Type boneType;
+
+//            for (int b = 0; b < NUM_BONES; b++)
+//            {
+//                boneType = static_cast<Bone::Type>(b);
+//                bone = finger.bone(boneType);
+//                Vector bone_Pos = bone.center();
+//                Vector distance = thumb_tip - bone_Pos;
+//                std:: cout << "[" << b << "]: " << distance.magnitude() << "\t" ;
+//            }
+//            std::cout << endl;
+//        }
+        Bone bone;
+        Bone::Type boneType;
+
+        boneType = static_cast<Bone::Type>(3);
+        bone = leftHand.fingers()[1].bone(boneType);
+        Vector bone_Pos = bone.center();
+        Vector distance = thumb_tip - bone_Pos;
+
+        if (distance.magnitude() < 30)
+        {
+             translateLeft++;
+             this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+        }
+
+
+
+
     }
 
     if (rightHandActive)
@@ -3244,13 +3300,56 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         }
     }
 
+//    if(leftHandActive)
+//    {
+//        if (leftHand.isLeft())
+//        {
+//            translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
+//        }
+
+/////       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
+//       if (leftIndex.isExtended())
+//       {
+//           translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+//       }
+
+//        if(leftThumb.isExtended())
+//        {
+//            translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+//        }
+//    }
+
+//    if (rightHandActive)
+//    {
+//        if (rightHand.isRight())
+//        {
+//            translateRight++;
+//            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
+//        }
+
+//        if(rightIndex.isExtended())
+//        {
+//            translateRight++;
+//            this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+//        }
+
+//        if(rightThumb.isExtended())
+//        {
+//            translateRight ++ ;
+//            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+//        }
+//    }
+
 
     //// WE TRACK THE LEFT HAND for SCALE
 
     if(
             (frame.hands().leftmost().isLeft())
-            //&& (leftHand.grabStrength() == 1)
-            && (extendedLeft.count() == 0)
+            && (leftHand.grabStrength() == 1)
+            //&& (extendedLeft.count() == 0)
             && (leftHandActive  )
             )
 //          &&   leftHand.translationProbability(controller_->frame(1)) > 0.7)
@@ -3392,23 +3491,26 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     ///         BOX TRANSLATION     ///
     /// ///////////////////////////////////////////////////////////
     ///
-    std::cout << "Left Pinch: " << leftHand.pinchStrength();
-    std::cout << "Left Fingers: \t" ;
-    for(Leap::FingerList::const_iterator finger = extendedLeft.begin(); finger != extendedLeft.end(); finger++)
-    {
-        std::cout << (*finger).toString() << "\t" ;
-    }
+//    std::cout << "Left Pinch: " << leftHand.pinchStrength();
+//    std::cout << "Left Fingers: \t" ;
+//    for(Leap::FingerList::const_iterator finger = extendedLeft.begin(); finger != extendedLeft.end(); finger++)
+//    {
+//        std::cout << (*finger).toString() << "\t" ;
+//    }
 
-    std::cout << "\t\t";
+//    std::cout << "\t\t";
 
-    std::cout << "Right Pinch: " << rightHand.pinchStrength();
-    std::cout << "Right Fingers: \t" ;
-    for(Leap::FingerList::const_iterator finger = extendedRight.begin(); finger != extendedRight.end(); finger++)
-    {
-        std::cout << (*finger).toString() << "\t" ;
-    }
+//    std::cout << "Right Pinch: " << rightHand.pinchStrength();
+//    std::cout << "Right Fingers: \t" ;
+//    for(Leap::FingerList::const_iterator finger = extendedRight.begin(); finger != extendedRight.end(); finger++)
+//    {
+//        std::cout << (*finger).toString() << "\t" ;
+//    }
 
-    std::cout << endl;
+//    std::cout << endl;
+
+
+    ///////////////////////////////
 
 //    if (translateLeft ==3 && translateRight == 3)
 //    {
