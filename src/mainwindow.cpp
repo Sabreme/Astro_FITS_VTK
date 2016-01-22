@@ -3126,8 +3126,13 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     Hand leftHand = frame.hands().leftmost();
     bool leftHandActive = true;
     bool rightHandActive = true;
-    int translateLeft = 0;          // We increment for each case until ALL SUM to 3
-    int translateRight = 0 ;    // We increment for each case until ALL SUM to 3
+
+    bool leftPinch = false;
+    bool rightPinch = false;
+
+    bool leftGrab = false;
+    bool rightGrab = false;
+
 
     /// If Not the Right Hand then reverse outcome
     /// If RightHand is Active then
@@ -3210,94 +3215,79 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     {
         if (leftHand.isLeft())
         {
-            translateLeft++;
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
         }
 
 /////       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
-//       if (leftIndex.isExtended())
-//       {
-//           translateLeft++;
-//            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
-//       }
+       if (leftHand.grabStrength() == 1)
+       {
+            leftGrab = true;
+            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+       }
 
-        if(leftThumb.isExtended())
-        {
-            translateLeft++;
-            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
-        }
 
         /// SOURCE CODE TAKE FROM
         /// http://blog.leapmotion.com/grabbing-and-throwing-small-objects-ragdoll-style/
         ///
-        bool trigger_Pinch = false;
-        int NUM_FINGERS = 5;
-        int NUM_BONES = 4;
-
 
         /// Thumb TIp is the pinch Position
-        Vector thumb_tip = leftHand.fingers()[0].tipPosition();
+       {
+           Vector thumb_tip = leftHand.fingers()[0].tipPosition();
 
-        /// CHeck thumb tip distance to joints on all other fingers
-        /// If its close enough, start pinching
-        ///
-        std::cout << std::fixed << std::setprecision(2) ;
-//        for (int i = 1; i <  NUM_FINGERS ; i++)
-//        {
-//            Finger finger = leftHand.fingers()[i];
-//            std:: cout << "Finger: " << i  << " ";
+           Bone bone;
+           Bone::Type boneType;
 
-//            Bone bone;
-//            Bone::Type boneType;
+           boneType = static_cast<Bone::Type>(3);
+           bone = leftHand.fingers()[1].bone(boneType);
+           Vector bone_Pos = bone.center();
+           Vector distance = thumb_tip - bone_Pos;
 
-//            for (int b = 0; b < NUM_BONES; b++)
-//            {
-//                boneType = static_cast<Bone::Type>(b);
-//                bone = finger.bone(boneType);
-//                Vector bone_Pos = bone.center();
-//                Vector distance = thumb_tip - bone_Pos;
-//                std:: cout << "[" << b << "]: " << distance.magnitude() << "\t" ;
-//            }
-//            std::cout << endl;
-//        }
-        Bone bone;
-        Bone::Type boneType;
-
-        boneType = static_cast<Bone::Type>(3);
-        bone = leftHand.fingers()[1].bone(boneType);
-        Vector bone_Pos = bone.center();
-        Vector distance = thumb_tip - bone_Pos;
-
-        if (distance.magnitude() < 30)
-        {
-             translateLeft++;
-             this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
-        }
-
-
-
-
+           if (distance.magnitude() < 30)
+           {
+               leftPinch = true;
+               this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+           }
+       }
     }
+
 
     if (rightHandActive)
     {
         if (rightHand.isRight())
         {
-            translateRight++;
             this->ui->checkbx_SubVolLeapRightHand->setChecked(true);            
         }
 
-        if(rightIndex.isExtended())
+        if(rightHand.grabStrength() == 1)
         {
-            translateRight++;
+            rightGrab = true;
             this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
         }
 
-        if(rightThumb.isExtended())
-        {
-            translateRight ++ ;
-            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
-        }
+//        if(rightThumb.isExtended())
+//        {
+//            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+//        }
+
+
+        /// Thumb TIp is the pinch Position
+       {
+           Vector thumb_tip = rightHand.fingers()[0].tipPosition();
+
+           Bone bone;
+           Bone::Type boneType;
+
+           boneType = static_cast<Bone::Type>(3);
+           bone = rightHand.fingers()[1].bone(boneType);
+           Vector bone_Pos = bone.center();
+           Vector distance = thumb_tip - bone_Pos;
+
+           if (distance.magnitude() < 30)
+           {
+               rightPinch = true;
+               this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+           }
+       }
     }
 
 //    if(leftHandActive)
@@ -3348,9 +3338,11 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
 
     if(
             (frame.hands().leftmost().isLeft())
-            && (leftHand.grabStrength() == 1)
+            //&& (leftHand.grabStrength() == 1)
+            && leftPinch
             //&& (extendedLeft.count() == 0)
-            && (leftHandActive  )
+            //&& (leftHandActive  )
+            && !leftGrab
             )
 //          &&   leftHand.translationProbability(controller_->frame(1)) > 0.7)
     {
@@ -3419,8 +3411,10 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     if(
             (frame.hands().rightmost().isRight())
             //&& (leftHand.grabStrength() == 1)
-            && (extendedRight.count() == 0)
-            && (rightHandActive  )
+            //&& (extendedRight.count() == 0)
+            && rightPinch
+            //&& (rightHandActive  )
+            && !rightGrab
             )
     {
         ////////////////////////////////////////////////////////
