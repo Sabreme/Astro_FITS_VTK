@@ -3222,7 +3222,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
        if (leftHand.grabStrength() == 1)
        {
             leftGrab = true;
-            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+            this->ui->checkbx_SubVolLeapLeftGrab->setChecked(true);
        }
 
 
@@ -3245,7 +3245,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
            if (distance.magnitude() < 30)
            {
                leftPinch = true;
-               this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+               this->ui->checkbx_SubVolLeapLeftPinch->setChecked(true);
            }
        }
     }
@@ -3261,7 +3261,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         if(rightHand.grabStrength() == 1)
         {
             rightGrab = true;
-            this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+            this->ui->checkbx_SubVolLeapRightGrab->setChecked(true);
         }
 
 //        if(rightThumb.isExtended())
@@ -3285,7 +3285,7 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
            if (distance.magnitude() < 30)
            {
                rightPinch = true;
-               this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+               this->ui->checkbx_SubVolLeapRightPinch->setChecked(true);
            }
        }
     }
@@ -3656,11 +3656,21 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
 
                 /// Interact, if desired
 
+
+
+                vtkProperty * pointerProperty1 = pointWidget1_->GetProperty();
+                pointerProperty1->SetColor(0.8900, 0.8100, 0.3400);
+
                 pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
 
 
 
                 pointWidget2_->SetPosition(pickPoint2);
+
+                vtkProperty * pointerProperty2 =
+                        pointWidget2_->GetProperty();
+
+                pointerProperty2->SetColor(0.3400, 0.8100, 0.8900);
 
                 /// Interact, if desired
 
@@ -6688,11 +6698,11 @@ void MainWindow::LeapMotion()
             this->ui->Frame_SubVolLeapTracking->setVisible(true);
 
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(false);
-            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(false);
-            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(false);
+            this->ui->checkbx_SubVolLeapLeftGrab->setChecked(false);
+            this->ui->checkbx_SubVolLeapLeftPinch->setChecked(false);
             this->ui->checkbx_SubVolLeapRightHand->setChecked(false);
-            this->ui->checkbx_SubVolLeapRightIndex->setChecked(false);
-            this->ui->checkbx_SubVolLeapRightThumb->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightGrab->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightPinch->setChecked(false);
 
         }
 

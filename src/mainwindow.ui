@@ -3313,7 +3313,7 @@ border:none;
           <string>Right Hand</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="checkbx_SubVolLeapRightThumb">
+        <widget class="QCheckBox" name="checkbx_SubVolLeapRightPinch">
          <property name="geometry">
           <rect>
            <x>170</x>
@@ -3323,10 +3323,10 @@ border:none;
           </rect>
          </property>
          <property name="text">
-          <string>Right Thumb</string>
+          <string>Right Pinch</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="checkbx_SubVolLeapRightIndex">
+        <widget class="QCheckBox" name="checkbx_SubVolLeapRightGrab">
          <property name="geometry">
           <rect>
            <x>170</x>
@@ -3336,7 +3336,7 @@ border:none;
           </rect>
          </property>
          <property name="text">
-          <string>Right Index</string>
+          <string>Right Grab</string>
          </property>
         </widget>
         <widget class="QCheckBox" name="checkbx_SubVolLeapLeftHand">
@@ -3352,7 +3352,7 @@ border:none;
           <string>Left Hand</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftThumb">
+        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftPinch">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -3362,10 +3362,10 @@ border:none;
           </rect>
          </property>
          <property name="text">
-          <string>Left Thumb</string>
+          <string>Left Pinch</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftIndex">
+        <widget class="QCheckBox" name="checkbx_SubVolLeapLeftGrab">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -3375,7 +3375,7 @@ border:none;
           </rect>
          </property>
          <property name="text">
-          <string>Left Index</string>
+          <string>Left Grab</string>
          </property>
         </widget>
        </widget>
