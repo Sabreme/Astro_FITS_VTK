@@ -429,6 +429,28 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
+
+            this->ui->qvtkWidgetLeft->setTransformsOn(true);
+            this->ui->qvtkWidgetLeft->SetArbSliceOn(false);
+
+            this->ui->qvtkWidgetLeft->SetSubVolumeOn(false);
+
+            this->ui->buttonTransformActive->setChecked(true);
+
+
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
+
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlicePressed()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Moving()), this, SLOT(touchFinger1ArbSliceMoving()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFinger1ArbSliceReleased()));
+
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2ArbSlicePressed()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Moving()), this, SLOT(touchFinger2ArbSliceMoving()));
+            disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Released()), this, SLOT(touchFInger2ArbSliceReleased()));
+
         }
             break;
         case Leap:
@@ -486,6 +508,20 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
 
+            this->ui->qvtkWidgetLeft->setTransformsOn(false);
+            this->ui->qvtkWidgetLeft->SetArbSliceOn(false);
+
+            this->ui->qvtkWidgetLeft->SetSubVolumeOn(true);
+
+            this->ui->buttonTransformActive->setChecked(false);
+
+
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
+
+
 
 
         }
@@ -536,6 +572,25 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
+
+            this->ui->buttonTransformActive->setChecked(false);
+
+
+            this->ui->qvtkWidgetLeft->setTransformsOn(false);
+
+            this->ui->qvtkWidgetLeft->SetSubVolumeOn(false);
+
+            this->ui->qvtkWidgetLeft->SetArbSliceOn(true);
+
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlicePressed()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Moving()), this, SLOT(touchFinger1ArbSliceMoving()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFinger1ArbSliceReleased()));
+
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2ArbSlicePressed()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Moving()), this, SLOT(touchFinger2ArbSliceMoving()));
+            connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Released()), this, SLOT(touchFInger2ArbSliceReleased()));
+
+
         }
             break;
         }
@@ -5301,7 +5356,7 @@ void MainWindow::touchFinger2ArbSliceMoving()
 
 void MainWindow::touchFInger2ArbSliceReleased()
 {
-    customArbPlaneWidget->finger2Released();
+    customArbPlaneWidget->finger1Released();
 }
 
 
