@@ -434,6 +434,7 @@ void MainWindow::startUserTest()
         case Leap:
         {
            setLeapInteractor();
+           this->ui->buttonTransformActive->setChecked(true);
         }
             break;
         }
@@ -460,7 +461,11 @@ void MainWindow::startUserTest()
         }
             break;
 
-        case Leap:  this->leapBeginSubVol();
+        case Leap:
+        {
+            this->leapBeginSubVol();
+            this->ui->buttonTransformActive->setChecked(false);
+            }
             break;
 
         case Touch:
@@ -480,6 +485,8 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
+
+
 
         }
             break;
@@ -888,7 +895,7 @@ void MainWindow::saveScreenShot()
       }
 
 
-      QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+      QString userDetails = QString("TESTS/UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
               .arg(userID)
               .arg(taskNo)
               .arg(userTest->GetCurrentTask(userID - 1))
