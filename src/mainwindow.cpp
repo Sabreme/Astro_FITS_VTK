@@ -434,6 +434,7 @@ void MainWindow::startUserTest()
         case Leap:
         {
            setLeapInteractor();
+           this->ui->buttonTransformActive->setChecked(true);
         }
             break;
         }
@@ -460,7 +461,11 @@ void MainWindow::startUserTest()
         }
             break;
 
-        case Leap:  this->leapBeginSubVol();
+        case Leap:
+        {
+            this->leapBeginSubVol();
+            this->ui->buttonTransformActive->setChecked(false);
+            }
             break;
 
         case Touch:
@@ -480,6 +485,8 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(translateTriggered()), userTestDlg,SLOT(incTranslation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(rotateTriggered()),userTestDlg,SLOT(incRotation()));
             connect(this->ui->qvtkWidgetLeft, SIGNAL(zRotateTriggered()), userTestDlg, SLOT(incZRotation()));
+
+
 
         }
             break;
@@ -888,7 +895,7 @@ void MainWindow::saveScreenShot()
       }
 
 
-      QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+      QString userDetails = QString("TESTS/UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
               .arg(userID)
               .arg(taskNo)
               .arg(userTest->GetCurrentTask(userID - 1))
@@ -3127,6 +3134,13 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     bool leftHandActive = true;
     bool rightHandActive = true;
 
+    bool leftPinch = false;
+    bool rightPinch = false;
+
+    bool leftGrab = false;
+    bool rightGrab = false;
+
+
     /// If Not the Right Hand then reverse outcome
     /// If RightHand is Active then
     if (frame.hands().count() == 1)
@@ -3158,14 +3172,15 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
 
     //                const FingerList leftFingers = frame.hands().leftmost().fingers();
     //                const FingerList rightFingers = frame.hands().rightmost().fingers();
-    const FingerList extendedLeft = frame.hands().leftmost().fingers().extended();
-    const FingerList extendedRight = frame.hands().rightmost().fingers().extended();
 
-    Finger leftThumb = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
-    Finger rightThumb = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_THUMB))[0];
+    const FingerList extendedLeft = leftHand.fingers().extended();
+    const FingerList extendedRight = rightHand.fingers().extended();
 
-    Finger leftIndex = (frame.hands().leftmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
-    Finger rightIndex = (frame.hands().rightmost().fingers().fingerType(Finger::TYPE_INDEX))[0];
+    Finger leftThumb = (leftHand.fingers().fingerType(Finger::TYPE_THUMB))[0];
+    Finger rightThumb = (rightHand.fingers().fingerType(Finger::TYPE_THUMB))[0];
+
+    Finger leftIndex = (leftHand.fingers().fingerType(Finger::TYPE_INDEX))[0];
+    Finger rightIndex = (rightHand.fingers().fingerType(Finger::TYPE_INDEX))[0];
 
     /// PRINTOUT OF STATUSSES
     //                std::cout << "Right Thumb out: " << rightThumb.isExtended() << " \t" ;
@@ -3198,39 +3213,143 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
     //                if( leftPinch > 0.5 && rightPinch > 0.5)
     //                {
 
+    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////
+    /// Code for UI Checkboxes
+    ///
+
     if(leftHandActive)
     {
-        if (frame.hands().leftmost().isLeft())
+        if (leftHand.isLeft())
+        {
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
+        }
 
-///       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
-       if (extendedLeft.count() == 0)
-            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+/////       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
+       if (leftHand.grabStrength() == 1)
+       {
+            leftGrab = true;
+            this->ui->checkbx_SubVolLeapLeftGrab->setChecked(true);
+       }
 
-        if(leftHand.grabStrength() == 1)
-            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+
+        /// SOURCE CODE TAKE FROM
+        /// http://blog.leapmotion.com/grabbing-and-throwing-small-objects-ragdoll-style/
+        ///
+
+        /// Thumb TIp is the pinch Position
+       {
+           Vector thumb_tip = leftHand.fingers()[0].tipPosition();
+
+           Bone bone;
+           Bone::Type boneType;
+
+           boneType = static_cast<Bone::Type>(3);
+           bone = leftHand.fingers()[1].bone(boneType);
+           Vector bone_Pos = bone.center();
+           Vector distance = thumb_tip - bone_Pos;
+
+           if (distance.magnitude() < 30)
+           {
+               leftPinch = true;
+               this->ui->checkbx_SubVolLeapLeftPinch->setChecked(true);
+           }
+       }
     }
+
 
     if (rightHandActive)
     {
-        if (frame.hands().rightmost().isRight())
-            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
-
-        if(rightHand.pinchStrength() == 1)
-            this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+        if (rightHand.isRight())
+        {
+            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);            
+        }
 
         if(rightHand.grabStrength() == 1)
-            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+        {
+            rightGrab = true;
+            this->ui->checkbx_SubVolLeapRightGrab->setChecked(true);
+        }
+
+//        if(rightThumb.isExtended())
+//        {
+//            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+//        }
+
+
+        /// Thumb TIp is the pinch Position
+       {
+           Vector thumb_tip = rightHand.fingers()[0].tipPosition();
+
+           Bone bone;
+           Bone::Type boneType;
+
+           boneType = static_cast<Bone::Type>(3);
+           bone = rightHand.fingers()[1].bone(boneType);
+           Vector bone_Pos = bone.center();
+           Vector distance = thumb_tip - bone_Pos;
+
+           if (distance.magnitude() < 30)
+           {
+               rightPinch = true;
+               this->ui->checkbx_SubVolLeapRightPinch->setChecked(true);
+           }
+       }
     }
 
+//    if(leftHandActive)
+//    {
+//        if (leftHand.isLeft())
+//        {
+//            translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftHand->setChecked(true);
+//        }
 
-    //// WE TRACK THE LEFT HAND
+/////       if (leftHand.translationProbability(controller_->frame(1)) > 0.7)
+//       if (leftIndex.isExtended())
+//       {
+//           translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(true);
+//       }
+
+//        if(leftThumb.isExtended())
+//        {
+//            translateLeft++;
+//            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(true);
+//        }
+//    }
+
+//    if (rightHandActive)
+//    {
+//        if (rightHand.isRight())
+//        {
+//            translateRight++;
+//            this->ui->checkbx_SubVolLeapRightHand->setChecked(true);
+//        }
+
+//        if(rightIndex.isExtended())
+//        {
+//            translateRight++;
+//            this->ui->checkbx_SubVolLeapRightIndex->setChecked(true);
+//        }
+
+//        if(rightThumb.isExtended())
+//        {
+//            translateRight ++ ;
+//            this->ui->checkbx_SubVolLeapRightThumb->setChecked(true);
+//        }
+//    }
+
+
+    //// WE TRACK THE LEFT HAND for SCALE
 
     if(
             (frame.hands().leftmost().isLeft())
             //&& (leftHand.grabStrength() == 1)
-            && (extendedLeft.count() == 0)
-            && (leftHandActive  )
+            && leftPinch
+            //&& (extendedLeft.count() == 0)
+            //&& (leftHandActive  )
+            && !leftGrab
             )
 //          &&   leftHand.translationProbability(controller_->frame(1)) > 0.7)
     {
@@ -3295,12 +3414,14 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         }
     }
 
-    //// WE TRACK THE RIGHT HAND
+    //// WE TRACK THE RIGHT HAND for Scale
     if(
             (frame.hands().rightmost().isRight())
             //&& (leftHand.grabStrength() == 1)
-            && (extendedRight.count() == 0)
-            && (rightHandActive  )
+            //&& (extendedRight.count() == 0)
+            && rightPinch
+            //&& (rightHandActive  )
+            && !rightGrab
             )
     {
         ////////////////////////////////////////////////////////
@@ -3365,10 +3486,244 @@ void MainWindow::leapSubVolumeUpdate(Frame frame, Hand hand, bool &subVolRightHa
         }
 
     }
+
+
+
+    //////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    ///         BOX TRANSLATION     ///
+    /// ///////////////////////////////////////////////////////////
+    ///
+    ///
+    ///
+    if (leftGrab && rightGrab)
+    {
+
+
+        bool widget1Valid = false;
+        bool widget2Valid = false;
+
+        double pickPoint1[4], pickPoint2[4];
+
+        {
+            ///std::cout << "VALID TRANSLATE LOCATION \t[x,y]: " << finger.x() << ", " << finger.y() << endl;
+
+
+            //    int threshold = 50;
+
+            /// 1. Compute the new Position by Getting the PointWidget Focal Point
+            /// 2. Getting the Finger Actor 2D position into 3D World Position using FocalPoint Z axis
+            /// 3. Create the Translation transformation from finger by lookint at last position
+            /// 3. Apply the translation to the widget position
+            /// 4. PointWidget Update
+
+            //// --------MOVE PointWidget 1 with HAND Left TRANSFORMATION--------"
+
+            {
+
+    //             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+    //                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
+
+                /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+                ///
+
+
+
+                 /// Get the Motion Vector of the Hand
+                 ///
+                Vector hand1OldPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+                Vector hand1NewPos = controller_->frame().hands().rightmost().stabilizedPalmPosition();
+
+                Vector leapRightMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+
+                /// Get the Camera Orientation and angle
+                double * camOrientation = camera->GetOrientationWXYZ();
+                double angle = camOrientation[0];
+                Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
+
+                const double PI = 3.141592653589793;
+                /// Generate the Matrix and Transforms
+                Matrix transformMatrix = Matrix();
+                transformMatrix.identity();
+                transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
+                Vector rotatedRightVector = transformMatrix.transformDirection(leapRightMove);
+
+                /// Get the pointWidget Position
+                double * newPosition;
+                double oldPosition[3];
+
+                pointWidget1_->GetPosition(oldPosition);
+
+                /// Generate the Transform and Apply it
+                vtkTransform * AggregateTransform =  vtkTransform::New();
+                AggregateTransform->Identity();
+                AggregateTransform->Translate(rotatedRightVector.x, rotatedRightVector.y, rotatedRightVector.z);
+                newPosition = AggregateTransform->TransformPoint(oldPosition);
+
+                /// Send New 3D Point to World
+
+                ///pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (newPosition[0]), newPosition[1], newPosition, pickPoint1);
+
+
+                /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+                ///
+
+                bool xRangeValid = (newPosition[0] >= global_Volume->GetBounds()[0]) && (newPosition[0] <= global_Volume->GetBounds()[1]);
+                bool yRangeValid = (newPosition[1] >= global_Volume->GetBounds()[2]) && (newPosition[1] <= global_Volume->GetBounds()[3]);
+                bool zRangeValid = (newPosition[2] >= global_Volume->GetBounds()[4]) && (newPosition[2] <= global_Volume->GetBounds()[5]);
+
+                if (xRangeValid && yRangeValid && zRangeValid)
+                {
+                      widget1Valid = true;
+                      pickPoint1[0] = newPosition[0];
+                      pickPoint1[1] = newPosition[1];
+                      pickPoint1[2] = newPosition[2];
+                }
+
+
+
+
+            }
+
+            //// --------MOVE PointWidget 2 with HAND 1 TRANSFORMATION--------"
+
+            {
+
+    //             std::cout << "Finger Translation: New[x,y]: " << actorPos2D[0] << ", " << actorPos2D[1]
+    //                                        << "\t Old[x,y]: " << actorPos2D2[0] << ", " << actorPos2D2[1] << endl;
+
+
+                Vector hand1OldPos = controller_->frame(1).hands().rightmost().stabilizedPalmPosition();
+                Vector hand1NewPos = controller_->frame().hands().rightmost().stabilizedPalmPosition();
+
+                Vector rightLeftMove = hand1NewPos-hand1OldPos;  /// Vector of the Finger Movement in Leap SPACE
+
+                /// Get the Camera Orientation and angle
+                double * camOrientation = camera->GetOrientationWXYZ();
+                double angle = camOrientation[0];
+                Vector cameraAngle = Vector(camOrientation[1], camOrientation[2], camOrientation[3]);
+
+                const double PI = 3.141592653589793;
+                /// Generate the Matrix and Transforms
+                Matrix transformMatrix = Matrix();
+                transformMatrix.identity();
+                transformMatrix.setRotation(cameraAngle,angle * (PI / 180));
+                Vector rotatedLeftVector = transformMatrix.transformDirection(rightLeftMove);
+
+                /// Get the pointWidget Position
+                double * newPosition;
+                double oldPosition[3];
+
+                pointWidget2_->GetPosition(oldPosition);
+
+                /// Generate the Transform and Apply it
+                vtkTransform * AggregateTransform =  vtkTransform::New();
+                AggregateTransform->Identity();
+                AggregateTransform->Translate(rotatedLeftVector.x, rotatedLeftVector.y, rotatedLeftVector.z);
+                newPosition = AggregateTransform->TransformPoint(oldPosition);
+
+                /// Send New 3D Point to World
+
+                ///pointWidget1_->ComputeDisplayToWorld(defaultRenderer, (newPosition[0]), newPosition[1], newPosition, pickPoint1);
+
+
+                /// If the NEW pointWidget 1 IS NOT ON the Volume Bounds, Set pointWidget Change to true
+                ///
+
+                bool xRangeValid = (newPosition[0] >= global_Volume->GetBounds()[0]) && (newPosition[0] <= global_Volume->GetBounds()[1]);
+                bool yRangeValid = (newPosition[1] >= global_Volume->GetBounds()[2]) && (newPosition[1] <= global_Volume->GetBounds()[3]);
+                bool zRangeValid = (newPosition[2] >= global_Volume->GetBounds()[4]) && (newPosition[2] <= global_Volume->GetBounds()[5]);
+
+                 if (xRangeValid && yRangeValid && zRangeValid)
+                 {
+                       widget2Valid = true;
+                       pickPoint2[0] = newPosition[0];
+                       pickPoint2[1] = newPosition[1];
+                       pickPoint2[2] = newPosition[2];
+                 }
+            }
+
+            /// If the widgets are Both Valid Translations, apply the New Point Positions
+            if (widget1Valid && widget2Valid)
+            {
+                if (userTestRunning() && !pointWidget1Active && !pointWidget2Active)
+                {
+                    userTestDlg->incSubVolPoint1();
+                    userTestDlg->incSubVolPoint2();
+                }
+
+                if (!pointWidget2Active && !pointWidget1Active)
+                {
+                    std::cout << "SubVolume TRIGGERED" << endl ;
+                    pointWidget1Active = true;
+                    pointWidget2Active = true;
+                }
+
+                pointWidget1_->SetPosition(pickPoint1);
+
+                /// Interact, if desired
+
+
+
+                vtkProperty * pointerProperty1 = pointWidget1_->GetProperty();
+                pointerProperty1->SetColor(0.8900, 0.8100, 0.3400);
+
+                pointWidget1_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+
+
+
+                pointWidget2_->SetPosition(pickPoint2);
+
+                vtkProperty * pointerProperty2 =
+                        pointWidget2_->GetProperty();
+
+                pointerProperty2->SetColor(0.3400, 0.8100, 0.8900);
+
+                /// Interact, if desired
+
+                pointWidget2_->InvokeEvent(vtkCommand::InteractionEvent, NULL);
+            } /// if (widget1Valid && widget2Valid)
+        } ///(validXmax && validXmin && validYmin && validYmax &&
+    }
+
+//    std::cout << "Left Pinch: " << leftHand.pinchStrength();
+//    std::cout << "Left Fingers: \t" ;
+//    for(Leap::FingerList::const_iterator finger = extendedLeft.begin(); finger != extendedLeft.end(); finger++)
+//    {
+//        std::cout << (*finger).toString() << "\t" ;
+//    }
+
+//    std::cout << "\t\t";
+
+//    std::cout << "Right Pinch: " << rightHand.pinchStrength();
+//    std::cout << "Right Fingers: \t" ;
+//    for(Leap::FingerList::const_iterator finger = extendedRight.begin(); finger != extendedRight.end(); finger++)
+//    {
+//        std::cout << (*finger).toString() << "\t" ;
+//    }
+
+//    std::cout << endl;
+
+
+    ///////////////////////////////
+
+//    if (translateLeft ==3 && translateRight == 3)
+//    {
+//        std::cout << "TRANSLATION REQUIRED" << endl;
+//    }
+//    else
+//    {
+//        translateLeft = 0;
+//        translateRight = 0;
+
+//    }
+
+
     double* finalPos1 = pointWidget1_->GetPosition();
     double* finalPos2 = pointWidget2_->GetPosition();
 
-    trackSubVolume(finalPos1, finalPos2);
+    trackSubVolume(finalPos1, finalPos2);       
+
 }
 
 void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand hand)
@@ -3378,7 +3733,7 @@ void MainWindow::leapTranslateUpdate(Frame frame, bool &translateMovement , Hand
     translateMovement = true;
 
 //    this->ui->labelTranslation->setFont(boldFont);
-//    this->ui->buttonTransfTranslation->setEnabled(true);
+    this->ui->buttonTransfTranslation->setEnabled(true);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief newPosition - CURRENT REPRESENTATION
@@ -3549,6 +3904,8 @@ void MainWindow::leapRotateUpdate(Frame frame, bool &rotateMovement, Hand hand)
     ui->line_OrientY->setText(QString::number(orientation[1], 'f', 0));
     ui->line_OrientZ->setText(QString::number(orientation[2], 'f', 0));
 
+    this->ui->buttonTransfRotation->setEnabled(true);
+
     //renderer->ResetCameraClippingRange();
     if(this->userTestRunning())
     {
@@ -3569,6 +3926,7 @@ void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
     float scaleFactor = hand.scaleFactor(controller_->frame(2));
 
 
+
     if (camera->GetParallelProjection())
     {
         camera->SetParallelProjection(camera->GetParallelScale() / scaleFactor);
@@ -3586,6 +3944,7 @@ void MainWindow::leapScaleUpdate(Frame frame, bool &scaleMovement, Hand hand)
     value = this->defaultCameraDistance /  camera->GetDistance();
 
     ui->line_Scale->setText(QString::number(value, 'f', 2));
+    ui->buttonTransfScaling->setEnabled(true);
 
     if(this->userTestRunning())
     {
@@ -6346,11 +6705,11 @@ void MainWindow::LeapMotion()
             this->ui->Frame_SubVolLeapTracking->setVisible(true);
 
             this->ui->checkbx_SubVolLeapLeftHand->setChecked(false);
-            this->ui->checkbx_SubVolLeapLeftIndex->setChecked(false);
-            this->ui->checkbx_SubVolLeapLeftThumb->setChecked(false);
+            this->ui->checkbx_SubVolLeapLeftGrab->setChecked(false);
+            this->ui->checkbx_SubVolLeapLeftPinch->setChecked(false);
             this->ui->checkbx_SubVolLeapRightHand->setChecked(false);
-            this->ui->checkbx_SubVolLeapRightIndex->setChecked(false);
-            this->ui->checkbx_SubVolLeapRightThumb->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightGrab->setChecked(false);
+            this->ui->checkbx_SubVolLeapRightPinch->setChecked(false);
 
         }
 
