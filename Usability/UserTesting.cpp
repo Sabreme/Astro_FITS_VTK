@@ -122,8 +122,28 @@ void UserTesting::importSystemResults(QString results)
     ///////////////////////
     /// SAVE RESULT FOR SYSTEM RESULTS
     ///
+    ///
+    /// ////////////////////////////////////////////////
+#ifdef __WIN32__
+    QDir dir("C:/);
+    QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+    dir.mkpath(userIDString);
+    if (!dir.exists())
+        dir.mkpath(".");
+    QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __linux__
+        QDir dir(QDir::homePath());
+        QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+        dir.mkpath(userIDString);
+        if (!dir.exists())
+            dir.mkpath(".");
+        QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#endif
 
-     QString output = QString("TESTS/UserID_%1_Task_%2_%3_SYSTEM.txt").arg(userID).arg(taskNo).arg(medium);
+     QString fileName = QString("UserID_%1_Task_%2_%3_SYSTEM.txt").arg(userID).arg(taskNo).arg(medium);
+
+    QString output = outputDir +  fileName;
+
 
     QFile file(output);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -171,8 +191,26 @@ void UserTesting::importUserResults(QString results)
         ///////////////////////
         /// SAVE RESULT FOR SYSTEM RESULTS
         ///
+        ///
+#ifdef __WIN32__
+    QDir dir("C:/);
+    QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+    dir.mkpath(userIDString);
+    if (!dir.exists())
+        dir.mkpath(".");
+    QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __linux__
+        QDir dir(QDir::homePath());
+        QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+        dir.mkpath(userIDString);
+        if (!dir.exists())
+            dir.mkpath(".");
+        QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#endif
 
-         QString output = QString("TESTS/UserID_%1_Task_%2_%3_USER.txt").arg(userID).arg(taskNo).arg(medium);
+     QString fileName = QString("UserID_%1_Task_%2_%3_USER.txt").arg(userID).arg(taskNo).arg(medium);
+
+    QString output = outputDir +  fileName;
 
         QFile file(output);
         file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -218,10 +256,29 @@ void UserTesting::importSurveyResults(QString results)
 
     /////////////////////////////////////////////////////
     ///////////////////////
-    /// SAVE RESULT FOR SYSTEM RESULTS
+    /// SAVE RESULT FOR SURVEY
     ///
+    ///
+#ifdef __WIN32__
+QDir dir("C:/);
+QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+dir.mkpath(userIDString);
+if (!dir.exists())
+    dir.mkpath(".");
+QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __linux__
+    QDir dir(QDir::homePath());
+    QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+    dir.mkpath(userIDString);
+    if (!dir.exists())
+        dir.mkpath(".");
+    QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#endif
 
-    QString output = QString("TESTS/UserID_%1_Task_%2_%3_Survey.txt").arg(userID).arg(taskNo).arg(medium);
+ QString fileName = QString("UserID_%1_Task_%2_%3_Survey.txt").arg(userID).arg(taskNo).arg(medium);
+
+QString output = outputDir +  fileName;
+
 
     QFile file(output);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -402,7 +459,17 @@ void UserTesting::saveResult(QString result)
 
     int userID = this->ui->spinBoxUSERID->value();
 
-    QString outputDir = QDir::currentPath();
+
+#ifdef __WIN32__
+        QString outputDir = QDir::currentPath();
+#elif __linux__
+        QDir dir ("/home/pmulumba/UserTesting");
+        if (!dir.exists())
+            dir.mkpath(".");
+        QString outputDir = dir.absolutePath();
+#endif
+//    QString outputDir = QDir::currentPath();
+
     QString fileName = QString("TESTS/UserID_%1_Task_%2_.txt").arg(userID).arg(taskNo);
 
     QString output = outputDir + "/" + fileName;

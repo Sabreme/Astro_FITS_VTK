@@ -155,6 +155,9 @@ QPushButton:checked
     </property>
    </widget>
    <widget class="QPushButton" name="buttonSaveScreen">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>100</x>

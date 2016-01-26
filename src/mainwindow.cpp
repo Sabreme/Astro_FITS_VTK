@@ -522,8 +522,6 @@ void MainWindow::startUserTest()
             connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
 
 
-
-
         }
             break;
         }
@@ -857,6 +855,12 @@ QString MainWindow::getUserTestResults(int job)
 
 void MainWindow::stopUserTest()
 {
+    //////////////////////////////////////////////////
+    /// \brief saveScreenShot
+    ///
+    saveScreenShot();
+
+
     int currentJob = userTest->getCurrentJob();
     /// We first grab the Results before we close the Dialogbox
     userTest->importUserResults(userTestDlg->getUserResults());
@@ -950,7 +954,28 @@ void MainWindow::saveScreenShot()
       }
 
 
-      QString userDetails = QString("TESTS/UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+      /////////////////////////////////////////////////////
+      ///////////////////////
+      /// SAVE RESULT FOR SYSTEM SURVEY
+      ///
+      ///
+#ifdef __WIN32__
+  QDir dir("C:/);
+  QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+  dir.mkpath(userIDString);
+  if (!dir.exists())
+      dir.mkpath(".");
+  QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __linux__
+      QDir dir(QDir::homePath());
+      QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+      dir.mkpath(userIDString);
+      if (!dir.exists())
+          dir.mkpath(".");
+      QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#endif
+
+      QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
               .arg(userID)
               .arg(taskNo)
               .arg(userTest->GetCurrentTask(userID - 1))
@@ -959,10 +984,7 @@ void MainWindow::saveScreenShot()
       /// UserID, Job#, Task#, Prototype
 //      QString userDetails = userTest->GetCurrentUserID() << ".png" ;
 
-      const char* fileName = userDetails.toStdString().c_str();
-
-
-
+      const char* fileName = QString(outputDir + userDetails).toStdString().c_str();
 
 
 
@@ -1226,6 +1248,9 @@ void MainWindow::on_buttonTabSubVol_pressed()
                 break;
             }
         }
+
+        this->defaultRenderer->GetActiveCamera()->SetParallelProjection(false);
+        this->defaultRenderer->GetActiveCamera()->SetViewAngle(45);
         this->ui->qvtkWidgetLeft->setFocus();
     }
 }

@@ -14,6 +14,8 @@ UserTestDialog::UserTestDialog(QWidget *parent) :
      connect(ui->btnStop,SIGNAL(clicked()), this, SLOT(collectResults()));
      connect(ui->buttonSaveScreen, SIGNAL(clicked()),this,SIGNAL(saveScreen()));
 
+     ui->buttonSaveScreen->setVisible(false);
+
     timer->start(1000);
 
     /// Reset the Timer to ZERO
