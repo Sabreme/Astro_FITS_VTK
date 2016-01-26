@@ -957,11 +957,11 @@ void MainWindow::saveScreenShot()
 
       /////////////////////////////////////////////////////
       ///////////////////////
-      /// SAVE RESULT FOR SYSTEM SURVEY
+      /// SAVE RESULT FOR IMAGE PRINTOUT
       ///
       ///
 #ifdef __WIN32__
-  QDir dir("C:/);
+  QDir dir("C:/");
   QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
   dir.mkpath(userIDString);
   if (!dir.exists())
@@ -2314,7 +2314,12 @@ void MainWindow::on_actionUserTesting_toggled(bool arg1)
         rect.moveCenter(ptRenderer);
         userTest->setGeometry(rect);
         userTest->show();
+#ifdef  __WIN32__
+        userTest->loadCounterBalance("C:/UserTesting/counterbalance.txt");
+
+#elif  __linux__
         userTest->loadCounterBalance("counterbalance.txt");
+#endif
         QObject::connect(userTest,SIGNAL(startTest()),this,SLOT(startUserTest()));
 
     }

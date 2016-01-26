@@ -125,7 +125,7 @@ void UserTesting::importSystemResults(QString results)
     ///
     /// ////////////////////////////////////////////////
 #ifdef __WIN32__
-    QDir dir("C:/);
+    QDir dir("C:/");
     QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
     dir.mkpath(userIDString);
     if (!dir.exists())
@@ -193,7 +193,7 @@ void UserTesting::importUserResults(QString results)
         ///
         ///
 #ifdef __WIN32__
-    QDir dir("C:/);
+    QDir dir("C:/");
     QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
     dir.mkpath(userIDString);
     if (!dir.exists())
@@ -260,7 +260,7 @@ void UserTesting::importSurveyResults(QString results)
     ///
     ///
 #ifdef __WIN32__
-QDir dir("C:/);
+QDir dir("C:/");
 QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
 dir.mkpath(userIDString);
 if (!dir.exists())
@@ -489,8 +489,12 @@ void UserTesting::saveResult(QString result)
 }
 
 void UserTesting::on_btnCounterBal_clicked()
-{    
+{
+#ifdef __WIN32__
+    loadCounterBalance("C:/UserTesting/counterbalance.txt");
+#elif __linux__
     loadCounterBalance("counterbalance.txt");
+#endif
 }
 
 void UserTesting::on_btnTest_clicked()
