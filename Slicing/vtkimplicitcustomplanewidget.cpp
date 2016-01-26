@@ -1435,10 +1435,10 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
 
     void vtkImplicitCustomPlaneWidget::finger1Released()
     {
-        if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
-          {
-          return;
-          }
+//        if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
+//          {
+//          return;
+//          }
 
         this->State = vtkImplicitCustomPlaneWidget::Start;
         this->HighlightPlane(0);
@@ -1522,15 +1522,19 @@ vtkImplicitCustomPlaneWidget::vtkImplicitCustomPlaneWidget() : vtkPolyDataSource
             this->Plane->Push( vtkMath::Dot(v,this->Plane->GetNormal()) );
             this->SetOrigin(this->Plane->GetOrigin());
             this->UpdateRepresentation();
+
+            this->InvokeEvent(vtkCommand::InteractionEvent,NULL);
         }
+
+        this->Interactor->Render();
     }
 
     void vtkImplicitCustomPlaneWidget::finger2Released()
     {
-        if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
-          {
-          return;
-          }
+//        if ( this->State == vtkImplicitCustomPlaneWidget::Outside )
+//          {
+//          return;
+//          }
 
         this->State = vtkImplicitCustomPlaneWidget::Start;
         this->HighlightPlane(0);
