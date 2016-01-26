@@ -156,6 +156,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
+
     //// Resize Window Handler
     resizeTimer.setSingleShot(true);
     connect (&resizeTimer, SIGNAL(timeout()),SLOT (resizeDone()));
