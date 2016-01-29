@@ -1198,6 +1198,7 @@ void MainWindow::on_buttonTabInfo_pressed()
             case Leap:
             {
                 setTouchInteractor();
+                this->ui->buttonTransformActive->setChecked(true);
             }
                 break;
             }
@@ -1234,7 +1235,12 @@ void MainWindow::on_buttonTabSubVol_pressed()
             }
                 break;
 
-            case Leap:  this->leapBeginSubVol();
+            case Leap:
+            {
+                this->leapBeginSubVol();
+                this->ui->buttonTransformActive->setChecked(false);
+            }
+
                 break;
 
             case Touch:
@@ -1311,8 +1317,10 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 break;
 
             case Leap:
-
+            {
                 this->leapBeginSliceArb();
+                this->ui->buttonTransformActive->setChecked(false);
+            }
                 break;
 
             case Touch:
