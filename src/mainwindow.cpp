@@ -960,8 +960,9 @@ void MainWindow::saveScreenShot()
       /// SAVE RESULT FOR IMAGE PRINTOUT
       ///
       ///
+     ///////NOTE WIN 7 MACHINE DOESNT LIKE C:/
 #ifdef __WIN32__
-  QDir dir("C:/");
+  QDir dir("F:/Projects/build-Astro_FITS_VTK-Desktop-Debug");
   QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
   dir.mkpath(userIDString);
   if (!dir.exists())
@@ -976,7 +977,8 @@ void MainWindow::saveScreenShot()
       QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 
-      QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
+      QString userDetails = QString("%1/UserID_%2.Job_%3.Task_%4.Prototyp_%5.png")
+              .arg(userIDString)
               .arg(userID)
               .arg(taskNo)
               .arg(userTest->GetCurrentTask(userID - 1))
@@ -985,13 +987,18 @@ void MainWindow::saveScreenShot()
       /// UserID, Job#, Task#, Prototype
 //      QString userDetails = userTest->GetCurrentUserID() << ".png" ;
 
-      const char* fileName = QString(outputDir + userDetails).toStdString().c_str();
+      ///const char* fileName = QString(outputDir + userDetails).toStdString().c_str();
+      QString fullFile = outputDir + userDetails;
+
+
+      std::string stringFilename = userDetails.toLocal8Bit().constData();
+      const char* fileName = QString(userDetails).toStdString().c_str();
 
 
 
       vtkSmartPointer<vtkPNGWriter> writer =
-        vtkSmartPointer<vtkPNGWriter>::New();
-      writer->SetFileName(fileName);
+        vtkSmartPointer<vtkPNGWriter>::New();      
+      writer->SetFileName(userDetails.toLocal8Bit().constData());
       writer->SetInputConnection(windowToImageFilter->GetOutputPort());
       writer->Write();
 

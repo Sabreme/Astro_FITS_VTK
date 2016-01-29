@@ -133,7 +133,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -442,7 +442,7 @@ border:none;
     <rect>
      <x>400</x>
      <y>10</y>
-     <width>61</width>
+     <width>81</width>
      <height>41</height>
     </rect>
    </property>
@@ -462,9 +462,9 @@ border:none;
   <widget class="QLabel" name="label_Agree">
    <property name="geometry">
     <rect>
-     <x>620</x>
+     <x>610</x>
      <y>10</y>
-     <width>51</width>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
@@ -628,7 +628,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -758,7 +758,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -885,7 +885,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1000,7 +1000,7 @@ border:none;
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1060,7 +1060,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1190,7 +1190,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1332,7 +1332,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1462,7 +1462,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1598,7 +1598,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -1728,7 +1728,7 @@ QRadioButton::indicator::checked
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>13</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
