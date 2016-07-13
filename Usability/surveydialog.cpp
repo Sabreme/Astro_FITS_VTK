@@ -24,17 +24,17 @@ QString SurveyDialog::getUserResults()
 //         results += QString ("[%1:%2], ").arg(i +1).arg(userAnswers[i]);
 //    }
 
-    QString results = "[";
+    QString results = "Scores=[";
 
     for (int i = 0; i < 10; i++ )
     {
         if (i == 9)
          results += QString (" %1 ").arg(userAnswers[i]);
         else
-         results += QString (" %1 ,").arg(userAnswers[i]);
+         results += QString (" %1 ;").arg(userAnswers[i]);
     }
 
-    results += QString("], [SUS] %1").arg(userScore) ;
+    results += QString("],SUS: %1").arg(userScore) ;
 
     return results;
 }

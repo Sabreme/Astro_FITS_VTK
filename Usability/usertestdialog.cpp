@@ -167,12 +167,13 @@ QString UserTestDialog::getUserResults()
             }
             else
             {
-                result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, subVolPnt1=%6, subVolPnt2=%7, subVolReset%8")
+                result = QString("rotation=%1 ,translation=%2 ,scale=%3, ZRotation=%4, resets=%5, subVolResize=%6, subVolPnt1=%7, subVolPnt2=%8, subVolReset%9")
                                 .arg(countRotate)
                                 .arg(countTranslate)
                                 .arg(countScale)
                                 .arg(countZRotate)
                                 .arg(countResets)
+                                .arg(countSubVolPnt1+countSubVolPnt2)
                                 .arg(countSubVolPnt1)
                                 .arg(countSubVolPnt2)
                                 .arg(countSubVolReset);
