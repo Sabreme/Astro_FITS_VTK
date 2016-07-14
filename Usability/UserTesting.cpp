@@ -115,7 +115,7 @@ void UserTesting::importSystemResults(QString results)
     int sessionID = userID / 3 ;
     if (userID % 3 != 0)
         sessionID++;
-    QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3 ,Prototype: %4 ,Time: %5:%6 ," + results % "\n")
+    QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3 ,Prototype: %4 ,Time: %5^%6 ," + results % "\n")
                                 .arg(userID).arg(taskNo).arg(task).arg(medium).arg(minutes).arg(seconds);
 
     /////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ void UserTesting::importSystemResults(QString results)
         QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 
-     QString fileName = QString("UserID_%1_Task_%2_%3_SYSTEM.txt").arg(userID).arg(taskNo).arg(medium);
+     QString fileName = QString("UserID_%1_Task_%2_%3_%4_SYSTEM.txt").arg(userID).arg(taskNo).arg(task).arg(medium);
 
     QString output = outputDir +  fileName;
 
@@ -184,7 +184,7 @@ void UserTesting::importUserResults(QString results)
         int sessionID = userID / 3 ;
         if (userID % 3 != 0)
             sessionID++;
-        QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3 ,Prototype: %4 ,Time: %5:%6 ," + results % "\n")
+        QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3 ,Prototype: %4 ,Time: %5^%6 ," + results % "\n")
                                     .arg(userID).arg(taskNo).arg(task).arg(medium).arg(minutes).arg(seconds);
 
         /////////////////////////////////////////////////////
@@ -208,7 +208,7 @@ void UserTesting::importUserResults(QString results)
         QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 
-     QString fileName = QString("UserID_%1_Task_%2_%3_USER.txt").arg(userID).arg(taskNo).arg(medium);
+     QString fileName = QString("UserID_%1_Task_%2_%3_%4_USER.txt").arg(userID).arg(taskNo).arg(task).arg(medium);
 
     QString output = outputDir +  fileName;
 
@@ -275,7 +275,7 @@ QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
     QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 
- QString fileName = QString("UserID_%1_Task_%2_%3_Survey.txt").arg(userID).arg(taskNo).arg(medium);
+ QString fileName = QString("UserID_%1_Task_%2_%3_%4_Survey.txt").arg(userID).arg(taskNo).arg(task).arg(medium);
 
 QString output = outputDir +  fileName;
 
@@ -438,7 +438,7 @@ void UserTesting::printResult(QString status)
     int sessionID = userID / 3 ;
     if (userID % 3 != 0)
         sessionID++;
-    QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3, Prototype: %4 ,Time: %5:%6" + status % "\n")
+    QString result =    QString("UserID: %1 ,TaskNo: %2 ,Task: %3, Prototype: %4 ,Time: %5^%6" + status % "\n")
                                 .arg(userID).arg(taskNo).arg(task).arg(medium).arg(minutes).arg(seconds);
 
     saveResult(result);

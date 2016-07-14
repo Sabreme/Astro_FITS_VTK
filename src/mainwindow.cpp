@@ -787,31 +787,31 @@ QString MainWindow::getUserTestResults(int job)
 
        //QString userDetails = QString("UserID_%1.Job_%2.Task_%3.Prototyp_%4.png")
     QString orientation = "[" + this->ui->line_OrientX->text() +
-                                " ," + this->ui->line_OrientY->text() +
-                                " ," + this->ui->line_OrientZ->text() + "] ";
+                                " ;" + this->ui->line_OrientY->text() +
+                                " ;" + this->ui->line_OrientZ->text() + "] ";
 
     QString position =    "[" + this->ui->line_PosX->text() +
-                                " ," + this->ui->line_PosY->text() +
-                                " ," + this->ui->line_PosZ->text() + "] ";
+                                " ;" + this->ui->line_PosY->text() +
+                                " ;" + this->ui->line_PosZ->text() + "] ";
 
     QString zoom =  "[" + this->ui->line_Scale->text() + "] ";
 
     QString subVolumeX = "[" + this->ui->lineSubVolXMin->text() +
-                                   " ," + this->ui->lineSubVolXMax->text() + "] ";
+                                   " ;" + this->ui->lineSubVolXMax->text() + "] ";
 
     QString subVolumeY =  "[" + this->ui->lineSubVolYMin->text() +
-                                    " ,"+ this->ui->lineSubVolYMax->text() + "] ";
+                                    " ;"+ this->ui->lineSubVolYMax->text() + "] ";
 
     QString subVolumeZ =  "[" +  this->ui->lineSubVolZMin->text() +
-                                    " ,"+ this->ui->lineSubVolZMax->text() + "] ";
+                                    " ;"+ this->ui->lineSubVolZMax->text() + "] ";
 
     QString slicePos = "[" + this->ui->lineArbSlicePosX->text() +
-                                " ," + this->ui->lineArbSlicePosY->text() +
-                                " ," + this->ui->lineArbSlicePosZ->text() + "] ";
+                                " ;" + this->ui->lineArbSlicePosY->text() +
+                                " ;" + this->ui->lineArbSlicePosZ->text() + "] ";
 
     QString sliceAngle =  "[" + this->ui->lineArbSliceAngleX->text() +
-                                 " ," + this->ui->lineArbSliceAngleY->text() +
-                                 " ," + this->ui->lineArbSliceAngleZ->text() + "]";
+                                 " ;" + this->ui->lineArbSliceAngleY->text() +
+                                 " ;" + this->ui->lineArbSliceAngleZ->text() + "]";
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -1225,6 +1225,7 @@ void MainWindow::on_buttonTabInfo_pressed()
             case Leap:
             {
                 setTouchInteractor();
+                this->ui->buttonTransformActive->setChecked(true);
             }
                 break;
             }
@@ -1261,7 +1262,12 @@ void MainWindow::on_buttonTabSubVol_pressed()
             }
                 break;
 
-            case Leap:  this->leapBeginSubVol();
+            case Leap:
+            {
+                this->leapBeginSubVol();
+                this->ui->buttonTransformActive->setChecked(false);
+            }
+
                 break;
 
             case Touch:
@@ -1353,8 +1359,10 @@ void MainWindow::on_buttonTabSliceArb_pressed()
                 break;
 
             case Leap:
-
+            {
                 this->leapBeginSliceArb();
+                this->ui->buttonTransformActive->setChecked(false);
+            }
                 break;
 
             case Touch:
