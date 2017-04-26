@@ -960,6 +960,7 @@ void MainWindow::saveScreenShot()
       /// SAVE RESULT FOR IMAGE PRINTOUT
       ///
       ///
+
      ///////NOTE WIN 7 MACHINE DOESNT LIKE C:/
 #ifdef __WIN32__
   QDir dir("C:/");
@@ -976,6 +977,12 @@ void MainWindow::saveScreenShot()
           dir.mkpath(".");
       QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
+//      QDir dir("C:/");
+//      QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+//      dir.mkpath(userIDString);
+//      if (!dir.exists())
+//          dir.mkpath(".");
+//      QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 
       QString userDetails = QString("%1/UserID_%2.Job_%3.Task_%4.Prototyp_%5.png")
               .arg(userIDString)
@@ -991,8 +998,9 @@ void MainWindow::saveScreenShot()
       QString fullFile = outputDir + userDetails;
 
 
-      std::string stringFilename = userDetails.toLocal8Bit().constData();
-      const char* fileName = QString(userDetails).toStdString().c_str();
+      std::string stringFilename = userDetails.toLocal8Bit().constData();      
+      const char* fileName = QString(outputDir + userDetails).toLocal8Bit().constData();
+
 
 
 
@@ -1200,6 +1208,27 @@ void MainWindow::on_buttonTabInfo_pressed()
                 setTouchInteractor();
 
                 this->ui->qvtkWidgetLeft->enableGestures();
+
+                this->ui->qvtkWidgetLeft->setTransformsOn(true);
+                this->ui->qvtkWidgetLeft->SetArbSliceOn(false);
+
+                this->ui->qvtkWidgetLeft->SetSubVolumeOn(false);
+
+                this->ui->buttonTransformActive->setChecked(true);
+
+
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
+
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlicePressed()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Moving()), this, SLOT(touchFinger1ArbSliceMoving()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFinger1ArbSliceReleased()));
+
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2ArbSlicePressed()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Moving()), this, SLOT(touchFinger2ArbSliceMoving()));
+                disconnect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Released()), this, SLOT(touchFInger2ArbSliceReleased()));
             }
                 break;
             case Leap:
@@ -1258,6 +1287,21 @@ void MainWindow::on_buttonTabSubVol_pressed()
                /// setTouchInteractor();
 
                 this->ui->qvtkWidgetLeft->enableGestures();
+
+                this->ui->qvtkWidgetLeft->setTransformsOn(false);
+                this->ui->qvtkWidgetLeft->SetArbSliceOn(false);
+
+                this->ui->qvtkWidgetLeft->SetSubVolumeOn(true);
+
+                this->ui->buttonTransformActive->setChecked(false);
+
+
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1SubVol()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2SubVol()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(rightClkSubVol()), this, SLOT(touchSubVolTranslate()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFingerReleased()));
+
+
             }
                 break;
             }
@@ -1337,6 +1381,24 @@ void MainWindow::on_buttonTabSliceArb_pressed()
 
 
                 this->ui->qvtkWidgetLeft->enableGestures();
+
+
+                this->ui->buttonTransformActive->setChecked(false);
+
+
+                this->ui->qvtkWidgetLeft->setTransformsOn(false);
+
+                this->ui->qvtkWidgetLeft->SetSubVolumeOn(false);
+
+                this->ui->qvtkWidgetLeft->SetArbSliceOn(true);
+
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Pressed()), this, SLOT(touchFinger1ArbSlicePressed()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Moving()), this, SLOT(touchFinger1ArbSliceMoving()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger1Released()), this, SLOT(touchFinger1ArbSliceReleased()));
+
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Pressed()), this, SLOT(touchFinger2ArbSlicePressed()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Moving()), this, SLOT(touchFinger2ArbSliceMoving()));
+                connect(this->ui->qvtkWidgetLeft, SIGNAL(finger2Released()), this, SLOT(touchFInger2ArbSliceReleased()));
 
                 this->customArbPlaneWidget->GetInteractor()->RemoveAllObservers();
             }
