@@ -48,7 +48,10 @@ class vtkLeapHandWidgetObserver : public vtkCommand
 {
 public:
   static vtkLeapHandWidgetObserver *New()
-    {return new vtkLeapHandWidgetObserver;};
+
+    {
+      return new vtkLeapHandWidgetObserver;
+  };
 
   vtkLeapHandWidgetObserver()
     {
@@ -72,6 +75,9 @@ vtkLeapHandWidget::vtkLeapHandWidget() :
     scaling_Start(20),
     scaling_Min(5)
 {
+  double boxBoundsVal [6] = {-2, 2, 1, 5, -2,3};
+  this->boxBounds = boxBoundsVal;
+
   this->StartEventObserverId = 0;
   this->EventCallbackCommand->SetCallback( vtkLeapHandWidget::ProcessEvents );
 

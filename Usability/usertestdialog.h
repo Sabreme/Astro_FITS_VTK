@@ -17,7 +17,7 @@ public:
     explicit UserTestDialog(QWidget *parent = 0);
     ~UserTestDialog();
 
-    int countRotation = 0;
+    int countRotation ;
 
     void setTaskLabel(QString task);
 
@@ -57,25 +57,25 @@ private:
     Ui::UserTestDialog *ui;
     QTimer *timer ;
 
-    int currentJob = -1;
-    int currentPrototype = -1;
+    int currentJob ;
+    int currentPrototype ;
 
-    int countRotate = 0;
-    int countTranslate = 0;
-    int countScale = 0;
-    int countZRotate = 0;
+    int countRotate ;
+    int countTranslate ;
+    int countScale ;
+    int countZRotate ;
 
-    int countLeapStarts = 0;
-    int countResets = 0;
+    int countLeapStarts ;
+    int countResets ;
 
-    int countSubVolResize = 0 ;
-    int countSubVolReset = 0;    
+    int countSubVolResize ;
+    int countSubVolReset ;
 
-    int countSubVolPnt1 = 0;
-    int countSubVolPnt2 = 0;
+    int countSubVolPnt1 ;
+    int countSubVolPnt2 ;
 
-    int countSliceResize = 0;
-    int countSliceReset = 0;
+    int countSliceResize ;
+    int countSliceReset ;
 
 };
 

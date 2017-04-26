@@ -58,7 +58,7 @@ private:
 
     int userAnswers[10];
 
-    int userScore =0;
+    int userScore;
 };
 
 #endif // SURVEYDIALOG_H

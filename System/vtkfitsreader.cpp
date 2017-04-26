@@ -121,7 +121,7 @@ int vtkFitsReader::RequestData(
   long naxes[4], fpixel, nbuffer, npixels, ii;
   const int buffsize = 100000;
   char comm[10] ;
-  long pNaxis[0], pEpoch[0];
+  long pNaxis[1], pEpoch[1];
 
   float datamin, datamax, nullval, buffer[buffsize];
 
@@ -173,7 +173,7 @@ int vtkFitsReader::RequestData(
 
     for (ii = 0; ii < nbuffer; ii++)
     {
-        if (isnan(buffer[ii]))
+        if ((buffer[ii] != buffer[ii]))
             buffer[ii] = -1000000.0; // hack for now
         scalars->InsertNextValue(buffer[ii]);
 

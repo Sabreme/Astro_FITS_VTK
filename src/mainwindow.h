@@ -160,10 +160,7 @@ public slots:
     bool MessageBoxQuery(QString title, QString question);
 
     void releaseTabFocus();
-    void resizeDone();
-
-    //// Interactor Slots
-    double getDefaultCameraPos(int dimension);
+    void resizeDone();    
 
     /// VTK TOuch Widget Public Slots
     void updateCameraPosition();
@@ -426,12 +423,12 @@ private:
         countDialog         * userPractice;
         SurveyDialog        * surveyDlg;
 
-        bool userTestActive  = false;
+        bool userTestActive  ;
 
-        int userTestCountRotation = 0;
+        int userTestCountRotation ;
 
-        bool pointWidget1Active = false;
-        bool pointWidget2Active = false;
+        bool pointWidget1Active ;
+        bool pointWidget2Active ;
 
 
 
@@ -452,7 +449,7 @@ private:
         QProgressDialog             * ProgressDialog;
         QFutureWatcher<void> FutureWatcher;
 
-          int TabCount = 6;
+          int TabCount;
 
         //////////////////////////////////////////////////
         /// CAMERA SETTINGS
@@ -479,7 +476,7 @@ private:
          SubVolumeDialog *subVolDialog;              // Global pointer for the SubVolume
          vtkCubeSource *global_subVolume;            // Global Pointer for the Sub-Volume
          vtkCustomBoxWidget* boxWidget_;                   // Global Pointer for the BoxWidget;
-         int touchWidgetRange_ = 50;
+         int touchWidgetRange_;
 
 
         //////////////////////////////////////////////////
@@ -501,9 +498,9 @@ private:
         //////////////////////////////////////////////////
         /// HAND MODEL SETTINGS
         ///
-        double                              boxBounds[6] = {-3, 3, 1, 5, -2,3};
+        double  *                            boxBounds;
         HandRenderer                * handRenderer;
-        bool                                    handModelActive = false;
+        bool                 handModelActive;
 
         //////////////////////////////////////////////////
         /// LEAP MOTION SETTINGS
@@ -532,21 +529,21 @@ private:
         vtkPointWidget* pointWidget3_;              // Global Pointer for the PointWidget
 
 
-        bool Leaping_ = false;
-        bool leapAxisSliceMode = false;
-        bool leapArbSliceMode = false;
-        bool leapSubVolMode = false;
-        bool longSubVolMode_ = true;                // Global Val for default SubVolumeMode Selection
+        bool Leaping_;
+        bool leapAxisSliceMode;
+        bool leapArbSliceMode;
+        bool leapSubVolMode ;
+        bool longSubVolMode_ ;                // Global Val for default SubVolumeMode Selection
 
-        bool leapHand1Move = false;
-        int leapHand1FrameBuffer = 0;                      //Global Variable for counting # of action frames
-        int leapHand1GestureCounter = 0;              // Global Variable for Keeping track of new gestures
+        bool leapHand1Move ;
+        int leapHand1FrameBuffer ;                      //Global Variable for counting # of action frames
+        int leapHand1GestureCounter ;              // Global Variable for Keeping track of new gestures
 
-        bool leapHand2Move = false;
-        int leapHand2FrameBuffer = 0;
-        int leapHand2GestureCounter = 0;
+        bool leapHand2Move ;
+        int leapHand2FrameBuffer ;
+        int leapHand2GestureCounter ;
 
-        int leapHandTriggerBuffer = 0;
+        int leapHandTriggerBuffer ;
 
         vtkSmartPointer< vtkResliceImageViewer > riw[3];
         vtkSmartPointer< vtkImagePlaneWidget > planeWidget[3];
@@ -557,19 +554,22 @@ private:
         vtkSmartPointer< vtkLookupTable>  lookupTable2D;
         vtkSmartPointer< vtkContourFilter> global_Contours2D;
 
-        int xAxisSlice = 0;
-        int yAxisSlice = 0;
-        int zAxisSlice = 0;
+        int xAxisSlice ;
+        int yAxisSlice ;
+        int zAxisSlice ;
         int imageDims[3];
 
         vtkSmartPointer< vtkPlaneWidget > customPlaneWidget;
 
-        vtkLeapMarkerWidget * leapMarkerWidget   = NULL;
-        vtkLeapHandWidget * leapHandWidget = NULL;
+        vtkLeapMarkerWidget * leapMarkerWidget  ;
+        vtkLeapHandWidget * leapHandWidget;
 
-        float gestureRange = 6.0f;
-        int frameActionCount = 4;
-        int framesRightMoving, framesLeftMoving, framesUpMoving, framesDownMoving = 0;
+        float gestureRange ;
+        int frameActionCount ;
+        int framesRightMoving ;
+        int framesLeftMoving ;
+        int framesUpMoving ;
+        int framesDownMoving ;
 
 
 };

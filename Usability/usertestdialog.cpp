@@ -3,7 +3,30 @@
 
 UserTestDialog::UserTestDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::UserTestDialog)
+    ui(new Ui::UserTestDialog),
+    countRotation ( 0),
+    currentJob (-1),
+    currentPrototype (-1),
+
+    countRotate (0),
+    countTranslate (0),
+    countScale (0),
+    countZRotate (0),
+
+    countLeapStarts (0),
+    countResets (0),
+
+    countSubVolResize (0),
+    countSubVolReset (0),
+
+    countSubVolPnt1 (0),
+    countSubVolPnt2 (0),
+
+    countSliceResize (0),
+    countSliceReset (0)
+
+
+
 {  
      ui->setupUi(this);
      this->ui->timeEdit->setDisplayFormat("mm:ss");

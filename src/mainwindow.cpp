@@ -49,7 +49,6 @@
 
 #include <QDebug>
 #include <QThread>
-#include <thread>
 
 #include "vtkResliceCursorLineRepresentation.h"
 #include "vtkResliceCursorThickLineRepresentation.h"
@@ -131,6 +130,36 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->ui->centralWidget = ui->qvtkWidgetLeft;
     this->vtkWidget = ui->qvtkWidgetLeft;               // Used for FrameRate Calculation    
+
+    double boxLayoutVal[6] = {-3, 3, 1, 5, -2,3};
+    this->boxBounds = boxLayoutVal;
+    this->touchWidgetRange_ = 50;
+    this->TabCount = 6;
+    this->handModelActive = false;
+
+    this->userTestActive = false;
+    this->pointWidget1Active = false;
+    this->pointWidget2Active = false;
+
+    this->Leaping_ = false;
+   this->leapAxisSliceMode = false;
+    this->leapArbSliceMode = false;
+    this->leapSubVolMode = false;
+    this->longSubVolMode_ = true;                // Global Val for default SubVolumeMode Selection
+
+    this->leapHand1Move = false;
+
+    this->leapHand2Move = false;
+
+    this->frameActionCount = 4;
+    this->gestureRange = 6.0f;
+
+    this->leapMarkerWidget = NULL;
+    this->leapHandWidget = NULL;
+
+
+
+    this->boxBounds = boxLayoutVal;
 
     ///MAIN WINDOW GUI LAYOUT CONFIGURATION
     ///                     |                        |
@@ -290,11 +319,6 @@ void MainWindow::releaseTabFocus()
 void MainWindow::resizeDone()
 {
     this->ui->qvtkWidgetLeft->GetInteractor()->GetRenderWindow()->Render();
-}
-
-double MainWindow::getDefaultCameraPos(int dimension)
-{
-
 }
 
 void MainWindow::updateCameraPosition()

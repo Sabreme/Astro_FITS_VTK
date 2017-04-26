@@ -98,7 +98,7 @@ private:
     QString counterBalance[cntrBalLength][7];
     int currentJob;     /// Variable showing which JOB to load from the Test
     int currentTask;    /// Variable showing current TASK radio button seleciton
-    int currentPrototype = 0; /// Variable showing current LOCATION for prototype    
+    int currentPrototype; /// Variable showing current LOCATION for prototype
 
 };
 

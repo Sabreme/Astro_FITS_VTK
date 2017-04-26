@@ -42,7 +42,7 @@ QMAKE_CXXFLAGS_RELEASE += -std=c++11 -fno-stack-protector
 win32 {LIBS += -LC:/VTK5.10.1-VS/lib/vtk-5.10 -lQVTK -lvtkVolumeRendering -lvtkHybrid -lvtkWidgets   \
         -lvtkInfovis -lvtkGeovis -lvtkViews -lvtkCharts -lvtkFiltering -lvtkImaging \
         -lvtkGraphics -lvtkGenericFiltering -lvtkIO -lvtkRendering -lvtkCommon  \
-        -lcfitsio
+        -lcfitsio -lLeap
 
 INCLUDEPATH += C:/VTK5.10.1-src/include/vtk-5.10
 }

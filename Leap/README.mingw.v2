@@ -1,0 +1,25 @@
+Instructions (revised for V2 Tracking)
+
+1. Install MinGW/MSYS. I'll assume you've already done this
+   otherwise you wouldn't have downloaded this package.
+2. Make sure the Skeletal Beta Leap Service is running.
+3. g++ -Wall -O2 -L. -lLeap Sample.cpp -o Sample
+4. ./Sample
+
+The included Leap.h, LeapMath.h, and Sample.cpp files were taken from SDK version 2.0.1.15831
+
+This libLeap.dll is almost 3 MB, noticeably larger than the
+MSVC-built Leap.dll. This is attributed to statically linking
+in the Visual Studio runtime. In the future we may consider
+providing libLeap.dll built with -MD
+
+The feature set may be limited to that which we have on
+Linux. In particular, there is no distinguishing between
+background and foreground apps, so all apps may receive
+frames regardless of the policy flag setting.
+
+This is only 32-bit for now. If you need MinGW-w64, please
+let us know.
+
+For LGPL compliance, the modifications we made to libxs are at
+https://github.com/leapmotion/libxs under the mingw branch.
