@@ -962,7 +962,7 @@ void MainWindow::saveScreenShot()
       ///
      ///////NOTE WIN 7 MACHINE DOESNT LIKE C:/
 #ifdef __WIN32__
-  QDir dir("F:/Projects/build-Astro_FITS_VTK-Desktop-Debug");
+  QDir dir("C:/");
   QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
   dir.mkpath(userIDString);
   if (!dir.exists())

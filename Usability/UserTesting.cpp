@@ -125,7 +125,7 @@ void UserTesting::importSystemResults(QString results)
     ///
     /// ////////////////////////////////////////////////
 #ifdef __WIN32__
-    QDir dir("F:/Projects/build-Astro_FITS_VTK-Desktop-Debug");
+    QDir dir("C:/");
     QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
     dir.mkpath(userIDString);
     if (!dir.exists())
@@ -193,7 +193,7 @@ void UserTesting::importUserResults(QString results)
         ///
         ///
 #ifdef __WIN32__
-    QDir dir("F:/Projects/build-Astro_FITS_VTK-Desktop-Debug");
+    QDir dir("C:/");
     QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
     dir.mkpath(userIDString);
     if (!dir.exists())
@@ -260,7 +260,7 @@ void UserTesting::importSurveyResults(QString results)
     ///
     ///
 #ifdef __WIN32__
-QDir dir("F:/Projects/build-Astro_FITS_VTK-Desktop-Debug");
+QDir dir("C:/");
 QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
 dir.mkpath(userIDString);
 if (!dir.exists())
