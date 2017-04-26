@@ -41,7 +41,6 @@ void UserTestDialog::updateClock()
 void UserTestDialog::updateRotation()
 {
     this->countRotation++;
-    //  std::cout << "Rotation Counter: " << countRotation << std::endl;
 }
 
 void UserTestDialog::setCurrentJob(int job)
@@ -73,7 +72,6 @@ void UserTestDialog::collectResults()
 void UserTestDialog::incRotation()
 {
     this->countRotate++;
-    //   std::cout << "rotation: " << countRotate;
 }
 
 void UserTestDialog::incZRotation()
@@ -84,13 +82,11 @@ void UserTestDialog::incZRotation()
 void UserTestDialog::incTranslation()
 {
     this->countTranslate++;
- //   std::cout << "Translate: " << countTranslate;
 }
 
 void UserTestDialog::incScaling()
 {
     this->countScale++;
-    //   std::cout << "Scale: " << countScale;
 }
 
 void UserTestDialog::incReset()
@@ -131,18 +127,6 @@ void UserTestDialog::incSliceReset()
 QString UserTestDialog::getUserResults()
 {
     QString result;
-//    std::cout   << "Rotations: " << countRotate << ", "
-//                  << "Translations: " << countTranslate  << ", "
-//                  << "Scaling: " << countScale << ", "
-//                  << "SubVolResize: " << countSubVolResize << ","
-//                  << "Resets: " << countResets << ","
-//                  << "SubVolReset: " << countSubVolReset << ","
-//                  << "SliceResize:" << countSliceResize << ","
-//                  << "SliceReset:" << countSliceReset << ",'"
-//                  << "SubVolPntLeft:" << countSubVolPntLeft << ","
-//                  << "SubVolPntRight:" << countSubVolPntRight << ","
-//                 << std::endl;
-
 
     switch(currentJob)
     {
@@ -186,15 +170,6 @@ QString UserTestDialog::getUserResults()
                                     .arg(countRotate).arg(countTranslate).arg(countScale).arg(countZRotate).arg(countResets).arg(countSliceResize).arg(countSliceReset); break;
         }
     }
-
-//    if (countSubVolPnt1 > 0)
-//        result += QString(" ,subVolPoint1=%1").arg(countSubVolPnt1);
-
-//    if (countSubVolPnt2 > 0)
-//        result += QString(" ,subVolPoint2=%1").arg(countSubVolPnt2);
-
-
-
     return result;
 }
 

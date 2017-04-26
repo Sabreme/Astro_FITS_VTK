@@ -69,12 +69,6 @@ void UserTesting::on_btnStop_clicked()
 {
     timer->stop();
     testingMode(false);
-
-
-
-    //printResult(" and Task Open");
-    //printResult(" and Task Stopped");
-
 }
 
 void UserTesting::on_btnDone_clicked()
@@ -241,9 +235,6 @@ void UserTesting::importSurveyResults(QString results)
         taskNo = "2";
     if (this->ui->radioTask3->isChecked() )
         taskNo = "3";
-
-//    int seconds = this->ui->timeEdit->time().second();
-//    int minutes = this->ui->timeEdit->time().minute();
 
     task = GetCurrentTask(this->ui->spinBoxUSERID->value() - 1);
 
@@ -468,16 +459,10 @@ void UserTesting::saveResult(QString result)
             dir.mkpath(".");
         QString outputDir = dir.absolutePath();
 #endif
-//    QString outputDir = QDir::currentPath();
 
     QString fileName = QString("TESTS/UserID_%1_Task_%2_.txt").arg(userID).arg(taskNo);
 
     QString output = outputDir + "/" + fileName;
-
-//    QString fileName = QString("TESTS/UserID_%1_Task_%2.txt").arg(userID).arg(taskNo);
-
-//    QString output = fileName;
-
 
     std::cout << output.toStdString() << endl;
 

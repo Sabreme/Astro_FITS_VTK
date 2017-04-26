@@ -17,13 +17,6 @@ SurveyDialog::~SurveyDialog()
 
 QString SurveyDialog::getUserResults()
 {
-//    QString results = "";
-
-//    for (int i = 0; i < 10; i++ )
-//    {
-//         results += QString ("[%1:%2], ").arg(i +1).arg(userAnswers[i]);
-//    }
-
     QString results = "Scores=[";
 
     for (int i = 0; i < 10; i++ )
@@ -41,18 +34,9 @@ QString SurveyDialog::getUserResults()
 
 void SurveyDialog::on_buttonSubmit_clicked()
 {
-//    for (int i = 0; i < 10; i++ )
-//    {
-//        std::cout << "Question: " << i << "\t Answer: " << userAnswers[i] << std::endl;
-//    }
-    //std::cout << "SUS Score = " << calculateScore() << std::endl;
-
     userScore = calculateScore();
 
     saveSurvey();
-
-
-    //std::cout << "Button Pressed" << std::endl;
 }
 
 
@@ -82,7 +66,6 @@ void SurveyDialog::selectionToValue(QString buttonName)
 
 void SurveyDialog::answerQuestion(char question)
 {
-    //QString style = "QLabel {  color : rgb(225,67,19); border : 1px solid white; border-radius : 2px; }";
     QString style = "QLabel {  padding : 2px; border : 4px solid white; border-radius : 4px; text-decoration: line-through;}";
     switch (question)
     {
