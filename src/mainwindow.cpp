@@ -961,7 +961,7 @@ void MainWindow::saveScreenShot()
       ///
       ///
 #ifdef __WIN32__
-  QDir dir("C:/);
+  QDir dir("C:/");
   QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
   dir.mkpath(userIDString);
   if (!dir.exists())
