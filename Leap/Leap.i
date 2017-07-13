@@ -1,15 +1,15 @@
-################################################################################
-# Copyright (C) 2012-2013 Leap Motion, Inc. All rights reserved.               #
-# Leap Motion proprietary and confidential. Not for distribution.              #
-# Use subject to the terms of the Leap Motion SDK Agreement available at       #
-# https://developer.leapmotion.com/sdk_agreement, or another agreement         #
-# between Leap Motion and you, your company or other organization.             #
-################################################################################
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (C) 2012-2015 Leap Motion, Inc. All rights reserved.               /
+// Leap Motion proprietary and confidential. Not for distribution.              /
+// Use subject to the terms of the Leap Motion SDK Agreement available at       /
+// https://developer.leapmotion.com/sdk_agreement, or another agreement         /
+// between Leap Motion and you, your company or other organization.             /
+////////////////////////////////////////////////////////////////////////////////
 
-# usage:
-#   swig -c++ -python -o LeapPython.cpp -interface LeapPython Leap.i
-#   swig -c++ -java   -o LeapJava.cpp -package com.leapmotion.leap -outdir com/leapmotion/leap Leap.i
-#   swig -c++ -csharp -o LeapCSharp.cpp -dllimport LeapCSharp -namespace Leap Leap.i
+// usage:
+//   swig -c++ -python -o LeapPython.cpp -interface LeapPython Leap.i
+//   swig -c++ -java   -o LeapJava.cpp -package com.leapmotion.leap -outdir com/leapmotion/leap Leap.i
+//   swig -c++ -csharp -o LeapCSharp.cpp -dllimport LeapCSharp -namespace Leap Leap.i
 
 %module(directors="1", threads="1") Leap
 #pragma SWIG nowarn=325
@@ -19,9 +19,9 @@
 %include "stdint.i"
 %include "attribute.i"
 
-################################################################################
-# Ignore constructors for internal use only                                    #
-################################################################################
+////////////////////////////////////////////////////////////////////////////////
+// Ignore constructors for internal use only                                    /
+////////////////////////////////////////////////////////////////////////////////
 
 %ignore Leap::Pointable::Pointable(PointableImplementation*);
 %ignore Leap::Pointable::Pointable(FingerImplementation*);
@@ -30,18 +30,23 @@
 %ignore Leap::Tool::Tool(ToolImplementation*);
 %ignore Leap::Bone::Bone(BoneImplementation*);
 %ignore Leap::Hand::Hand(HandImplementation*);
+%ignore Leap::Arm::Arm(HandImplementation*);
 %ignore Leap::Gesture::Gesture(GestureImplementation*);
+%ignore Leap::Image::Image(ImageImplementation*);
+%ignore Leap::Mask::Mask(MaskImplementation*);
 %ignore Leap::Screen::Screen(ScreenImplementation*);
 %ignore Leap::Frame::Frame(FrameImplementation*);
 %ignore Leap::Controller::Controller(ControllerImplementation*);
 %ignore Leap::Device::Device(DeviceImplementation*);
 %ignore Leap::InteractionBox::InteractionBox(InteractionBoxImplementation*);
+%ignore Leap::TrackedQuad::TrackedQuad(TrackedQuadImplementation*);
+%ignore Leap::BugReport::BugReport(BugReportImplementation*);
 
-#####################################################################################
-# Set Attributes (done after functions are uppercased, but before vars are lowered) #
-#####################################################################################
-#TODO: If possible, figure out how to auomatically make any C++ function
-# that is const and takes no arguments be defined as a property in C#
+/////////////////////////////////////////////////////////////////////////////////////
+// Set Attributes (done after functions are uppercased, but before vars are lowered) /
+/////////////////////////////////////////////////////////////////////////////////////
+//TODO: If possible, figure out how to auomatically make any C++ function
+// that is const and takes no arguments be defined as a property in C/
 
 %define %constattrib( Class, Type, Name )
   %attribute( Class, Type, Name, Name )
@@ -74,7 +79,7 @@
 
 #endif
 
-# Apply language specific caseing
+// Apply language specific caseing
 #if SWIGCSHARP
 
 %rename("%(camelcase)s", %$not %$isenumitem) "";
@@ -108,6 +113,8 @@
 %constattrib( Leap::Pointable, float, timeVisible );
 %leapattrib( Leap::Pointable, Frame, frame );
 
+%constattrib( Leap::Finger, Leap::Finger::Type, type )
+
 %leapattrib( Leap::Bone, Vector, prevJoint );
 %leapattrib( Leap::Bone, Vector, nextJoint );
 %leapattrib( Leap::Bone, Vector, center );
@@ -134,11 +141,21 @@
 %constattrib( Leap::Hand, float, pinchStrength );
 %constattrib( Leap::Hand, float, palmWidth );
 %leapattrib( Leap::Hand, Vector, stabilizedPalmPosition )
+%leapattrib( Leap::Hand, Vector, wristPosition )
 %constattrib( Leap::Hand, float, timeVisible );
 %constattrib( Leap::Hand, float, confidence );
 %constattrib( Leap::Hand, bool, isLeft );
 %constattrib( Leap::Hand, bool, isRight );
 %leapattrib( Leap::Hand, Frame, frame );
+%leapattrib( Leap::Hand, Arm, arm );
+
+%constattrib( Leap::Arm, float, width );
+%leapattrib( Leap::Arm, Vector, center );
+%leapattrib( Leap::Arm, Vector, direction );
+%leapattrib( Leap::Arm, Matrix, basis )
+%leapattrib( Leap::Arm, Vector, elbowPosition );
+%leapattrib( Leap::Arm, Vector, wristPosition );
+%constattrib( Leap::Arm, bool, isValid );
 
 %constattrib( Leap::Gesture, Leap::Gesture::Type, type )
 %constattrib( Leap::Gesture, Leap::Gesture::State, state )
@@ -168,13 +185,38 @@
 %constattrib( Leap::KeyTapGesture, float, progress );
 %leapattrib( Leap::KeyTapGesture, Pointable, pointable );
 
-# Count is made a const attribute in C# but renamed to __len__ in Python
+%constattrib( Leap::Image, int64_t, sequenceId );
+%constattrib( Leap::Image, int32_t, id );
+%constattrib( Leap::Image, int, width );
+%constattrib( Leap::Image, int, height );
+%constattrib( Leap::Image, int, bytesPerPixel );
+%constattrib( Leap::Image, Leap::Image::FormatType, format );
+%constattrib( Leap::Image, int, distortionWidth );
+%constattrib( Leap::Image, int, distortionHeight );
+%constattrib( Leap::Image, float, rayOffsetX );
+%constattrib( Leap::Image, float, rayOffsetY );
+%constattrib( Leap::Image, float, rayScaleX );
+%constattrib( Leap::Image, float, rayScaleY );
+%constattrib( Leap::Image, int64_t, timestamp );
+%constattrib( Leap::Image, bool, isValid );
+
+%constattrib( Leap::Mask, int64_t, sequenceId );
+%constattrib( Leap::Mask, int32_t, id );
+%constattrib( Leap::Mask, int, width );
+%constattrib( Leap::Mask, int, height );
+%constattrib( Leap::Mask, int, offsetX );
+%constattrib( Leap::Mask, int, offsetY );
+%constattrib( Leap::Mask, bool, isValid );
+
+// Count is made a const attribute in C# but renamed to __len__ in Python
 #if SWIGCSHARP
 %constattrib( Leap::PointableList, int, count );
 %constattrib( Leap::FingerList, int, count );
 %constattrib( Leap::ToolList, int, count );
 %constattrib( Leap::HandList, int, count );
 %constattrib( Leap::GestureList, int, count );
+%constattrib( Leap::ImageList, int, count );
+%constattrib( Leap::MaskList, int, count );
 %constattrib( Leap::ScreenList, int, count );
 %constattrib( Leap::DeviceList, int, count );
 #endif
@@ -184,6 +226,8 @@
 %constattrib( Leap::ToolList, bool, isEmpty );
 %constattrib( Leap::HandList, bool, isEmpty );
 %constattrib( Leap::GestureList, bool, isEmpty );
+%constattrib( Leap::ImageList, bool, isEmpty );
+%constattrib( Leap::MaskList, bool, isEmpty );
 %constattrib( Leap::ScreenList, bool, isEmpty );
 %constattrib( Leap::DeviceList, bool, isEmpty );
 
@@ -207,8 +251,10 @@
 %leapattrib( Leap::Frame, FingerList, fingers );
 %leapattrib( Leap::Frame, ToolList, tools );
 %leapattrib( Leap::Frame, HandList, hands );
+%leapattrib( Leap::Frame, ImageList, images );
 %constattrib( Leap::Frame, bool, isValid );
 %leapattrib( Leap::Frame, InteractionBox, interactionBox );
+%constattrib( Leap::Frame, int, serializeLength );
 
 %constattrib( Leap::Screen, int32_t, id );
 %leapattrib( Leap::Screen, Vector, horizontalAxis );
@@ -221,16 +267,37 @@
 %constattrib( Leap::Device, float, horizontalViewAngle );
 %constattrib( Leap::Device, float, verticalViewAngle );
 %constattrib( Leap::Device, float, range );
+%constattrib( Leap::Device, float, baseline );
 %constattrib( Leap::Device, bool, isValid );
 %constattrib( Leap::Device, bool, isEmbedded );
 %constattrib( Leap::Device, bool, isStreaming );
+%constattrib( Leap::Device, bool, isFlipped );
 %constattrib( Leap::Device, Leap::Device::Type, type );
+%attributestring( Leap::Device, std::string, serialNumber, serialNumber );
+%leapattrib( Leap::Device, Vector, position );
+%leapattrib( Leap::Device, Matrix, orientation );
 
 %leapattrib( Leap::InteractionBox, Vector, center );
 %constattrib( Leap::InteractionBox, float, width );
 %constattrib( Leap::InteractionBox, float, height );
 %constattrib( Leap::InteractionBox, float, depth );
 %constattrib( Leap::InteractionBox, bool, isValid );
+%leapattrib( Leap::Frame, TrackedQuad, trackedQuad )
+
+%constattrib( Leap::TrackedQuad, float, width );
+%constattrib( Leap::TrackedQuad, float, height );
+%constattrib( Leap::TrackedQuad, int, resolutionX );
+%constattrib( Leap::TrackedQuad, int, resolutionY );
+%constattrib( Leap::TrackedQuad, bool, visible );
+%leapattrib( Leap::TrackedQuad, Matrix, orientation );
+%leapattrib( Leap::TrackedQuad, Vector, position );
+%leapattrib( Leap::TrackedQuad, MaskList, masks );
+%leapattrib( Leap::TrackedQuad, ImageList, images );
+%constattrib( Leap::TrackedQuad, bool, isValid );
+
+%constattrib( Leap::BugReport, bool, isActive );
+%constattrib( Leap::BugReport, float, progress );
+%constattrib( Leap::BugReport, float, duration );
 
 #if SWIGCSHARP
 %csmethodmodifiers Leap::Finger::invalid "public new";
@@ -241,10 +308,13 @@
 %staticattrib( Leap::Tool, static const Tool&, invalid);
 %staticattrib( Leap::Bone, static const Bone&, invalid);
 %staticattrib( Leap::Hand, static const Hand&, invalid);
+%staticattrib( Leap::Arm, static const Arm&, invalid);
 %staticattrib( Leap::Gesture, static const Gesture&, invalid);
+%staticattrib( Leap::Image, static const Image&, invalid);
 %staticattrib( Leap::Screen, static const Screen&, invalid );
 %staticattrib( Leap::Device, static const Device&, invalid );
 %staticattrib( Leap::InteractionBox, static const InteractionBox&, invalid );
+%staticattrib( Leap::TrackedQuad, static const TrackedQuad&, invalid );
 %staticattrib( Leap::Frame, static const Frame&, invalid);
 
 %constattrib( Leap::Vector, float, magnitude );
@@ -258,8 +328,11 @@
 %constattrib( Leap::Controller, bool, hasFocus );
 %constattrib( Leap::Controller, Controller::PolicyFlag, policyFlags );
 %leapattrib( Leap::Controller, Config, config );
+%leapattrib( Leap::Controller, ImageList, images );
 %leapattrib( Leap::Controller, ScreenList, locatedScreens );
 %leapattrib( Leap::Controller, DeviceList, devices );
+%leapattrib( Leap::Controller, TrackedQuad, trackedQuad );
+%leapattrib( Leap::Controller, BugReport, bugReport );
 
 %staticattrib( Leap::Vector, static const Vector&, zero );
 %staticattrib( Leap::Vector, static const Vector&, xAxis );
@@ -276,7 +349,30 @@
 
 #endif
 
+%ignore Leap::Frame::serialize() const;
+%ignore Leap::Frame::deserialize(const std::string&);
+%ignore Leap::Image::data() const;
+%ignore Leap::Image::distortion() const;
+%ignore Leap::Mask::data() const;
+
+#if !defined(SWIGCSHARP) && !defined(SWIGPYTHON)
+
+%ignore Leap::Image::dataPointer() const;
+%ignore Leap::Image::distortionPointer() const;
+%ignore Leap::Mask::dataPointer() const;
+
+#endif
+
 #if SWIGCSHARP
+
+%include "arrays_csharp.i"
+%apply unsigned char INOUT[] { unsigned char* };
+%apply float OUTPUT[] { float* };
+%typemap(cstype) void* "System.IntPtr"
+%typemap(csout) void* { return $imcall; }
+
+%rename(SerializeWithArg) Leap::Frame::serialize(unsigned char*) const;
+%rename(DeserializeWithLength) Leap::Frame::deserialize(const unsigned char*, int length);
 
 %rename("%(lowercamelcase)s", %$isvariable) "";
 %ignore Leap::DEG_TO_RAD;
@@ -285,18 +381,322 @@
 
 SWIG_CSBODY_PROXY(public, public, SWIGTYPE)
 
+%ignore Leap::Image::data(unsigned char*) const;
+%ignore Leap::Image::distortion(float*) const;
+%ignore Leap::Mask::data(unsigned char*) const;
+
+%typemap(cscode) Leap::Image %{
+  /**
+  * The image data.
+  *
+  * The image data is a set of 8-bit intensity values. The buffer is
+  * ``image.Width * image.Height * image.BytesPerPixel`` bytes long.
+  *
+  * \include Image_data_1.txt
+  *
+  * @since 2.1.0
+  */
+  public byte[] Data {
+    get {
+      byte[] ret = new byte[Width * Height * BytesPerPixel];
+      DataWithArg(ret);
+      return ret;
+    }
+  }
+  public void DataWithArg(byte[] dst) {
+    System.Runtime.InteropServices.Marshal.Copy(DataPointer(), dst, 0, Width * Height * BytesPerPixel);
+  }
+  /**
+  * The distortion calibration map for this image.
+  *
+  * The calibration map is a 64x64 grid of points. Each point is defined by
+  * a pair of 32-bit floating point values. Each point in the map
+  * represents a ray projected into the camera. The value of
+  * a grid point defines the pixel in the image data containing the brightness
+  * value produced by the light entering along the corresponding ray. By
+  * interpolating between grid data points, you can find the brightness value
+  * for any projected ray. Grid values that fall outside the range [0..1] do
+  * not correspond to a value in the image data and those points should be ignored.
+  *
+  * \include Image_distortion_1.txt
+  *
+  * The calibration map can be used to render an undistorted image as well as to
+  * find the true angle from the camera to a feature in the raw image. The
+  * distortion map itself is designed to be used with GLSL shader programs.
+  * In other contexts, it may be more convenient to use the Image Rectify()
+  * and Warp() functions.
+  *
+  * Distortion is caused by the lens geometry as well as imperfections in the
+  * lens and sensor window. The calibration map is created by the calibration
+  * process run for each device at the factory (and which can be rerun by the
+  * user).
+  *
+  * Note, in a future release, there will be two distortion maps per image;
+  * one containing the horizontal values and the other containing the vertical values.
+  *
+  * @since 2.1.0
+  */
+  public float[] Distortion {
+    get {
+      float[] ret = new float[DistortionWidth * DistortionHeight];
+      DistortionWithArg(ret);
+      return ret;
+    }
+  }
+  public void DistortionWithArg(float[] dst) {
+    System.Runtime.InteropServices.Marshal.Copy(DistortionPointer(), dst, 0, DistortionWidth * DistortionHeight);
+  }
+%}
+
+%typemap(cscode) Leap::Mask %{
+  /**
+  * The mask data.
+  *
+  * The mask data is a set of 8-bit intensity values. The buffer is
+  * ``mask.Width * mask.Height`` bytes long. Areas of the mask which contain part
+  * of a hand or finger covering the quad are assigned the value 255. The rest
+  * of the mask is assigned the value 0.
+  *
+  * \include Mask_data.txt
+  * @since 2.2.5
+  */
+  public byte[] Data {
+    get {
+      byte[] ret = new byte[Width * Height];
+      DataWithArg(ret);
+      return ret;
+    }
+  }
+  public void DataWithArg(byte[] dst) {
+    System.Runtime.InteropServices.Marshal.Copy(DataPointer(), dst, 0, Width * Height);
+  }
+%}
+
+%typemap(cscode) Leap::Frame %{
+  /**
+  * Encodes this Frame object as a byte string.
+  *
+  * \include Frame_serialize.txt
+  *
+  * @since 2.1.0
+  */
+  public byte[] Serialize {
+    get {
+      byte[] ptr = new byte[SerializeLength];
+      SerializeWithArg(ptr);
+      return ptr;
+    }
+  }
+
+ /**
+  * Decodes a byte string to replace the properties of this Frame.
+  *
+  * A Controller object must be instantiated for this function to succeed, but
+  * it does not need to be connected. To extract gestures from the deserialized
+  * frame, you must enable the appropriate gestures first.
+  *
+  * Any existing data in the frame is
+  * destroyed. If you have references to
+  * child objects (hands, fingers, etc.), these are preserved as long as the
+  * references remain in scope.
+  *
+  * \include Frame_deserialize.txt
+  *
+  * **Note:** The behavior when calling functions which take
+  * another Frame object as a parameter is undefined when either frame has
+  * been deserialized. For example, calling ``Gestures(sinceFrame)`` on a
+  * deserialized frame or with a deserialized frame as parameter (or both)
+  * does not necessarily return all gestures that occurred between the two
+  * frames. Motion functions, like ``ScaleFactor(startFrame)``, are more
+  * likely to return reasonable results, but could return anomalous values
+  * in some cases.
+  *
+  * @param arg A byte array containing the bytes of a serialized frame.
+  * @since 2.1.0
+  */
+  public void Deserialize(byte[] arg) {
+    DeserializeWithLength(arg, arg.Length);
+  }
+%}
+
 #elif SWIGPYTHON
+
+%include "carrays.i"
+%array_class(unsigned char, byteArray)
+%array_class(float, floatArray)
+
+%extend Leap::Image {
+%pythoncode {
+  def data(self):
+      ptr = byte_array(self.width * self.height * self.bytes_per_pixel)
+      LeapPython.Image_data(self, ptr)
+      return ptr
+  def distortion(self):
+      ptr = float_array(self.distortion_width * self.distortion_height)
+      LeapPython.Image_distortion(self, ptr)
+      return ptr
+  __swig_getmethods__["data"] = data
+  if _newclass:data = _swig_property(data)
+  __swig_getmethods__["distortion"] = distortion
+  if _newclass:distortion = _swig_property(distortion)
+%}}
+
+%extend Leap::Mask {
+%pythoncode {
+  def data(self):
+      ptr = byte_array(self.width * self.height)
+      LeapPython.Mask_data(self, ptr)
+      return ptr
+  __swig_getmethods__["data"] = data
+  if _newclass:data = _swig_property(data)
+%}}
+
+%extend Leap::Frame {
+%pythoncode {
+  def serialize(self):
+      length = self.serialize_length
+      str = byte_array(length)
+      LeapPython.Frame_serialize(self, str)
+      return (str, length)
+  def deserialize(self, tup):
+      LeapPython.Frame_deserialize(self, tup[0], tup[1])
+  __swig_getmethods__["serialize"] = serialize
+  if _newclass:serialize = _swig_property(serialize)
+%}}
+
+%constattrib( Leap::Image, void*, dataPointer );
+%constattrib( Leap::Image, void*, distortionPointer );
+%constattrib( Leap::Mask, void*, dataPointer );
 
 %rename("%(camelcase)s", %$isclass) "";
 %rename("%(camelcase)s", %$isconstructor) "";
 
 #elif SWIGJAVA
 
+%include "arrays_java.i"
+%apply signed char[] { unsigned char* };
+%apply float[] { float* };
+
+%typemap(javacode) Leap::Image %{
+  /**
+  * The image data.
+  *
+  * The image data is a set of 8-bit intensity values. The buffer is
+  * ``image.width() * image.height() * image.bytesPerPixel()`` bytes long.
+  *
+  * \include Image_data_1.txt
+  *
+  * @since 2.1.0
+  */
+  public byte[] data() {
+    byte[] ptr = new byte[width() * height() * bytesPerPixel()];
+    LeapJNI.Image_data(swigCPtr, this, ptr);
+    return ptr;
+  }
+  /**
+  * The distortion calibration map for this image.
+  *
+  * The calibration map is a 64x64 grid of points. Each point is defined by
+  * a pair of 32-bit floating point values. Each point in the map
+  * represents a ray projected into the camera. The value of
+  * a grid point defines the pixel in the image data containing the brightness
+  * value produced by the light entering along the corresponding ray. By
+  * interpolating between grid data points, you can find the brightness value
+  * for any projected ray. Grid values that fall outside the range [0..1] do
+  * not correspond to a value in the image data and those points should be ignored.
+  *
+  * \include Image_distortion_1.txt
+  *
+  * The calibration map can be used to render an undistorted image as well as to
+  * find the true angle from the camera to a feature in the raw image. The
+  * distortion map itself is designed to be used with GLSL shader programs.
+  * In other contexts, it may be more convenient to use the Image rectify()
+  * and warp() functions.
+  *
+  * Distortion is caused by the lens geometry as well as imperfections in the
+  * lens and sensor window. The calibration map is created by the calibration
+  * process run for each device at the factory (and which can be rerun by the
+  * user).
+  *
+  * @returns The float array containing the camera lens calibration map.
+  * @since 2.1.0
+  */
+  public float[] distortion() {
+    float[] ptr = new float[distortionWidth() * distortionHeight()];
+    LeapJNI.Image_distortion(swigCPtr, this, ptr);
+    return ptr;
+  }
+%}
+
+%typemap(javacode) Leap::Mask %{
+  /**
+  * The mask data.
+  *
+  * The mask data is a set of 8-bit intensity values. The buffer is
+  * ``image.width() * image.height()`` bytes long. Areas of the mask which contain part
+  * of a hand or finger covering the quad are assigned the value 255. The rest
+  * of the mask is assigned the value 0.
+  *
+  * \include Mask_data.txt
+  * @since 2.2.5
+  */
+  public byte[] data() {
+    byte[] ptr = new byte[width() * height()];
+    LeapJNI.Mask_data(swigCPtr, this, ptr);
+    return ptr;
+  }
+%}
+
+%typemap(javacode) Leap::Frame %{
+ /**
+  * Encodes this Frame object as a byte string.
+  *
+  * \include Frame_serialize.txt
+  *
+  * @returns The byte array encoding the data for this frame.
+  * @since 2.1.0
+  */
+  public byte[] serialize() {
+    byte[] ptr = new byte[serializeLength()];
+    LeapJNI.Frame_serialize(swigCPtr, this, ptr);
+    return ptr;
+  }
+ /**
+  * Decodes a byte string to replace the properties of this Frame.
+  *
+  * A Controller object must be instantiated for this function to succeed, but
+  * it does not need to be connected. To extract gestures from the deserialized
+  * frame, you must enable the appropriate gestures first.
+  *
+  * Any existing data in the frame is
+  * destroyed. If you have references to
+  * child objects (hands, fingers, etc.), these are preserved as long as the
+  * references remain in scope.
+  *
+  * \include Frame_deserialize.txt
+  *
+  * **Note:** The behavior when calling functions which take
+  * another Frame object as a parameter is undefined when either frame has
+  * been deserialized. For example, calling ``gestures(sinceFrame)`` on a
+  * deserialized frame or with a deserialized frame as parameter (or both)
+  * does not necessarily return all gestures that occurred between the two
+  * frames. Motion functions, like ``scaleFactor(startFrame)``, are more
+  * likely to return reasonable results, but could return anomalous values
+  * in some cases.
+  *
+  * @param str A byte array containing the bytes of a serialized frame.
+  * @since 2.1.0
+  */
+  public void deserialize(byte[] str) {
+    LeapJNI.Frame_deserialize(swigCPtr, this, str, str.length);
+  }
+%}
+
 %ignore Leap::DEG_TO_RAD;
 %ignore Leap::RAD_TO_DEG;
 %ignore Leap::PI;
 
-# Use proper Java enums
+// Use proper Java enums
 %include "enums.swg"
 %javaconst(1);
 
@@ -304,9 +704,9 @@ SWIG_JAVABODY_PROXY(public, public, SWIGTYPE)
 
 #endif
 
-# Ignore C++ streaming operator
+// Ignore C++ streaming operator
 %ignore operator<<;
-# Ignore C++ equal operator
+// Ignore C++ equal operator
 %ignore operator=;
 
 #if SWIGPYTHON
@@ -340,34 +740,34 @@ extern "C" BOOL WINAPI DllMain(
     _In_ LPVOID lpvReserved)
 {
   if (lpvReserved == 0) {
-    static TCHAR lpPrevPathName[1024];
-    static BOOL restore = FALSE;
-
     if (fdwReason == DLL_PROCESS_ATTACH) {
       TCHAR lpPathName[1024];
       int len;
 
-      len = GetDllDirectory(static_cast<DWORD>(sizeof(lpPrevPathName) - 1),
-                            lpPrevPathName);
-      if (len < 0 && len >= sizeof(lpPrevPathName)) {
-        len = 0;
-      }
-      lpPrevPathName[len] = '\0';
       len = static_cast<int>(GetModuleFileName(static_cast<HMODULE>(hinstDLL),
                          lpPathName, static_cast<DWORD>(sizeof(lpPathName))));
       if (len > 0 && len < sizeof(lpPathName)) {
         for (int i = len; i >= 0; i--) {
           if (lpPathName[i] == '\\' || lpPathName[i] == '/') {
             lpPathName[i] = '\0';
-            restore = SetDllDirectory(lpPathName);
+            static TCHAR lpPathVar[8192]; // static to avoid stacksize concerns
+            DWORD sz = GetEnvironmentVariable("PATH", lpPathVar, sizeof(lpPathVar));
+            if (sz == 0) {
+              // %PATH% not defined
+              lpPathVar[0] = '\0';
+            }
+            if (sz + strlen(lpPathName) + 1 < sizeof(lpPathVar)) {
+              // If someone's %PATH% is 8 kB, they have bigger problems
+              static TCHAR lpTmp[8192];
+              strcpy(lpTmp, lpPathVar);
+              strcpy(lpPathVar, lpPathName);
+              lpPathVar[strlen(lpPathName)] = ';';
+              strcat(lpPathVar, lpTmp);
+              SetEnvironmentVariable("PATH", lpPathVar);
+            }
             break;
           }
         }
-      }
-    } else if (fdwReason == DLL_PROCESS_DETACH) {
-      if (restore && lpPrevPathName[0] != '\0') {
-        SetDllDirectory(lpPrevPathName);
-        restore = FALSE;
       }
     }
   }
@@ -377,7 +777,7 @@ extern "C" BOOL WINAPI DllMain(
 %}
 #endif
 
-%typemap(csin, pre="    lock(arg0) {", post="      $csinput.Dispose();\n    }") const Leap::Controller& "Controller.getCPtr($csinput)"
+%typemap(csin, pre="    lock($csinput) {", post="      $csinput.Dispose();\n    }") const Leap::Controller& "Controller.getCPtr($csinput)"
 
 %header %{
 #define SWIG
@@ -404,9 +804,9 @@ extern "C" BOOL WINAPI DllMain(
   }
 %}
 
-################################################################################
-# Operator overloading                                                         #
-################################################################################
+////////////////////////////////////////////////////////////////////////////////
+// Operator overloading                                                         #
+////////////////////////////////////////////////////////////////////////////////
 
 #if SWIGCSHARP
 
@@ -467,7 +867,7 @@ extern "C" BOOL WINAPI DllMain(
 %}
 %typemap(cscode) Leap::Matrix
 %{
-  /** Multiply two matrices. */ 
+  /** Multiply two matrices. */
   public static Matrix operator * (Matrix m1, Matrix m2) {
     return m1._operator_mul(m2);
   }
@@ -610,9 +1010,9 @@ extern "C" BOOL WINAPI DllMain(
 
 #endif
 
-################################################################################
-# List Helpers                                                                 #
-################################################################################
+////////////////////////////////////////////////////////////////////////////////
+// List Helpers
+////////////////////////////////////////////////////////////////////////////////
 
 #if SWIGCSHARP
 
@@ -716,13 +1116,15 @@ extern "C" BOOL WINAPI DllMain(
 %leap_list_helper(Finger);
 %leap_list_helper(Tool);
 %leap_list_helper(Gesture);
+%leap_list_helper(Image);
+%leap_list_helper(Mask);
 %leap_list_helper(Hand);
 %leap_list_helper(Screen);
 %leap_list_helper(Device);
 
-################################################################################
-# Config Helpers                                                               #
-################################################################################
+////////////////////////////////////////////////////////////////////////////////
+// Config Helpers
+////////////////////////////////////////////////////////////////////////////////
 
 #if SWIGPYTHON
 
@@ -765,9 +1167,9 @@ extern "C" BOOL WINAPI DllMain(
 
 #endif
 
-################################################################################
-# ToString methods                                                             #
-################################################################################
+////////////////////////////////////////////////////////////////////////////////
+// ToString methods
+////////////////////////////////////////////////////////////////////////////////
 
 #if SWIGCSHARP
 
@@ -782,6 +1184,8 @@ extern "C" BOOL WINAPI DllMain(
 %rename(__str__) *::toString;
 
 #endif
+
+
 
 %include "LeapMath.h"
 %include "Leap.h"

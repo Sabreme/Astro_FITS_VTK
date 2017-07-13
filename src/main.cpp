@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "main.h"
 
 #include <iostream>
@@ -52,7 +52,7 @@ void reloadFrameRate()
 
 int main(int argc, char *argv[])
 {
-    qInstallMsgHandler(myMsgHandler);
+//    qInstallMsgHandler(myMsgHandler);
     QApplication a(argc, argv);
     MainWindow astroFitsVTK;
     _mainWindow = &astroFitsVTK;

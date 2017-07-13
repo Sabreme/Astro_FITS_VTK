@@ -1,3 +1,7 @@
+#include "vtkAutoInit.h"
+#define vtkRenderingCore_AUTOINIT 3(vtkInteractionStyle, vtkRenderingOpenGL, vtkRenderingFreeType)
+#define vtkRenderingVolume_AUTOINIT 1(vtkRenderingVolumeOpenGL)
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -35,6 +39,9 @@
 #include <vtkTextProperty.h>
 #include <vtkActorCollection.h>
 
+#include <QBoxLayout>
+#include <QMessageBox>
+
 #include <vtkTransform.h>
 #include <vtkLinearTransform.h>
 #include <vtkPerspectiveTransform.h>
@@ -42,7 +49,7 @@
 
 #include <vtkVolume.h>
 #include <vtkSmartVolumeMapper.h>
-#include <vtkStructuredPointsToPolyDataFilter.h>
+//#include <vtkStructuredPointsToPolyDataFilter.h>
 
 #include <vtkPlaneCollection.h>
 #include <vtkStructuredPointsGeometryFilter.h>
@@ -976,6 +983,13 @@ void MainWindow::saveScreenShot()
       if (!dir.exists())
           dir.mkpath(".");
       QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __APPLE__
+      QDir dir(QDir::homePath());
+      QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+      dir.mkpath(userIDString);
+      if (!dir.exists())
+          dir.mkpath(".");
+      QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 //      QDir dir("C:/");
 //      QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
@@ -1583,7 +1597,7 @@ void MainWindow::loadFitsFile(QString filename)
     /// Create the Volume & mapper
 
     vtkVolume *volume = vtkVolume::New();
-    vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
+    vtkFixedPointVolumeRayCastMapper *mapper = vtkFixedPointVolumeRayCastMapper::New();
     global_Mapper = mapper;
 
     //mapper->SetInputConnection(fitsReader->GetOutputPort());
@@ -1927,7 +1941,7 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_actionReload_triggered()
 {
     vtkVolume *volume = vtkVolume::New();
-    vtkGPUVolumeRayCastMapper *mapper = vtkGPUVolumeRayCastMapper::New();
+    vtkFixedPointVolumeRayCastMapper *mapper = vtkFixedPointVolumeRayCastMapper::New();
     global_Mapper = mapper;
 
     //mapper->SetInputConnection(fitsReader->GetOutputPort());
@@ -3020,7 +3034,7 @@ void MainWindow::beginSliceAxis()
         rep->GetResliceCursorActor()->
                 GetCursorAlgorithm()->SetReslicePlaneNormal(i);
 
-        riw[i]->SetInput(global_Reader->GetOutput());
+        riw[i]->SetInputData(global_Reader->GetOutput());
         riw[i]->SetSliceOrientation(i);
         riw[i]->SetResliceModeToAxisAligned();
     }
@@ -3054,7 +3068,7 @@ void MainWindow::beginSliceAxis()
         planeWidget[i]->SetTexturePlaneProperty(ipwProp);
         planeWidget[i]->TextureInterpolateOff();
         planeWidget[i]->SetResliceInterpolateToLinear();
-        planeWidget[i]->SetInput(global_Reader->GetOutput());
+        planeWidget[i]->SetInputData(global_Reader->GetOutput());
         planeWidget[i]->SetPlaneOrientation(i);
         planeWidget[i]->SetSliceIndex(imageDims[i]/2);
         planeWidget[i]->DisplayTextOn();
@@ -4601,13 +4615,12 @@ void MainWindow::touchBeginSubVol()
     /// POINT 1
     {
         /// The plane widget is used probe the dataset.
-        vtkSmartPointer<vtkPolyData> point =
-                vtkSmartPointer<vtkPolyData>::New();
+        vtkPolyData* point = vtkPolyData::New();
 
-        vtkSmartPointer<vtkProbeFilter> probe =
-                vtkSmartPointer<vtkProbeFilter>::New();
-        probe->SetInput(point);
-        probe->SetSource(global_Reader->GetOutput());
+        vtkProbeFilter* probe = vtkProbeFilter::New();
+//        probe->SetInputConnection(point);
+        probe->SetInputData(point);
+//        probe->SetInputData(global_Reader->GetOutput());
 
         /// create glyph
         ///
@@ -4661,7 +4674,7 @@ void MainWindow::touchBeginSubVol()
 
         pointWidget1_ = vtkPointWidget::New();
         pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-        pointWidget1_->SetInput(global_Reader->GetOutput());
+        pointWidget1_->SetInputData(global_Reader->GetOutput());
         pointWidget1_->AllOff();
         pointWidget1_->PlaceWidget();
         pointWidget1_->GetPolyData(point);
@@ -4695,8 +4708,8 @@ void MainWindow::touchBeginSubVol()
 
         vtkSmartPointer<vtkProbeFilter> probe =
                 vtkSmartPointer<vtkProbeFilter>::New();
-        probe->SetInput(point);
-        probe->SetSource(global_Reader->GetOutput());
+        probe->SetInputData(point);
+//        probe->SetSource(global_Reader->GetOutput());
 
         /// create glyph
         ///
@@ -4749,7 +4762,7 @@ void MainWindow::touchBeginSubVol()
 
         pointWidget2_ = vtkPointWidget::New();
         pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-        pointWidget2_->SetInput(global_Reader->GetOutput());
+        pointWidget2_->SetInputData(global_Reader->GetOutput());
         pointWidget2_->AllOff();
         pointWidget2_->PlaceWidget();
         pointWidget2_->GetPolyData(point);
@@ -5478,8 +5491,8 @@ void MainWindow::on_actionTracking_triggered()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+    probe->SetInputData(point);
+//    probe->SetSource(global_Reader->GetOutput());
 
     /// create glyph
     ///
@@ -5533,7 +5546,7 @@ void MainWindow::on_actionTracking_triggered()
 
     pointWidget1_ = vtkPointWidget::New();
     pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    pointWidget1_->SetInput(global_Reader->GetOutput());
+    pointWidget1_->SetInputData(global_Reader->GetOutput());
     pointWidget1_->AllOff();
     pointWidget1_->PlaceWidget();
     pointWidget1_->GetPolyData(point);
@@ -5560,8 +5573,8 @@ void MainWindow::addSecondPointer()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+    probe->SetInputData(point);
+//    probe->SetSource(global_Reader->GetOutput());
 
     /// create glyph
     ///
@@ -5614,7 +5627,7 @@ void MainWindow::addSecondPointer()
 
     pointWidget2_ = vtkPointWidget::New();
     pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    pointWidget2_->SetInput(global_Reader->GetOutput());
+    pointWidget2_->SetInputData(global_Reader->GetOutput());
     pointWidget2_->AllOff();
     pointWidget2_->PlaceWidget();
     pointWidget2_->GetPolyData(point);
@@ -5644,8 +5657,8 @@ void MainWindow::addThirdPointer()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+    probe->SetInputData(point);
+//    probe->SetSource(global_Reader->GetOutput());
 
     /// create glyph
     ///
@@ -6421,7 +6434,7 @@ void MainWindow::beginSliceArb()
     ///
     customArbPlaneWidget = vtkImplicitCustomPlaneWidget::New();
     //customPlaneWidget = vtkSmartPointer<vtkImplicitCustomPlaneWidget>::New();
-    customArbPlaneWidget->SetInput(global_Reader->GetOutput());
+    customArbPlaneWidget->SetInputData(global_Reader->GetOutput());
     customArbPlaneWidget->NormalToZAxisOn();
     customArbPlaneWidget->SetPlaceFactor(1.0);
     customArbPlaneWidget->GetPolyData(polyPlane);
@@ -6442,7 +6455,7 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
 
     vtkCutter * cutter = vtkCutter::New();
-    cutter->SetInput(global_Reader->GetOutput());
+    cutter->SetInputData(global_Reader->GetOutput());
 
     vtkPlane * plane = vtkPlane::New();
     customArbPlaneWidget->GetPlane(plane);
@@ -6452,7 +6465,7 @@ void MainWindow::beginSliceArb()
     ///
 
     vtkPolyDataMapper * slice = vtkPolyDataMapper::New();
-    slice->SetInput(cutter->GetOutput());
+    slice->SetInputData(cutter->GetOutput());
     slice->Update();
     slice->SetScalarRange(global_Reader->GetOutput()->GetScalarRange());
 
@@ -6506,7 +6519,7 @@ void MainWindow::beginSliceArb()
 
 
     vtkSmartPointer<vtkContourFilter> contours2D = vtkSmartPointer<vtkContourFilter>::New();
-    contours2D->SetInput(cutter->GetOutput());
+    contours2D->SetInputData(cutter->GetOutput());
     contours2D->GenerateValues(10, global_Reader->GetOutput()->GetScalarRange());
     global_Contours2D = contours2D;
     //contours2D->SetNumberOfContours(10);
@@ -6521,7 +6534,7 @@ void MainWindow::beginSliceArb()
 
     vtkSmartPointer<vtkPolyDataMapper> contour2DMapper =
             vtkSmartPointer<vtkPolyDataMapper>::New();
-    contour2DMapper->SetInput(contours2D->GetOutput());
+    contour2DMapper->SetInputData(contours2D->GetOutput());
     contour2DMapper->SetLookupTable(lut2D);
     ///contourMapper->SetInputConnection(probe->GetOutputPort());
     contour2DMapper->SetScalarRange(global_Reader->GetOutput()->GetScalarRange());

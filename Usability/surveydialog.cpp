@@ -45,9 +45,13 @@ void SurveyDialog::selectionMade(QAbstractButton *radioButton)
     QString name = radioButton->objectName();
     ///std::cout << radioButton->objectName().toStdString() << std::endl;
 
+#ifdef __APPLE__
+    char question = name.at(5).toLatin1();
+    char answer = name.at(9).toLatin1();
+#else
     char question = name.at(5).toAscii();
     char answer = name.at(9).toAscii();
-
+#endif
     answerQuestion(question);
 
     addResult(question, answer);

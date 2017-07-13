@@ -6,7 +6,7 @@
 #include <vtkRenderWindowInteractor.h>
 #include <vtkVolume16Reader.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkGPUVolumeRayCastMapper.h>
+#include <vtkFixedPointVolumeRayCastMapper.h>
 #include <vtkActor.h>
 #include <vtkOutlineFilter.h>
 #include <vtkCamera.h>
@@ -27,7 +27,7 @@
 #include <vtkStructuredPoints.h>
 #include <vtkActor.h>
 #include <vtkLookupTable.h>
-#include <vtkGPUVolumeRayCastMapper.h>
+#include <vtkFixedPointVolumeRayCastMapper.h>
 #include <vtkImageResample.h>
 
 #include <vtkOrientationMarkerWidget.h>
@@ -440,7 +440,7 @@ private:
         vtkVolume                   * global_Volume;            // Global Pointer for the Current Volume
         vtkActor                    * global_Outline;           // Global pointer for the Outline volume
         vtkCubeAxesActor            * defaultCubeAxes;          // Global pointer for the axes of volume
-        vtkGPUVolumeRayCastMapper   * global_Mapper;            // Global Pointer for Volume Mapper
+        vtkFixedPointVolumeRayCastMapper   * global_Mapper;            // Global Pointer for Volume Mapper
         vtkLookupTable              * default_Volume_Colours;   // Global Pointer for the Default Volume schema
         vtkRenderWindowInteractor   * defaultInter;             // Global Pointer for the Default Interactor
         vtkRenderer                 * defaultRenderer;          // Global Pointer for the Default Renderer

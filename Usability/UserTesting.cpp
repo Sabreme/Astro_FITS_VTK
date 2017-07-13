@@ -132,6 +132,13 @@ void UserTesting::importSystemResults(QString results)
         if (!dir.exists())
             dir.mkpath(".");
         QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __APPLE__
+        QDir dir(QDir::homePath());
+        QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+        dir.mkpath(userIDString);
+        if (!dir.exists())
+            dir.mkpath(".");
+        QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 
      QString fileName = QString("UserID_%1_Task_%2_%3_%4_SYSTEM.txt").arg(userID).arg(taskNo).arg(task).arg(medium);
@@ -200,6 +207,13 @@ void UserTesting::importUserResults(QString results)
         if (!dir.exists())
             dir.mkpath(".");
         QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __APPLE__
+        QDir dir(QDir::homePath());
+        QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+        dir.mkpath(userIDString);
+        if (!dir.exists())
+            dir.mkpath(".");
+        QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #endif
 
      QString fileName = QString("UserID_%1_Task_%2_%3_%4_USER.txt").arg(userID).arg(taskNo).arg(task).arg(medium);
@@ -258,6 +272,13 @@ if (!dir.exists())
     dir.mkpath(".");
 QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
 #elif __linux__
+    QDir dir(QDir::homePath());
+    QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
+    dir.mkpath(userIDString);
+    if (!dir.exists())
+        dir.mkpath(".");
+    QString outputDir = dir.absolutePath() + "/" + userIDString + "/";
+#elif __APPLE__
     QDir dir(QDir::homePath());
     QString userIDString = QString("UserTesting/UserID_%1").arg(userID);
     dir.mkpath(userIDString);
@@ -455,6 +476,11 @@ void UserTesting::saveResult(QString result)
         QString outputDir = QDir::currentPath();
 #elif __linux__
         QDir dir ("/home/pmulumba/UserTesting");
+        if (!dir.exists())
+            dir.mkpath(".");
+        QString outputDir = dir.absolutePath();
+#elif __APPLE__
+        QDir dir ("/users/patrickmulumba/UserTesting");
         if (!dir.exists())
             dir.mkpath(".");
         QString outputDir = dir.absolutePath();

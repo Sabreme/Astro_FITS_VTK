@@ -11,6 +11,7 @@
 #include "vtkOrientationMarkerWidget.h"
 
 #include "vtkInteractorStyleUser.h"
+#include "vtkVertexGlyphFilter.h"
 
 #include "vtkTransform.h"
 #include "vtkMatrix4x4.h"
@@ -32,6 +33,7 @@
 //#include "private/qgesture_p.h"
 
 #include "qgesture.h"
+#include <QtGui/qevent.h>
 #include <QEvent>
 #include <QMetaEnum>
 //#include "qevent.h"
@@ -169,10 +171,10 @@ void QVTKTouchWidget::enableGestures()
 
     polydata->SetPoints(points);
 
-    vtkSmartPointer<vtkVertexGlyphFilter> glyphfilter =
-            vtkSmartPointer<vtkVertexGlyphFilter>::New();
+    vtkVertexGlyphFilter* glyphfilter =
+            vtkVertexGlyphFilter::New();
 
-    glyphfilter->SetInputConnection(polydata->GetProducerPort());
+    glyphfilter->SetInputData(polydata);
     glyphfilter->Update();
 
     vtkSmartPointer<vtkPolyDataMapper2D> mapper =

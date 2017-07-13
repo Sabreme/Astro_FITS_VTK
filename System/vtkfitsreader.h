@@ -5,6 +5,8 @@
     #include <fitsio\fitsio.h>
 #elif __linux__
     #include "fitsio.h"
+#elif __APPLE__
+    #include "fitsio/fitsio.h"
 #endif
 
 #include "vtkDataReader.h"
@@ -34,7 +36,7 @@ class VTK_EXPORT vtkFitsReader : public vtkDataReader
 public:
     //vtkFitsReader();
     static vtkFitsReader *New();
-    vtkTypeRevisionMacro(vtkFitsReader,vtkDataReader);
+//    vtkTypeRevisionMacro(vtkFitsReader,vtkDataReader);
 
     const char *GetClassName() {return "vtkFitsReader";}
     void PrintSelf(ostream& os, vtkIndent indent);

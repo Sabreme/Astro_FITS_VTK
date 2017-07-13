@@ -14,7 +14,7 @@
 #include "vtkDecimatePro.h"
 #include "vtkProperty.h"
 #include "vtkImageResample.h"
-#include "vtkGPUVolumeRayCastMapper.h"
+#include "vtkFixedPointVolumeRayCastMapper.h"
 #include "vtkPiecewiseFunction.h"
 #include "vtkColorTransferFunction.h"
 #include "vtkImageData.h"
@@ -84,7 +84,7 @@ void SliceDialog::UpdateQVTKWidget(vtkResliceImageViewer * riw, int axis)
 
     this->riw[0]->SetupInteractor(this->ui->qvtkWidgetRight->GetInteractor());
 
-    this->riw[0]->SetInput(riw->GetInput());
+    this->riw[0]->SetInputData(riw->GetInput());
 
     this->riw[0]->SetSliceOrientation(riw->GetSliceOrientation());
 

@@ -4,6 +4,7 @@
 #include "QVTKWidget.h"
 #include <QtGui>
 #include <iostream>
+#include <QGestureEvent>
 
 #include "vtkCamera.h"
 #include "vtkSystemIncludes.h"
