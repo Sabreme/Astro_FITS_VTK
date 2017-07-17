@@ -34,7 +34,7 @@ class VTK_EXPORT vtkFitsReader : public vtkDataReader
 public:
     //vtkFitsReader();
     static vtkFitsReader *New();
-    vtkTypeRevisionMacro(vtkFitsReader,vtkDataReader);
+//    vtkTypeRevisionMacro(vtkFitsReader,vtkDataReader);
 
     const char *GetClassName() {return "vtkFitsReader";}
     void PrintSelf(ostream& os, vtkIndent indent);

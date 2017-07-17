@@ -1,3 +1,9 @@
+#include "vtkAutoInit.h"
+VTK_MODULE_INIT(vtkRenderingOpenGL)
+VTK_MODULE_INIT(vtkRenderingVolumeOpenGL)
+VTK_MODULE_INIT(vtkInteractionStyle)
+VTK_MODULE_INIT(vtkRenderingFreeType)
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -42,7 +48,7 @@
 
 #include <vtkVolume.h>
 #include <vtkSmartVolumeMapper.h>
-#include <vtkStructuredPointsToPolyDataFilter.h>
+//#include <vtkStructuredPointsToPolyDataFilter.h>
 
 #include <vtkPlaneCollection.h>
 #include <vtkStructuredPointsGeometryFilter.h>
@@ -64,6 +70,7 @@
 #include "vtkDistanceRepresentation.h"
 #include "vtkHandleRepresentation.h"
 #include "vtkResliceImageViewerMeasurements.h"
+#include "vtkResliceImageViewer.h"
 
 #include "vtkInteractorStyleImage.h"
 #include "vtkImageMapToWindowLevelColors.h"
@@ -1596,9 +1603,9 @@ void MainWindow::loadFitsFile(QString filename)
     // Create the property and attach the transfer functions
 
     vtkVolumeProperty * property = vtkVolumeProperty::New();
-    property->SetColor(colorFun);
-    property->SetScalarOpacity(opacityFun);
-    property->SetInterpolationTypeToLinear();
+//    property->SetColor(colorFun);
+//    property->SetScalarOpacity(opacityFun);
+//    property->SetInterpolationTypeToLinear();
     //property->SetIndependentComponents(1);//
 
 
@@ -1653,15 +1660,18 @@ void MainWindow::loadFitsFile(QString filename)
     //      colorFun->AddRGBPoint(min, 0.0, 0.0, 0.0);
     //      colorFun->AddRGBPoint(max, 1.0, 1.0, 1.0);
 
-    mapper->SetBlendModeToComposite();
+//    mapper->SetBlendModeToComposite();
+//    mapper->SetMaxMemoryInBytes(536870912);
+//    mapper->SetMaxMemoryFraction(0.75);
+//    mapper->SetAutoAdjustSampleDistances(1);
     //mapper->SetBlendModeToMaximumIntensity();
-    property->ShadeOn();
-    property->SetAmbient(0.4);
-    property->SetDiffuse(0.6);
+//    property->ShadeOn();
+//    property->SetAmbient(0.4);
+//    property->SetDiffuse(0.6);
 
-    property->SetSpecular(0.2);
-    property->SetSpecularPower(1.0);
-    property->SetScalarOpacityUnitDistance(0.8919);
+//    property->SetSpecular(0.2);
+//    property->SetSpecularPower(1.0);
+//    property->SetScalarOpacityUnitDistance(0.8919);
 
     // connect up the volume to the property and the mapper
     volume->SetProperty( property );
@@ -1739,7 +1749,7 @@ void MainWindow::loadFitsFile(QString filename)
     ////
     //qDebug() << "Adding Orientation Marker" << endl;
 
-    AddOrientationAxes(this->ui->qvtkWidgetLeft);
+  //  AddOrientationAxes(this->ui->qvtkWidgetLeft);
 
     ////////////////////////////////////
     /// \brief ScalarBar Widget
@@ -3015,12 +3025,13 @@ void MainWindow::beginSliceAxis()
         vtkResliceCursorLineRepresentation *rep =
                 vtkResliceCursorLineRepresentation::SafeDownCast(
                     riw[i]->GetResliceCursorWidget()->GetRepresentation());
+        vtkResliceCursor* cursor = riw[0]->GetResliceCursor();
         riw[i]->SetResliceCursor(riw[0]->GetResliceCursor());
 
         rep->GetResliceCursorActor()->
                 GetCursorAlgorithm()->SetReslicePlaneNormal(i);
 
-        riw[i]->SetInput(global_Reader->GetOutput());
+        riw[i]->SetInputData(global_Reader->GetOutput());
         riw[i]->SetSliceOrientation(i);
         riw[i]->SetResliceModeToAxisAligned();
     }
@@ -3054,7 +3065,7 @@ void MainWindow::beginSliceAxis()
         planeWidget[i]->SetTexturePlaneProperty(ipwProp);
         planeWidget[i]->TextureInterpolateOff();
         planeWidget[i]->SetResliceInterpolateToLinear();
-        planeWidget[i]->SetInput(global_Reader->GetOutput());
+        planeWidget[i]->SetInputData(global_Reader->GetOutput());
         planeWidget[i]->SetPlaneOrientation(i);
         planeWidget[i]->SetSliceIndex(imageDims[i]/2);
         planeWidget[i]->DisplayTextOn();
@@ -4606,8 +4617,8 @@ void MainWindow::touchBeginSubVol()
 
         vtkSmartPointer<vtkProbeFilter> probe =
                 vtkSmartPointer<vtkProbeFilter>::New();
-        probe->SetInput(point);
-        probe->SetSource(global_Reader->GetOutput());
+        probe->SetInputData(point);
+        probe->SetSourceData(global_Reader->GetOutput());
 
         /// create glyph
         ///
@@ -4661,7 +4672,7 @@ void MainWindow::touchBeginSubVol()
 
         pointWidget1_ = vtkPointWidget::New();
         pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-        pointWidget1_->SetInput(global_Reader->GetOutput());
+        pointWidget1_->SetInputData(global_Reader->GetOutput());
         pointWidget1_->AllOff();
         pointWidget1_->PlaceWidget();
         pointWidget1_->GetPolyData(point);
@@ -4695,8 +4706,8 @@ void MainWindow::touchBeginSubVol()
 
         vtkSmartPointer<vtkProbeFilter> probe =
                 vtkSmartPointer<vtkProbeFilter>::New();
-        probe->SetInput(point);
-        probe->SetSource(global_Reader->GetOutput());
+        probe->SetInputData(point);
+        probe->SetSourceData(global_Reader->GetOutput());
 
         /// create glyph
         ///
@@ -4749,7 +4760,7 @@ void MainWindow::touchBeginSubVol()
 
         pointWidget2_ = vtkPointWidget::New();
         pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-        pointWidget2_->SetInput(global_Reader->GetOutput());
+        pointWidget2_->SetInputData(global_Reader->GetOutput());
         pointWidget2_->AllOff();
         pointWidget2_->PlaceWidget();
         pointWidget2_->GetPolyData(point);
@@ -5478,8 +5489,8 @@ void MainWindow::on_actionTracking_triggered()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+    probe->SetInputData(point);
+    probe->SetSourceData(global_Reader->GetOutput());
 
     /// create glyph
     ///
@@ -5533,7 +5544,7 @@ void MainWindow::on_actionTracking_triggered()
 
     pointWidget1_ = vtkPointWidget::New();
     pointWidget1_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    pointWidget1_->SetInput(global_Reader->GetOutput());
+    pointWidget1_->SetInputData(global_Reader->GetOutput());
     pointWidget1_->AllOff();
     pointWidget1_->PlaceWidget();
     pointWidget1_->GetPolyData(point);
@@ -5560,8 +5571,8 @@ void MainWindow::addSecondPointer()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+    probe->SetInputData(point);
+    probe->SetSourceData(global_Reader->GetOutput());
 
     /// create glyph
     ///
@@ -5614,7 +5625,7 @@ void MainWindow::addSecondPointer()
 
     pointWidget2_ = vtkPointWidget::New();
     pointWidget2_->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
-    pointWidget2_->SetInput(global_Reader->GetOutput());
+    pointWidget2_->SetInputData(global_Reader->GetOutput());
     pointWidget2_->AllOff();
     pointWidget2_->PlaceWidget();
     pointWidget2_->GetPolyData(point);
@@ -5644,8 +5655,8 @@ void MainWindow::addThirdPointer()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(global_Reader->GetOutput());
+    probe->SetInputData(point);
+    probe->SetSourceData(global_Reader->GetOutput());
 
     /// create glyph
     ///
@@ -6421,7 +6432,7 @@ void MainWindow::beginSliceArb()
     ///
     customArbPlaneWidget = vtkImplicitCustomPlaneWidget::New();
     //customPlaneWidget = vtkSmartPointer<vtkImplicitCustomPlaneWidget>::New();
-    customArbPlaneWidget->SetInput(global_Reader->GetOutput());
+    customArbPlaneWidget->SetInputData(global_Reader->GetOutput());
     customArbPlaneWidget->NormalToZAxisOn();
     customArbPlaneWidget->SetPlaceFactor(1.0);
     customArbPlaneWidget->GetPolyData(polyPlane);
@@ -6442,7 +6453,7 @@ void MainWindow::beginSliceArb()
     customArbPlaneWidget->SetInteractor(this->ui->qvtkWidgetLeft->GetInteractor());
 
     vtkCutter * cutter = vtkCutter::New();
-    cutter->SetInput(global_Reader->GetOutput());
+    cutter->SetInputData(global_Reader->GetOutput());
 
     vtkPlane * plane = vtkPlane::New();
     customArbPlaneWidget->GetPlane(plane);
@@ -6452,7 +6463,7 @@ void MainWindow::beginSliceArb()
     ///
 
     vtkPolyDataMapper * slice = vtkPolyDataMapper::New();
-    slice->SetInput(cutter->GetOutput());
+    slice->SetInputData(cutter->GetOutput());
     slice->Update();
     slice->SetScalarRange(global_Reader->GetOutput()->GetScalarRange());
 
@@ -6506,7 +6517,7 @@ void MainWindow::beginSliceArb()
 
 
     vtkSmartPointer<vtkContourFilter> contours2D = vtkSmartPointer<vtkContourFilter>::New();
-    contours2D->SetInput(cutter->GetOutput());
+    contours2D->SetInputData(cutter->GetOutput());
     contours2D->GenerateValues(10, global_Reader->GetOutput()->GetScalarRange());
     global_Contours2D = contours2D;
     //contours2D->SetNumberOfContours(10);
@@ -6521,7 +6532,7 @@ void MainWindow::beginSliceArb()
 
     vtkSmartPointer<vtkPolyDataMapper> contour2DMapper =
             vtkSmartPointer<vtkPolyDataMapper>::New();
-    contour2DMapper->SetInput(contours2D->GetOutput());
+    contour2DMapper->SetInputData(contours2D->GetOutput());
     contour2DMapper->SetLookupTable(lut2D);
     ///contourMapper->SetInputConnection(probe->GetOutputPort());
     contour2DMapper->SetScalarRange(global_Reader->GetOutput()->GetScalarRange());

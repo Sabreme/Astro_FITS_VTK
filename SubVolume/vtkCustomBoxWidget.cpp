@@ -57,7 +57,7 @@ vtkCustomBoxWidget::vtkCustomBoxWidget()
   // Construct the poly data representing the hex
   this->HexPolyData = vtkPolyData::New();
   this->HexMapper = vtkPolyDataMapper::New();
-  this->HexMapper->SetInput(HexPolyData);
+  this->HexMapper->SetInputData(HexPolyData);
   this->HexActor = vtkActor::New();
   this->HexActor->SetMapper(this->HexMapper);
 
@@ -95,7 +95,7 @@ vtkCustomBoxWidget::vtkCustomBoxWidget()
   this->HexFacePolyData->SetPoints(this->Points);
   this->HexFacePolyData->SetPolys(cells);
   this->HexFaceMapper = vtkPolyDataMapper::New();
-  this->HexFaceMapper->SetInput(HexFacePolyData);
+  this->HexFaceMapper->SetInputData(HexFacePolyData);
   this->HexFace = vtkActor::New();
   this->HexFace->SetMapper(this->HexFaceMapper);
   cells->Delete();
@@ -104,7 +104,7 @@ vtkCustomBoxWidget::vtkCustomBoxWidget()
   this->OutlinePolyData = vtkPolyData::New();
   this->OutlinePolyData->SetPoints(this->Points);
   this->OutlineMapper = vtkPolyDataMapper::New();
-  this->OutlineMapper->SetInput(this->OutlinePolyData);
+  this->OutlineMapper->SetInputData(this->OutlinePolyData);
   this->HexOutline = vtkActor::New();
   this->HexOutline->SetMapper(this->OutlineMapper);
   cells = vtkCellArray::New();
@@ -128,7 +128,7 @@ vtkCustomBoxWidget::vtkCustomBoxWidget()
     this->HandleGeometry[i]->SetThetaResolution(16);
     this->HandleGeometry[i]->SetPhiResolution(8);
     this->HandleMapper[i] = vtkPolyDataMapper::New();
-    this->HandleMapper[i]->SetInput(this->HandleGeometry[i]->GetOutput());
+    this->HandleMapper[i]->SetInputData(this->HandleGeometry[i]->GetOutput());
     this->Handle[i] = vtkActor::New();
     this->Handle[i]->SetMapper(this->HandleMapper[i]);
     }

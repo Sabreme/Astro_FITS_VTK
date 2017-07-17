@@ -16,7 +16,7 @@
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
 
-vtkCxxRevisionMacro(vtkFitsReader, "$Revision: 1.00 $");
+//vtkCxxRevisionMacro(vtkFitsReader, "$Revision: 1.00 $");
 vtkStandardNewMacro(vtkFitsReader);
 
 vtkFitsReader::vtkFitsReader()
@@ -195,7 +195,11 @@ int vtkFitsReader::RequestData(
 
   output->GetPointData()->SetScalars(scalars) ;
 
-  output->SetScalarType(scalars->GetDataType());
+  vtkInformation * scalarInfo = scalars->GetInformation();
+
+  output->SetScalarType(scalars->GetDataType(), scalarInfo);
+
+//  output->SetScalarType(scalars->GetDataType());
 
   int extent[6];
 
@@ -206,9 +210,14 @@ int vtkFitsReader::RequestData(
   extent[4] = 0;  
   extent[5] = this->dimensions[2]-1;
 
+
+//  if (this->dimensions[2] ==1)
+//      extent[5] = 1;
+//  output->SetWholeExtent(extent);
+
   if (this->dimensions[2] ==1)
       extent[5] = 1;
-  output->SetWholeExtent(extent);
+  output->SetExtent(extent);
 
   ReadHeader();
 
