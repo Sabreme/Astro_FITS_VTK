@@ -7,6 +7,7 @@
 #include <vtkVolume16Reader.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkGPUVolumeRayCastMapper.h>
+#include <vtkSmartVolumeMapper.h>
 #include <vtkActor.h>
 #include <vtkOutlineFilter.h>
 #include <vtkCamera.h>

@@ -180,9 +180,9 @@ void SubVolumeDialog::UpdateQVTKWidget(QVTKWidget *qvtkWidget, vtkFitsReader *so
 
     cubeAxesActor->SetCamera(ren1->GetActiveCamera());
     cubeAxesActor->SetBounds(volume->GetBounds());
-    #if VTK_MAJOR_VERSION > 5
-    cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
-    #endif
+//    #if VTK_MAJOR_VERSION > 5
+//    cubeAxesActor->SetGridLineLocation(VTK_GRID_LINES_FURTHEST);
+//    #endif
     cubeAxesActor->GetTitleTextProperty(0)->SetColor(1.0, 0.0, 0.0);
     cubeAxesActor->GetLabelTextProperty(0)->SetColor(1.0, 0.0, 0.0);
 

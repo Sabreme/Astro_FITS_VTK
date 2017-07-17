@@ -172,7 +172,7 @@ void QVTKTouchWidget::enableGestures()
     vtkSmartPointer<vtkVertexGlyphFilter> glyphfilter =
             vtkSmartPointer<vtkVertexGlyphFilter>::New();
 
-    glyphfilter->SetInputConnection(polydata->GetProducerPort());
+    glyphfilter->SetInputData(polydata);
     glyphfilter->Update();
 
     vtkSmartPointer<vtkPolyDataMapper2D> mapper =

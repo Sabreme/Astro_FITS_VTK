@@ -80,7 +80,7 @@ void LeapDialog::leapDiagnostic()
 
     vtkSmartPointer<vtkPolyDataMapper> mapperSphere =
             vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapperSphere->SetInput(inputPolyData);
+    mapperSphere->SetInputData(inputPolyData);
 
     vtkSmartPointer<vtkActor> sphereActor =
             vtkSmartPointer<vtkActor>::New();
@@ -233,7 +233,7 @@ void LeapDialog::leapDiagnostic()
     ///////////////////////////////////////////////
 
     leapDbgPlaneWidget = vtkPlaneWidget::New();
-    leapDbgPlaneWidget->SetInput(leapDbgSphere->GetOutput());
+    leapDbgPlaneWidget->SetInputData(leapDbgSphere->GetOutput());
     leapDbgPlaneWidget->NormalToXAxisOn();
     leapDbgPlaneWidget->SetResolution(20);
     leapDbgPlaneWidget->SetRepresentationToOutline();
@@ -266,8 +266,8 @@ void LeapDialog::leapDiagnostic()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(cubeSource->GetOutput());
+    probe->SetInputData(point);
+    probe->SetSourceData(cubeSource->GetOutput());
 
     ///
     /// create glyph

@@ -104,7 +104,7 @@ vtkLeapMarkerWidget::vtkLeapMarkerWidget()
   tcoord->SetCoordinateSystemToDisplay();
 
   vtkPolyDataMapper2D *mapper = vtkPolyDataMapper2D::New();
-  mapper->SetInput( this->Outline );
+  mapper->SetInputData( this->Outline );
   mapper->SetTransformCoordinate( tcoord );
 
   this->OutlineActor = vtkActor2D::New();
@@ -519,7 +519,7 @@ void vtkLeapMarkerWidget::GeneratActors()
 
     vtkSmartPointer<vtkPolyDataMapper> mapperSphere =
             vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapperSphere->SetInput(inputPolyData);
+    mapperSphere->SetInputData(inputPolyData);
 
     vtkSmartPointer<vtkActor> sphereActor =
             vtkSmartPointer<vtkActor>::New();
@@ -652,7 +652,7 @@ void vtkLeapMarkerWidget::GeneratActors()
     ///////////////////////////////////////////////
 
     leapDbgPlaneWidget = vtkPlaneWidget::New();
-    leapDbgPlaneWidget->SetInput(leapDbgSphere->GetOutput());
+    leapDbgPlaneWidget->SetInputData(leapDbgSphere->GetOutput());
     leapDbgPlaneWidget->NormalToXAxisOn();
     leapDbgPlaneWidget->SetResolution(20);
     leapDbgPlaneWidget->SetRepresentationToOutline();
@@ -685,8 +685,8 @@ void vtkLeapMarkerWidget::GeneratActors()
 
     vtkSmartPointer<vtkProbeFilter> probe =
             vtkSmartPointer<vtkProbeFilter>::New();
-    probe->SetInput(point);
-    probe->SetSource(cubeSource->GetOutput());
+    probe->SetInputData(point);
+    probe->SetSourceData(cubeSource->GetOutput());
 
     ///
     /// create glyph
